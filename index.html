@@ -177,7 +177,6 @@
     const originalText = btn.innerText;
     btn.innerText = "⌛ Sincronizando...";
     try {
-      // O truque do ?t=Date.now() evita que o GitHub mostre a lista velha (cache)
       const response = await fetch('toolflix_backup.json?t=' + Date.now());
       if (!response.ok) throw new Error();
       const data = await response.json();
@@ -322,5 +321,9 @@
   render();
 })();
 </script>
+
+<script data-goatcounter="https://cheats0075.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
 </body>
 </html>
