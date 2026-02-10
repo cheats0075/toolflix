@@ -1,31 +1,57 @@
-<!DOCTYPE html><html lang="pt-BR"><head>  <meta charset="utf-8">  <meta name="viewport" content="width=device-width,initial-scale=1">  <title>ToolFlix</title>  <style>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ToolFlix</title>
+  <style>
+    /* VARIÁVEIS DE COR (O segredo da mudança) */
+    :root {
+      --cor-accent: #00ffff; /* Ciano padrão */
+      --cor-bg-overlay: rgba(0, 0, 0, 0.7);
+    }
+
+    /* Cores por Tema */
+    body.theme-dbz { 
+      --cor-accent: #ff8c00; /* Laranja Goku */
+      background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://m.media-amazon.com/images/I/714yiDPJ7wL.jpg'); 
+    }
+    body.theme-mk { 
+      --cor-accent: #ff0000; /* Vermelho Sangue */
+      background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://i.redd.it/he010ipc19p51.jpg'); 
+    }
+    body.theme-gta { 
+      --cor-accent: #2ecc71; /* Verde Gangue */
+      background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpapers.com/images/hd/gta-sa-4k-blonde-girl-z9zaoylvpq1ly51q.jpg'); 
+    }
+    body.theme-cyber { 
+      --cor-accent: #f012be; /* Rosa/Magenta Neon */
+      background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images.hdqwalls.com/wallpapers/cyborg-cyberpunk-girl-4k-0w.jpg'); 
+    }
+
     /* Reset e Base */
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:#0a0a0a;color:#e0e0e0;text-align:center;line-height:1.5;padding-bottom:50px; background-attachment: fixed; background-size: cover; background-position: center; transition: 0.5s;}
     
-    /* TEMAS */
-    body.theme-dbz { background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://m.media-amazon.com/images/I/714yiDPJ7wL.jpg'); }
-    body.theme-mk { background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://i.redd.it/he010ipc19p51.jpg'); }
-    body.theme-gta { background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://wallpapers.com/images/hd/gta-sa-4k-blonde-girl-z9zaoylvpq1ly51q.jpg'); }
-    body.theme-cyber { background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.hdqwalls.com/wallpapers/cyborg-cyberpunk-girl-4k-0w.jpg'); }
-
     /* ESTILO DO CONTADOR */
     .container-contador { margin-left: 20px; margin-bottom: -15px; display: flex; justify-content: flex-start; }
-    .container-contador img { height: 28px; border-radius: 4px; box-shadow: 0 0 15px rgba(0, 255, 255, 0.4); }
+    .container-contador img { height: 28px; border-radius: 4px; box-shadow: 0 0 15px var(--cor-accent); transition: 0.3s; }
 
     /* Cabeçalho */
-    header{position:relative;padding:50px 20px 60px 20px;background: rgba(30,30,30,0.6); display:flex; flex-direction:column; align-items:flex-start; justify-content:center; border-bottom:3px solid #0ff; box-shadow:0 6px 20px rgba(0,255,255,0.2)}
-    #logoToolFlix{font-family:'Impact', 'Arial Black', sans-serif;font-size:68px;font-weight:900;background:linear-gradient(90deg,#e50914 0%,#00ffff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:2px 2px 12px rgba(0,0,0,0.8);margin:0 0 20px 20px;letter-spacing:4px}
-    #searchBar{display:block;margin:0 0 0 20px;padding:10px 15px;width:250px;border-radius:8px;border:none;font-size:16px;background:#111;color:#fff;box-shadow:0 2px 6px rgba(0,255,255,0.2);transition:0.3s}
-    #searchBar:focus{outline:none;box-shadow:0 0 12px #0ff}
+    header{position:relative;padding:50px 20px 60px 20px;background: rgba(30,30,30,0.6); display:flex; flex-direction:column; align-items:flex-start; justify-content:center; border-bottom:3px solid var(--cor-accent); box-shadow:0 6px 20px rgba(0,0,0,0.4); transition: 0.3s;}
+    
+    #logoToolFlix{font-family:'Impact', 'Arial Black', sans-serif;font-size:68px;font-weight:900;background:linear-gradient(90deg,#e50914 0%, var(--cor-accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:2px 2px 12px rgba(0,0,0,0.8);margin:0 0 20px 20px;letter-spacing:4px; transition: 0.3s;}
+    
+    #searchBar{display:block;margin:0 0 0 20px;padding:10px 15px;width:250px;border-radius:8px;border:none;font-size:16px;background:#111;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.5);transition:0.3s}
+    #searchBar:focus{outline:none;box-shadow:0 0 12px var(--cor-accent)}
 
     /* Container Botões Topo */
     .top-actions{position:absolute; top:20px; right:20px; display:flex; flex-direction:column; align-items:flex-end; gap:10px; z-index:100}
     .top-buttons-row { display: flex; gap: 10px; align-items: center; }
     
-    #themeSelect { background: #111; color: #fff; border: 1px solid #0ff; border-radius: 4px; padding: 5px; cursor: pointer; font-size: 12px; }
-    #adminBtn, #syncBtn{background:rgba(0,0,0,0.6); color:#fff; border:1px solid #0ff; padding:8px 18px; border-radius:20px; cursor:pointer; font-weight:700; transition:0.3s; text-decoration:none; font-size:14px}
-    #adminBtn:hover, #syncBtn:hover{background:#0ff; color:#111}
+    #themeSelect { background: #111; color: #fff; border: 1px solid var(--cor-accent); border-radius: 4px; padding: 5px; cursor: pointer; font-size: 12px; transition: 0.3s;}
+    #adminBtn, #syncBtn{background:rgba(0,0,0,0.6); color:#fff; border:1px solid var(--cor-accent); padding:8px 18px; border-radius:20px; cursor:pointer; font-weight:700; transition:0.3s; text-decoration:none; font-size:14px}
+    #adminBtn:hover{background:var(--cor-accent); color:#111}
     #adminBtn.active-mode{background:#e50914; border-color:#fff; color:#fff}
     #syncBtn{border-color:#e50914; background:rgba(229, 9, 20, 0.2)}
     #syncBtn:hover{background:#e50914; color:#fff}
@@ -37,7 +63,7 @@
     /* Barra de Ações */
     .action-bar{margin:20px 0; display:flex; justify-content:center; gap:10px; flex-wrap:wrap}
     .action-btn{padding:10px 20px; border-radius:6px; font-weight:700; cursor:pointer; border:none; transition:0.3s}
-    #importBtn{background:#0ff; color:#111}
+    #importBtn{background:var(--cor-accent); color:#111}
     #exportBtn{background:#444; color:#fff}
     #favFiltroBtn{background:#222; color:#fff; border: 1px solid #444}
     #favFiltroBtn.active{background:#ff4757; color:#fff; border-color:#ff4757; box-shadow: 0 0 15px #ff4757}
@@ -45,14 +71,14 @@
     /* Categorias */
     #categoriaBtns{margin:15px 0; display:flex; justify-content:center; flex-wrap:wrap; gap:5px; padding: 0 10px}
     .catBtn{background:#222;color:#fff;padding:8px 18px;border-radius:6px;font-weight:700;transition:0.3s; cursor:pointer; border:none; margin-bottom: 5px}
-    .catBtn.active, .catBtn:hover{background:#0ff;color:#111}
+    .catBtn.active, .catBtn:hover{background:var(--cor-accent);color:#111}
 
     /* Catálogo */
     #catalogo{display:flex;flex-wrap:wrap;justify-content:center;gap:25px;margin:30px 0}
-    .jogo{background:#111;border-radius:12px;padding:12px;width:190px;text-align:center;transition:transform 0.3s, box-shadow 0.3s;position:relative;box-shadow:0 4px 12px rgba(0,255,255,0.1);cursor:pointer}
-    .jogo:hover{transform:scale(1.07);box-shadow:0 10px 25px rgba(0,255,255,0.3)}
+    .jogo{background:#111;border-radius:12px;padding:12px;width:190px;text-align:center;transition:transform 0.3s, box-shadow 0.3s;position:relative;box-shadow:0 4px 12px rgba(0,0,0,0.5);cursor:pointer}
+    .jogo:hover{transform:scale(1.07);box-shadow:0 10px 25px var(--cor-accent)}
     .jogo img{width:100%;border-radius:10px; aspect-ratio: 3/4; object-fit: cover;}
-    .jogo p{margin-top:10px;font-weight:700;color:#0ff}
+    .jogo p{margin-top:10px;font-weight:700;color:var(--cor-accent); transition: 0.3s;}
 
     /* Controles da Capa */
     .excluir-btn, .editar-btn{position:absolute; font-weight:700; border:none; cursor:pointer; transition:0.2s; z-index:10; display:none}
@@ -62,17 +88,19 @@
     .fav-card-btn.active{color:#ff4757; background:#fff; border-color:#ff4757; box-shadow: 0 0 15px #ff4757; transform: scale(1.1)}
     
     .badge{position:absolute;top:38px;left:6px;padding:3px 6px;font-size:10px;font-weight:700;border-radius:4px;color:#111;z-index:5; text-transform: uppercase;}
-    .ps2{background:#00ffff} .ps3{background:#8a2be2; color:#fff} .ps1{background:#ff007f; color:#fff}
+    .ps2{background:var(--cor-accent)} .ps3{background:#8a2be2; color:#fff} .ps1{background:#ff007f; color:#fff}
     .youtube{background:#ff0000; color:#fff} .pc{background:#00ff00} .roms{background:#ff8c00}
 
-    #adminSection{display:none;background:#1a1a1a;padding:25px;border-radius:12px;width:320px;margin:20px auto;box-shadow:0 6px 20px rgba(0,255,255,0.2); border: 1px solid #333; scroll-margin-top: 50px;}
+    #adminSection{display:none;background:#1a1a1a;padding:25px;border-radius:12px;width:320px;margin:20px auto;box-shadow:0 6px 20px var(--cor-accent); border: 1px solid #333; scroll-margin-top: 50px;}
     #adminSection input, #adminSection select{display:block;margin:12px auto;padding:10px;width:90%;border-radius:6px;border:none;background:#111;color:#fff}
     #loginModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);justify-content:center;align-items:center;z-index:9999}
-    #loginBox{background:#111;border:1px solid #0ff;padding:25px;border-radius:12px;width:340px}
+    #loginBox{background:#111;border:1px solid var(--cor-accent);padding:25px;border-radius:12px;width:340px}
     #loginBox input{width:100%; padding:10px; background:#222; color:#fff; border:1px solid #333; border-radius:6px; margin-top:10px}
 
     @media(max-width:480px){ #logoToolFlix{font-size:46px} .jogo{width:45%} .top-actions{top:10px; right:10px; gap:8px} #adminBtn, #syncBtn, #requestGameBtn{padding:5px 10px; font-size:11px} }
-  </style></head><body>
+  </style>
+</head>
+<body>
 
 <div class="top-actions">
     <div class="top-buttons-row">
@@ -138,7 +166,7 @@
     <option value="Roms">Roms</option>
     <option value="Emuladores">Emuladores</option>
   </select>
-  <button id="addJogoBtn" style="background:#0ff; width:100%; padding:10px; cursor:pointer; font-weight:700; border:none; border-radius:6px">SALVAR ✏️</button>
+  <button id="addJogoBtn" style="background:var(--cor-accent); width:100%; padding:10px; cursor:pointer; font-weight:700; border:none; border-radius:6px">SALVAR ✏️</button>
   <button id="cancelEdit" style="background:#444; color:#fff; width:100%; padding:8px; cursor:pointer; border:none; border-radius:6px; margin-top:5px; display:none">CANCELAR</button>
 </section>
 
@@ -146,16 +174,17 @@
 
 <div id="loginModal">
   <div id="loginBox">
-    <h4 style="color:#0ff">Acesso Restrito</h4>
+    <h4 style="color:var(--cor-accent)">Acesso Restrito</h4>
     <input id="loginInput" type="password" placeholder="Digite a senha">
     <div style="text-align:right; margin-top:15px">
       <button id="loginCancel" style="background:#333; color:#fff; padding:8px 15px; border-radius:6px; border:none; cursor:pointer">Sair</button>
-      <button id="loginSubmit" style="background:#0ff; color:#111; padding:8px 15px; border-radius:6px; border:none; cursor:pointer; font-weight:700">Entrar</button>
+      <button id="loginSubmit" style="background:var(--cor-accent); color:#111; padding:8px 15px; border-radius:6px; border:none; cursor:pointer; font-weight:700">Entrar</button>
     </div>
   </div>
 </div>
 
-<script>(function(){
+<script>
+(function(){
   var jogos=JSON.parse(localStorage.getItem('jogosPS2'))||[];
   var favoritos=JSON.parse(localStorage.getItem('toolflix_favs'))||[];
   var adminMode=false, apenasFavs=false, editIndex=null, catSelecionada='Todos';
@@ -165,9 +194,9 @@
   // Lógica de Temas
   const themeSelect = document.getElementById('themeSelect');
   function applyTheme(t) { 
-    document.body.className = t === 'default' ? '' : 'theme-' + t; 
-    localStorage.setItem('toolflix_theme', t); 
-  }
+     document.body.className = t === 'default' ? '' : 'theme-' + t; 
+     localStorage.setItem('toolflix_theme', t); 
+   }
   themeSelect.onchange = (e) => applyTheme(e.target.value);
   applyTheme(localStorage.getItem('toolflix_theme') || 'default');
   themeSelect.value = localStorage.getItem('toolflix_theme') || 'default';
@@ -193,7 +222,7 @@
       render();
       alert("✅ Catálogo atualizado com sucesso!");
     } catch (e) {
-      alert("❌ O arquivo 'toolflix_backup.json' não foi encontrado ou está com erro.");
+      alert("❌ O arquivo 'toolflix_backup.json' não foi encontrado.");
     } finally {
       btn.innerText = originalText;
     }
@@ -250,8 +279,7 @@
     render();
   };
 
-  window.excluir = (i) => { if(confirm('Excluir este item?')){ jogos.splice(i,1); save(); render(); } };
-  
+  window.excluir = (i) => { if(confirm('Excluir este item?')){ jogos.splice(i,1); save(); render(); } };  
   window.editar = (i) => {
     editIndex = i;
     const j = jogos[i];
@@ -292,8 +320,7 @@
   document.getElementById('loginInput').onkeyup = (e) => { if(e.key==='Enter') loginAction(); };
   document.getElementById('adminBtn').onclick = () => toggleAdminMode();
   document.getElementById('syncBtn').onclick = (e) => { e.preventDefault(); syncGithub(); };
-  document.getElementById('loginCancel').onclick = () => document.getElementById('loginModal').style.display='none';
-  
+  document.getElementById('loginCancel').onclick = () => document.getElementById('loginModal').style.display='none';  
   document.getElementById('addJogoBtn').onclick = () => {
     const n=document.getElementById('nomeJogo').value.trim(), c=document.getElementById('linkCapa').value.trim(), l=document.getElementById('linkJogo').value.trim(), cat=document.getElementById('selectCategoria').value;
     if(!n || !c || !l) return alert('Preencha tudo!');
@@ -316,8 +343,7 @@
       render();
     };
   });
-  searchBar.oninput = render;
-  
+  searchBar.oninput = render;  
   document.getElementById('importBtn').onclick = () => {
     const inp = document.createElement('input'); inp.type='file';
     inp.onchange = e => {
@@ -342,6 +368,7 @@
   };
 
   render();
-})();</script>
-<script data-goatcounter="https://cheats0075.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-</body></html>
+})();
+</script>
+</body>
+</html>
