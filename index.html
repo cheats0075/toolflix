@@ -1,36 +1,29 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ToolFlix</title>
-  <style>
+<!DOCTYPE html><html lang="pt-BR"><head>  <meta charset="utf-8">  <meta name="viewport" content="width=device-width,initial-scale=1">  <title>ToolFlix</title>  <style>
     /* Reset e Base */
     *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:#0a0a0a;color:#e0e0e0;text-align:center;line-height:1.5;padding-bottom:50px}
+    body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:#0a0a0a;color:#e0e0e0;text-align:center;line-height:1.5;padding-bottom:50px; background-attachment: fixed; background-size: cover; background-position: center; transition: 0.5s;}
+    
+    /* TEMAS */
+    body.theme-dbz { background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://m.media-amazon.com/images/I/714yiDPJ7wL.jpg'); }
+    body.theme-mk { background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://i.redd.it/he010ipc19p51.jpg'); }
+    body.theme-gta { background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://wallpapers.com/images/hd/gta-sa-4k-blonde-girl-z9zaoylvpq1ly51q.jpg'); }
+    body.theme-cyber { background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.hdqwalls.com/wallpapers/cyborg-cyberpunk-girl-4k-0w.jpg'); }
 
-    /* ESTILO DO CONTADOR - ADICIONADO */
-    .container-contador {
-      margin-left: 20px;
-      margin-bottom: -15px;
-      display: flex;
-      justify-content: flex-start;
-    }
-    .container-contador img {
-      height: 28px;
-      border-radius: 4px;
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
-    }
+    /* ESTILO DO CONTADOR */
+    .container-contador { margin-left: 20px; margin-bottom: -15px; display: flex; justify-content: flex-start; }
+    .container-contador img { height: 28px; border-radius: 4px; box-shadow: 0 0 15px rgba(0, 255, 255, 0.4); }
 
     /* Cabeçalho */
-    header{position:relative;padding:50px 20px 60px 20px;background:linear-gradient(180deg, rgba(30,30,30,0.55) 0%, rgba(30,30,30,0.6) 70%), url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg8agAZ1Hu-qcGTcIZDMd4o5F7MTdMYrd-Nf5uWnfNeqsevZzNbBOm4dzxTrNLup1IuQQeMmFlwFmtd8zMOi4Ntz7TGJIr1hYzAMyFyxusJj9W2VsIOF21yNX_ttPNlOdGWVKgcKjIUqmND/w800/FDFDFDFar.PNG') center/cover no-repeat; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; border-bottom:3px solid #0ff; box-shadow:0 6px 20px rgba(0,255,255,0.2)}
+    header{position:relative;padding:50px 20px 60px 20px;background: rgba(30,30,30,0.6); display:flex; flex-direction:column; align-items:flex-start; justify-content:center; border-bottom:3px solid #0ff; box-shadow:0 6px 20px rgba(0,255,255,0.2)}
     #logoToolFlix{font-family:'Impact', 'Arial Black', sans-serif;font-size:68px;font-weight:900;background:linear-gradient(90deg,#e50914 0%,#00ffff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:2px 2px 12px rgba(0,0,0,0.8);margin:0 0 20px 20px;letter-spacing:4px}
     #searchBar{display:block;margin:0 0 0 20px;padding:10px 15px;width:250px;border-radius:8px;border:none;font-size:16px;background:#111;color:#fff;box-shadow:0 2px 6px rgba(0,255,255,0.2);transition:0.3s}
     #searchBar:focus{outline:none;box-shadow:0 0 12px #0ff}
-    
+
     /* Container Botões Topo */
     .top-actions{position:absolute; top:20px; right:20px; display:flex; flex-direction:column; align-items:flex-end; gap:10px; z-index:100}
-    .top-buttons-row { display: flex; gap: 10px; }
+    .top-buttons-row { display: flex; gap: 10px; align-items: center; }
+    
+    #themeSelect { background: #111; color: #fff; border: 1px solid #0ff; border-radius: 4px; padding: 5px; cursor: pointer; font-size: 12px; }
     #adminBtn, #syncBtn{background:rgba(0,0,0,0.6); color:#fff; border:1px solid #0ff; padding:8px 18px; border-radius:20px; cursor:pointer; font-weight:700; transition:0.3s; text-decoration:none; font-size:14px}
     #adminBtn:hover, #syncBtn:hover{background:#0ff; color:#111}
     #adminBtn.active-mode{background:#e50914; border-color:#fff; color:#fff}
@@ -64,7 +57,7 @@
     /* Controles da Capa */
     .excluir-btn, .editar-btn{position:absolute; font-weight:700; border:none; cursor:pointer; transition:0.2s; z-index:10; display:none}
     .excluir-btn{top:5px; right:5px; background:red; color:#fff; width:28px; height:28px; border-radius:50%}
-    .editar-btn{top:5px; left:5px; background:#0ff; color:#111; padding:4px 8px; border-radius:4px; font-size:10px}
+    .editar-btn{top:5px; left:5px; background:#007bff; color:#fff; padding:4px 10px; border-radius:4px; font-size:10px}
     .fav-card-btn{position:absolute; bottom:45px; right:15px; background:rgba(0,0,0,0.8); color:rgba(255,255,255,0.5); width:35px; height:35px; border-radius:50%; font-size:18px; display:flex; align-items:center; justify-content:center; border: 1px solid rgba(255,255,255,0.2); transition: 0.3s; z-index:10}
     .fav-card-btn.active{color:#ff4757; background:#fff; border-color:#ff4757; box-shadow: 0 0 15px #ff4757; transform: scale(1.1)}
     
@@ -72,19 +65,24 @@
     .ps2{background:#00ffff} .ps3{background:#8a2be2; color:#fff} .ps1{background:#ff007f; color:#fff}
     .youtube{background:#ff0000; color:#fff} .pc{background:#00ff00} .roms{background:#ff8c00}
 
-    #adminSection{display:none;background:#1a1a1a;padding:25px;border-radius:12px;width:320px;margin:20px auto;box-shadow:0 6px 20px rgba(0,255,255,0.2); border: 1px solid #333}
+    #adminSection{display:none;background:#1a1a1a;padding:25px;border-radius:12px;width:320px;margin:20px auto;box-shadow:0 6px 20px rgba(0,255,255,0.2); border: 1px solid #333; scroll-margin-top: 50px;}
     #adminSection input, #adminSection select{display:block;margin:12px auto;padding:10px;width:90%;border-radius:6px;border:none;background:#111;color:#fff}
     #loginModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);justify-content:center;align-items:center;z-index:9999}
     #loginBox{background:#111;border:1px solid #0ff;padding:25px;border-radius:12px;width:340px}
     #loginBox input{width:100%; padding:10px; background:#222; color:#fff; border:1px solid #333; border-radius:6px; margin-top:10px}
 
     @media(max-width:480px){ #logoToolFlix{font-size:46px} .jogo{width:45%} .top-actions{top:10px; right:10px; gap:8px} #adminBtn, #syncBtn, #requestGameBtn{padding:5px 10px; font-size:11px} }
-  </style>
-</head>
-<body>
+  </style></head><body>
 
 <div class="top-actions">
     <div class="top-buttons-row">
+        <select id="themeSelect">
+          <option value="default">Tema Padrão</option>
+          <option value="dbz">Dragon Ball Z</option>
+          <option value="mk">Mortal Kombat</option>
+          <option value="gta">GTA San Andreas</option>
+          <option value="cyber">Cyberpunk</option>
+        </select>
         <a href="#" id="syncBtn">📥 Verificar novos jogos</a>
         <button id="adminBtn" type="button">⚙️ Modo Admin</button>
     </div>
@@ -95,8 +93,7 @@
   <div class="container-contador">
     <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fcheats0075.github.io%2Ftoolflix&count_bg=%2300FFFF&title_bg=%23333333&icon=&icon_color=%23E7E7E7&title=VISITAS&edge_flat=true" alt="Visitas">
   </div>
-  
-  <span id="logoToolFlix">ToolFlix</span>
+    <span id="logoToolFlix">ToolFlix</span>
   <input type="text" id="searchBar" placeholder="Pesquisar no catálogo...">
 </header>
 
@@ -142,6 +139,7 @@
     <option value="Emuladores">Emuladores</option>
   </select>
   <button id="addJogoBtn" style="background:#0ff; width:100%; padding:10px; cursor:pointer; font-weight:700; border:none; border-radius:6px">SALVAR ✏️</button>
+  <button id="cancelEdit" style="background:#444; color:#fff; width:100%; padding:8px; cursor:pointer; border:none; border-radius:6px; margin-top:5px; display:none">CANCELAR</button>
 </section>
 
 <section id="catalogo"></section>
@@ -157,13 +155,22 @@
   </div>
 </div>
 
-<script>
-(function(){
+<script>(function(){
   var jogos=JSON.parse(localStorage.getItem('jogosPS2'))||[];
   var favoritos=JSON.parse(localStorage.getItem('toolflix_favs'))||[];
   var adminMode=false, apenasFavs=false, editIndex=null, catSelecionada='Todos';
   const catalogo = document.getElementById('catalogo');
   const searchBar = document.getElementById('searchBar');
+
+  // Lógica de Temas
+  const themeSelect = document.getElementById('themeSelect');
+  function applyTheme(t) { 
+    document.body.className = t === 'default' ? '' : 'theme-' + t; 
+    localStorage.setItem('toolflix_theme', t); 
+  }
+  themeSelect.onchange = (e) => applyTheme(e.target.value);
+  applyTheme(localStorage.getItem('toolflix_theme') || 'default');
+  themeSelect.value = localStorage.getItem('toolflix_theme') || 'default';
 
   function corrigirDados() {
     let alterado = false;
@@ -197,8 +204,8 @@
     const term = searchBar.value.toLowerCase();
     jogos.forEach((jogo, index) => {
       const isFav = favoritos.includes(jogo.nome);
-      if((catSelecionada==='Todos' || jogo.categoria===catSelecionada) &&
-          (jogo.nome.toLowerCase().includes(term)) &&
+      if((catSelecionada==='Todos' || jogo.categoria===catSelecionada) && 
+          (jogo.nome.toLowerCase().includes(term)) && 
           (!apenasFavs || isFav)){
         const div = document.createElement('div');
         div.className = 'jogo';
@@ -244,6 +251,7 @@
   };
 
   window.excluir = (i) => { if(confirm('Excluir este item?')){ jogos.splice(i,1); save(); render(); } };
+  
   window.editar = (i) => {
     editIndex = i;
     const j = jogos[i];
@@ -252,9 +260,18 @@
     document.getElementById('linkJogo').value=j.link;
     document.getElementById('selectCategoria').value=j.categoria;
     document.getElementById('adminSection').style.display='block';
-    document.getElementById('adminTitle').textContent="Editando Item";
+    document.getElementById('adminTitle').textContent="Editando: " + j.nome;
+    document.getElementById('cancelEdit').style.display='block';
     window.scrollTo({top: 0, behavior: 'smooth'});
   };
+
+  function clearEdit() {
+    editIndex = null;
+    document.querySelectorAll('#adminSection input').forEach(i=>i.value='');
+    document.getElementById('adminTitle').textContent="Novo Item";
+    document.getElementById('cancelEdit').style.display='none';
+  }
+  document.getElementById('cancelEdit').onclick = clearEdit;
 
   function save(){ localStorage.setItem('jogosPS2', JSON.stringify(jogos)); }
 
@@ -276,15 +293,20 @@
   document.getElementById('adminBtn').onclick = () => toggleAdminMode();
   document.getElementById('syncBtn').onclick = (e) => { e.preventDefault(); syncGithub(); };
   document.getElementById('loginCancel').onclick = () => document.getElementById('loginModal').style.display='none';
+  
   document.getElementById('addJogoBtn').onclick = () => {
     const n=document.getElementById('nomeJogo').value.trim(), c=document.getElementById('linkCapa').value.trim(), l=document.getElementById('linkJogo').value.trim(), cat=document.getElementById('selectCategoria').value;
     if(!n || !c || !l) return alert('Preencha tudo!');
-    if(editIndex !== null){ jogos[editIndex]={nome:n, capa:c, link:l, categoria:cat}; editIndex=null; }
-    else{ jogos.push({nome:n, capa:c, link:l, categoria:cat}); }
-    save(); render();
-    document.querySelectorAll('#adminSection input').forEach(i=>i.value='');
-    document.getElementById('adminTitle').textContent="Novo Item";
+    if(editIndex !== null){ 
+        jogos[editIndex]={nome:n, capa:c, link:l, categoria:cat}; 
+    } else { 
+        jogos.push({nome:n, capa:c, link:l, categoria:cat}); 
+    }
+    save(); 
+    clearEdit();
+    render();
   };
+
   document.getElementById('favFiltroBtn').onclick = function(){ apenasFavs = !apenasFavs; this.classList.toggle('active'); render(); };
   document.querySelectorAll('.catBtn').forEach(b => {
     b.onclick = () => {
@@ -295,6 +317,7 @@
     };
   });
   searchBar.oninput = render;
+  
   document.getElementById('importBtn').onclick = () => {
     const inp = document.createElement('input'); inp.type='file';
     inp.onchange = e => {
@@ -306,24 +329,19 @@
               save();
               render();
               alert("Importado com sucesso!");
-          } catch(err) {
-              alert("Erro ao ler o arquivo JSON.");
-          }
+          } catch(err) { alert("Erro ao ler o arquivo JSON."); }
       };
       reader.readAsText(e.target.files[0]);
     };
     inp.click();
   };
+
   document.getElementById('exportBtn').onclick = () => {
     const blob = new Blob([JSON.stringify(jogos)], {type:'application/json'});
     const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='toolflix_backup.json'; a.click();
   };
+
   render();
-})();
-</script>
-
-<script data-goatcounter="https://cheats0075.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
-
-</body>
-</html>
+})();</script>
+<script data-goatcounter="https://cheats0075.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body></html>
