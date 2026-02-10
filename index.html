@@ -1,127 +1,142 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ToolFlix</title>
-  <style>
-    /* VARIÁVEIS DE COR (O segredo da mudança) */
+<!DOCTYPE html><html lang="pt-BR"><head>  <meta charset="utf-8">  <meta name="viewport" content="width=device-width,initial-scale=1">  <title>ToolFlix</title>  <style>
+    /* VARIÁVEIS DE COR E TEMAS */
     :root {
-      --cor-accent: #00ffff; /* Ciano padrão */
+      --cor-accent: #00ffff;
       --cor-bg-overlay: rgba(0, 0, 0, 0.7);
+      --banner-padrao: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg8agAZ1Hu-qcGTcIZDMd4o5F7MTdMYrd-Nf5uWnfNeqsevZzNbBOm4dzxTrNLup1IuQQeMmFlwFmtd8zMOi4Ntz7TGJIr1hYzAMyFyxusJj9W2VsIOF21yNX_ttPNlOdGWVKgcKjIUqmND/w800/FDFDFDFar.PNG');
     }
 
-    /* Cores por Tema */
-    body.theme-dbz { 
-      --cor-accent: #ff8c00; /* Laranja Goku */
-      background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://m.media-amazon.com/images/I/714yiDPJ7wL.jpg'); 
-    }
-    body.theme-mk { 
-      --cor-accent: #ff0000; /* Vermelho Sangue */
-      background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://i.redd.it/he010ipc19p51.jpg'); 
-    }
-    body.theme-gta { 
-      --cor-accent: #2ecc71; /* Verde Gangue */
-      background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpapers.com/images/hd/gta-sa-4k-blonde-girl-z9zaoylvpq1ly51q.jpg'); 
-    }
-    body.theme-cyber { 
-      --cor-accent: #f012be; /* Rosa/Magenta Neon */
-      background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images.hdqwalls.com/wallpapers/cyborg-cyberpunk-girl-4k-0w.jpg'); 
-    }
+    /* Temas Específicos */
+    body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdna.artstation.com/p/assets/covers/images/013/652/970/large/sm-bonin-athena-19.jpg?1540572163'); }
+    body.theme-dbz { --cor-accent: #ff8c00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://m.media-amazon.com/images/I/714yiDPJ7wL.jpg'); }
+    body.theme-mk { --cor-accent: #ff0000; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://i.redd.it/he010ipc19p51.jpg'); }
+    body.theme-gta { --cor-accent: #2ecc71; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpapers.com/images/hd/gta-sa-4k-blonde-girl-z9zaoylvpq1ly51q.jpg'); }
+    body.theme-cyber { --cor-accent: #f012be; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images.hdqwalls.com/wallpapers/cyborg-cyberpunk-girl-4k-0w.jpg'); }
+
+    /* NOVOS TEMAS ADICIONADOS */
+    body.theme-gtav { --cor-accent: #fbc531; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://www.menosfios.com/wp-content/uploads/2013/12/gta5.jpg'); }
+    body.theme-godhand { --cor-accent: #a36b4f; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpaperset.com/w/full/0/a/b/511651.jpg'); }
+    body.theme-sonic { --cor-accent: #00a8ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://i.pinimg.com/originals/82/b5/9c/82b59c4fa657d77bedce8572e8eca8d7.jpg'); }
+    body.theme-mario { --cor-accent: #e84118; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallup.net/wp-content/uploads/2017/11/22/405754-Princess_Peach-Super_Mario-video_games-render.jpg'); }
+    body.theme-resident { --cor-accent: #c23616; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdnb.artstation.com/p/assets/images/images/016/531/185/large/prywinko-art-ada-claire.jpg?1552501890'); }
+    body.theme-kof { --cor-accent: #e67e22; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images5.alphacoders.com/118/1187221.png'); }
 
     /* Reset e Base */
     *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:#0a0a0a;color:#e0e0e0;text-align:center;line-height:1.5;padding-bottom:50px; background-attachment: fixed; background-size: cover; background-position: center; transition: 0.5s;}
-    
-    /* ESTILO DO CONTADOR */
-    .container-contador { margin-left: 20px; margin-bottom: -15px; display: flex; justify-content: flex-start; }
-    .container-contador img { height: 28px; border-radius: 4px; box-shadow: 0 0 15px var(--cor-accent); transition: 0.3s; }
+    body{font-family:'Segoe UI', sans-serif;background:#0a0a0a;color:#e0e0e0;text-align:center;padding-bottom:50px; background-attachment: fixed; background-size: cover; background-position: center; transition: 0.5s;}
 
-    /* Cabeçalho */
-    header{position:relative;padding:50px 20px 60px 20px;background: rgba(30,30,30,0.6); display:flex; flex-direction:column; align-items:flex-start; justify-content:center; border-bottom:3px solid var(--cor-accent); box-shadow:0 6px 20px rgba(0,0,0,0.4); transition: 0.3s;}
-    
-    #logoToolFlix{font-family:'Impact', 'Arial Black', sans-serif;font-size:68px;font-weight:900;background:linear-gradient(90deg,#e50914 0%, var(--cor-accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:2px 2px 12px rgba(0,0,0,0.8);margin:0 0 20px 20px;letter-spacing:4px; transition: 0.3s;}
-    
+    /* CABEÇALHO BASE */
+    header {
+      position:relative; padding:50px 20px 60px 20px; 
+      display:flex; flex-direction:column; align-items:flex-start; justify-content:center; 
+      border-bottom:3px solid var(--cor-accent); 
+      box-shadow:0 6px 20px rgba(0,0,0,0.4); 
+      transition: 0.3s; background-position: center; background-size: cover;
+      background-color: transparent;
+    }
+
+    /* BANNER APENAS NO TEMA PADRÃO */
+    body:not([class*="theme-"]) header {
+      background-image: linear-gradient(180deg, rgba(30,30,30,0.55) 0%, rgba(30,30,30,0.6) 70%), var(--banner-padrao);
+    }
+    /* Degradê para garantir leitura nos temas */
+    body[class*="theme-"] header {
+      background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+    }
+
+    #logoToolFlix{font-family:'Impact', sans-serif;font-size:68px;font-weight:900;background:linear-gradient(90deg,#e50914 0%, var(--cor-accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:2px 2px 12px rgba(0,0,0,0.8);margin:0 0 15px 20px;letter-spacing:4px;}
     #searchBar{display:block;margin:0 0 0 20px;padding:10px 15px;width:250px;border-radius:8px;border:none;font-size:16px;background:#111;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.5);transition:0.3s}
     #searchBar:focus{outline:none;box-shadow:0 0 12px var(--cor-accent)}
 
-    /* Container Botões Topo */
+    /* Top Actions */
     .top-actions{position:absolute; top:20px; right:20px; display:flex; flex-direction:column; align-items:flex-end; gap:10px; z-index:100}
     .top-buttons-row { display: flex; gap: 10px; align-items: center; }
     
-    #themeSelect { background: #111; color: #fff; border: 1px solid var(--cor-accent); border-radius: 4px; padding: 5px; cursor: pointer; font-size: 12px; transition: 0.3s;}
+    #themeSelect, #sortSelect { background: rgba(0,0,0,0.6); color: #fff; border: 1px solid var(--cor-accent); border-radius: 4px; padding: 5px; cursor: pointer; font-size: 12px; height: 32px; }
     #adminBtn, #syncBtn{background:rgba(0,0,0,0.6); color:#fff; border:1px solid var(--cor-accent); padding:8px 18px; border-radius:20px; cursor:pointer; font-weight:700; transition:0.3s; text-decoration:none; font-size:14px}
-    #adminBtn:hover{background:var(--cor-accent); color:#111}
-    #adminBtn.active-mode{background:#e50914; border-color:#fff; color:#fff}
+    #adminBtn.active-mode{background:#e50914; border-color:#fff;}
     #syncBtn{border-color:#e50914; background:rgba(229, 9, 20, 0.2)}
-    #syncBtn:hover{background:#e50914; color:#fff}
+    
+    .bottom-row-actions { display: flex; gap: 10px; align-items: center; }
+    #requestGameBtn { background: linear-gradient(45deg, #ff0000, #ff4757); color: #fff; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 800; text-decoration: none; font-size: 14px; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.3); }
 
-    /* Botão Pedir Jogo */
-    #requestGameBtn { background: linear-gradient(45deg, #ff0000, #ff4757); color: #fff; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 800; text-decoration: none; font-size: 14px; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4); transition: 0.3s; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.3); }
-    #requestGameBtn:hover { transform: scale(1.05); background: linear-gradient(45deg, #cc0000, #ff0000); box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); }
-
-    /* Barra de Ações */
+    /* Barra de Ações e Categorias */
     .action-bar{margin:20px 0; display:flex; justify-content:center; gap:10px; flex-wrap:wrap}
     .action-btn{padding:10px 20px; border-radius:6px; font-weight:700; cursor:pointer; border:none; transition:0.3s}
     #importBtn{background:var(--cor-accent); color:#111}
     #exportBtn{background:#444; color:#fff}
     #favFiltroBtn{background:#222; color:#fff; border: 1px solid #444}
-    #favFiltroBtn.active{background:#ff4757; color:#fff; border-color:#ff4757; box-shadow: 0 0 15px #ff4757}
+    #favFiltroBtn.active{background:#ff4757; box-shadow: 0 0 15px #ff4757}
 
-    /* Categorias */
     #categoriaBtns{margin:15px 0; display:flex; justify-content:center; flex-wrap:wrap; gap:5px; padding: 0 10px}
-    .catBtn{background:#222;color:#fff;padding:8px 18px;border-radius:6px;font-weight:700;transition:0.3s; cursor:pointer; border:none; margin-bottom: 5px}
+    .catBtn{background:#222;color:#fff;padding:8px 18px;border-radius:6px;font-weight:700;cursor:pointer; border:none; margin-bottom: 5px; transition: 0.3s;}
     .catBtn.active, .catBtn:hover{background:var(--cor-accent);color:#111}
 
     /* Catálogo */
     #catalogo{display:flex;flex-wrap:wrap;justify-content:center;gap:25px;margin:30px 0}
-    .jogo{background:#111;border-radius:12px;padding:12px;width:190px;text-align:center;transition:transform 0.3s, box-shadow 0.3s;position:relative;box-shadow:0 4px 12px rgba(0,0,0,0.5);cursor:pointer}
+    .jogo{background:#111;border-radius:12px;padding:12px;width:190px;text-align:center;transition:0.3s;position:relative;box-shadow:0 4px 12px rgba(0,0,0,0.5);cursor:pointer}
     .jogo:hover{transform:scale(1.07);box-shadow:0 10px 25px var(--cor-accent)}
     .jogo img{width:100%;border-radius:10px; aspect-ratio: 3/4; object-fit: cover;}
-    .jogo p{margin-top:10px;font-weight:700;color:var(--cor-accent); transition: 0.3s;}
+    .jogo p{margin-top:10px;font-weight:700;color:var(--cor-accent);}
 
-    /* Controles da Capa */
-    .excluir-btn, .editar-btn{position:absolute; font-weight:700; border:none; cursor:pointer; transition:0.2s; z-index:10; display:none}
-    .excluir-btn{top:5px; right:5px; background:red; color:#fff; width:28px; height:28px; border-radius:50%}
-    .editar-btn{top:5px; left:5px; background:#007bff; color:#fff; padding:4px 10px; border-radius:4px; font-size:10px}
-    .fav-card-btn{position:absolute; bottom:45px; right:15px; background:rgba(0,0,0,0.8); color:rgba(255,255,255,0.5); width:35px; height:35px; border-radius:50%; font-size:18px; display:flex; align-items:center; justify-content:center; border: 1px solid rgba(255,255,255,0.2); transition: 0.3s; z-index:10}
-    .fav-card-btn.active{color:#ff4757; background:#fff; border-color:#ff4757; box-shadow: 0 0 15px #ff4757; transform: scale(1.1)}
-    
+    /* Badges e Fav */
     .badge{position:absolute;top:38px;left:6px;padding:3px 6px;font-size:10px;font-weight:700;border-radius:4px;color:#111;z-index:5; text-transform: uppercase;}
     .ps2{background:var(--cor-accent)} .ps3{background:#8a2be2; color:#fff} .ps1{background:#ff007f; color:#fff}
     .youtube{background:#ff0000; color:#fff} .pc{background:#00ff00} .roms{background:#ff8c00}
+    .fav-card-btn{position:absolute; bottom:45px; right:15px; background:rgba(0,0,0,0.8); color:rgba(255,255,255,0.5); width:35px; height:35px; border-radius:50%; display:flex; align-items:center; justify-content:center; border: 1px solid rgba(255,255,255,0.2); transition: 0.3s; z-index:10; cursor:pointer}
+    .fav-card-btn.active{color:#ff4757; background:#fff; border-color:#ff4757;}
 
-    #adminSection{display:none;background:#1a1a1a;padding:25px;border-radius:12px;width:320px;margin:20px auto;box-shadow:0 6px 20px var(--cor-accent); border: 1px solid #333; scroll-margin-top: 50px;}
-    #adminSection input, #adminSection select{display:block;margin:12px auto;padding:10px;width:90%;border-radius:6px;border:none;background:#111;color:#fff}
+    /* Admin e Modal */
+    #adminSection{display:none;background:#1a1a1a;padding:25px;border-radius:12px;width:320px;margin:20px auto;box-shadow:0 6px 20px var(--cor-accent); border: 1px solid #333}
+    #adminSection input, #adminSection select{display:block;margin:12px auto;padding:10px;width:90%;border-radius:6px;background:#111;color:#fff;border:none}
     #loginModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);justify-content:center;align-items:center;z-index:9999}
     #loginBox{background:#111;border:1px solid var(--cor-accent);padding:25px;border-radius:12px;width:340px}
     #loginBox input{width:100%; padding:10px; background:#222; color:#fff; border:1px solid #333; border-radius:6px; margin-top:10px}
+    .excluir-btn, .editar-btn{position:absolute; font-weight:700; border:none; cursor:pointer; z-index:10; display:none}
+    .excluir-btn{top:5px; right:5px; background:red; color:#fff; width:28px; height:28px; border-radius:50%}
+    .editar-btn{top:5px; left:5px; background:#007bff; color:#fff; padding:4px 10px; border-radius:4px; font-size:10px}
 
-    @media(max-width:480px){ #logoToolFlix{font-size:46px} .jogo{width:45%} .top-actions{top:10px; right:10px; gap:8px} #adminBtn, #syncBtn, #requestGameBtn{padding:5px 10px; font-size:11px} }
-  </style>
-</head>
-<body>
+    @media(max-width:480px){ 
+        #logoToolFlix{font-size:40px} 
+        .jogo{width:45%} 
+        .top-actions{top:10px; right:10px;} 
+        #adminBtn, #syncBtn, #requestGameBtn{padding:5px 10px; font-size:11px} 
+        #searchBar{width: 180px;}
+    }
+  </style></head><body>
 
 <div class="top-actions">
     <div class="top-buttons-row">
         <select id="themeSelect">
           <option value="default">Tema Padrão</option>
+          <option value="gow">God of War</option>
+          <option value="gtav">GTA V</option>
+          <option value="godhand">God Hand</option>
+          <option value="sonic">Sonic</option>
+          <option value="mario">Mario</option>
+          <option value="resident">Resident Evil</option>
+          <option value="kof">KOF</option>
           <option value="dbz">Dragon Ball Z</option>
           <option value="mk">Mortal Kombat</option>
           <option value="gta">GTA San Andreas</option>
           <option value="cyber">Cyberpunk</option>
         </select>
-        <a href="#" id="syncBtn">📥 Verificar novos jogos</a>
+        <a href="#" id="syncBtn">📥 Sincronizar Jogos</a>
         <button id="adminBtn" type="button">⚙️ Modo Admin</button>
     </div>
-    <a href="https://youtu.be/BB0RbhXJWVc?si=goie7I_b2RLcvfkG" target="_blank" id="requestGameBtn">🎮 Pedir um Jogo</a>
+    <div class="bottom-row-actions">
+        <select id="sortSelect">
+            <option value="newest">Últimos Postados</option>
+            <option value="oldest">Primeiros Postados</option>
+            <option value="az">A - Z</option>
+            <option value="za">Z - A</option>
+        </select>
+        <a href="https://youtu.be/BB0RbhXJWVc?si=goie7I_b2RLcvfkG" target="_blank" id="requestGameBtn">🎮 Pedir um Jogo</a>
+    </div>
 </div>
 
 <header>
-  <div class="container-contador">
-    <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fcheats0075.github.io%2Ftoolflix&count_bg=%2300FFFF&title_bg=%23333333&icon=&icon_color=%23E7E7E7&title=VISITAS&edge_flat=true" alt="Visitas">
-  </div>
-    <span id="logoToolFlix">ToolFlix</span>
+  <span id="logoToolFlix">ToolFlix</span>
   <input type="text" id="searchBar" placeholder="Pesquisar no catálogo...">
 </header>
 
@@ -150,8 +165,8 @@
 <section id="adminSection">
   <h3 id="adminTitle">Novo Item</h3>
   <input type="text" id="nomeJogo" placeholder="Nome do Item">
-  <input type="text" id="linkCapa" placeholder="URL da Capa (Imagem)">
-  <input type="text" id="linkJogo" placeholder="Link de Destino/Download">
+  <input type="text" id="linkCapa" placeholder="URL da Capa">
+  <input type="text" id="linkJogo" placeholder="Link de Destino">
   <select id="selectCategoria">
     <option value="Jogos PS2">Jogos PS2</option>
     <option value="PS2 com Cheats">PS2 com Cheats</option>
@@ -188,187 +203,159 @@
   var jogos=JSON.parse(localStorage.getItem('jogosPS2'))||[];
   var favoritos=JSON.parse(localStorage.getItem('toolflix_favs'))||[];
   var adminMode=false, apenasFavs=false, editIndex=null, catSelecionada='Todos';
+  
   const catalogo = document.getElementById('catalogo');
   const searchBar = document.getElementById('searchBar');
-
-  // Lógica de Temas
+  const sortSelect = document.getElementById('sortSelect');
   const themeSelect = document.getElementById('themeSelect');
-  function applyTheme(t) { 
-     document.body.className = t === 'default' ? '' : 'theme-' + t; 
-     localStorage.setItem('toolflix_theme', t); 
-   }
+
+  function applyTheme(t) {
+      document.body.className = t === 'default' ? '' : 'theme-' + t;
+      localStorage.setItem('toolflix_theme', t);
+  }
   themeSelect.onchange = (e) => applyTheme(e.target.value);
   applyTheme(localStorage.getItem('toolflix_theme') || 'default');
   themeSelect.value = localStorage.getItem('toolflix_theme') || 'default';
 
-  function corrigirDados() {
-    let alterado = false;
-    jogos.forEach(j => { if(j.categoria === "Emuladores e Roms") { j.categoria = "Roms"; alterado = true; } });
-    if(alterado) save();
-  }
-  corrigirDados();
-
   async function syncGithub() {
     const btn = document.getElementById('syncBtn');
-    const originalText = btn.innerText;
     btn.innerText = "⌛ Sincronizando...";
     try {
       const response = await fetch('toolflix_backup.json?t=' + Date.now());
       if (!response.ok) throw new Error();
-      const data = await response.json();
-      jogos = data;
-      corrigirDados();
-      save();
-      render();
-      alert("✅ Catálogo atualizado com sucesso!");
+      jogos = await response.json();
+      save(); render();
+      alert("✅ Sincronizado!");
     } catch (e) {
-      alert("❌ O arquivo 'toolflix_backup.json' não foi encontrado.");
-    } finally {
-      btn.innerText = originalText;
-    }
+      alert("❌ Erro ao buscar arquivo.");
+    } finally { btn.innerText = "📥 Sincronizar Jogos"; }
   }
+  document.getElementById('syncBtn').onclick = (e) => { e.preventDefault(); syncGithub(); };
 
   function render(){
     catalogo.innerHTML='';
     const term = searchBar.value.toLowerCase();
-    jogos.forEach((jogo, index) => {
-      const isFav = favoritos.includes(jogo.nome);
-      if((catSelecionada==='Todos' || jogo.categoria===catSelecionada) && 
-          (jogo.nome.toLowerCase().includes(term)) && 
-          (!apenasFavs || isFav)){
-        const div = document.createElement('div');
-        div.className = 'jogo';
-        const bC = jogo.categoria.toLowerCase();
-        let bClass = 'pc';
-        if(bC.includes('ps2')) bClass = 'ps2';
-        else if(bC.includes('ps3')) bClass = 'ps3';
-        else if(bC.includes('ps1')) bClass = 'ps1';
-        else if(bC.includes('youtube')) bClass = 'youtube';
-        else if(bC.includes('roms') || bC.includes('emuladores')) bClass = 'roms';
+    const order = sortSelect.value;
+    let lista = jogos.map((j, i) => ({...j, originalIndex: i}));
 
-        div.innerHTML = `
-          <button class="excluir-btn" style="display:${adminMode?'block':'none'}" onclick="event.stopPropagation(); excluir(${index})">×</button>
-          <button class="editar-btn" style="display:${adminMode?'block':'none'}" onclick="event.stopPropagation(); editar(${index})">EDITAR</button>
-          <button class="fav-card-btn ${isFav?'active':''}" onclick="event.stopPropagation(); toggleFav('${jogo.nome}')">❤</button>
-          <span class="badge ${bClass}">${jogo.categoria}</span>
-          <img src="${jogo.capa}" onclick="window.open('${jogo.link}', '_blank')">
-          <p>${jogo.nome}</p>
-        `;
-        catalogo.appendChild(div);
-      }
+    lista = lista.filter(j => 
+        (catSelecionada === 'Todos' || j.categoria === catSelecionada) &&
+        (j.nome.toLowerCase().includes(term)) &&
+        (!apenasFavs || favoritos.includes(j.nome))
+    );
+
+    if(order === 'az') lista.sort((a,b) => a.nome.localeCompare(b.nome));
+    else if(order === 'za') lista.sort((a,b) => b.nome.localeCompare(a.nome));
+    else if(order === 'oldest') {} 
+    else if(order === 'newest') lista.reverse();
+
+    lista.forEach((jogo) => {
+      const isFav = favoritos.includes(jogo.nome);
+      const div = document.createElement('div');
+      div.className = 'jogo';
+      const bC = jogo.categoria.toLowerCase();
+      let bClass = 'pc';
+      if(bC.includes('ps2')) bClass = 'ps2';
+      else if(bC.includes('ps3')) bClass = 'ps3';
+      else if(bC.includes('ps1')) bClass = 'ps1';
+      else if(bC.includes('youtube')) bClass = 'youtube';
+      else if(bC.includes('roms') || bC.includes('emuladores')) bClass = 'roms';
+
+      div.innerHTML = `
+        <button class="excluir-btn" style="display:${adminMode?'block':'none'}" onclick="event.stopPropagation(); excluir(${jogo.originalIndex})">×</button>
+        <button class="editar-btn" style="display:${adminMode?'block':'none'}" onclick="event.stopPropagation(); editar(${jogo.originalIndex})">EDITAR</button>
+        <button class="fav-card-btn ${isFav?'active':''}" onclick="event.stopPropagation(); toggleFav('${jogo.nome}')">❤</button>
+        <span class="badge ${bClass}">${jogo.categoria}</span>
+        <img src="${jogo.capa}" onclick="window.open('${jogo.link}', '_blank')">
+        <p>${jogo.nome}</p>
+      `;
+      catalogo.appendChild(div);
     });
   }
 
-  function toggleAdminMode(forceOff = false){
-    if(adminMode || forceOff){
-      adminMode = false;
-      document.getElementById('adminBtn').classList.remove('active-mode');
-      document.getElementById('adminSection').style.display='none';
-      document.getElementById('exportBtn').style.display='none';
-      render();
-    } else {
-      document.getElementById('loginModal').style.display='flex';
-      document.getElementById('loginInput').focus();
+  document.getElementById('importBtn').onclick = () => {
+    const inp = document.createElement('input'); inp.type='file'; inp.accept='.json';
+    inp.onchange = e => {
+      const reader = new FileReader();
+      reader.onload = ev => { 
+          try {
+            jogos = JSON.parse(ev.target.result); 
+            save(); render(); 
+          } catch(err) { alert("Arquivo inválido."); }
+      };
+      reader.readAsText(e.target.files[0]);
+    }; inp.click();
+  };
+  document.getElementById('exportBtn').onclick = () => {
+    const blob = new Blob([JSON.stringify(jogos)], {type:'application/json'});
+    const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='toolflix_backup.json'; a.click();
+  };
+
+  const loginAction = () => {
+    if(document.getElementById('loginInput').value === '@dm1nt1'){
+      adminMode = true; document.getElementById('adminBtn').classList.add('active-mode');
+      document.getElementById('adminSection').style.display='block';
+      document.getElementById('exportBtn').style.display='inline-block';
+      document.getElementById('loginModal').style.display='none';
+      document.getElementById('loginInput').value = ''; render();
+    } else alert('Senha Incorreta!');
+  };
+
+  window.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') {
+        document.getElementById('loginModal').style.display='none';
+        if(adminMode) {
+            adminMode = false; document.getElementById('adminBtn').classList.remove('active-mode');
+            document.getElementById('adminSection').style.display='none';
+            document.getElementById('exportBtn').style.display='none'; render();
+        }
     }
-  }
+  });
+
+  document.getElementById('loginInput').onkeydown = (e) => { if(e.key === 'Enter') loginAction(); };
+  document.getElementById('loginSubmit').onclick = loginAction;
+  document.getElementById('loginCancel').onclick = () => document.getElementById('loginModal').style.display='none';
+  document.getElementById('adminBtn').onclick = () => {
+    if(adminMode) { adminMode=false; document.getElementById('adminBtn').classList.remove('active-mode'); document.getElementById('adminSection').style.display='none'; document.getElementById('exportBtn').style.display='none'; render(); }
+    else { document.getElementById('loginModal').style.display='flex'; document.getElementById('loginInput').focus(); }
+  };
 
   window.toggleFav = (nome) => {
     if(favoritos.includes(nome)) favoritos = favoritos.filter(f => f !== nome);
     else favoritos.push(nome);
-    localStorage.setItem('toolflix_favs', JSON.stringify(favoritos));
-    render();
+    localStorage.setItem('toolflix_favs', JSON.stringify(favoritos)); render();
   };
 
-  window.excluir = (i) => { if(confirm('Excluir este item?')){ jogos.splice(i,1); save(); render(); } };  
+  window.excluir = (i) => { if(confirm('Excluir?')){ jogos.splice(i,1); save(); render(); } };
   window.editar = (i) => {
-    editIndex = i;
-    const j = jogos[i];
-    document.getElementById('nomeJogo').value=j.nome;
-    document.getElementById('linkCapa').value=j.capa;
-    document.getElementById('linkJogo').value=j.link;
-    document.getElementById('selectCategoria').value=j.categoria;
-    document.getElementById('adminSection').style.display='block';
-    document.getElementById('adminTitle').textContent="Editando: " + j.nome;
-    document.getElementById('cancelEdit').style.display='block';
+    editIndex = i; const j = jogos[i];
+    document.getElementById('nomeJogo').value=j.nome; document.getElementById('linkCapa').value=j.capa;
+    document.getElementById('linkJogo').value=j.link; document.getElementById('selectCategoria').value=j.categoria;
+    document.getElementById('adminSection').style.display='block'; document.getElementById('cancelEdit').style.display='block';
     window.scrollTo({top: 0, behavior: 'smooth'});
   };
 
-  function clearEdit() {
-    editIndex = null;
-    document.querySelectorAll('#adminSection input').forEach(i=>i.value='');
-    document.getElementById('adminTitle').textContent="Novo Item";
-    document.getElementById('cancelEdit').style.display='none';
-  }
-  document.getElementById('cancelEdit').onclick = clearEdit;
-
   function save(){ localStorage.setItem('jogosPS2', JSON.stringify(jogos)); }
 
-  const loginAction = () => {
-    if(document.getElementById('loginInput').value === '@dm1nt1'){
-      adminMode=true;
-      document.getElementById('adminBtn').classList.add('active-mode');
-      document.getElementById('adminSection').style.display='block';
-      document.getElementById('exportBtn').style.display='inline-block';
-      document.getElementById('loginModal').style.display='none';
-      document.getElementById('loginInput').value = '';
-      render();
-    } else alert('Senha Incorreta!');
-  };
-
-  window.addEventListener('keydown', (e) => { if(e.key === 'Escape') toggleAdminMode(true); });
-  document.getElementById('loginSubmit').onclick = loginAction;
-  document.getElementById('loginInput').onkeyup = (e) => { if(e.key==='Enter') loginAction(); };
-  document.getElementById('adminBtn').onclick = () => toggleAdminMode();
-  document.getElementById('syncBtn').onclick = (e) => { e.preventDefault(); syncGithub(); };
-  document.getElementById('loginCancel').onclick = () => document.getElementById('loginModal').style.display='none';  
   document.getElementById('addJogoBtn').onclick = () => {
-    const n=document.getElementById('nomeJogo').value.trim(), c=document.getElementById('linkCapa').value.trim(), l=document.getElementById('linkJogo').value.trim(), cat=document.getElementById('selectCategoria').value;
+    const n=document.getElementById('nomeJogo').value, c=document.getElementById('linkCapa').value, l=document.getElementById('linkJogo').value, cat=document.getElementById('selectCategoria').value;
     if(!n || !c || !l) return alert('Preencha tudo!');
-    if(editIndex !== null){ 
-        jogos[editIndex]={nome:n, capa:c, link:l, categoria:cat}; 
-    } else { 
-        jogos.push({nome:n, capa:c, link:l, categoria:cat}); 
-    }
-    save(); 
-    clearEdit();
-    render();
+    if(editIndex !== null) { jogos[editIndex]={nome:n, capa:c, link:l, categoria:cat}; editIndex=null; }
+    else jogos.push({nome:n, capa:c, link:l, categoria:cat});
+    save(); render(); document.querySelectorAll('#adminSection input').forEach(i=>i.value='');
+    document.getElementById('cancelEdit').style.display='none';
   };
 
   document.getElementById('favFiltroBtn').onclick = function(){ apenasFavs = !apenasFavs; this.classList.toggle('active'); render(); };
   document.querySelectorAll('.catBtn').forEach(b => {
     b.onclick = () => {
       document.querySelectorAll('.catBtn').forEach(btn => btn.classList.remove('active'));
-      b.classList.add('active');
-      catSelecionada = b.dataset.cat;
-      render();
+      b.classList.add('active'); catSelecionada = b.dataset.cat; render();
     };
   });
-  searchBar.oninput = render;  
-  document.getElementById('importBtn').onclick = () => {
-    const inp = document.createElement('input'); inp.type='file';
-    inp.onchange = e => {
-      const reader = new FileReader();
-      reader.onload = ev => {
-          try {
-              jogos = JSON.parse(ev.target.result);
-              corrigirDados();
-              save();
-              render();
-              alert("Importado com sucesso!");
-          } catch(err) { alert("Erro ao ler o arquivo JSON."); }
-      };
-      reader.readAsText(e.target.files[0]);
-    };
-    inp.click();
-  };
 
-  document.getElementById('exportBtn').onclick = () => {
-    const blob = new Blob([JSON.stringify(jogos)], {type:'application/json'});
-    const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='toolflix_backup.json'; a.click();
-  };
-
+  searchBar.oninput = render;
+  sortSelect.onchange = render;
   render();
 })();
-</script>
-</body>
-</html>
+</script></body></html>
