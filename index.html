@@ -29,9 +29,9 @@
         
         header { 
             position:relative; padding:50px 20px 60px 20px; display:flex; flex-direction:column; align-items:flex-start; 
-            border-bottom:3px solid var(--cor-accent); box-shadow:0 6px 20px rgba(0,0,0,0.4); background-position: center; background-size: cover;
+            border-bottom:3px solid var(--cor-accent); box-shadow:0 6px 20px rgba(0,0,0,0.4); 
         }
-        body:not([class*="theme-"]) header { background-image: linear-gradient(180deg, rgba(30,30,30,0.55) 0%, rgba(30,30,30,0.6) 70%), var(--banner-padrao); }
+        body:not([class*="theme-"]) header { background-image: linear-gradient(180deg, rgba(30,30,30,0.55) 0%, rgba(30,30,30,0.6) 70%), var(--banner-padrao); background-size: cover; background-position: center;}
         body[class*="theme-"] header { background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%); }
 
         #logoToolFlix{font-family:'Impact', sans-serif;font-size:68px;font-weight:900;background:linear-gradient(90deg,#e50914 0%, var(--cor-accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 0 15px 20px;letter-spacing:4px;}
@@ -180,9 +180,9 @@
 
 <script>
 (function(){
-  // --- CONFIGURAÇÃO ---
-  const URL_JOGOS_GITHUB = "https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/jogos.json";
-  const URL_TOKENS_GITHUB = "https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/tokens.json";
+  // --- DADOS REAIS JÁ CONFIGURADOS ---
+  const URL_JOGOS_GITHUB = "https://raw.githubusercontent.com/cheats0075/toolflix/main/toolflix_backup.json";
+  const URL_TOKENS_GITHUB = "https://raw.githubusercontent.com/cheats0075/toolflix/main/tokens.json";
 
   let jogos = JSON.parse(localStorage.getItem('jogosPS2')) || [];
   let favoritos = JSON.parse(localStorage.getItem('toolflix_favs')) || [];
@@ -193,26 +193,22 @@
   const catalogo = document.getElementById('catalogo');
   const searchBar = document.getElementById('searchBar');
 
-  // FAVORITOS (CORREÇÃO DE FUNCIONALIDADE)
+  // FAVORITOS
   window.toggleFav = function(nome) {
     const idx = favoritos.indexOf(nome);
-    if(idx > -1) {
-        favoritos.splice(idx, 1);
-    } else {
-        favoritos.push(nome);
-    }
+    if(idx > -1) favoritos.splice(idx, 1);
+    else favoritos.push(nome);
     localStorage.setItem('toolflix_favs', JSON.stringify(favoritos));
     render();
   };
 
-  // TEMAS (RESTAURADO)
+  // TEMAS
   function applyTheme(t) {
     document.body.className = (!t || t === 'default') ? '' : 'theme-' + t;
     localStorage.setItem('toolflix_theme', t);
   }
   document.getElementById('themeSelect').onchange = (e) => applyTheme(e.target.value);
   applyTheme(localStorage.getItem('toolflix_theme') || 'default');
-  document.getElementById('themeSelect').value = localStorage.getItem('toolflix_theme') || 'default';
 
   function render(){
     catalogo.innerHTML = '';
@@ -260,98 +256,82 @@
     });
   }
 
-  // SINCRONIZAÇÃO GITHUB
+  // SINCRONIZAÇÃO
   document.getElementById('syncBtn').onclick = async () => {
     try {
-      const r = await fetch(URL_JOGOS_GITHUB + "?t=" + Date.now());
-      if(r.ok) {
-        jogos = await r.json();
-        localStorage.setItem('jogosPS2', JSON.stringify(jogos));
-        alert("Sincronização concluída!");
-        render();
-      } else alert("Falha ao carregar do GitHub.");
-    } catch(e) { alert("Erro na conexão com o repositório."); }
+      const r = await fetch(URL_JOGOS_GITHUB + "?nocache=" + Date.now());
+      if(!r.ok) throw new Error("Erro " + r.status);
+      jogos = await r.json();
+      localStorage.setItem('jogosPS2', JSON.stringify(jogos));
+      alert("✅ toolflix_backup.json sincronizado!");
+      render();
+    } catch(e) {
+      alert("🚨 Erro de Rede: Verifique o arquivo no GitHub.");
+      console.error(e);
+    }
   };
 
-  // ADMIN LOGIN
-  function loginAction() {
-    if(document.getElementById('loginInput').value === '@dm1nt1'){
-      adminMode=true; 
-      document.getElementById('loginModal').style.display='none';
-      document.getElementById('adminSection').style.display='block';
-      document.getElementById('exportBtn').style.display='inline-block'; 
-      renderTokenList(); render();
-    } else alert("Senha incorreta!");
-  }
-
-  document.getElementById('adminBtn').onclick = () => {
-    document.getElementById('loginModal').style.display='flex';
-    document.getElementById('loginInput').focus();
+  // PREMIUM
+  document.getElementById('premiumSubmit').onclick = async () => {
+    const val = document.getElementById('premiumInput').value.toUpperCase().trim();
+    if(!val) return alert("Digite o código!");
+    try {
+        const r = await fetch(URL_TOKENS_GITHUB + "?nocache=" + Date.now());
+        const data = await r.json();
+        if(data.ativos && data.ativos.includes(val)) {
+            isPremiumUser = true; localStorage.setItem('toolflix_premium_atv', 'true');
+            alert("💎 PREMIUM ATIVADO!"); location.reload();
+        } else alert("❌ Token inválido.");
+    } catch(e) { alert("🚨 Erro de conexão."); }
   };
-  document.getElementById('loginSubmit').onclick = loginAction;
 
-  // TOKENS (CORREÇÃO DE IMPORTAÇÃO)
+  // ADMIN
   function renderTokenList() {
-    const area = document.getElementById('tokenListArea');
-    area.innerHTML = '';
+    const area = document.getElementById('tokenListArea'); area.innerHTML = '';
     tokensDB.ativos.forEach((tk, idx) => {
         const d = document.createElement('div'); d.className = 'token-item';
         d.innerHTML = `<span>✅ ${tk}</span><button style="background:red;border:none;color:white;padding:2px 5px;cursor:pointer" onclick="expirarToken(${idx})">X</button>`;
         area.appendChild(d);
     });
   }
-
   window.expirarToken = (i) => { tokensDB.expirados.push(tokensDB.ativos.splice(i, 1)[0]); renderTokenList(); };
-
   document.getElementById('genTokenBtn').onclick = () => {
     const res = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; let tk = "";
     for(let i=0; i<6; i++) tk += res.charAt(Math.floor(Math.random()*res.length));
     tokensDB.ativos.push(tk); renderTokenList();
   };
-
   document.getElementById('exportTokensBtn').onclick = () => {
     const blob = new Blob([JSON.stringify(tokensDB, null, 2)], {type:'application/json'});
     const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='tokens.json'; a.click();
   };
-
   document.getElementById('importTokensBtn').onclick = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    input.onchange = e => {
-      const file = e.target.files[0];
+    const inp = document.createElement('input'); inp.type='file'; inp.accept='.json';
+    inp.onchange = e => {
       const reader = new FileReader();
-      reader.onload = ev => {
-        try {
-          tokensDB = JSON.parse(ev.target.result);
-          renderTokenList();
-          alert("Lista de tokens carregada!");
-        } catch(err) { alert("Arquivo inválido."); }
-      };
-      reader.readAsText(file);
-    };
-    input.click();
+      reader.onload = ev => { tokensDB = JSON.parse(ev.target.result); renderTokenList(); alert("Tokens carregados!"); };
+      reader.readAsText(e.target.files[0]);
+    }; inp.click();
   };
 
-  // PREMIUM VALIDATE
-  document.getElementById('premiumTriggerBtn').onclick = () => {
-    document.getElementById('premiumModal').style.display='flex';
-    document.getElementById('premiumInput').focus();
-  };
-  
-  document.getElementById('premiumSubmit').onclick = async () => {
-    const val = document.getElementById('premiumInput').value.toUpperCase();
-    try {
-        const r = await fetch(URL_TOKENS_GITHUB + "?t=" + Date.now());
-        const data = await r.json();
-        if(data.ativos.includes(val)) {
-            isPremiumUser = true; localStorage.setItem('toolflix_premium_atv', 'true');
-            alert("Acesso Premium Liberado!"); location.reload();
-        } else alert("Código inválido ou já usado.");
-    } catch(e) { alert("Erro de rede."); }
+  document.getElementById('adminBtn').onclick = () => { document.getElementById('loginModal').style.display='flex'; document.getElementById('loginInput').focus(); };
+  document.getElementById('loginSubmit').onclick = () => {
+    if(document.getElementById('loginInput').value === '@dm1nt1'){
+      adminMode=true; document.getElementById('loginModal').style.display='none';
+      document.getElementById('adminSection').style.display='block';
+      renderTokenList(); render();
+    } else alert("Senha incorreta!");
   };
 
-  // CRUD JOGOS
+  document.getElementById('premiumTriggerBtn').onclick = () => { document.getElementById('premiumModal').style.display='flex'; document.getElementById('premiumInput').focus(); };
+
+  window.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') {
+      adminMode = false; document.getElementById('adminSection').style.display = 'none';
+      document.getElementById('loginModal').style.display = 'none';
+      document.getElementById('premiumModal').style.display = 'none'; render();
+    }
+  });
+
   document.getElementById('addJogoBtn').onclick = () => {
     const n=document.getElementById('nomeJogo').value, c=document.getElementById('linkCapa').value, l=document.getElementById('linkJogo').value, cat=document.getElementById('selectCategoria').value;
     if(editIndex !== null) { jogos[editIndex]={nome:n, capa:c, link:l, categoria:cat}; editIndex=null; }
@@ -360,37 +340,13 @@
     document.getElementById('nomeJogo').value=''; document.getElementById('linkCapa').value=''; document.getElementById('linkJogo').value='';
   };
 
-  window.excluir = (i) => { if(confirm("Remover item?")) { jogos.splice(i,1); localStorage.setItem('jogosPS2', JSON.stringify(jogos)); render(); } };
+  window.excluir = (i) => { if(confirm("Excluir?")) { jogos.splice(i,1); localStorage.setItem('jogosPS2', JSON.stringify(jogos)); render(); } };
   window.editar = (i) => {
     editIndex = i; const j = jogos[i];
     document.getElementById('nomeJogo').value=j.nome; document.getElementById('linkCapa').value=j.capa;
     document.getElementById('linkJogo').value=j.link; document.getElementById('selectCategoria').value=j.categoria;
     window.scrollTo(0,0);
   };
-
-  // ATALHOS TECLADO
-  window.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape') {
-      adminMode = false;
-      document.getElementById('adminSection').style.display = 'none';
-      document.getElementById('loginModal').style.display = 'none';
-      document.getElementById('premiumModal').style.display = 'none';
-      render();
-    }
-  });
-
-  document.getElementById('loginInput').onkeydown = (e) => { if(e.key === 'Enter') loginAction(); };
-  document.getElementById('searchBar').oninput = render;
-  document.getElementById('sortSelect').onchange = render;
-  
-  document.getElementById('favFiltroBtn').onclick = function(){ 
-    apenasFavs=!apenasFavs; this.classList.toggle('active'); render(); 
-  };
-  
-  document.querySelectorAll('.catBtn').forEach(b => b.onclick = () => {
-    document.querySelectorAll('.catBtn').forEach(x => x.classList.remove('active'));
-    b.classList.add('active'); catSelecionada = b.dataset.cat; render();
-  });
 
   document.getElementById('importBtn').onclick = () => {
     const i = document.createElement('input'); i.type='file'; i.accept='.json';
@@ -400,11 +356,14 @@
     }; i.click();
   };
 
-  document.getElementById('exportBtn').onclick = () => {
-    const b = new Blob([JSON.stringify(jogos)], {type:'application/json'});
-    const a = document.createElement('a'); a.href=URL.createObjectURL(b); a.download='backup_toolflix.json'; a.click();
-  };
+  document.getElementById('favFiltroBtn').onclick = function(){ apenasFavs=!apenasFavs; this.classList.toggle('active'); render(); };
+  document.querySelectorAll('.catBtn').forEach(b => b.onclick = () => {
+    document.querySelectorAll('.catBtn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); catSelecionada = b.dataset.cat; render();
+  });
 
+  searchBar.oninput = render;
+  document.getElementById('sortSelect').onchange = render;
   render();
 })();
 </script>
