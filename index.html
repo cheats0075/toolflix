@@ -7,7 +7,7 @@
     <style>
         :root { 
             --cor-accent: #00ffff; 
-            --cor-bg-overlay: rgba(0, 0, 0, 0.7); 
+            --cor-bg-overlay: rgba(0, 0, 0, 0.85); 
             --banner-padrao: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg8agAZ1Hu-qcGTcIZDMd4o5F7MTdMYrd-Nf5uWnfNeqsevZzNbBOm4dzxTrNLup1IuQQeMmFlwFmtd8zMOi4Ntz7TGJIr1hYzAMyFyxusJj9W2VsIOF21yNX_ttPNlOdGWVKgcKjIUqmND/w800/FDFDFDFar.PNG'); 
         }
         
@@ -68,15 +68,20 @@
         .fav-card-btn{position:absolute; bottom:45px; right:15px; background:rgba(0,0,0,0.8); color:rgba(255,255,255,0.5); width:35px; height:35px; border-radius:50%; display:flex; align-items:center; justify-content:center; border: 1px solid rgba(255,255,255,0.2); z-index:10; cursor:pointer}
         .fav-card-btn.active{color:#ff4757; background:#fff; border-color:#ff4757; box-shadow: 0 0 10px rgba(255,71,87,0.5)}
 
-        #adminSection{display:none;background:#1a1a1a;padding:25px;border-radius:12px;width:380px;margin:20px auto;border: 1px solid #333; text-align: left;}
-        #adminSection input, #adminSection select{display:block;margin:10px auto;padding:10px;width:100%;background:#111;color:#fff;border:1px solid #333}
+        /* VISUAL MELHORADO DO ADMIN */
+        #adminSection{display:none; background:#0d0d0d; padding:25px; border-radius:15px; width:450px; margin:20px auto; border: 2px solid var(--cor-accent); text-align: left; box-shadow: 0 0 30px rgba(0,255,255,0.2);}
+        #adminSection h3 { border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; }
+        #adminSection input, #adminSection select{display:block;margin:10px 0;padding:12px;width:100%;background:#000;color:#fff;border:1px solid #333; border-radius: 6px;}
+        #adminSection input:focus { border-color: var(--cor-accent); outline: none; }
         .token-list-area { background: #000; padding: 10px; border-radius: 8px; max-height: 180px; overflow-y: auto; margin: 10px 0; border: 1px solid #444;}
-        .token-item { display: flex; justify-content: space-between; align-items: center; padding: 5px; border-bottom: 1px solid #222; font-family: monospace; font-size: 12px;}
+        .token-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #222; font-family: monospace; font-size: 13px;}
+        .admin-grid-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .btn-admin-action { padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
 
-        #loginModal, #premiumModal {display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);justify-content:center;align-items:center;z-index:9999}
-        .modal-box {background:#111;border:1px solid var(--cor-accent);padding:25px;border-radius:12px;width:340px}
+        #loginModal, #premiumModal {display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);justify-content:center;align-items:center;z-index:9999}
+        .modal-box {background:#0a0a0a;border:2px solid var(--cor-accent);padding:30px;border-radius:15px;width:340px; box-shadow: 0 0 40px var(--cor-accent);}
 
-        @media(max-width:480px){ #logoToolFlix{font-size:40px} .jogo{width:45%} #searchBar{width: 180px;} }
+        @media(max-width:480px){ #logoToolFlix{font-size:40px} .jogo{width:45%} #searchBar{width: 180px;} #adminSection{width: 90%;} }
     </style>
 </head>
 <body>
@@ -119,7 +124,7 @@
 <div class="action-bar">
   <button id="importBtn" class="action-btn">Importar Dados</button>
   <button id="favFiltroBtn" class="action-btn">❤️ Favoritos</button>
-  <button id="exportBtn" class="action-btn" style="display:none; background:#444; color:white">Exportar Backup</button>
+  <button id="exportBtn" class="action-btn" style="display:none; background:#222; color:var(--cor-accent); border: 1px solid var(--cor-accent)">💾 Exportar toolflix_backup.json</button>
 </div>
 
 <div id="categoriaBtns">
@@ -140,7 +145,8 @@
 </div>
 
 <section id="adminSection">
-  <h3 style="text-align:center; color:var(--cor-accent)">Painel Admin</h3>
+  <h3 style="color:var(--cor-accent)">Console de Gerenciamento</h3>
+  <label style="font-size: 12px; color: #777;">Informações do Item:</label>
   <input type="text" id="nomeJogo" placeholder="Nome do Item">
   <input type="text" id="linkCapa" placeholder="URL da Capa">
   <input type="text" id="linkJogo" placeholder="Link de Destino">
@@ -153,34 +159,35 @@
     <option value="Roms">Roms</option><option value="Emuladores">Emuladores</option>
     <option value="Premium">Premium 💎</option>
   </select>
-  <button id="addJogoBtn" style="background:var(--cor-accent); width:100%; padding:10px; cursor:pointer; font-weight:700; border:none; border-radius:6px; color:#000">SALVAR NOVO ITEM</button>
+  <button id="addJogoBtn" class="btn-admin-action" style="background:var(--cor-accent); width:100%; color:#000">SALVAR NOVO ITEM NO LOCAL</button>
   
-  <div style="margin-top:20px; border-top:1px dashed #444; padding-top:15px">
-    <h3 style="color:gold">Tokens Premium</h3>
-    <button id="importTokensBtn" style="width:100%; padding:5px; background:#222; color:white; border:1px solid #444; margin-bottom:5px; cursor:pointer">Carregar tokens.json</button>
+  <div style="margin-top:25px; border-top:1px solid #333; padding-top:20px">
+    <h3 style="color:gold">Sistema de Tokens</h3>
+    <button id="importTokensBtn" style="width:100%; padding:8px; background:#111; color:white; border:1px solid #444; margin-bottom:10px; cursor:pointer; border-radius: 4px;">📂 Carregar tokens.json do PC</button>
     <div class="token-list-area" id="tokenListArea"></div>
-    <button id="genTokenBtn" style="width:100%; padding:8px; background:gold; border:none; font-weight:bold; cursor:pointer; color:#000">GERAR CÓDIGO</button>
-    <button id="exportTokensBtn" style="width:100%; padding:8px; margin-top:5px; background:#111; color:gold; border:1px solid gold; cursor:pointer">BAIXAR TOKENS.JSON</button>
+    <div class="admin-grid-btns">
+        <button id="genTokenBtn" class="btn-admin-action" style="background:gold; color:#000">GERAR TOKEN</button>
+        <button id="exportTokensBtn" class="btn-admin-action" style="background:#000; color:gold; border:1px solid gold">BAIXAR TOKENS</button>
+    </div>
   </div>
 </section>
 
 <section id="catalogo"></section>
 
 <div id="loginModal"><div class="modal-box">
-    <h4 style="color:var(--cor-accent)">Acesso Administrativo</h4>
-    <input id="loginInput" type="password" placeholder="Senha do Admin">
-    <button id="loginSubmit" style="width:100%; padding:10px; background:var(--cor-accent); border:none; margin-top:10px; cursor:pointer; color:#000; font-weight:bold">ENTRAR</button>
+    <h4 style="color:var(--cor-accent); margin-bottom: 10px;">Acesso Restrito</h4>
+    <input id="loginInput" type="password" placeholder="Chave Mestra" style="width:100%; padding:12px; background:#000; border:1px solid #333; color:#fff; text-align:center;">
+    <button id="loginSubmit" style="width:100%; padding:12px; background:var(--cor-accent); border:none; margin-top:15px; cursor:pointer; color:#000; font-weight:bold; border-radius: 6px;">DESBLOQUEAR</button>
 </div></div>
 
 <div id="premiumModal"><div class="modal-box">
-    <h4 style="color:gold">Ativar Token Premium</h4>
+    <h4 style="color:gold">Ativar Acesso Premium</h4>
     <input id="premiumInput" type="text" maxlength="6" style="width:100%; padding:12px; text-align:center; font-size:22px; background:#000; color:gold; border:1px solid gold; text-transform:uppercase; margin-top:15px">
-    <button id="premiumSubmit" style="width:100%; padding:12px; background:gold; border:none; margin-top:15px; font-weight:bold; cursor:pointer; color:#000">ATIVAR AGORA</button>
+    <button id="premiumSubmit" style="width:100%; padding:12px; background:gold; border:none; margin-top:15px; font-weight:bold; cursor:pointer; color:#000; border-radius: 6px;">VALIDAR CÓDIGO</button>
 </div></div>
 
 <script>
 (function(){
-  // --- DADOS REAIS JÁ CONFIGURADOS ---
   const URL_JOGOS_GITHUB = "https://raw.githubusercontent.com/cheats0075/toolflix/main/toolflix_backup.json";
   const URL_TOKENS_GITHUB = "https://raw.githubusercontent.com/cheats0075/toolflix/main/tokens.json";
 
@@ -285,7 +292,7 @@
     } catch(e) { alert("🚨 Erro de conexão."); }
   };
 
-  // ADMIN
+  // ADMIN - TOKENS
   function renderTokenList() {
     const area = document.getElementById('tokenListArea'); area.innerHTML = '';
     tokensDB.ativos.forEach((tk, idx) => {
@@ -313,13 +320,31 @@
     }; inp.click();
   };
 
-  document.getElementById('adminBtn').onclick = () => { document.getElementById('loginModal').style.display='flex'; document.getElementById('loginInput').focus(); };
-  document.getElementById('loginSubmit').onclick = () => {
+  // LOGIN ADMIN
+  const loginAction = () => {
     if(document.getElementById('loginInput').value === '@dm1nt1'){
-      adminMode=true; document.getElementById('loginModal').style.display='none';
+      adminMode=true; 
+      document.getElementById('loginModal').style.display='none';
       document.getElementById('adminSection').style.display='block';
+      document.getElementById('exportBtn').style.display='inline-block'; // Mostra botão de exportar
       renderTokenList(); render();
     } else alert("Senha incorreta!");
+  };
+
+  document.getElementById('adminBtn').onclick = () => { 
+    document.getElementById('loginModal').style.display='flex'; 
+    document.getElementById('loginInput').focus(); 
+  };
+  
+  document.getElementById('loginSubmit').onclick = loginAction;
+  document.getElementById('loginInput').onkeydown = (e) => { if(e.key === 'Enter') loginAction(); };
+
+  document.getElementById('exportBtn').onclick = () => {
+    const blob = new Blob([JSON.stringify(jogos, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'toolflix_backup.json';
+    a.click();
   };
 
   document.getElementById('premiumTriggerBtn').onclick = () => { document.getElementById('premiumModal').style.display='flex'; document.getElementById('premiumInput').focus(); };
