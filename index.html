@@ -197,6 +197,7 @@
   const catalogo = document.getElementById('catalogo');
   const searchBar = document.getElementById('searchBar');
   const sortSelect = document.getElementById('sortSelect');
+  const exportBtn = document.getElementById('exportBtn'); // Elemento do botão
 
   window.toggleFav = function(nome) {
     const idx = favoritos.indexOf(nome);
@@ -266,7 +267,6 @@
 
   sortSelect.onchange = render;
 
-  // --- MENSAGENS DE SINCRONIZAÇÃO ATUALIZADAS ---
   document.getElementById('syncBtn').onclick = async () => {
     try {
       const r = await fetch(URL_JOGOS_GITHUB + "?nocache=" + Date.now());
@@ -280,7 +280,6 @@
     }
   };
 
-  // --- MENSAGENS DE PREMIUM ATUALIZADAS ---
   document.getElementById('premiumSubmit').onclick = async () => {
     const val = document.getElementById('premiumInput').value.toUpperCase().trim();
     try {
@@ -325,11 +324,16 @@
     }; inp.click();
   };
 
+  // --- LÓGICA DE LOGIN COM ATIVAÇÃO DO BOTÃO EXPORTAR ---
   const loginAction = () => {
     if(document.getElementById('loginInput').value === '@dm1nt1'){
-      adminMode=true; document.getElementById('loginModal').style.display='none';
+      adminMode=true; 
+      document.getElementById('loginModal').style.display='none';
       document.getElementById('adminSection').style.display='block';
-      document.getElementById('exportBtn').style.display='inline-block';
+      
+      // EXIBE O BOTÃO SOMENTE AQUI
+      exportBtn.style.display='inline-block'; 
+      
       renderTokenList(); render();
     } else alert("Acesso negado ❌");
   };
@@ -349,7 +353,9 @@
     if(e.key === 'Escape') {
       adminMode = false; document.getElementById('adminSection').style.display = 'none';
       document.getElementById('loginModal').style.display = 'none';
-      document.getElementById('premiumModal').style.display = 'none'; render();
+      document.getElementById('premiumModal').style.display = 'none';
+      exportBtn.style.display = 'none'; // OCULTA AO SAIR
+      render();
     }
   });
 
