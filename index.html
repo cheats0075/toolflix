@@ -63,16 +63,14 @@
 
         .badge{position:absolute;top:38px;left:6px;padding:3px 6px;font-size:10px;font-weight:700;border-radius:4px;color:#111;z-index:5; text-transform: uppercase;}
         .ps2{background:var(--cor-accent)} .ps3{background:#8a2be2; color:#fff} .ps1{background:#ff007f; color:#fff}
-        .youtube{background:#ff0000; color:#fff} .pc{background:#00ff00} .roms{background:#ff8c00}
+        .youtube{background:#ff0000; color:#fff} .pc{background:#00ff00} .roms{background:#ff8c00} .premium-badge{background:gold; color:#000}
         
         .fav-card-btn{position:absolute; bottom:45px; right:15px; background:rgba(0,0,0,0.8); color:rgba(255,255,255,0.5); width:35px; height:35px; border-radius:50%; display:flex; align-items:center; justify-content:center; border: 1px solid rgba(255,255,255,0.2); z-index:10; cursor:pointer}
         .fav-card-btn.active{color:#ff4757; background:#fff; border-color:#ff4757; box-shadow: 0 0 10px rgba(255,71,87,0.5)}
 
-        /* VISUAL MELHORADO DO ADMIN */
         #adminSection{display:none; background:#0d0d0d; padding:25px; border-radius:15px; width:450px; margin:20px auto; border: 2px solid var(--cor-accent); text-align: left; box-shadow: 0 0 30px rgba(0,255,255,0.2);}
         #adminSection h3 { border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; }
         #adminSection input, #adminSection select{display:block;margin:10px 0;padding:12px;width:100%;background:#000;color:#fff;border:1px solid #333; border-radius: 6px;}
-        #adminSection input:focus { border-color: var(--cor-accent); outline: none; }
         .token-list-area { background: #000; padding: 10px; border-radius: 8px; max-height: 180px; overflow-y: auto; margin: 10px 0; border: 1px solid #444;}
         .token-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #222; font-family: monospace; font-size: 13px;}
         .admin-grid-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
@@ -146,7 +144,6 @@
 
 <section id="adminSection">
   <h3 style="color:var(--cor-accent)">Console de Gerenciamento</h3>
-  <label style="font-size: 12px; color: #777;">Informações do Item:</label>
   <input type="text" id="nomeJogo" placeholder="Nome do Item">
   <input type="text" id="linkCapa" placeholder="URL da Capa">
   <input type="text" id="linkJogo" placeholder="Link de Destino">
@@ -229,11 +226,21 @@
     }
 
     let lista = jogos.map((j, i) => ({...j, originalIndex: i}));
-    lista = lista.filter(j => 
-        (catSelecionada === 'Todos' || j.categoria === catSelecionada) &&
-        (j.nome.toLowerCase().includes(term)) &&
-        (!apenasFavs || favoritos.includes(j.nome))
-    );
+    
+    // --- LÓGICA DE PROTEÇÃO PREMIUM ---
+    lista = lista.filter(j => {
+        const isPremiumItem = j.categoria === 'Premium';
+        
+        // Se o item for premium e o usuário NÃO for premium, ESCONDE (a menos que seja Admin)
+        if(isPremiumItem && !isPremiumUser && !adminMode) return false;
+        
+        // Filtros normais (Categoria, Busca, Favoritos)
+        const matchCat = (catSelecionada === 'Todos' || j.categoria === catSelecionada);
+        const matchSearch = (j.nome.toLowerCase().includes(term));
+        const matchFav = (!apenasFavs || favoritos.includes(j.nome));
+        
+        return matchCat && matchSearch && matchFav;
+    });
 
     if(order === 'az') lista.sort((a,b) => a.nome.localeCompare(b.nome));
     else if(order === 'za') lista.sort((a,b) => b.nome.localeCompare(a.nome));
@@ -250,6 +257,7 @@
       else if(bC.includes('ps1')) bClass = 'ps1';
       else if(bC.includes('youtube')) bClass = 'youtube';
       else if(bC.includes('roms')) bClass = 'roms';
+      else if(bC.includes('premium')) bClass = 'premium-badge';
 
       div.innerHTML = `
         ${adminMode ? `<button style="position:absolute;top:5px;right:5px;background:red;border:none;color:white;border-radius:50%;width:25px;height:25px;z-index:20" onclick="event.stopPropagation(); excluir(${jogo.originalIndex})">×</button>` : ''}
@@ -272,10 +280,7 @@
       localStorage.setItem('jogosPS2', JSON.stringify(jogos));
       alert("✅ toolflix_backup.json sincronizado!");
       render();
-    } catch(e) {
-      alert("🚨 Erro de Rede: Verifique o arquivo no GitHub.");
-      console.error(e);
-    }
+    } catch(e) { alert("🚨 Erro de Rede."); }
   };
 
   // PREMIUM
@@ -292,7 +297,7 @@
     } catch(e) { alert("🚨 Erro de conexão."); }
   };
 
-  // ADMIN - TOKENS
+  // ADMIN
   function renderTokenList() {
     const area = document.getElementById('tokenListArea'); area.innerHTML = '';
     tokensDB.ativos.forEach((tk, idx) => {
@@ -320,31 +325,22 @@
     }; inp.click();
   };
 
-  // LOGIN ADMIN
   const loginAction = () => {
     if(document.getElementById('loginInput').value === '@dm1nt1'){
-      adminMode=true; 
-      document.getElementById('loginModal').style.display='none';
+      adminMode=true; document.getElementById('loginModal').style.display='none';
       document.getElementById('adminSection').style.display='block';
-      document.getElementById('exportBtn').style.display='inline-block'; // Mostra botão de exportar
+      document.getElementById('exportBtn').style.display='inline-block';
       renderTokenList(); render();
     } else alert("Senha incorreta!");
   };
 
-  document.getElementById('adminBtn').onclick = () => { 
-    document.getElementById('loginModal').style.display='flex'; 
-    document.getElementById('loginInput').focus(); 
-  };
-  
+  document.getElementById('adminBtn').onclick = () => { document.getElementById('loginModal').style.display='flex'; document.getElementById('loginInput').focus(); };
   document.getElementById('loginSubmit').onclick = loginAction;
   document.getElementById('loginInput').onkeydown = (e) => { if(e.key === 'Enter') loginAction(); };
 
   document.getElementById('exportBtn').onclick = () => {
     const blob = new Blob([JSON.stringify(jogos, null, 2)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'toolflix_backup.json';
-    a.click();
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'toolflix_backup.json'; a.click();
   };
 
   document.getElementById('premiumTriggerBtn').onclick = () => { document.getElementById('premiumModal').style.display='flex'; document.getElementById('premiumInput').focus(); };
