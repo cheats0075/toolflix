@@ -12,6 +12,26 @@
             --glass-bg: rgba(20, 20, 20, 0.7);
             --glass-border: rgba(255, 255, 255, 0.1);
         }
+
+        /* ANIMAÇÃO DE BRILHO PARA O BOTÃO PREMIUM */
+        @keyframes pulsePremium {
+            0% { box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); transform: scale(1); }
+            50% { box-shadow: 0 4px 25px rgba(255, 215, 0, 0.8); transform: scale(1.03); }
+            100% { box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); transform: scale(1); }
+        }
+
+        /* ESTILO DO LINK YOUTUBE */
+        .yt-box {
+            margin-top: 8px;
+            background: rgba(255, 0, 0, 0.15);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            padding: 5px 12px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        .yt-box span { font-size: 13px; font-weight: 700; color: #fff; }
+        .yt-box a { color: #ff4d4d; text-decoration: none; font-weight: 900; text-transform: uppercase; margin-left: 5px; }
+        .yt-box a:hover { text-decoration: underline; color: #fff; }
         
         /* TEMAS */
         body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdna.artstation.com/p/assets/covers/images/013/652/970/large/sm-bonin-athena-19.jpg?1540572163') !important; }
@@ -25,7 +45,7 @@
         body.theme-mario { --cor-accent: #e84118; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallup.net/wp-content/uploads/2017/11/22/405754-Princess_Peach-Super_Mario-video_games-render.jpg') !important; }
         body.theme-resident { --cor-accent: #c23616; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdnb.artstation.com/p/assets/images/images/016/531/185/large/prywinko-art-ada-claire.jpg?1552501890') !important; }
         body.theme-kof { --cor-accent: #e67e22; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images5.alphacoders.com/118/1187221.png') !important; }
-
+        
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Segoe UI', sans-serif;background:#0a0a0a;color:#f0f0f0;text-align:center;padding-bottom:50px; background-attachment: fixed; background-size: cover; background-position: center; transition: 0.5s;}
         
@@ -43,7 +63,13 @@
         .top-buttons-row { display: flex; gap: 10px; }
         #themeSelect, #sortSelect { background: var(--glass-bg); color: #fff; border: 1px solid var(--glass-border); border-radius: 6px; padding: 5px; cursor: pointer; height: 32px; backdrop-filter: blur(5px);}
         #adminBtn, #syncBtn{background:rgba(255,255,255,0.05); color:#fff; border:1px solid var(--glass-border); padding:8px 18px; border-radius:20px; cursor:pointer; font-weight:700; font-size:14px; backdrop-filter: blur(5px);}
-        #premiumTriggerBtn { background: linear-gradient(45deg, gold, #ffa500); color: #000; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 800; font-size: 14px; border: none; box-shadow: 0 4px 15px rgba(255,215,0,0.3); }
+        
+        #premiumTriggerBtn { 
+            background: linear-gradient(45deg, gold, #ffa500); 
+            color: #000; padding: 10px 20px; border-radius: 20px; 
+            cursor: pointer; font-weight: 800; font-size: 14px; border: none; 
+            animation: pulsePremium 2s infinite ease-in-out; 
+        }
 
         .action-bar{margin:20px 0; display:flex; justify-content:center; gap:10px;}
         .action-btn{padding:10px 20px; border-radius:6px; font-weight:700; cursor:pointer; border:1px solid var(--glass-border); background: var(--glass-bg); color: #fff; backdrop-filter: blur(5px);}
@@ -78,8 +104,13 @@
 
         #loginModal, #premiumModal {display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8); backdrop-filter: blur(8px); justify-content:center; align-items:center; z-index:9999}
         .modal-box {background: var(--glass-bg); border:1px solid var(--glass-border); padding:30px; border-radius:20px; width:340px; text-align: center;}
-
-        @media(max-width:480px){ #logoToolFlix{font-size:45px} .jogo{width:46%} #searchBar{width: 200px;} }
+        
+        @media(max-width:480px){ 
+            #logoToolFlix{font-size:45px} 
+            .jogo{width:46%} 
+            #searchBar{width: 200px;} 
+            .top-actions{position: relative; right: auto; top: auto; align-items: center; padding: 20px;}
+        }
     </style>
 </head>
 <body>
@@ -103,14 +134,19 @@
         <button id="syncBtn">📥 Sincronizar</button>
         <button id="adminBtn">⚙️ Admin</button>
     </div>
-    <div style="margin-top:5px; display:flex; gap:10px; justify-content: flex-end;">
-        <select id="sortSelect">
-            <option value="newest">Mais Recentes</option>
-            <option value="oldest">Mais Antigos</option>
-            <option value="az">A - Z</option>
-            <option value="za">Z - A</option>
-        </select>
-        <button id="premiumTriggerBtn">💎 PREMIUM</button>
+    <div style="margin-top:5px; display:flex; flex-direction:column; align-items:flex-end;">
+        <div style="display:flex; gap:10px;">
+            <select id="sortSelect">
+                <option value="newest">Mais Recentes</option>
+                <option value="oldest">Mais Antigos</option>
+                <option value="az">A - Z</option>
+                <option value="za">Z - A</option>
+            </select>
+            <button id="premiumTriggerBtn">💎 PREMIUM</button>
+        </div>
+        <div class="yt-box" id="ytInstruction">
+            <span>Peça seu token nos comentários <a href="https://youtu.be/FbHaSemn5NI" target="_blank">AQUI</a></span>
+        </div>
     </div>
 </div>
 
@@ -197,7 +233,7 @@
   const catalogo = document.getElementById('catalogo');
   const searchBar = document.getElementById('searchBar');
   const sortSelect = document.getElementById('sortSelect');
-  const exportBtn = document.getElementById('exportBtn'); // Elemento do botão
+  const exportBtn = document.getElementById('exportBtn');
 
   window.toggleFav = function(nome) {
     const idx = favoritos.indexOf(nome);
@@ -223,6 +259,7 @@
         const pBtn = document.querySelector('.catBtn[data-cat="Premium"]');
         if(pBtn) pBtn.classList.add('unlocked');
         document.getElementById('premiumTriggerBtn').style.display = 'none';
+        document.getElementById('ytInstruction').style.display = 'none';
     }
 
     let lista = jogos.map((j, i) => ({...j, originalIndex: i}));
@@ -275,9 +312,7 @@
       localStorage.setItem('jogosPS2', JSON.stringify(jogos));
       alert("catalogo atualizado ✅");
       render();
-    } catch(e) { 
-      alert("catalogo não atualizado ❌"); 
-    }
+    } catch(e) { alert("catalogo não atualizado ❌"); }
   };
 
   document.getElementById('premiumSubmit').onclick = async () => {
@@ -289,12 +324,8 @@
             isPremiumUser = true; localStorage.setItem('toolflix_premium_atv', 'true');
             alert("bem premium ativado com sucesso 💎🏆"); 
             location.reload();
-        } else {
-            alert("tokken invalido ou expirado");
-        }
-    } catch(e) { 
-        alert("Erro de conexão ao servidor de tokens ❌"); 
-    }
+        } else { alert("tokken invalido ou expirado"); }
+    } catch(e) { alert("Erro de conexão ❌"); }
   };
 
   function renderTokenList() {
@@ -324,16 +355,12 @@
     }; inp.click();
   };
 
-  // --- LÓGICA DE LOGIN COM ATIVAÇÃO DO BOTÃO EXPORTAR ---
   const loginAction = () => {
     if(document.getElementById('loginInput').value === '@dm1nt1'){
       adminMode=true; 
       document.getElementById('loginModal').style.display='none';
       document.getElementById('adminSection').style.display='block';
-      
-      // EXIBE O BOTÃO SOMENTE AQUI
-      exportBtn.style.display='inline-block'; 
-      
+      exportBtn.style.display='inline-block';
       renderTokenList(); render();
     } else alert("Acesso negado ❌");
   };
@@ -354,7 +381,7 @@
       adminMode = false; document.getElementById('adminSection').style.display = 'none';
       document.getElementById('loginModal').style.display = 'none';
       document.getElementById('premiumModal').style.display = 'none';
-      exportBtn.style.display = 'none'; // OCULTA AO SAIR
+      exportBtn.style.display = 'none';
       render();
     }
   });
