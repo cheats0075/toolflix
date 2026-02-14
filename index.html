@@ -1,4 +1,18 @@
-<!DOCTYPE html><html lang="pt-BR"><head>    <meta charset="utf-8">    <meta name="viewport" content="width=device-width,initial-scale=1">    <title>ToolFlix Pro - Oficial</title>    <style>        :root {             --cor-accent: #00ffff;             --cor-bg-overlay: rgba(0, 0, 0, 0.6);             --banner-padrao: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg8agAZ1Hu-qcGTcIZDMd4o5F7MTdMYrd-Nf5uWnfNeqsevZzNbBOm4dzxTrNLup1IuQQeMmFlwFmtd8zMOi4Ntz7TGJIr1hYzAMyFyxusJj9W2VsIOF21yNX_ttPNlOdGWVKgcKjIUqmND/w800/FDFDFDFar.PNG');             --glass-bg: rgba(20, 20, 20, 0.7);            --glass-border: rgba(255, 255, 255, 0.1);        }
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ToolFlix Pro - Oficial</title>
+    <style>
+        :root {
+              --cor-accent: #00ffff;
+              --cor-bg-overlay: rgba(0, 0, 0, 0.6);
+              --banner-padrao: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg8agAZ1Hu-qcGTcIZDMd4o5F7MTdMYrd-Nf5uWnfNeqsevZzNbBOm4dzxTrNLup1IuQQeMmFlwFmtd8zMOi4Ntz7TGJIr1hYzAMyFyxusJj9W2VsIOF21yNX_ttPNlOdGWVKgcKjIUqmND/w800/FDFDFDFar.PNG');
+              --glass-bg: rgba(20, 20, 20, 0.7);
+              --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
         /* ANIMAÇÕES */
         @keyframes pulsePremium {
             0% { box-shadow: 0 0 5px #ffd700; transform: scale(1); }
@@ -15,7 +29,7 @@
         /* ESTILO DO LINK YOUTUBE */
         .yt-box { margin-top: 8px; background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); padding: 6px 15px; border-radius: 10px; backdrop-filter: blur(5px); }
         .yt-box a { color: gold; text-decoration: none; font-weight: 900; text-transform: uppercase; border-bottom: 1px solid gold; font-size: 13px; }
-        
+                
         /* TEMAS */
         body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdna.artstation.com/p/assets/covers/images/013/652/970/large/sm-bonin-athena-19.jpg?1540572163') !important; }
         body.theme-dbz { --cor-accent: #ff8c00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://m.media-amazon.com/images/I/714yiDPJ7wL.jpg') !important; }
@@ -28,94 +42,453 @@
         body.theme-mario { --cor-accent: #e84118; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallup.net/wp-content/uploads/2017/11/22/405754-Princess_Peach-Super_Mario-video_games-render.jpg') !important; }
         body.theme-resident { --cor-accent: #c23616; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdnb.artstation.com/p/assets/images/images/016/531/185/large/prywinko-art-ada-claire.jpg?1552501890') !important; }
         body.theme-kof { --cor-accent: #e67e22; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images5.alphacoders.com/118/1187221.png') !important; }
-                *{margin:0;padding:0;box-sizing:border-box}        body{font-family:'Segoe UI', sans-serif;background:#0a0a0a;color:#f0f0f0;text-align:center;padding-bottom:50px; background-attachment: fixed; background-size: cover; background-position: center; transition: 0.5s;}                header {             position:relative; padding:50px 20px 60px 20px; display:flex; flex-direction:column; align-items:flex-start;             border-bottom:1px solid var(--glass-border); backdrop-filter: blur(10px);        }        body:not([class*="theme-"]) header { background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%), var(--banner-padrao); background-size: cover; background-position: center;}        body[class*="theme-"] header { background: rgba(0,0,0,0.3); }
-        #logoToolFlix{font-family:'Impact', sans-serif;font-size:68px;font-weight:900;background:linear-gradient(90deg,#e50914 0%, var(--cor-accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 0 15px 20px;letter-spacing:4px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));}        #searchBar{display:block;margin:0 0 0 20px;padding:12px 15px;width:250px;border-radius:8px;border:1px solid var(--glass-border);background:rgba(0,0,0,0.4);color:#fff; backdrop-filter: blur(5px);}
-        .top-actions{position:absolute; top:20px; right:20px; display:flex; flex-direction:column; align-items:flex-end; gap:10px; z-index:100}        .top-buttons-row { display: flex; gap: 10px; }        #themeSelect, #sortSelect { background: var(--glass-bg); color: #fff; border: 1px solid var(--glass-border); border-radius: 6px; padding: 5px; cursor: pointer; height: 32px; backdrop-filter: blur(5px);}        #adminBtn, #syncBtn{background:rgba(255,255,255,0.05); color:#fff; border:1px solid var(--glass-border); padding:8px 18px; border-radius:20px; cursor:pointer; font-weight:700; font-size:14px; backdrop-filter: blur(5px);}                
+                
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI', sans-serif; background:#0a0a0a; color:#f0f0f0; text-align:center; padding-bottom:50px; background-attachment: fixed; background-size: cover; background-position: center; transition: 0.5s; }
+                
+        header { 
+            position:relative; padding:50px 20px 40px 20px; display:flex; flex-direction:column; align-items:flex-start;
+            border-bottom:1px solid var(--glass-border); backdrop-filter: blur(10px);
+        }
+        body:not([class*="theme-"]) header { background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%), var(--banner-padrao); background-size: cover; background-position: center;}
+        body[class*="theme-"] header { background: rgba(0,0,0,0.3); }
+
+        #logoToolFlix { font-family:'Impact', sans-serif; font-size:68px; font-weight:900; background:linear-gradient(90deg,#e50914 0%, var(--cor-accent) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin:0 0 15px 20px; letter-spacing:4px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
+        #searchBar { display:block; margin:0 0 20px 20px; padding:12px 15px; width:280px; border-radius:8px; border:2px solid var(--glass-border); background:rgba(0,0,0,0.5); color:#fff; backdrop-filter: blur(5px); }
+                
+        #categoriaBtns { margin: 0 0 10px 20px; display:flex; justify-content:flex-start; flex-wrap:wrap; gap:10px; padding: 5px 0; max-width: 90%; }
+        .catBtn { background: rgba(255,255,255,0.1); color:#fff; padding:10px 18px; border-radius:10px; font-weight:700; cursor:pointer; border:1px solid rgba(255,255,255,0.2); transition: 0.3s; text-transform: uppercase; font-size: 12px; }
+        .catBtn.active, .catBtn:hover { background:var(--cor-accent); color:#000; border-color:#fff; transform: scale(1.05); box-shadow: 0 0 15px var(--cor-accent); }
+        .catBtn[data-cat="Premium"] { border-color: gold; color: gold; background: rgba(255,215,0,0.1); }
+        .catBtn[data-cat="Premium"].unlocked { background: gold; color: #000; }
+
+        .top-actions { position:absolute; top:20px; right:20px; display:flex; flex-direction:column; align-items:flex-end; gap:10px; z-index:100 }
+        .top-buttons-row { display: flex; gap: 10px; }
+        #themeSelect, #sortSelect { background: var(--glass-bg); color: #fff; border: 1px solid var(--glass-border); border-radius: 6px; padding: 5px; cursor: pointer; height: 32px; backdrop-filter: blur(5px); }
+        #adminBtn, #syncBtn { background:rgba(255,255,255,0.05); color:#fff; border:1px solid var(--glass-border); padding:8px 18px; border-radius:20px; cursor:pointer; font-weight:700; font-size:14px; backdrop-filter: blur(5px); }
+        
+        /* OCULTAR O BOTÃO SYNC CONFORME SOLICITADO */
+        #syncBtn { display: none !important; }
+
         #premiumTriggerBtn { background: linear-gradient(-45deg, #ffd700, #ffa500, #fff700, #ff8c00); background-size: 300% 300%; animation: pulsePremium 1.5s infinite ease-in-out, gradientMove 3s infinite; color: #000; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-weight: 900; font-size: 15px; border: 2px solid #fff; letter-spacing: 1px; }
-        .action-bar{margin:20px 0; display:flex; justify-content:center; gap:10px;}        .action-btn{padding:10px 20px; border-radius:6px; font-weight:700; cursor:pointer; border:1px solid var(--glass-border); background: var(--glass-bg); color: #fff; backdrop-filter: blur(5px);}        #importBtn{background:var(--cor-accent); color:#000; border:none;}        #favFiltroBtn.active{background:#ff4757; border:none;}
-        #categoriaBtns{margin:15px 0; display:flex; justify-content:center; flex-wrap:wrap; gap:8px; padding: 0 10px}        .catBtn{background:rgba(255,255,255,0.05);color:#ccc;padding:8px 16px;border-radius:20px;font-weight:600;cursor:pointer; border:1px solid var(--glass-border); transition: 0.3s; backdrop-filter: blur(5px);}        .catBtn.active, .catBtn:hover{background:var(--cor-accent);color:#000; border-color:var(--cor-accent);}
-        
-        /* NOVO ESTILO DO BOTÃO PREMIUM NA LISTA */
-        .catBtn[data-cat="Premium"] { background: rgba(255,215,0,0.05); color: gold; border-color: gold; opacity: 0.5; }
-        .catBtn[data-cat="Premium"].unlocked { opacity: 1; background: rgba(255,215,0,0.2); font-weight: 800; border-width: 2px; }
 
-        #catalogo{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin:30px 0}        .jogo{background: var(--glass-bg); border-radius:15px; padding:10px; width:185px; text-align:center; transition:0.3s; position:relative; border:1px solid var(--glass-border); backdrop-filter: blur(10px);}        .jogo:hover{transform:translateY(-5px); border-color:var(--cor-accent); box-shadow: 0 10px 20px rgba(0,0,0,0.4);}
-        
-        /* ESTILO DO CARD PREMIUM VIP */
+        .action-bar { margin:20px 0; display:flex; justify-content:center; gap:10px; }
+        .action-btn { padding:10px 20px; border-radius:6px; font-weight:700; cursor:pointer; border:1px solid var(--glass-border); background: var(--glass-bg); color: #fff; backdrop-filter: blur(5px); }
+        #importBtn { background:var(--cor-accent); color:#000; border:none; }
+        #favFiltroBtn.active { background:#ff4757; border:none; }
+
+        #catalogo { display:flex; flex-wrap:wrap; justify-content:center; gap:20px; margin:30px 0 }
+        .jogo { background: var(--glass-bg); border-radius:15px; padding:10px; width:185px; text-align:center; transition:0.3s; position:relative; border:1px solid var(--glass-border); backdrop-filter: blur(10px); }
+        .jogo:hover { transform:translateY(-5px); border-color:var(--cor-accent); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
         .jogo.premium-vip { animation: glowPremiumCard 2s infinite ease-in-out; border-width: 2px; background: linear-gradient(145deg, rgba(30,30,10,0.8), rgba(10,10,10,0.9)); }
+        .jogo img { width:100%; border-radius:10px; aspect-ratio: 3/4; object-fit: cover; cursor: pointer; }
+        .jogo p { margin:10px 0 5px 0; font-weight:700; color:#fff; font-size: 14px; }
         
-        .jogo img{width:100%;border-radius:10px; aspect-ratio: 3/4; object-fit: cover;}        .jogo p{margin:10px 0 5px 0;font-weight:700;color:#fff; font-size: 14px;}
-        .badge{position:absolute;top:38px;left:6px;padding:3px 6px;font-size:10px;font-weight:800;border-radius:4px;color:#000;z-index:5; text-transform: uppercase;}        .ps2{background:var(--cor-accent)} .ps3{background:#8a2be2; color:#fff} .ps1{background:#ff007f; color:#fff}        .youtube{background:#ff0000; color:#fff} .pc{background:#00ff00} .roms{background:#ff8c00} .premium-badge{background:gold;}                .fav-card-btn{position:absolute; bottom:40px; right:15px; background:rgba(0,0,0,0.5); color:#fff; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; border: 1px solid var(--glass-border); z-index:10; cursor:pointer;}        .fav-card-btn.active{color:#ff4757; background:#fff;}
-        #adminSection{display:none; background: var(--glass-bg); padding:25px; border-radius:20px; width:450px; margin:20px auto; border: 1px solid var(--cor-accent); backdrop-filter: blur(20px); text-align: left;}        #adminSection input, #adminSection select{display:block;margin:10px 0;padding:12px;width:100%;background:rgba(0,0,0,0.3);color:#fff;border:1px solid var(--glass-border); border-radius: 8px;}        .token-list-area { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 10px; max-height: 150px; overflow-y: auto; margin: 10px 0;}        .token-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--glass-border); color: gold;}        .admin-grid-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }        .btn-admin-action { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        #loginModal, #premiumModal {display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8); backdrop-filter: blur(8px); justify-content:center; align-items:center; z-index:9999}        .modal-box {background: var(--glass-bg); border:1px solid var(--glass-border); padding:30px; border-radius:20px; width:340px; text-align: center;}                @media(max-width:480px){             #logoToolFlix{font-size:45px}             .jogo{width:46%}             #searchBar{width: 200px;}             .top-actions{position: relative; right: auto; top: auto; align-items: center; padding: 20px;}        }    </style></head><body>
-<div class="top-actions">    <div class="top-buttons-row">        <select id="themeSelect">          <option value="default">🎭 Temas</option>          <option value="gow">God of War</option>          <option value="gtav">GTA V</option>          <option value="godhand">God Hand</option>          <option value="sonic">Sonic</option>          <option value="mario">Mario</option>          <option value="resident">Resident Evil</option>          <option value="kof">KOF</option>          <option value="dbz">Dragon Ball Z</option>          <option value="mk">Mortal Kombat</option>          <option value="gta">GTA SA</option>          <option value="cyber">Cyberpunk</option>        </select>        <button id="syncBtn">📥 Sincronizar</button>        <button id="adminBtn">⚙️ Admin</button>    </div>    <div style="margin-top:5px; display:flex; flex-direction:column; align-items:flex-end;">        <div style="display:flex; gap:10px;">            <select id="sortSelect">                <option value="newest">Mais Recentes</option>                <option value="oldest">Mais Antigos</option>                <option value="az">A - Z</option>                <option value="za">Z - A</option>            </select>            <button id="premiumTriggerBtn">💎 ATIVAR PREMIUM</button>        </div>        <div class="yt-box" id="ytInstruction">            <span><a href="https://youtu.be/FbHaSemn5NI" target="_blank">SOLICITAR TOKEN GRÁTIS</a></span>        </div>    </div></div>
-<header>  <span id="logoToolFlix">ToolFlix</span>  <input type="text" id="searchBar" placeholder="Pesquisar no catálogo..."></header>
-<div class="action-bar">  <button id="importBtn" class="action-btn">📂 Abrir Lista Local</button>  <button id="favFiltroBtn" class="action-btn">❤️ Favoritos</button>  <button id="exportBtn" class="action-btn" style="display:none; border-color: gold; color: gold;">💾 Exportar Backup</button></div>
-<div id="categoriaBtns">  <button class="catBtn active" data-cat="Todos">Todos</button>  <button class="catBtn" data-cat="Jogos PS2">PS2</button>  <button class="catBtn" data-cat="PS2 com Cheats">PS2+</button>  <button class="catBtn" data-cat="Jogos PS3">PS3</button>  <button class="catBtn" data-cat="PS3 com Cheats">PS3+</button>  <button class="catBtn" data-cat="Jogos PS1">PS1</button>  <button class="catBtn" data-cat="PS1 com Cheats">PS1+</button>  <button class="catBtn" data-cat="YouTube">YouTube</button>  <button class="catBtn" data-cat="Jogos PC">PC</button>  <button class="catBtn" data-cat="Fix SteamTools">Fix</button>  <button class="catBtn" data-cat="Arquivos">Arquivos</button>  <button class="catBtn" data-cat="Roms">Roms</button>  <button class="catBtn" data-cat="Emuladores">Emuladores</button>  <button class="catBtn" data-cat="Premium" id="catPremiumBtn">Premium 🔒</button></div>
-<section id="adminSection">  <h3 style="color:var(--cor-accent); margin-bottom:15px;">PAINEL DE CONTROLE</h3>  <input type="text" id="nomeJogo" placeholder="Nome do Jogo">  <input type="text" id="linkCapa" placeholder="Link da Capa (URL)">  <input type="text" id="linkJogo" placeholder="Link de Download">  <select id="selectCategoria">    <option value="Jogos PS2">PS2</option><option value="PS2 com Cheats">PS2+</option>    <option value="Jogos PS3">PS3</option><option value="PS3 com Cheats">PS3+</option>    <option value="Jogos PS1">PS1</option><option value="PS1 com Cheats">PS1+</option>    <option value="YouTube">YouTube</option><option value="Jogos PC">PC</option>    <option value="Fix SteamTools">Fix</option><option value="Arquivos">Arquivos</option>    <option value="Roms">Roms</option><option value="Emuladores">Emuladores</option>    <option value="Premium">Premium 💎</option>  </select>  <button id="addJogoBtn" class="btn-admin-action" style="background:var(--cor-accent); width:100%; color:#000; margin-bottom: 20px;">ADICIONAR ITEM</button>    <div style="border-top:1px solid var(--glass-border); padding-top:20px">    <h4 style="color:gold; margin-bottom:10px;">GERENCIAR TOKENS</h4>    <button id="importTokensBtn" style="width:100%; padding:10px; background:rgba(255,255,255,0.05); color:#fff; border:1px solid var(--glass-border); margin-bottom:10px; cursor:pointer; border-radius: 8px;">📂 Carregar Tokens</button>    <div class="token-list-area" id="tokenListArea"></div>    <div class="admin-grid-btns">        <button id="genTokenBtn" class="btn-admin-action" style="background:gold; color:#000">GERAR NOVO</button>        <button id="exportTokensBtn" class="btn-admin-action" style="background:transparent; color:gold; border:1px solid gold">SALVAR LISTA</button>    </div>  </div></section>
+        .badge { position:absolute; top:38px; left:6px; padding:3px 6px; font-size:10px; font-weight:800; border-radius:4px; color:#000; z-index:5; text-transform: uppercase; }
+        .ps2 { background:var(--cor-accent) } 
+        .ps3 { background:#8a2be2; color:#fff } 
+        .ps1 { background:#ff007f; color:#fff }
+        .youtube { background:#ff0000; color:#fff } 
+        .pc { background:#00ff00 } 
+        .roms { background:#ff8c00 } 
+        .premium-badge { background:gold; }
+        
+        .fav-card-btn { position:absolute; bottom:40px; right:15px; background:rgba(0,0,0,0.5); color:#fff; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; border: 1px solid var(--glass-border); z-index:10; cursor:pointer; }
+        .fav-card-btn.active { color:#ff4757; background:#fff; }
+
+        #adminSection { display:none; background: var(--glass-bg); padding:25px; border-radius:20px; width:450px; margin:20px auto; border: 1px solid var(--cor-accent); backdrop-filter: blur(20px); text-align: left; }
+        #adminSection input, #adminSection select { display:block; margin:10px 0; padding:12px; width:100%; background:rgba(0,0,0,0.3); color:#fff; border:1px solid var(--glass-border); border-radius: 8px; }
+        .token-list-area { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 10px; max-height: 150px; overflow-y: auto; margin: 10px 0; }
+        .token-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--glass-border); color: gold; }
+        .admin-grid-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-admin-action { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+
+        #loginModal, #premiumModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter: blur(8px); justify-content:center; align-items:center; z-index:9999 }
+        .modal-box { background: var(--glass-bg); border:1px solid var(--glass-border); padding:30px; border-radius:20px; width:340px; text-align: center; }
+
+        @media(max-width:480px){
+              #logoToolFlix { font-size:45px }
+              .jogo { width:46% }
+              #searchBar { width: 250px; }
+              #categoriaBtns { justify-content: center; margin-left: 0; }
+              .top-actions { position: relative; right: auto; top: auto; align-items: center; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-actions">
+    <div class="top-buttons-row">
+        <select id="themeSelect">
+          <option value="default">🎭 Temas</option>
+          <option value="gow">God of War</option>
+          <option value="gtav">GTA V</option>
+          <option value="godhand">God Hand</option>
+          <option value="sonic">Sonic</option>
+          <option value="mario">Mario</option>
+          <option value="resident">Resident Evil</option>
+          <option value="kof">KOF</option>
+          <option value="dbz">Dragon Ball Z</option>
+          <option value="mk">Mortal Kombat</option>
+          <option value="gta">GTA SA</option>
+          <option value="cyber">Cyberpunk</option>
+        </select>
+        <button id="syncBtn">📥 Sincronizar</button>
+        <button id="adminBtn">⚙️ Admin</button>
+    </div>
+    <div style="margin-top:5px; display:flex; gap:10px; align-items: center;">
+        <select id="sortSelect">
+            <option value="newest">Mais Recentes</option>
+            <option value="oldest">Mais Antigos</option>
+            <option value="az">A - Z</option>
+            <option value="za">Z - A</option>
+        </select>
+        <button id="premiumTriggerBtn">💎 ATIVAR PREMIUM</button>
+    </div>
+    <div class="yt-box" id="ytInstruction">
+        <span><a href="https://youtu.be/FbHaSemn5NI" target="_blank">SOLICITAR TOKEN GRÁTIS</a></span>
+    </div>
+</div>
+
+<header>
+  <span id="logoToolFlix">ToolFlix</span>
+  <input type="text" id="searchBar" placeholder="Pesquisar no catálogo...">
+  <div id="categoriaBtns">
+    <button class="catBtn active" data-cat="Todos">Todos</button>
+    <button class="catBtn" data-cat="Jogos PS2">PS2</button>
+    <button class="catBtn" data-cat="PS2 com Cheats">PS2+</button>
+    <button class="catBtn" data-cat="Jogos PS3">PS3</button>
+    <button class="catBtn" data-cat="PS3 com Cheats">PS3+</button>
+    <button class="catBtn" data-cat="Jogos PS1">PS1</button>
+    <button class="catBtn" data-cat="PS1 com Cheats">PS1+</button>
+    <button class="catBtn" data-cat="YouTube">YouTube</button>
+    <button class="catBtn" data-cat="Jogos PC">PC</button>
+    <button class="catBtn" data-cat="Fix SteamTools">Fix</button>
+    <button class="catBtn" data-cat="Arquivos">Arquivos</button>
+    <button class="catBtn" data-cat="Roms">Roms</button>
+    <button class="catBtn" data-cat="Emuladores">Emuladores</button>
+    <button class="catBtn" data-cat="Premium" id="catPremiumBtn">Premium 🔒</button>
+  </div>
+</header>
+
+<div class="action-bar">
+  <button id="importBtn" class="action-btn">📂 Abrir Lista Local</button>
+  <button id="favFiltroBtn" class="action-btn">❤️ Favoritos</button>
+  <button id="exportBtn" class="action-btn" style="display:none; border-color: gold; color: gold;">💾 Exportar Backup</button>
+</div>
+
+<section id="adminSection">
+  <h3 style="color:var(--cor-accent); margin-bottom:15px;">PAINEL DE CONTROLE</h3>
+  <input type="text" id="nomeJogo" placeholder="Nome do Jogo">
+  <input type="text" id="linkCapa" placeholder="Link da Capa (URL)">
+  <input type="text" id="linkJogo" placeholder="Link de Download">
+  <select id="selectCategoria">
+    <option value="Jogos PS2">PS2</option>
+    <option value="PS2 com Cheats">PS2+</option>
+    <option value="Jogos PS3">PS3</option>
+    <option value="PS3 com Cheats">PS3+</option>
+    <option value="Jogos PS1">PS1</option>
+    <option value="PS1 com Cheats">PS1+</option>
+    <option value="YouTube">YouTube</option>
+    <option value="Jogos PC">PC</option>
+    <option value="Fix SteamTools">Fix</option>
+    <option value="Arquivos">Arquivos</option>
+    <option value="Roms">Roms</option>
+    <option value="Emuladores">Emuladores</option>
+    <option value="Premium">Premium 💎</option>
+  </select>
+  <button id="addJogoBtn" class="btn-admin-action" style="background:var(--cor-accent); width:100%; color:#000; margin-bottom: 20px;">ADICIONAR ITEM</button>
+      
+  <div style="border-top:1px solid var(--glass-border); padding-top:20px">
+    <h4 style="color:gold; margin-bottom:10px;">GERENCIAR TOKENS</h4>
+    <button id="importTokensBtn" style="width:100%; padding:10px; background:rgba(255,255,255,0.05); color:#fff; border:1px solid var(--glass-border); margin-bottom:10px; cursor:pointer; border-radius: 8px;">📂 Carregar Tokens</button>
+    <div class="token-list-area" id="tokenListArea"></div>
+    <div class="admin-grid-btns">
+        <button id="genTokenBtn" class="btn-admin-action" style="background:gold; color:#000">GERAR NOVO</button>
+        <button id="exportTokensBtn" class="btn-admin-action" style="background:transparent; color:gold; border:1px solid gold">SALVAR LISTA</button>
+    </div>
+  </div>
+</section>
+
 <section id="catalogo"></section>
-<div id="loginModal"><div class="modal-box">    <h4 style="color:var(--cor-accent); margin-bottom:20px;">ADMIN LOGIN</h4>    <input id="loginInput" type="password" placeholder="Sua Senha" style="width:100%; padding:12px; background:rgba(0,0,0,0.5); border:1px solid var(--glass-border); color:#fff; text-align:center; margin-bottom:15px; border-radius: 10px;">    <button id="loginSubmit" style="width:100%; padding:12px; background:var(--cor-accent); border:none; color:#000; font-weight:bold; border-radius: 10px; cursor:pointer;">ENTRAR AGORA</button></div></div>
-<div id="premiumModal"><div class="modal-box">    <h4 style="color:gold; margin-bottom:20px;">ATIVAÇÃO PREMIUM</h4>    <input id="premiumInput" type="text" maxlength="6" style="width:100%; padding:15px; text-align:center; font-size:24px; background:rgba(0,0,0,0.5); color:gold; border:1px solid gold; text-transform:uppercase; border-radius:10px;">    <button id="premiumSubmit" style="width:100%; padding:15px; background:gold; border:none; margin-top:20px; font-weight:800; color:#000; border-radius:10px; cursor:pointer;">DESBLOQUEAR TUDO</button></div></div>
-<script>(function(){  const URL_JOGOS_GITHUB = "https://raw.githubusercontent.com/cheats0075/toolflix/main/toolflix_backup.json";  const URL_TOKENS_GITHUB = "https://raw.githubusercontent.com/cheats0075/toolflix/main/tokens.json";
-  let jogos = JSON.parse(localStorage.getItem('jogosPS2')) || [];  let favoritos = JSON.parse(localStorage.getItem('toolflix_favs')) || [];  let tokensDB = { ativos: [], expirados: [] };  let adminMode = false, apenasFavs = false, editIndex = null, catSelecionada = 'Todos';  let isPremiumUser = localStorage.getItem('toolflix_premium_atv') === 'true';
-  const catalogo = document.getElementById('catalogo');  const searchBar = document.getElementById('searchBar');  const sortSelect = document.getElementById('sortSelect');  const exportBtn = document.getElementById('exportBtn');
 
-  window.toggleFav = function(nome) {    const idx = favoritos.indexOf(nome);    if(idx > -1) favoritos.splice(idx, 1);    else favoritos.push(nome);    localStorage.setItem('toolflix_favs', JSON.stringify(favoritos));    render();  };
+<div id="loginModal">
+    <div class="modal-box">
+        <h4 style="color:var(--cor-accent); margin-bottom:20px;">ADMIN LOGIN</h4>
+        <input id="loginInput" type="password" placeholder="Sua Senha" style="width:100%; padding:12px; background:rgba(0,0,0,0.5); border:1px solid var(--glass-border); color:#fff; text-align:center; margin-bottom:15px; border-radius: 10px;">
+        <button id="loginSubmit" style="width:100%; padding:12px; background:var(--cor-accent); border:none; color:#000; font-weight:bold; border-radius: 10px; cursor:pointer;">ENTRAR AGORA</button>
+    </div>
+</div>
 
-  function applyTheme(t) {    document.body.className = (!t || t === 'default') ? '' : 'theme-' + t;    localStorage.setItem('toolflix_theme', t);  }  document.getElementById('themeSelect').onchange = (e) => applyTheme(e.target.value);  applyTheme(localStorage.getItem('toolflix_theme') || 'default');
+<div id="premiumModal">
+    <div class="modal-box">
+        <h4 style="color:gold; margin-bottom:20px;">ATIVAÇÃO PREMIUM</h4>
+        <input id="premiumInput" type="text" maxlength="6" style="width:100%; padding:15px; text-align:center; font-size:24px; background:rgba(0,0,0,0.5); color:gold; border:1px solid gold; text-transform:uppercase; border-radius:10px;">
+        <button id="premiumSubmit" style="width:100%; padding:15px; background:gold; border:none; margin-top:20px; font-weight:800; color:#000; border-radius:10px; cursor:pointer;">DESBLOQUEAR TUDO</button>
+    </div>
+</div>
 
-  function render(){    catalogo.innerHTML = '';    const term = searchBar.value.toLowerCase();    const order = sortSelect.value;        
-    // LÓGICA DE BOTÃO PREMIUM BLOQUEADO/DESBLOQUEADO
+<script>
+(function(){
+  const URL_JOGOS_GITHUB = "https://raw.githubusercontent.com/cheats0075/toolflix/main/toolflix_backup.json";
+  const URL_TOKENS_GITHUB = "https://raw.githubusercontent.com/cheats0075/toolflix/main/tokens.json";
+  
+  let jogos = JSON.parse(localStorage.getItem('jogosPS2')) || [];
+  let favoritos = JSON.parse(localStorage.getItem('toolflix_favs')) || [];
+  let tokensDB = { ativos: [], expirados: [] };
+  let adminMode = false, apenasFavs = false, editIndex = null, catSelecionada = 'Todos';
+  let isPremiumUser = localStorage.getItem('toolflix_premium_atv') === 'true';
+  
+  const catalogo = document.getElementById('catalogo');
+  const searchBar = document.getElementById('searchBar');
+  const sortSelect = document.getElementById('sortSelect');
+  const exportBtn = document.getElementById('exportBtn');
+
+  // --- FUNÇÕES DE SINCRONIZAÇÃO ---
+  async function sincronizarCatalogo() {
+    try {
+      const r = await fetch(URL_JOGOS_GITHUB + "?nocache=" + Date.now());
+      if(!r.ok) throw new Error();
+      jogos = await r.json();
+      localStorage.setItem('jogosPS2', JSON.stringify(jogos));
+      console.log("Catálogo sincronizado automaticamente ✅");
+      render();
+    } catch(e) { 
+      console.error("Falha na sincronização automática ❌", e); 
+    }
+  }
+
+  // Chama a sincronização assim que o script carrega
+  sincronizarCatalogo();
+
+  window.toggleFav = function(nome) {
+    const idx = favoritos.indexOf(nome);
+    if(idx > -1) favoritos.splice(idx, 1);
+    else favoritos.push(nome);
+    localStorage.setItem('toolflix_favs', JSON.stringify(favoritos));
+    render();
+  };
+
+  function applyTheme(t) {
+    document.body.className = (!t || t === 'default') ? '' : 'theme-' + t;
+    localStorage.setItem('toolflix_theme', t);
+  }
+  
+  document.getElementById('themeSelect').onchange = (e) => applyTheme(e.target.value);
+  applyTheme(localStorage.getItem('toolflix_theme') || 'default');
+
+  function render(){
+    catalogo.innerHTML = '';
+    const term = searchBar.value.toLowerCase();
+    const order = sortSelect.value;
+    
     const pBtn = document.getElementById('catPremiumBtn');
-    if(isPremiumUser) {        pBtn.classList.add('unlocked');        pBtn.innerHTML = "Premium 💎";        document.getElementById('premiumTriggerBtn').style.display = 'none';        document.getElementById('ytInstruction').style.display = 'none';    } else {        pBtn.classList.remove('unlocked');        pBtn.innerHTML = "Premium 🔒";    }
+    if(isPremiumUser) {
+        pBtn.classList.add('unlocked');
+        pBtn.innerHTML = "Premium 💎";
+        document.getElementById('premiumTriggerBtn').style.display = 'none';
+        document.getElementById('ytInstruction').style.display = 'none';
+    } else {
+        pBtn.classList.remove('unlocked');
+        pBtn.innerHTML = "Premium 🔒";
+    }
 
-    let lista = jogos.map((j, i) => ({...j, originalIndex: i}));    lista = lista.filter(j => {        const isPremiumItem = (j.categoria === 'Premium');        if(isPremiumItem && !isPremiumUser && !adminMode) return false;        const matchCat = (catSelecionada === 'Todos' || j.categoria === catSelecionada);        const matchSearch = (j.nome.toLowerCase().includes(term));        const matchFav = (!apenasFavs || favoritos.includes(j.nome));        return matchCat && matchSearch && matchFav;    });
+    let lista = jogos.map((j, i) => ({...j, originalIndex: i}));
+    
+    lista = lista.filter(j => {
+        const isPremiumItem = (j.categoria === 'Premium');
+        if(isPremiumItem && !isPremiumUser && !adminMode) return false;
+        const matchCat = (catSelecionada === 'Todos' || j.categoria === catSelecionada);
+        const matchSearch = (j.nome.toLowerCase().includes(term));
+        const matchFav = (!apenasFavs || favoritos.includes(j.nome));
+        return matchCat && matchSearch && matchFav;
+    });
 
-    if(order === 'az') lista.sort((a,b) => a.nome.localeCompare(b.nome));    else if(order === 'za') lista.sort((a,b) => b.nome.localeCompare(a.nome));    else if(order === 'newest') lista.sort((a,b) => b.originalIndex - a.originalIndex);    else if(order === 'oldest') lista.sort((a,b) => a.originalIndex - b.originalIndex);
+    if(order === 'az') lista.sort((a,b) => a.nome.localeCompare(b.nome));
+    else if(order === 'za') lista.sort((a,b) => b.nome.localeCompare(a.nome));
+    else if(order === 'newest') lista.sort((a,b) => b.originalIndex - a.originalIndex);
+    else if(order === 'oldest') lista.sort((a,b) => a.originalIndex - b.originalIndex);
 
-    lista.forEach((jogo) => {      const isFav = favoritos.includes(jogo.nome);      const isPremiumCard = (jogo.categoria === 'Premium');      const div = document.createElement('div');      div.className = 'jogo' + (isPremiumCard ? ' premium-vip' : '');      
-      const bC = (jogo.categoria || "").toLowerCase();      let bClass = 'pc';      if(bC.includes('ps2')) bClass = 'ps2';      else if(bC.includes('ps3')) bClass = 'ps3';      else if(bC.includes('ps1')) bClass = 'ps1';      else if(bC.includes('youtube')) bClass = 'youtube';      else if(bC.includes('roms')) bClass = 'roms';      else if(bC.includes('premium')) bClass = 'premium-badge';
+    lista.forEach((jogo) => {
+      const isFav = favoritos.includes(jogo.nome);
+      const isPremiumCard = (jogo.categoria === 'Premium');
+      const div = document.createElement('div');
+      div.className = 'jogo' + (isPremiumCard ? ' premium-vip' : '');
+                  
+      const bC = (jogo.categoria || "").toLowerCase();
+      let bClass = 'pc';
+      if(bC.includes('ps2')) bClass = 'ps2';
+      else if(bC.includes('ps3')) bClass = 'ps3';
+      else if(bC.includes('ps1')) bClass = 'ps1';
+      else if(bC.includes('youtube')) bClass = 'youtube';
+      else if(bC.includes('roms')) bClass = 'roms';
+      else if(bC.includes('premium')) bClass = 'premium-badge';
 
-      div.innerHTML = `        ${adminMode ? `<button style="position:absolute;top:5px;right:5px;background:red;border:none;color:white;border-radius:50%;width:22px;height:22px;z-index:20" onclick="event.stopPropagation(); excluir(${jogo.originalIndex})">×</button>` : ''}        ${adminMode ? `<button style="position:absolute;top:5px;left:5px;background:blue;border:none;color:white;padding:2px 5px;font-size:10px;z-index:20;border-radius:4px;" onclick="event.stopPropagation(); editar(${jogo.originalIndex})">EDT</button>` : ''}        <button class="fav-card-btn ${isFav?'active':''}" onclick="event.stopPropagation(); window.toggleFav('${jogo.nome}')">❤</button>        <span class="badge ${bClass}">${jogo.categoria}</span>        <img src="${jogo.capa}" onclick="window.open('${jogo.link}', '_blank')">        <p>${jogo.nome}</p>      `;      catalogo.appendChild(div);    });  }
+      div.innerHTML = `
+        ${adminMode ? `<button style="position:absolute;top:5px;right:5px;background:red;border:none;color:white;border-radius:50%;width:22px;height:22px;z-index:20" onclick="event.stopPropagation(); excluir(${jogo.originalIndex})">×</button>` : ''}
+        ${adminMode ? `<button style="position:absolute;top:5px;left:5px;background:blue;border:none;color:white;padding:2px 5px;font-size:10px;z-index:20;border-radius:4px;" onclick="event.stopPropagation(); editar(${jogo.originalIndex})">EDT</button>` : ''}
+        <button class="fav-card-btn ${isFav?'active':''}" onclick="event.stopPropagation(); window.toggleFav('${jogo.nome}')">❤</button>
+        <span class="badge ${bClass}">${jogo.categoria}</span>
+        <img src="${jogo.capa}" onclick="window.open('${jogo.link}', '_blank')">
+        <p>${jogo.nome}</p>
+      `;
+      catalogo.appendChild(div);
+    });
+  }
 
   sortSelect.onchange = render;
 
-  document.getElementById('syncBtn').onclick = async () => {    try {      const r = await fetch(URL_JOGOS_GITHUB + "?nocache=" + Date.now());      if(!r.ok) throw new Error();      jogos = await r.json();      localStorage.setItem('jogosPS2', JSON.stringify(jogos));      alert("catalogo atualizado ✅");      render();    } catch(e) { alert("catalogo não atualizado ❌"); }  };
+  document.getElementById('premiumSubmit').onclick = async () => {
+    const val = document.getElementById('premiumInput').value.toUpperCase().trim();
+    try {
+        const r = await fetch(URL_TOKENS_GITHUB + "?nocache=" + Date.now());
+        const data = await r.json();
+        if(data.ativos && data.ativos.includes(val)) {
+            isPremiumUser = true; 
+            localStorage.setItem('toolflix_premium_atv', 'true');
+            alert("💎 ACESSO PREMIUM LIBERADO! 🏆"); 
+            location.reload();
+        } else { alert("token inválido ou expirado"); }
+    } catch(e) { alert("Erro de conexão ❌"); }
+  };
 
-  document.getElementById('premiumSubmit').onclick = async () => {    const val = document.getElementById('premiumInput').value.toUpperCase().trim();    try {        const r = await fetch(URL_TOKENS_GITHUB + "?nocache=" + Date.now());        const data = await r.json();        if(data.ativos && data.ativos.includes(val)) {            isPremiumUser = true; localStorage.setItem('toolflix_premium_atv', 'true');            alert("💎 ACESSO PREMIUM LIBERADO! 🏆");             location.reload();        } else { alert("token inválido ou expirado"); }    } catch(e) { alert("Erro de conexão ❌"); }  };
-
-  function renderTokenList() {    const area = document.getElementById('tokenListArea'); area.innerHTML = '';    tokensDB.ativos.forEach((tk, idx) => {        const d = document.createElement('div'); d.className = 'token-item';        d.innerHTML = `<span>${tk}</span><button style="background:rgba(255,0,0,0.2);border:1px solid red;color:red;padding:2px 8px;cursor:pointer;border-radius:4px;" onclick="expirarToken(${idx})">X</button>`;        area.appendChild(d);    });  }
-  window.expirarToken = (i) => { tokensDB.expirados.push(tokensDB.ativos.splice(i, 1)[0]); renderTokenList(); };
-  document.getElementById('genTokenBtn').onclick = () => {    const res = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; let tk = "";    for(let i=0; i<6; i++) tk += res.charAt(Math.floor(Math.random()*res.length));    tokensDB.ativos.push(tk); renderTokenList();  };
-  document.getElementById('exportTokensBtn').onclick = () => {    const blob = new Blob([JSON.stringify(tokensDB, null, 2)], {type:'application/json'});    const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='tokens.json'; a.click();  };
-
-  document.getElementById('importTokensBtn').onclick = () => {    const inp = document.createElement('input'); inp.type='file'; inp.accept='.json';    inp.onchange = e => {      const reader = new FileReader();      reader.onload = ev => { tokensDB = JSON.parse(ev.target.result); renderTokenList(); };      reader.readAsText(e.target.files[0]);    }; inp.click();  };
-
-  const loginAction = () => {    if(document.getElementById('loginInput').value === '@dm1nt1'){      adminMode=true;       document.getElementById('loginModal').style.display='none';      document.getElementById('adminSection').style.display='block';      exportBtn.style.display='inline-block';      renderTokenList(); render();    } else alert("Acesso negado ❌");  };
-
-  document.getElementById('adminBtn').onclick = () => { document.getElementById('loginModal').style.display='flex'; document.getElementById('loginInput').focus(); };  document.getElementById('loginSubmit').onclick = loginAction;  document.getElementById('loginInput').onkeydown = (e) => { if(e.key === 'Enter') loginAction(); };
-
-  document.getElementById('exportBtn').onclick = () => {    const blob = new Blob([JSON.stringify(jogos, null, 2)], {type:'application/json'});    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'toolflix_backup.json'; a.click();  };
-
-  document.getElementById('premiumTriggerBtn').onclick = () => { document.getElementById('premiumModal').style.display='flex'; document.getElementById('premiumInput').focus(); };
-
-  window.addEventListener('keydown', (e) => {    if(e.key === 'Escape') {      adminMode = false; document.getElementById('adminSection').style.display = 'none';      document.getElementById('loginModal').style.display = 'none';      document.getElementById('premiumModal').style.display = 'none';      exportBtn.style.display = 'none';      render();    }  });
-
-  document.getElementById('addJogoBtn').onclick = () => {    const n=document.getElementById('nomeJogo').value, c=document.getElementById('linkCapa').value, l=document.getElementById('linkJogo').value, cat=document.getElementById('selectCategoria').value;    if(editIndex !== null) { jogos[editIndex]={nome:n, capa:c, link:l, categoria:cat}; editIndex=null; }    else jogos.push({nome:n, capa:c, link:l, categoria:cat});    localStorage.setItem('jogosPS2', JSON.stringify(jogos)); render();    document.getElementById('nomeJogo').value=''; document.getElementById('linkCapa').value=''; document.getElementById('linkJogo').value='';  };
-
-  window.excluir = (i) => { if(confirm("Deseja realmente excluir este item?")) { jogos.splice(i,1); localStorage.setItem('jogosPS2', JSON.stringify(jogos)); render(); } };  window.editar = (i) => {    editIndex = i; const j = jogos[i];    document.getElementById('nomeJogo').value=j.nome; document.getElementById('linkCapa').value=j.capa;    document.getElementById('linkJogo').value=j.link; document.getElementById('selectCategoria').value=j.categoria;    window.scrollTo(0,0);  };
-
-  document.getElementById('importBtn').onclick = () => {    const i = document.createElement('input'); i.type='file'; i.accept='.json';    i.onchange = e => {      const r = new FileReader(); r.onload = ev => { jogos = JSON.parse(ev.target.result); localStorage.setItem('jogosPS2', JSON.stringify(jogos)); render(); };      r.readAsText(e.target.files[0]);    }; i.click();  };
-
-  document.getElementById('favFiltroBtn').onclick = function(){ apenasFavs=!apenasFavs; this.classList.toggle('active'); render(); };
+  function renderTokenList() {
+    const area = document.getElementById('tokenListArea'); area.innerHTML = '';
+    tokensDB.ativos.forEach((tk, idx) => {
+        const d = document.createElement('div'); d.className = 'token-item';
+        d.innerHTML = `<span>${tk}</span><button style="background:rgba(255,0,0,0.2);border:1px solid red;color:red;padding:2px 8px;cursor:pointer;border-radius:4px;" onclick="expirarToken(${idx})">X</button>`;
+        area.appendChild(d);
+    });
+  }
   
-  // LOGICA DOS BOTÕES DE CATEGORIA ATUALIZADA
+  window.expirarToken = (i) => { tokensDB.expirados.push(tokensDB.ativos.splice(i, 1)[0]); renderTokenList(); };
+  
+  document.getElementById('genTokenBtn').onclick = () => {
+    const res = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; let tk = "";
+    for(let i=0; i<6; i++) tk += res.charAt(Math.floor(Math.random()*res.length));
+    tokensDB.ativos.push(tk); renderTokenList();
+  };
+  
+  document.getElementById('exportTokensBtn').onclick = () => {
+    const blob = new Blob([JSON.stringify(tokensDB, null, 2)], {type:'application/json'});
+    const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='tokens.json'; a.click();
+  };
+
+  document.getElementById('importTokensBtn').onclick = () => {
+    const inp = document.createElement('input'); inp.type='file'; inp.accept='.json';
+    inp.onchange = e => {
+      const reader = new FileReader();
+      reader.onload = ev => { tokensDB = JSON.parse(ev.target.result); renderTokenList(); };
+      reader.readAsText(e.target.files[0]);
+    }; inp.click();
+  };
+
+  const loginAction = () => {
+    if(document.getElementById('loginInput').value === '@dm1nt1'){
+      adminMode=true; 
+      document.getElementById('loginModal').style.display='none';
+      document.getElementById('adminSection').style.display='block';
+      exportBtn.style.display='inline-block';
+      renderTokenList(); render();
+    } else alert("Acesso negado ❌");
+  };
+
+  document.getElementById('adminBtn').onclick = () => { 
+    document.getElementById('loginModal').style.display='flex'; 
+    document.getElementById('loginInput').focus(); 
+  };
+  
+  document.getElementById('loginSubmit').onclick = loginAction;
+  document.getElementById('loginInput').onkeydown = (e) => { if(e.key === 'Enter') loginAction(); };
+
+  document.getElementById('exportBtn').onclick = () => {
+    const blob = new Blob([JSON.stringify(jogos, null, 2)], {type:'application/json'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'toolflix_backup.json'; a.click();
+  };
+
+  document.getElementById('premiumTriggerBtn').onclick = () => { 
+    document.getElementById('premiumModal').style.display='flex'; 
+    document.getElementById('premiumInput').focus(); 
+  };
+
+  window.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') {
+      adminMode = false; document.getElementById('adminSection').style.display = 'none';
+      document.getElementById('loginModal').style.display = 'none';
+      document.getElementById('premiumModal').style.display = 'none';
+      exportBtn.style.display = 'none';
+      render();
+    }
+  });
+
+  document.getElementById('addJogoBtn').onclick = () => {
+    const n=document.getElementById('nomeJogo').value, 
+          c=document.getElementById('linkCapa').value, 
+          l=document.getElementById('linkJogo').value, 
+          cat=document.getElementById('selectCategoria').value;
+    if(editIndex !== null) { 
+        jogos[editIndex]={nome:n, capa:c, link:l, categoria:cat}; 
+        editIndex=null; 
+    }
+    else jogos.push({nome:n, capa:c, link:l, categoria:cat});
+    localStorage.setItem('jogosPS2', JSON.stringify(jogos)); 
+    render();
+    document.getElementById('nomeJogo').value=''; 
+    document.getElementById('linkCapa').value=''; 
+    document.getElementById('linkJogo').value='';
+  };
+
+  window.excluir = (i) => { 
+    if(confirm("Deseja realmente excluir este item?")) { 
+        jogos.splice(i,1); 
+        localStorage.setItem('jogosPS2', JSON.stringify(jogos)); 
+        render(); 
+    } 
+  };
+  
+  window.editar = (i) => {
+    editIndex = i; const j = jogos[i];
+    document.getElementById('nomeJogo').value=j.nome; 
+    document.getElementById('linkCapa').value=j.capa;
+    document.getElementById('linkJogo').value=j.link; 
+    document.getElementById('selectCategoria').value=j.categoria;
+    window.scrollTo(0,0);
+  };
+
+  document.getElementById('importBtn').onclick = () => {
+    const i = document.createElement('input'); i.type='file'; i.accept='.json';
+    i.onchange = e => {
+      const r = new FileReader(); 
+      r.onload = ev => { 
+          jogos = JSON.parse(ev.target.result); 
+          localStorage.setItem('jogosPS2', JSON.stringify(jogos)); 
+          render(); 
+      };
+      r.readAsText(e.target.files[0]);
+    }; i.click();
+  };
+
+  document.getElementById('favFiltroBtn').onclick = function(){ 
+      apenasFavs=!apenasFavs; 
+      this.classList.toggle('active'); 
+      render(); 
+  };
+
   document.querySelectorAll('.catBtn').forEach(b => b.onclick = () => {
     if(b.dataset.cat === 'Premium' && !isPremiumUser && !adminMode) {
         document.getElementById('premiumModal').style.display = 'flex';
         document.getElementById('premiumInput').focus();
         return;
     }
-    document.querySelectorAll('.catBtn').forEach(x => x.classList.remove('active'));    b.classList.add('active'); catSelecionada = b.dataset.cat; render();  });
+    document.querySelectorAll('.catBtn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); 
+    catSelecionada = b.dataset.cat; 
+    render();
+  });
 
-  searchBar.oninput = render;  render();})();</script></body></html>
+  searchBar.oninput = render;
+  render();
+})();
+</script>
+</body>
+</html>
