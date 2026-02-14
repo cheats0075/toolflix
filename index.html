@@ -13,6 +13,30 @@
               --glass-border: rgba(255, 255, 255, 0.1);
         }
 
+        /* ESTILO DA NOTIFICAÇÃO (TOAST) */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+        }
+        .toast {
+            background: rgba(10, 10, 10, 0.9);
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 12px;
+            border: 1px solid var(--cor-accent);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideUp 0.5s ease-out;
+            backdrop-filter: blur(10px);
+        }
+        @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
         /* ANIMAÇÕES */
         @keyframes pulsePremium {
             0% { box-shadow: 0 0 5px #ffd700; transform: scale(1); }
@@ -67,7 +91,6 @@
         #themeSelect, #sortSelect { background: var(--glass-bg); color: #fff; border: 1px solid var(--glass-border); border-radius: 6px; padding: 5px; cursor: pointer; height: 32px; backdrop-filter: blur(5px); }
         #adminBtn, #syncBtn { background:rgba(255,255,255,0.05); color:#fff; border:1px solid var(--glass-border); padding:8px 18px; border-radius:20px; cursor:pointer; font-weight:700; font-size:14px; backdrop-filter: blur(5px); }
         
-        /* OCULTAR O BOTÃO SYNC CONFORME SOLICITADO */
         #syncBtn { display: none !important; }
 
         #premiumTriggerBtn { background: linear-gradient(-45deg, #ffd700, #ffa500, #fff700, #ff8c00); background-size: 300% 300%; animation: pulsePremium 1.5s infinite ease-in-out, gradientMove 3s infinite; color: #000; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-weight: 900; font-size: 15px; border: 2px solid #fff; letter-spacing: 1px; }
@@ -116,6 +139,8 @@
     </style>
 </head>
 <body>
+
+<div id="toast-container"></div>
 
 <div class="top-actions">
     <div class="top-buttons-row">
@@ -244,21 +269,52 @@
   const sortSelect = document.getElementById('sortSelect');
   const exportBtn = document.getElementById('exportBtn');
 
-  // --- FUNÇÕES DE SINCRONIZAÇÃO ---
+  // FUNÇÃO PARA MOSTRAR O ALERTA (TOAST)
+  function showToast(mensagem) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `✨ ${mensagem}`;
+    container.appendChild(toast);
+    setTimeout(() => { 
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 500);
+    }, 5000);
+  }
+
+  // FUNÇÃO DE SINCRONIZAÇÃO COM DETECTOR DE NOVIDADES
   async function sincronizarCatalogo() {
     try {
       const r = await fetch(URL_JOGOS_GITHUB + "?nocache=" + Date.now());
       if(!r.ok) throw new Error();
-      jogos = await r.json();
+      const jogosNovos = await r.json();
+      
+      // Lógica de comparação para categorias novas
+      const nomesAtuais = new Set(jogos.map(j => j.nome));
+      const categoriasNovas = new Set();
+
+      jogosNovos.forEach(j => {
+        if (!nomesAtuais.has(j.nome)) {
+            categoriasNovas.add(j.categoria);
+        }
+      });
+
+      // Se houver novidades, mostra o pop-up
+      if (categoriasNovas.size > 0 && nomesAtuais.size > 0) {
+        const listaCats = Array.from(categoriasNovas).join(', ');
+        showToast(`Novo conteúdo em: ${listaCats}`);
+      }
+
+      // Salva a nova lista
+      jogos = jogosNovos;
       localStorage.setItem('jogosPS2', JSON.stringify(jogos));
-      console.log("Catálogo sincronizado automaticamente ✅");
+      console.log("Catálogo sincronizado ✅");
       render();
     } catch(e) { 
       console.error("Falha na sincronização automática ❌", e); 
     }
   }
 
-  // Chama a sincronização assim que o script carrega
   sincronizarCatalogo();
 
   window.toggleFav = function(nome) {
