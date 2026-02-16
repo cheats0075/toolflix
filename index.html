@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -215,38 +216,62 @@
     let editandoIndex = -1;
 
     // --- SEGURANÇA E VALIDAÇÃO ---
-    async function checkPremiumSync() {
-        const tokenAtivador = localStorage.getItem('toolflix_token_ativador');
-        if (!tokenAtivador) { isPremium = false; render(); return; }
-        try {
-            const resp = await fetch(URL_TOKENS + '?t=' + new Date().getTime());
-            if (resp.ok) {
-                const data = await resp.json();
-                const ativos = data.ativos || [];
-                const usados = data.usados || [];
-                if (usados.includes(tokenAtivador) || !ativos.includes(tokenAtivador)) {
-                    localStorage.removeItem('toolflix_premium_atv');
-                    localStorage.removeItem('toolflix_token_ativador');
-                    isPremium = false;
-                } else { isPremium = true; }
-                render();
-            }
-        } catch (e) {
-            isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';
-            render();
-        }
+async function checkPremiumSync() {
+    const tokenAtivador = localStorage.getItem('toolflix_token_ativador');
+
+    if (!tokenAtivador) {
+        isPremium = false;
+        render();
+        return;
     }
 
+    try {
+        const resp = await fetch(URL_TOKENS + '?v=' + Date.now());
+        if (!resp.ok) throw new Error();
+
+        const data = await resp.json();
+        const ativos = data.ativos || [];
+        const usados = data.usados || [];
+
+        if (!ativos.includes(tokenAtivador) || usados.includes(tokenAtivador)) {
+            localStorage.removeItem('toolflix_premium_atv');
+            localStorage.removeItem('toolflix_token_ativador');
+            isPremium = false;
+        } else {
+            isPremium = true;
+            localStorage.setItem('toolflix_premium_atv', 'true');
+        }
+
+        render();
+    } catch (e) {
+        // fallback se GitHub falhar
+        isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';
+        render();
+    }
+
+
     async function syncJogos() {
-        try {
-            const response = await fetch(URL_JOGOS + '?t=' + new Date().getTime());
-            if (response.ok) {
-                const data = await response.json();
-                db_jogos = data.jogos || data;
-                localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
-                render();
-            }
-        } catch (e) { console.warn("Sincronização externa indisponível."); }
+    try {
+        const response = await fetch(URL_JOGOS + '?v=' + Date.now());
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const jogosRemotos = data.jogos || data;
+
+        const hashRemoto = JSON.stringify(jogosRemotos).length;
+        const hashLocal = localStorage.getItem('toolflix_jogos_hash');
+
+        if (hashLocal != hashRemoto) {
+            db_jogos = jogosRemotos;
+            localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
+            localStorage.setItem('toolflix_jogos_hash', hashRemoto);
+            render();
+        }
+    } catch (e) {
+        console.warn("Catálogo remoto indisponível.");
+    }
+}
+
     }
 
     function showToast(msg) {
@@ -424,7 +449,8 @@
         try {
             const resp = await fetch(URL_TOKENS + '?t=' + new Date().getTime());
             const data = await resp.json();
-            if((data.ativos || []).includes(input)) {
+            if ((data.ativos || []).includes(input) && !(data.usados || []).includes(input)) {
+
                 localStorage.setItem('toolflix_premium_atv', 'true');
                 localStorage.setItem('toolflix_token_ativador', input);
                 isPremium = true;
