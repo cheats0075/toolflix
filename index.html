@@ -21,28 +21,28 @@
 <div id="premiumModal" class="modal-overlay">    <div class="modal-box">        <h4 style="color:gold">ATIVAR TOKEN</h4>        <input type="text" id="premiumInput" maxlength="6" placeholder="CÓDIGO">        <button id="premiumSubmit" class="btn-modal" style="background:gold">Validar</button>    </div></div>
 <div id="toast-container"></div>
 <script>(function(){    
-    const URL_GITHUB_JOGOS = "https://github.com/cheats0075/toolflix/raw/refs/heads/main/toolflix_backup.json";
-    const URL_GITHUB_TOKENS = "https://github.com/cheats0075/toolflix/raw/refs/heads/main/tokens.json";
+    // LINKS AUTOMÁTICOS VIA CDN (JSDELIVR) PARA EVITAR CACHE
+    const URL_GITHUB_JOGOS = "https://cdn.jsdelivr.net/gh/cheats0075/toolflix@main/toolflix_backup.json";
+    const URL_GITHUB_TOKENS = "https://cdn.jsdelivr.net/gh/cheats0075/toolflix@main/tokens.json";
 
     let db_jogos = JSON.parse(localStorage.getItem('jogosPS2')) || [];    
     let db_favs = JSON.parse(localStorage.getItem('toolflix_favs')) || [];    
-    let db_tokens = JSON.parse(localStorage.getItem('toolflix_tokens')) || [];    
     let isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';    
     let catAtiva = 'Todos', modoAdmin = false, sortModo = 'recentes', filterFav = false;    
     let editandoIndex = -1;    
     let currentTheme = 'default';
 
-    // FUNÇÃO PARA PUXAR JOGOS AUTOMATICAMENTE DO GITHUB
+    // FUNÇÃO QUE PUXA OS JOGOS DO GITHUB AUTOMATICAMENTE (F5 / ENTRAR)
     async function syncJogos() {
         try {
-            const response = await fetch(URL_GITHUB_JOGOS);
+            const response = await fetch(URL_GITHUB_JOGOS + '?t=' + new Date().getTime());
             if (response.ok) {
                 const data = await response.json();
                 db_jogos = data.jogos || data;
                 localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
                 render();
             }
-        } catch (e) { console.log("Erro ao sincronizar jogos:", e); }
+        } catch (e) { console.error("Falha na sincronização:", e); }
     }
 
     // --- TECLADO (ENTER/ESC) ---    
@@ -70,7 +70,8 @@
     function getCorCategoria(cat) {        
         const cores = { 'PS2': '#0077ff', 'PS3': '#ff0000', 'PS1': '#ffffff', 'Cheats': '#ff8c00', 'Premium': '#ffd700', 'YouTube': '#ff0055', 'PC': '#2ecc71' };        
         for (let key in cores) if(cat.includes(key)) return cores[key];        
-        return '#00ffff';    }
+        return '#00ffff';    
+    }
 
     function render() {        
         const grid = document.getElementById('catalogo'); grid.innerHTML = '';        
@@ -86,6 +87,7 @@
         if(filterFav) lista = lista.filter(j => db_favs.includes(j.nome));
         if(sortModo === 'az') lista.sort((a,b) => a.nome.localeCompare(b.nome));        
         else if(sortModo === 'recentes') lista.reverse();
+
         lista.forEach((j) => {            
             const isF = db_favs.includes(j.nome);            
             const isP = j.categoria === 'Premium';            
@@ -118,15 +120,13 @@
                         <button onclick="event.stopPropagation(); window.delJogo('${j.nome}')" style="flex:1; background:#ff4757; color:white; border:none; padding:6px; border-radius:8px; cursor:pointer; font-size:10px">EXCLUIR</button>                    
                     </div>                ` : ''}            `;            
             grid.appendChild(card);        
-        });        
-        renderTokenList();    
+        });    
     }
 
     window.toggleFav = (n) => {        
         const i = db_favs.indexOf(n); if(i > -1) db_favs.splice(i,1); else db_favs.push(n);        
         localStorage.setItem('toolflix_favs', JSON.stringify(db_favs)); render();    
     };
-
     function loginAction() {        
         if(document.getElementById('loginInput').value === '@dm1nt1') {            
             modoAdmin = true;             
@@ -142,12 +142,10 @@
         document.getElementById('loginInput').value = '';    
     }    
     document.getElementById('loginSubmit').onclick = loginAction;
-
     document.getElementById('adminBtn').onclick = () => {        
         if(modoAdmin) { modoAdmin=false; document.getElementById('adminSection').style.display='none'; render(); }        
         else { document.getElementById('loginModal').style.display='flex'; document.getElementById('loginInput').focus(); }    
     };
-
     window.editJogo = (idx) => {        
         const j = db_jogos[idx];        
         document.getElementById('nomeJogo').value = j.nome;        
@@ -159,7 +157,6 @@
         editandoIndex = idx;        
         window.scrollTo({ top: 0, behavior: 'smooth' });    
     };
-
     window.delJogo = (nome) => {        
         if(confirm("Excluir?")) {            
             db_jogos = db_jogos.filter(j => j.nome !== nome);            
@@ -167,7 +164,6 @@
             render();        
         }    
     };
-
     document.getElementById('addJogoBtn').onclick = () => {        
         const n=document.getElementById('nomeJogo'), c=document.getElementById('linkCapa'), l=document.getElementById('linkJogo'), cat=document.getElementById('selectCategoria');        
         if(!n.value) return;        
@@ -180,57 +176,19 @@
             db_jogos.push({nome:n.value, capa:c.value, link:l.value, categoria:cat.value});        
         }        
         localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));        
-        n.value=''; c.value=''; l.value=''; render(); showToast("Salvo!");    
+        n.value=''; c.value=''; l.value=''; render(); showToast("Salvo Localmente!");    
     };
 
-    function renderTokenList() {        
-        const div = document.getElementById('tokenList'); div.innerHTML = '';        
-        db_tokens.forEach((t, i) => { div.innerHTML += `<div style="background:#000; border:1px solid gold; color:gold; padding:5px; border-radius:5px; font-size:10px; display:flex; justify-content:space-between">${t} <b onclick="removeToken(${i})" style="cursor:pointer; color:red">×</b></div>`; });    
-    }    
-    window.removeToken = (i) => { db_tokens.splice(i,1); localStorage.setItem('toolflix_tokens', JSON.stringify(db_tokens)); renderTokenList(); };        
-    
-    document.getElementById('genTokenBtn').onclick = () => {        
-        const r = Math.random().toString(36).substring(2,8).toUpperCase();        
-        db_tokens.push(r); localStorage.setItem('toolflix_tokens', JSON.stringify(db_tokens)); renderTokenList();    
-    };
-
-    document.getElementById('exportTokensBtn').onclick = () => {        
-        const blob = new Blob([JSON.stringify({ativos: db_tokens})], {type:'application/json'});        
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'tokens_toolflix.json'; a.click();    
-    };
-
-    document.getElementById('importTokensBtn').onclick = () => document.getElementById('fileInput').click();    
-    document.getElementById('fileInput').onchange = (e) => {        
-        const fr = new FileReader();        
-        fr.onload = (ev) => {            
-            try {                
-                const data = JSON.parse(ev.target.result);                
-                db_tokens = data.ativos || data;                
-                localStorage.setItem('toolflix_tokens', JSON.stringify(db_tokens));                
-                renderTokenList();                
-                showToast("Tokens Importados!");            
-            } catch(e) { showToast("Erro no Arquivo!"); }        
-        };        
-        fr.readAsText(e.target.files[0]);    
-    };
-
-    document.getElementById('exportBackupBtn').onclick = () => {        
-        const blob = new Blob([JSON.stringify({jogos: db_jogos})], {type:'application/json'});        
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'backup_jogos.json'; a.click();    
-    };
-
-    document.getElementById('clearUsedBtn').onclick = () => { if(confirm("Limpar tokens?")) { db_tokens = []; localStorage.setItem('toolflix_tokens', JSON.stringify(db_tokens)); renderTokenList(); } };
-
-    // FUNÇÃO DE VALIDAR TOKEN PUXANDO DO GITHUB
+    // VALIDAÇÃO DE TOKEN BUSCANDO DO GITHUB
     async function validatePremium() {        
         const inputCode = document.getElementById('premiumInput').value.toUpperCase();
+        if(!inputCode) return;
         showToast("Validando...");
         try {
-            const response = await fetch(URL_GITHUB_TOKENS);
+            const response = await fetch(URL_GITHUB_TOKENS + '?t=' + new Date().getTime());
             if (response.ok) {
                 const data = await response.json();
                 const tokensValidos = data.ativos || data;
-                
                 if(tokensValidos.includes(inputCode)) {             
                     localStorage.setItem('toolflix_premium_atv', 'true');             
                     isPremium = true;            
@@ -238,8 +196,8 @@
                     render();            
                     showToast("💎 Premium Ativado!");        
                 } else { showToast("Código Inválido!"); }
-            } else { showToast("Erro ao conectar servidor!"); }
-        } catch (e) { showToast("Erro na validação!"); }
+            } else { showToast("Erro no servidor de tokens."); }
+        } catch (e) { showToast("Erro de conexão."); }
     }    
     
     document.getElementById('premiumSubmit').onclick = validatePremium;    
@@ -271,7 +229,6 @@
     document.getElementById('searchBar').oninput = render;    
     document.getElementById('sortBtn').onclick = () => { sortModo = sortModo === 'recentes' ? 'az' : 'recentes'; document.getElementById('sortBtn').innerText = `🔃 Ordem: ${sortModo === 'az' ? 'A-Z' : 'Recentes'}`; render(); };
 
-    // INICIAR SINCRONIZAÇÃO AO ABRIR/RECARREGAR
+    // INICIAR SYNC AUTOMÁTICO
     syncJogos();
-    render();
 })();</script></body></html>
