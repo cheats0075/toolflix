@@ -33,47 +33,33 @@
         
         #premiumTriggerBtn { background: gold; color: #000; border: none; font-weight: 900; animation: pulsePremium 2s infinite; box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
         #solicitarTokenBtn { background: #f1c40f; color: #000; border: none; font-weight: 800; margin-top: 5px; }
-        #solicitarTokenBtn:hover { background: #f39c12; transform: scale(1.02); }
         
         @keyframes pulsePremium { 0% { transform: scale(1); } 70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); } 100% { transform: scale(1); } }
         
         main { margin-left: var(--sidebar-width); flex: 1; padding: 25px 40px; width: calc(100% - var(--sidebar-width)); }
         .top-nav { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-bottom: 35px; }
         .nav-item { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: #fff; padding: 10px 18px; border-radius: 50px; cursor: pointer; font-weight: 600; transition: 0.3s; font-size: 13px; outline: none; }
-        .nav-item.active-filter { border-color: #ff4757; color: #ff4757; background: rgba(255, 71, 87, 0.1); }
         
         #themeSelect { background: #1a1a1a; color: gold; border: 1px solid gold; padding: 10px 15px; cursor: pointer; border-radius: 12px; font-weight: bold; }
-        #themeSelect option { background: #0a0a0a; color: #fff; }
         
         #catalogo { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 30px; }
         .jogo { background: var(--glass-bg); border-radius: 18px; padding: 14px; border: 1px solid var(--glass-border); position: relative; transition: 0.4s; cursor: pointer; overflow: hidden; }
-        .jogo:hover { transform: translateY(-10px); border-color: var(--cor-accent); box-shadow: 0 0 15px var(--cor-accent); }
         .jogo img { width: 100%; border-radius: 12px; aspect-ratio: 1/1; object-fit: cover; display: block; }
         
-        @keyframes glowPremium {
-            0% { box-shadow: 0 0 5px gold; border-color: gold; }
-            50% { box-shadow: 0 0 20px gold; border-color: #fff; }
-            100% { box-shadow: 0 0 5px gold; border-color: gold; }
-        }
         .jogo-premium { border: 2px solid gold !important; animation: glowPremium 3s infinite ease-in-out; }
-        .jogo-premium:hover { box-shadow: 0 0 30px gold !important; transform: translateY(-10px) scale(1.02); }
+        @keyframes glowPremium { 0%, 100% { box-shadow: 0 0 5px gold; } 50% { box-shadow: 0 0 20px gold; } }
         
-        .badge-categoria { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-top: 10px; background: rgba(0,0,0,0.4); letter-spacing: 0.5px; }
-        .premium-locked img { filter: grayscale(100%) blur(5px) !important; opacity: 0.3 !important; }
-        .lock-icon { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 40px; color: gold; pointer-events: none; z-index: 5; text-shadow: 0 0 15px #000; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-8px); } 80% { transform: translateX(8px); } }
-        .shake-active { animation: shake 0.3s ease-in-out; border-color: #ff4757 !important; }
+        .premium-locked img { filter: grayscale(100%) blur(5px); opacity: 0.3; }
+        .lock-icon { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 40px; color: gold; z-index: 5; }
         
         .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.9); backdrop-filter:blur(20px); display:none; justify-content:center; align-items:center; z-index:9999; }
         .modal-box { background: linear-gradient(145deg, #1a1a1a, #0a0a0a); padding: 40px; border-radius: 35px; width: 380px; text-align: center; border: 1px solid var(--glass-border); }
-        .modal-box input { width: 100%; padding: 16px; margin-bottom: 20px; background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 18px; color: #fff; text-align: center; font-size: 18px; outline: none; }
-        .btn-modal { width: 100%; padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; }
-        
+        .modal-box input { width: 100%; padding: 16px; margin-bottom: 20px; background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 18px; color: #fff; text-align: center; font-size: 18px; }
+        .btn-modal { width: 100%; padding: 16px; border-radius: 18px; border: none; font-weight: 800; cursor: pointer; }
+
         #adminSection { display:none; background: var(--glass-bg); padding:25px; border-radius:20px; border: 2px solid var(--cor-accent); margin-bottom: 30px; }
-        #adminSection input, #adminSection select { width: 100%; padding: 12px; margin-bottom: 10px; background: #000; border: 1px solid #333; border-radius: 10px; color: #fff; outline: none; }
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 10000; }
-        .toast { background: rgba(20,20,20,0.95); color: #fff; padding: 15px 30px; border-radius: 12px; margin-top: 10px; border-left: 5px solid var(--cor-accent); animation: slideIn 0.3s; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .toast { background: rgba(20,20,20,0.95); color: #fff; padding: 15px 30px; border-radius: 12px; margin-top: 10px; border-left: 5px solid var(--cor-accent); }
     </style>
 </head>
 <body class="theme-default">
@@ -104,14 +90,14 @@
 <main>
     <div class="top-nav">
         <select id="themeSelect" class="nav-item">
-            <option value="default">🎭 Padrão (Livre)</option>
-            <option value="gow">⚔️ God of War (Livre)</option>
-            <option value="dbz">💎 Dragon Ball Z (Premium)</option>
-            <option value="mk">💎 Mortal Kombat (Premium)</option>
-            <option value="gta">💎 GTA SA (Premium)</option>
-            <option value="gtav">💎 GTA V (Premium)</option>
-            <option value="cod">💎 Call of Duty (Premium)</option>
-            <option value="re">💎 Resident Evil (Premium)</option>
+            <option value="default">🎭 Padrão</option>
+            <option value="gow">⚔️ God of War</option>
+            <option value="dbz">💎 DBZ</option>
+            <option value="mk">💎 MK</option>
+            <option value="gta">💎 GTA SA</option>
+            <option value="gtav">💎 GTA V</option>
+            <option value="cod">💎 COD</option>
+            <option value="re">💎 Resident Evil</option>
         </select>
         <button class="nav-item" id="sortBtn">🔃 Ordem: Recentes</button>
         <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
@@ -124,27 +110,23 @@
 
     <section id="adminSection">
         <h3 style="color:var(--cor-accent); margin-bottom:15px">Painel Admin</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap:10px">
-            <input type="text" id="nomeJogo" placeholder="Nome do Conteúdo">
-            <input type="text" id="linkCapa" placeholder="URL da Imagem">
-            <input type="text" id="linkJogo" placeholder="Link de Download">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom: 20px;">
+            <input type="text" id="nomeJogo" placeholder="Nome">
+            <input type="text" id="linkCapa" placeholder="URL Capa">
+            <input type="text" id="linkJogo" placeholder="URL Download">
             <select id="selectCategoria"></select>
-        </div>
-        
-        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <button id="addJogoBtn" class="nav-item" style="background:var(--cor-accent); color:#000; border:none; flex:2">SALVAR ITEM</button>
-            <button id="exportBackupBtn" class="nav-item" style="background:#2ecc71; color:#000; border:none; flex:1">BACKUP JOGOS</button>
+            <button id="addJogoBtn" class="nav-item" style="background:var(--cor-accent); color:#000; border:none;">SALVAR ITEM</button>
+            <button id="exportBackupBtn" class="nav-item" style="background:#2ecc71; color:#000; border:none;">BACKUP JOGOS</button>
         </div>
         
         <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; border: 1px solid #333;">
-            <h4 style="color:gold; margin-bottom:10px">Gerenciar Tokens (Ativos e Usados)</h4>
-            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:10px; margin-bottom:10px">
+            <h4 style="color:gold; margin-bottom:10px">Gestão de Tokens</h4>
+            <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-bottom:10px">
                 <button id="genTokenBtn" class="nav-item" style="color:gold; border-color:gold">GERAR</button>
                 <button id="exportTokensBtn" class="nav-item">EXPORTAR</button>
                 <button id="importTokensBtn" class="nav-item">IMPORTAR</button>
-                <button id="clearUsedBtn" class="nav-item" style="background:#ff4757; border:none">LIMPAR TUDO</button>
+                <button id="clearUsedBtn" class="nav-item" style="background:#ff4757; border:none">LIMPAR</button>
             </div>
-            <p style="font-size: 10px; color: #888; margin-bottom: 5px;">* Clicar no X move o token para a lista de bloqueados.</p>
             <div id="tokenList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; max-height: 150px; overflow-y: auto;"></div>
             <input type="file" id="fileInput" style="display:none" accept=".json">
         </div>
@@ -156,7 +138,7 @@
 
 <div id="loginModal" class="modal-overlay">
     <div class="modal-box">
-        <h4 style="color:var(--cor-accent)">ACESSO ADMIN</h4>
+        <h4>ADMIN</h4>
         <input type="password" id="loginInput" placeholder="Senha">
         <button id="loginSubmit" class="btn-modal" style="background:var(--cor-accent)">Entrar</button>
     </div>
@@ -164,8 +146,8 @@
 
 <div id="premiumModal" class="modal-overlay">
     <div class="modal-box">
-        <h4 style="color:gold">ATIVAR TOKEN</h4>
-        <input type="text" id="premiumInput" maxlength="6" placeholder="CÓDIGO">
+        <h4 style="color:gold">ATIVAR PREMIUM</h4>
+        <input type="text" id="premiumInput" maxlength="6" placeholder="DIGITE O TOKEN">
         <button id="premiumSubmit" class="btn-modal" style="background:gold">Validar</button>
     </div>
 </div>
@@ -174,35 +156,69 @@
 
 <script>
 (function(){
-    const URL_GITHUB_JOGOS = "https://cdn.jsdelivr.net/gh/cheats0075/toolflix@latest/toolflix_backup.json";
-    const URL_GITHUB_TOKENS = "https://cdn.jsdelivr.net/gh/cheats0075/toolflix@latest/tokens.json";
+    // USANDO LINK RAW PARA FURAR O CACHE DO JSDELIVR
+    const URL_TOKENS = "https://raw.githubusercontent.com/cheats0075/toolflix/main/tokens.json";
+    const URL_JOGOS = "https://cdn.jsdelivr.net/gh/cheats0075/toolflix@latest/toolflix_backup.json";
 
     let db_jogos = JSON.parse(localStorage.getItem('jogosPS2')) || [];
     let db_favs = JSON.parse(localStorage.getItem('toolflix_favs')) || [];
-    
-    // Agora mantemos duas listas separadas no LocalStorage também
     let db_tokens_ativos = JSON.parse(localStorage.getItem('toolflix_tokens_atv')) || [];
     let db_tokens_usados = JSON.parse(localStorage.getItem('toolflix_tokens_usd')) || [];
     
-    let isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';
-    let catAtiva = 'Todos', modoAdmin = false, sortModo = 'recentes', filterFav = false;
+    let isPremium = false; // Começa como falso até validar
+    let modoAdmin = false;
+    let catAtiva = 'Todos';
+    let sortModo = 'recentes';
+    let filterFav = false;
     let editandoIndex = -1;
     let currentTheme = 'default';
 
+    // --- 1. VERIFICAÇÃO DE ASSINATURA (O SEGREDO DO BLOQUEIO) ---
+    async function checkPremiumSync() {
+        const tokenAtivador = localStorage.getItem('toolflix_token_ativador');
+        
+        if (!tokenAtivador) {
+            isPremium = false;
+            render();
+            return;
+        }
+
+        try {
+            // Timestamp para ignorar cache (?t=...)
+            const resp = await fetch(URL_TOKENS + '?t=' + new Date().getTime());
+            if (resp.ok) {
+                const data = await resp.resp ? await resp.json() : JSON.parse(await resp.text());
+                const ativos = data.ativos || [];
+                const usados = data.usados || [];
+
+                // SE O TOKEN FOI BANIDO (USADOS) OU NÃO EXISTE MAIS (REMOVIDO DOS ATIVOS)
+                if (usados.includes(tokenAtivador) || !ativos.includes(tokenAtivador)) {
+                    localStorage.removeItem('toolflix_premium_atv');
+                    localStorage.removeItem('toolflix_token_ativador');
+                    isPremium = false;
+                    showToast("❌ Token expirado ou banido!");
+                } else {
+                    isPremium = true;
+                }
+                render();
+            }
+        } catch (e) {
+            // Em caso de erro de rede, mantemos o local mas tentamos de novo depois
+            isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';
+            render();
+        }
+    }
+
     async function syncJogos() {
         try {
-            const response = await fetch(URL_GITHUB_JOGOS + '?t=' + new Date().getTime());
+            const response = await fetch(URL_JOGOS + '?t=' + new Date().getTime());
             if (response.ok) {
                 const data = await response.json();
-                const novosJogos = data.jogos || data;
-                if (db_jogos.length > 0 && novosJogos.length > db_jogos.length) {
-                    showToast(`🔥 ${novosJogos.length - db_jogos.length} novas adições!`);
-                }
-                db_jogos = novosJogos;
+                db_jogos = data.jogos || data;
                 localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
                 render();
             }
-        } catch (e) { console.error("Falha sync:", e); }
+        } catch (e) { console.error(e); }
     }
 
     function showToast(msg) {
@@ -211,19 +227,22 @@
         setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 4000);
     }
 
-    function getCorCategoria(cat) {
-        const cores = { 'PS2': '#0077ff', 'PS3': '#ff0000', 'PS1': '#ffffff', 'Cheats': '#ff8c00', 'Premium': '#ffd700', 'YouTube': '#ff0055', 'PC': '#2ecc71' };
-        for (let key in cores) if(cat.includes(key)) return cores[key];
-        return '#00ffff';
-    }
-
     function render() {
         const grid = document.getElementById('catalogo'); grid.innerHTML = '';
+        const btnP = document.getElementById('premiumTriggerBtn');
+        const btnS = document.getElementById('solicitarTokenBtn');
+        const catP = document.getElementById('catPremiumBtn');
+
         if(isPremium) {
-            document.getElementById('catPremiumBtn').innerHTML = "💎 Premium 🔓";
-            document.getElementById('premiumTriggerBtn').style.display = 'none';
-            document.getElementById('solicitarTokenBtn').style.display = 'none';
+            catP.innerHTML = "💎 Premium 🔓";
+            btnP.style.display = 'none';
+            btnS.style.display = 'none';
+        } else {
+            catP.innerHTML = "💎 Premium 🔒";
+            btnP.style.display = 'block';
+            btnS.style.display = 'block';
         }
+
         let lista = [...db_jogos];
         if(catAtiva !== 'Todos') lista = lista.filter(j => j.categoria === catAtiva);
         const search = document.getElementById('searchBar').value.toLowerCase();
@@ -236,38 +255,44 @@
             const isF = db_favs.includes(j.nome);
             const isP = j.categoria === 'Premium';
             const lock = isP && !isPremium && !modoAdmin;
-            const corTag = getCorCategoria(j.categoria);
             const card = document.createElement('div');
             card.className = `jogo ${isP ? 'jogo-premium' : ''} ${lock ? 'premium-locked' : ''}`;
+            
             card.onclick = () => { 
-                if(lock) { card.classList.add('shake-active'); showToast("🔒 Conteúdo Premium!"); setTimeout(() => card.classList.remove('shake-active'), 400); } 
+                if(lock) { showToast("🔒 Conteúdo Premium!"); } 
                 else { window.open(j.link, '_blank'); } 
             };
-            card.innerHTML = `<button onclick="event.stopPropagation(); window.toggleFav('${j.nome}')" style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.6); color:${isF?'#ff4757':'#fff'}; border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; z-index:10; font-size:16px">${isF ? '❤️' : '🤍'}</button>${lock ? '<span class="lock-icon">🔒</span>' : ''}<img src="${j.capa}"><div style="text-align:center"><span class="badge-categoria" style="color:${corTag}; border: 1px solid ${corTag}44">${j.categoria}</span><p style="margin-top:8px; font-weight:700; font-size:13px;">${j.nome}</p></div>${modoAdmin ? `<div style="display:flex; gap:5px; margin-top:10px"><button onclick="event.stopPropagation(); window.editJogo(${db_jogos.indexOf(j)})" style="flex:1; background:#ffd700; color:#000; border:none; padding:6px; border-radius:8px; cursor:pointer; font-size:10px; font-weight:bold">EDITAR</button><button onclick="event.stopPropagation(); window.delJogo('${j.nome}')" style="flex:1; background:#ff4757; color:white; border:none; padding:6px; border-radius:8px; cursor:pointer; font-size:10px">EXCLUIR</button></div>` : ''}`;
+
+            card.innerHTML = `
+                <button onclick="event.stopPropagation(); window.toggleFav('${j.nome}')" style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.6); color:${isF?'#ff4757':'#fff'}; border:none; width:30px; height:30px; border-radius:50%; cursor:pointer; z-index:10;">${isF?'❤️':'🤍'}</button>
+                ${lock ? '<span class="lock-icon">🔒</span>' : ''}
+                <img src="${j.capa}">
+                <div style="text-align:center">
+                    <span style="font-size:10px; color:var(--cor-accent)">${j.categoria}</span>
+                    <p style="font-weight:700; font-size:13px; margin-top:5px">${j.nome}</p>
+                </div>
+                ${modoAdmin ? `<button onclick="event.stopPropagation(); window.delJogo('${j.nome}')" style="width:100%; margin-top:10px; background:#ff4757; color:#fff; border:none; padding:5px; border-radius:5px">EXCLUIR</button>` : ''}
+            `;
             grid.appendChild(card);
         });
         renderTokenList();
     }
 
-    // --- GERENCIAMENTO DE TOKENS (NOVA LÓGICA) ---
-    function renderTokenList() { 
-        const div = document.getElementById('tokenList'); 
-        div.innerHTML = ''; 
-        // Renderiza ativos
-        db_tokens_ativos.forEach((t, i) => { 
-            div.innerHTML += `<div style="background:#003300; border:1px solid #00ff00; color:#00ff00; padding:5px; border-radius:5px; font-size:10px; display:flex; justify-content:space-between"><span>✅ ${t}</span> <b onclick="desativarToken(${i})" style="cursor:pointer; color:#ff4757; padding-left:5px">X</b></div>`; 
-        }); 
-        // Renderiza usados/bloqueados
-        db_tokens_usados.forEach((t) => { 
-            div.innerHTML += `<div style="background:#330000; border:1px solid #ff4757; color:#ff4757; padding:5px; border-radius:5px; font-size:10px; opacity:0.6">🚫 ${t}</div>`; 
+    // --- TOKENS ADMIN ---
+    function renderTokenList() {
+        const div = document.getElementById('tokenList'); div.innerHTML = '';
+        db_tokens_ativos.forEach((t, i) => {
+            div.innerHTML += `<div style="background:#003300; color:#00ff00; padding:5px; border-radius:5px; font-size:10px; display:flex; justify-content:space-between"><span>✅ ${t}</span> <b onclick="desativarToken(${i})" style="cursor:pointer; color:#ff4757">X</b></div>`;
+        });
+        db_tokens_usados.forEach((t) => {
+            div.innerHTML += `<div style="background:#330000; color:#ff4757; padding:5px; border-radius:5px; font-size:10px; opacity:0.6">🚫 ${t}</div>`;
         });
     }
 
-    window.desativarToken = (i) => { 
-        const t = db_tokens_ativos.splice(i,1)[0]; 
+    window.desativarToken = (i) => {
+        const t = db_tokens_ativos.splice(i,1)[0];
         if(!db_tokens_usados.includes(t)) db_tokens_usados.push(t);
-        saveTokensLocal();
-        renderTokenList(); 
+        saveTokensLocal(); render();
     };
 
     function saveTokensLocal() {
@@ -275,90 +300,100 @@
         localStorage.setItem('toolflix_tokens_usd', JSON.stringify(db_tokens_usados));
     }
 
-    document.getElementById('genTokenBtn').onclick = () => { 
-        const r = Math.random().toString(36).substring(2,8).toUpperCase(); 
-        db_tokens_ativos.push(r); 
-        saveTokensLocal();
-        renderTokenList(); 
+    document.getElementById('genTokenBtn').onclick = () => {
+        const r = Math.random().toString(36).substring(2,8).toUpperCase();
+        db_tokens_ativos.push(r); saveTokensLocal(); render();
     };
 
-    document.getElementById('exportTokensBtn').onclick = () => { 
-        const blob = new Blob([JSON.stringify({ativos: db_tokens_ativos, usados: db_tokens_usados})], {type:'application/json'}); 
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'tokens.json'; a.click(); 
+    // --- VALIDAÇÃO PREMIUM ---
+    async function validatePremium() {
+        const input = document.getElementById('premiumInput').value.toUpperCase().trim();
+        if(!input) return;
+
+        showToast("Validando...");
+        try {
+            const resp = await fetch(URL_TOKENS + '?t=' + new Date().getTime());
+            const data = await resp.json();
+            const ativos = data.ativos || [];
+
+            if(ativos.includes(input)) {
+                localStorage.setItem('toolflix_premium_atv', 'true');
+                localStorage.setItem('toolflix_token_ativador', input);
+                isPremium = true;
+                document.getElementById('premiumModal').style.display = 'none';
+                render();
+                showToast("💎 Premium Ativado!");
+            } else {
+                showToast("❌ Token inválido!");
+            }
+        } catch (e) { showToast("Erro de conexão"); }
+    }
+
+    // --- EVENTOS ---
+    document.getElementById('premiumSubmit').onclick = validatePremium;
+    document.getElementById('premiumTriggerBtn').onclick = () => document.getElementById('premiumModal').style.display='flex';
+    document.getElementById('adminBtn').onclick = () => document.getElementById('loginModal').style.display='flex';
+    document.getElementById('loginSubmit').onclick = () => {
+        if(document.getElementById('loginInput').value === '@dm1nt1') {
+            modoAdmin = true; document.getElementById('loginModal').style.display='none';
+            document.getElementById('adminSection').style.display='block';
+            const sel = document.getElementById('selectCategoria'); sel.innerHTML = '';
+            document.querySelectorAll('.catBtn').forEach(b => { if(b.dataset.cat !== 'Todos') sel.innerHTML += `<option value="${b.dataset.cat}">${b.dataset.cat}</option>`; });
+            render();
+        }
+    };
+
+    document.getElementById('addJogoBtn').onclick = () => {
+        const n=document.getElementById('nomeJogo').value, c=document.getElementById('linkCapa').value, l=document.getElementById('linkJogo').value, cat=document.getElementById('selectCategoria').value;
+        if(n) { db_jogos.push({nome:n, capa:c, link:l, categoria:cat}); localStorage.setItem('jogosPS2', JSON.stringify(db_jogos)); render(); }
+    };
+
+    document.getElementById('exportBackupBtn').onclick = () => {
+        const blob = new Blob([JSON.stringify({jogos: db_jogos})], {type:'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'toolflix_backup.json'; a.click();
+    };
+
+    document.getElementById('exportTokensBtn').onclick = () => {
+        const blob = new Blob([JSON.stringify({ativos: db_tokens_ativos, usados: db_tokens_usados})], {type:'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'tokens.json'; a.click();
     };
 
     document.getElementById('importTokensBtn').onclick = () => document.getElementById('fileInput').click();
-    document.getElementById('fileInput').onchange = (e) => { 
-        const fr = new FileReader(); 
-        fr.onload = (ev) => { 
-            try { 
-                const data = JSON.parse(ev.target.result); 
-                db_tokens_ativos = data.ativos || []; 
-                db_tokens_usados = data.usados || []; 
-                saveTokensLocal();
-                renderTokenList(); 
-                showToast("Tokens Sincronizados!"); 
-            } catch(e) { showToast("Erro no arquivo!"); } 
-        }; 
-        fr.readAsText(e.target.files[0]); 
+    document.getElementById('fileInput').onchange = (e) => {
+        const fr = new FileReader();
+        fr.onload = (ev) => {
+            const data = JSON.parse(ev.target.result);
+            db_tokens_ativos = data.ativos || []; db_tokens_usados = data.usados || [];
+            saveTokensLocal(); render();
+        };
+        fr.readAsText(e.target.files[0]);
     };
 
-    document.getElementById('clearUsedBtn').onclick = () => { 
-        if(confirm("Isso limpará TODA a lista local (Ativos e Usados). Continuar?")) { 
-            db_tokens_ativos = []; db_tokens_usados = []; saveTokensLocal(); renderTokenList(); 
-        } 
+    document.querySelectorAll('.catBtn').forEach(b => {
+        b.onclick = () => {
+            document.querySelector('.catBtn.active').classList.remove('active');
+            b.classList.add('active'); catAtiva = b.dataset.cat;
+            document.getElementById('sectionTitle').innerText = catAtiva; render();
+        };
+    });
+
+    document.getElementById('themeSelect').onchange = (e) => {
+        document.body.className = 'theme-' + e.target.value;
     };
 
-    // --- VALIDAÇÃO PREMIUM (DUPLA CAMADA) ---
-    async function validatePremium() {
-        const inputCode = document.getElementById('premiumInput').value.toUpperCase();
-        if(!inputCode) return;
-        showToast("Consultando Servidor...");
-        try {
-            const forcedURL = URL_GITHUB_TOKENS + '?t=' + new Date().getTime() + '&nocache=' + Math.random();
-            const response = await fetch(forcedURL);
-            if (response.ok) {
-                const data = await response.json();
-                const ativos = data.ativos || [];
-                const usados = data.usados || [];
+    window.toggleFav = (n) => {
+        const i = db_favs.indexOf(n);
+        if(i > -1) db_favs.splice(i,1); else db_favs.push(n);
+        localStorage.setItem('toolflix_favs', JSON.stringify(db_favs)); render();
+    };
 
-                // 1. Verifica se está na lista de bloqueados/usados primeiro
-                if(usados.includes(inputCode)) {
-                    showToast("❌ Este token foi desativado pelo Admin!");
-                    return;
-                }
+    window.delJogo = (nome) => {
+        db_jogos = db_jogos.filter(j => j.nome !== nome);
+        localStorage.setItem('jogosPS2', JSON.stringify(db_jogos)); render();
+    };
 
-                // 2. Verifica se está ativo
-                if(ativos.includes(inputCode)) { 
-                    localStorage.setItem('toolflix_premium_atv', 'true'); 
-                    isPremium = true; 
-                    document.getElementById('premiumModal').style.display='none'; 
-                    render(); 
-                    showToast("💎 Premium Ativado com Sucesso!"); 
-                } else { 
-                    showToast("❌ Código Inválido!"); 
-                }
-            }
-        } catch (e) { showToast("Erro de conexão."); }
-    }
-
-    // --- RESTANTE DAS FUNÇÕES ---
-    window.toggleFav = (n) => { const i = db_favs.indexOf(n); if(i > -1) db_favs.splice(i,1); else db_favs.push(n); localStorage.setItem('toolflix_favs', JSON.stringify(db_favs)); render(); };
-    function loginAction() { if(document.getElementById('loginInput').value === '@dm1nt1') { modoAdmin = true; document.getElementById('loginModal').style.display='none'; document.getElementById('adminSection').style.display='block'; const sel = document.getElementById('selectCategoria'); sel.innerHTML = ''; document.querySelectorAll('.catBtn').forEach(b => { const c = b.getAttribute('data-cat'); if(c !== 'Todos') sel.innerHTML += `<option value="${c}">${c}</option>`; }); render(); showToast("Admin Ativo!"); } else showToast("Senha Errada!"); document.getElementById('loginInput').value = ''; }
-    document.getElementById('loginSubmit').onclick = loginAction;
-    document.getElementById('adminBtn').onclick = () => { if(modoAdmin) { modoAdmin=false; document.getElementById('adminSection').style.display='none'; render(); } else { document.getElementById('loginModal').style.display='flex'; document.getElementById('loginInput').focus(); } };
-    window.editJogo = (idx) => { const j = db_jogos[idx]; document.getElementById('nomeJogo').value = j.nome; document.getElementById('linkCapa').value = j.capa; document.getElementById('linkJogo').value = j.link; document.getElementById('selectCategoria').value = j.categoria; document.getElementById('addJogoBtn').innerText = "ATUALIZAR"; editandoIndex = idx; window.scrollTo({ top: 0, behavior: 'smooth' }); };
-    window.delJogo = (nome) => { if(confirm("Excluir?")) { db_jogos = db_jogos.filter(j => j.nome !== nome); localStorage.setItem('jogosPS2', JSON.stringify(db_jogos)); render(); } };
-    document.getElementById('addJogoBtn').onclick = () => { const n=document.getElementById('nomeJogo'), c=document.getElementById('linkCapa'), l=document.getElementById('linkJogo'), cat=document.getElementById('selectCategoria'); if(!n.value) return; if(editandoIndex > -1) { db_jogos[editandoIndex] = {nome:n.value, capa:c.value, link:l.value, categoria:cat.value}; editandoIndex = -1; document.getElementById('addJogoBtn').innerText = "SALVAR ITEM"; } else { db_jogos.push({nome:n.value, capa:c.value, link:l.value, categoria:cat.value}); } localStorage.setItem('jogosPS2', JSON.stringify(db_jogos)); n.value=''; c.value=''; l.value=''; render(); showToast("Salvo!"); };
-    document.getElementById('exportBackupBtn').onclick = () => { const blob = new Blob([JSON.stringify({jogos: db_jogos})], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'toolflix_backup.json'; a.click(); };
-    document.getElementById('premiumSubmit').onclick = validatePremium;
-    document.getElementById('premiumTriggerBtn').onclick = () => { document.getElementById('premiumModal').style.display='flex'; document.getElementById('premiumInput').focus(); };
-    document.getElementById('themeSelect').onchange = (e) => { const val = e.target.value; if (!isPremium && !modoAdmin && !['default', 'gow'].includes(val)) { showToast("💎 Tema Premium!"); e.target.value = currentTheme; return; } currentTheme = val; document.body.className = 'theme-' + val; };
-    document.querySelectorAll('.catBtn').forEach(b => { b.onclick = () => { document.querySelector('.catBtn.active').classList.remove('active'); b.classList.add('active'); catAtiva = b.getAttribute('data-cat'); document.getElementById('sectionTitle').innerText = catAtiva; render(); }; });
-    document.getElementById('favFiltroBtn').onclick = function() { filterFav = !filterFav; this.classList.toggle('active-filter'); render(); };
-    document.getElementById('searchBar').oninput = render;
-    document.getElementById('sortBtn').onclick = () => { sortModo = sortModo === 'recentes' ? 'az' : 'recentes'; document.getElementById('sortBtn').innerText = `🔃 Ordem: ${sortModo === 'az' ? 'A-Z' : 'Recentes'}`; render(); };
-
+    // INICIALIZAÇÃO
+    checkPremiumSync();
     syncJogos();
 })();
 </script>
