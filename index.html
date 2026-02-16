@@ -209,12 +209,13 @@
     let db_tokens_ativos = JSON.parse(localStorage.getItem('toolflix_tokens_atv')) || [];
     let db_tokens_usados = JSON.parse(localStorage.getItem('toolflix_tokens_usd')) || [];
     
-    let isPremium = false;
-    let modoAdmin = false;
-    let catAtiva = 'Todos';
-    let sortModo = 'recentes';
-    let filterFav = false;
-    let editandoIndex = -1;
+let isPremium = false;
+let modoAdmin = false;
+let catAtiva = 'Todos';
+let sortModo = 'recentes';
+let filterFav = false;
+let editandoIndex = -1;
+
 
     // --- SEGURANÇA E VALIDAÇÃO ---
 async function checkPremiumSync() {
@@ -251,7 +252,10 @@ async function checkPremiumSync() {
     }
 
 
-    async function syncJogos() {
+    
+
+    } 
+	async function syncJogos() {
     try {
         const response = await fetch(URL_JOGOS + '?v=' + Date.now());
         if (!response.ok) return;
@@ -272,8 +276,6 @@ async function checkPremiumSync() {
         console.warn("Catálogo remoto indisponível.");
     }
 }
-
-    }
 
     function showToast(msg) {
         const t = document.createElement('div'); t.className = 'toast'; t.innerText = msg;
@@ -478,13 +480,22 @@ async function checkPremiumSync() {
     });
 
     // --- EVENTOS INICIAIS ---
-    document.querySelectorAll('.catBtn').forEach(b => {
-        b.onclick = () => {
-            document.querySelector('.catBtn.active').classList.remove('active');
-            b.classList.add('active'); catAtiva = b.dataset.cat;
-            document.getElementById('sectionTitle').innerText = catAtiva; render();
-        };
-    });
+document.querySelectorAll('.catBtn').forEach(b => {
+    b.onclick = () => {
+
+        if (b.dataset.cat === 'Premium' && !isPremium && !modoAdmin) {
+            showToast("🔒 Categoria Premium!");
+            return;
+        }
+
+        document.querySelector('.catBtn.active').classList.remove('active');
+        b.classList.add('active'); 
+        catAtiva = b.dataset.cat;
+        document.getElementById('sectionTitle').innerText = catAtiva; 
+        render();
+    };
+});
+
 
     document.getElementById('exportBackupBtn').onclick = () => {
         const blob = new Blob([JSON.stringify({jogos: db_jogos})], {type:'application/json'});
