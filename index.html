@@ -213,6 +213,18 @@ body.theme-fortnite {
   animation: shake 0.35s ease;
   box-shadow: 0 0 12px rgba(255,0,0,.7);
 }
+/* Tema premium bloqueado */
+option.tema-premium-lock {
+    color: #888;
+    background: #111;
+}
+
+/* Tema premium liberado */
+option.tema-premium-ok {
+    color: #fff;
+    font-weight: 600;
+}
+
  
 	</style>
 </head>
@@ -322,6 +334,38 @@ body.theme-fortnite {
     // Configurações e URLs (Mantidas conforme o padrão de segurança)
     const URL_TOKENS = "https://raw.githubusercontent.com/cheats0075/toolflix/main/tokens.json";
     const URL_JOGOS = "https://raw.githubusercontent.com/cheats0075/toolflix/main/toolflix_backup.json";
+	const TEMAS_PREMIUM = {
+    gow: "⚔️",
+    re: "🧟",
+    dbz: "🐉"
+};
+function atualizarSelectTemas() {
+    const select = document.getElementById('themeSelect');
+    if (!select) return;
+
+    [...select.options].forEach(opt => {
+        const tema = opt.value;
+
+        // ignora tema padrão
+        if (tema === 'default') return;
+
+        // verifica se é tema premium
+        const isTemaPremium = opt.textContent.includes('💎');
+
+        if (isTemaPremium && !isPremium && !modoAdmin) {
+            opt.textContent = `🔒 ${tema.toUpperCase()}`;
+            opt.classList.remove('tema-premium-ok');
+            opt.classList.add('tema-premium-lock');
+        } else if (isTemaPremium) {
+            const emoji = TEMAS_PREMIUM[tema] || '🎨';
+            opt.textContent = `${emoji} ${tema.toUpperCase()}`;
+            opt.classList.remove('tema-premium-lock');
+            opt.classList.add('tema-premium-ok');
+        }
+    });
+}
+
+
 
 
     // Banco de Dados Local
@@ -488,6 +532,8 @@ min-height: auto;
             grid.appendChild(card);
         });
         renderTokenList();
+		atualizarSelectTemas();
+
     }
 
     // --- FILTROS E GESTÃO ---
