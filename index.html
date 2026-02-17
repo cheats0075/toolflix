@@ -1,7 +1,6 @@
 
 
 
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -143,7 +142,7 @@ body.theme-fortnite {
     100% { box-shadow: 0 0 5px gold, 0 0 10px gold; }
 }
 
-
+.premium-locked img { filter: grayscale(100%) blur(8px); opacity: 0.2; }
 
         .premium-locked img { filter: grayscale(100%) blur(8px); opacity: 0.2; }
 
@@ -214,18 +213,6 @@ body.theme-fortnite {
   animation: shake 0.35s ease;
   box-shadow: 0 0 12px rgba(255,0,0,.7);
 }
-/* Tema premium bloqueado */
-option.tema-premium-lock {
-    color: #888;
-    background: #111;
-}
-
-/* Tema premium liberado */
-option.tema-premium-ok {
-    color: #fff;
-    font-weight: 600;
-}
-
  
 	</style>
 </head>
@@ -332,120 +319,94 @@ option.tema-premium-ok {
 
 <div id="toast-container"></div><script>
 (function(){
+    // Configurações e URLs (Mantidas conforme o padrão de segurança)
     const URL_TOKENS = "https://raw.githubusercontent.com/cheats0075/toolflix/main/tokens.json";
     const URL_JOGOS = "https://raw.githubusercontent.com/cheats0075/toolflix/main/toolflix_backup.json";
-    const TEMAS_PREMIUM = {
-    gow: "⚔️",
-    re: "🧟",
-    dbz: "🐉",
-    mk: "🥋",
-    gta: "🚗",
-    gtav: "🚀",
-    cod: "🔫",
-    cyberPunk: "🤖",
-    mario: "🍄",
-    zelda: "🗡️",
-    spiderman: "🕷️",
-    fortnite: "🎮"
-};
 
 
-
+    // Banco de Dados Local
     let db_jogos = JSON.parse(localStorage.getItem('jogosPS2')) || [];
     let db_favs = JSON.parse(localStorage.getItem('toolflix_favs')) || [];
     let db_tokens_ativos = JSON.parse(localStorage.getItem('toolflix_tokens_atv')) || [];
     let db_tokens_usados = JSON.parse(localStorage.getItem('toolflix_tokens_usd')) || [];
+    
+let isPremium = false;
+let modoAdmin = false;
+let catAtiva = 'Todos';
+let sortModo = 'recentes';
+let filterFav = false;
+let editandoIndex = -1;
 
-    let isPremium = false;
-    let modoAdmin = false;
-    let catAtiva = 'Todos';
-    let sortModo = 'recentes';
-    let filterFav = false;
-    let editandoIndex = -1;
 
-    function atualizarSelectTemas() {
-    const select = document.getElementById('themeSelect');
-    if (!select) return;
+    // --- SEGURANÇA E VALIDAÇÃO ---
+async function checkPremiumSync() {
+    const tokenAtivador = localStorage.getItem('toolflix_token_ativador');
 
-    [...select.options].forEach(opt => {
-        const tema = opt.value;
-        if (tema === 'default') {
-            opt.textContent = "🎭 Padrão";
-            opt.classList.remove('tema-premium-lock', 'tema-premium-ok');
-            return;
-        }
+    if (!tokenAtivador) {
+        isPremium = false;
+        render();
+        return;
+    }
 
-        const emoji = TEMAS_PREMIUM[tema] || '🎨';
-        const isTemaPremium = TEMAS_PREMIUM.hasOwnProperty(tema);
+    try {
+        const resp = await fetch(URL_TOKENS + '?v=' + Date.now());
+        if (!resp.ok) throw new Error();
 
-        if (isTemaPremium && !isPremium && !modoAdmin) {
-            // Usuário não Premium → cadeado 🔒
-            opt.textContent = `🔒 ${emoji} ${tema.toUpperCase()}`;
-            opt.classList.remove('tema-premium-ok');
-            opt.classList.add('tema-premium-lock');
+        const data = await resp.json();
+        const ativos = data.ativos || [];
+        const usados = data.usados || [];
+
+        if (!ativos.includes(tokenAtivador) || usados.includes(tokenAtivador)) {
+            localStorage.removeItem('toolflix_premium_atv');
+            localStorage.removeItem('toolflix_token_ativador');
+            isPremium = false;
         } else {
-            // Premium liberado
-            opt.textContent = `${emoji} ${tema.toUpperCase()}`;
-            opt.classList.remove('tema-premium-lock');
-            opt.classList.add('tema-premium-ok');
+            isPremium = true;
+            localStorage.setItem('toolflix_premium_atv', 'true');
         }
-    });
+
+        render();
+    } catch (e) {
+        // fallback se GitHub falhar
+        isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';
+        render();
+    }
+
+
+    
+
+    } 
+	async function syncJogos() {
+    try {
+        const response = await fetch(URL_JOGOS + '?v=' + Date.now());
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const jogosRemotos = data.jogos || data;
+
+        const hashRemoto = JSON.stringify(jogosRemotos).length;
+        const hashLocal = localStorage.getItem('toolflix_jogos_hash');
+
+        if (hashLocal != hashRemoto) {
+            db_jogos = jogosRemotos;
+            localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
+            localStorage.setItem('toolflix_jogos_hash', hashRemoto);
+            render();
+        }
+    } catch (e) {
+        console.warn("Catálogo remoto indisponível.");
+    }
 }
 
-
-    async function checkPremiumSync() {
-        const tokenAtivador = localStorage.getItem('toolflix_token_ativador');
-        if (!tokenAtivador) { isPremium = false; render(); return; }
-
-        try {
-            const resp = await fetch(URL_TOKENS + '?v=' + Date.now());
-            if (!resp.ok) throw new Error();
-            const data = await resp.json();
-            const ativos = data.ativos || [];
-            const usados = data.usados || [];
-            if (!ativos.includes(tokenAtivador) || usados.includes(tokenAtivador)) {
-                localStorage.removeItem('toolflix_premium_atv');
-                localStorage.removeItem('toolflix_token_ativador');
-                isPremium = false;
-            } else {
-                isPremium = true;
-                localStorage.setItem('toolflix_premium_atv', 'true');
-            }
-            render();
-        } catch (e) {
-            isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';
-            render();
-        }
-    }
-
-    async function syncJogos() {
-        try {
-            const response = await fetch(URL_JOGOS + '?v=' + Date.now());
-            if (!response.ok) return;
-            const data = await response.json();
-            const jogosRemotos = data.jogos || data;
-            const hashRemoto = JSON.stringify(jogosRemotos).length;
-            const hashLocal = localStorage.getItem('toolflix_jogos_hash');
-            if (hashLocal != hashRemoto) {
-                db_jogos = jogosRemotos;
-                localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
-                localStorage.setItem('toolflix_jogos_hash', hashRemoto);
-                render();
-            }
-        } catch(e) { console.warn("Catálogo remoto indisponível."); }
-    }
-
     function showToast(msg) {
-        const t = document.createElement('div');
-        t.className = 'toast';
-        t.innerText = msg;
+        const t = document.createElement('div'); t.className = 'toast'; t.innerText = msg;
         document.getElementById('toast-container').appendChild(t);
         setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
     }
 
+    // --- RENDERIZAÇÃO PRINCIPAL ---
     function render() {
-        const grid = document.getElementById('catalogo');
-        grid.innerHTML = '';
+        const grid = document.getElementById('catalogo'); grid.innerHTML = '';
         const btnP = document.getElementById('premiumTriggerBtn');
         const btnS = document.getElementById('solicitarTokenBtn');
         const catP = document.getElementById('catPremiumBtn');
@@ -469,6 +430,7 @@ option.tema-premium-ok {
         const search = document.getElementById('searchBar').value.toLowerCase();
         if(search) lista = lista.filter(j => j.nome.toLowerCase().includes(search));
         if(filterFav) lista = lista.filter(j => db_favs.includes(j.nome));
+
         if(sortModo === 'az') lista.sort((a,b) => a.nome.localeCompare(b.nome));
         else if(sortModo === 'za') lista.sort((a,b) => b.nome.localeCompare(a.nome));
         else if(sortModo === 'recentes') lista.reverse();
@@ -480,34 +442,42 @@ option.tema-premium-ok {
             const lock = isP && !isPremium && !modoAdmin;
             const card = document.createElement('div');
             card.className = `jogo ${isP ? 'jogo-premium' : ''} ${lock ? 'premium-locked' : ''}`;
-
+            
             card.onclick = () => {
-                if (lock) {
-                    showToast("🔒 Conteúdo Premium!");
-                    card.classList.add('card-shake');
-                    setTimeout(() => card.classList.remove('card-shake'), 400);
+    if (lock) {
+        showToast("🔒 Conteúdo Premium!");
 
-                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.frequency.value = 180;
-                    gain.gain.value = 0.2;
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.12);
-                    return;
-                }
-                window.open(j.link, '_blank');
-            };
+        card.classList.add('card-shake');
+        setTimeout(() => card.classList.remove('card-shake'), 400);
+
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 180;
+        gain.gain.value = 0.2;
+        osc.start();
+        osc.stop(ctx.currentTime + 0.12);
+
+        return;
+    }
+
+    window.open(j.link, '_blank');
+};
 
             card.innerHTML = `
                 <button onclick="event.stopPropagation(); window.toggleFav('${j.nome}')" style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.7); color:${isF?'#ff4757':'#fff'}; border:none; width:34px; height:34px; border-radius:50%; cursor:pointer; z-index:10; transition:0.3s; display:flex; align-items:center; justify-content:center; font-size:18px">${isF?'❤️':'🤍'}</button>
-                ${lock ? `<span style="position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:40px; z-index:5">🔒</span>` : ''}
+                ${lock ? '<span style="position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:40px; z-index:5">🔒</span>' : ''}
                 <img src="${j.capa}">
                 <div style="margin-top:12px; text-align:center">
                     <span style="font-size:10px; color:var(--cor-accent); font-weight:800; letter-spacing:1px">${j.categoria}</span>
-                    <p style="font-weight:600; font-size:13px; margin-top:4px; display:block; min-height:auto;">${j.nome}</p>
+                    <p style="font-weight:600; font-size:13px; margin-top:4px; display:-webkit-box;white-space: normal;
+overflow: visible;
+display: block;
+min-height: auto;
+
+">${j.nome}</p>
                 </div>
                 ${modoAdmin ? `
                 <div style="display:flex; gap:5px; margin-top:10px">
@@ -518,42 +488,229 @@ option.tema-premium-ok {
             grid.appendChild(card);
         });
         renderTokenList();
-        atualizarSelectTemas();
     }
 
-    // ... restante do código de filtros, tokens, login, admin permanece inalterado ...
+    // --- FILTROS E GESTÃO ---
+    document.getElementById('sortBtn').onclick = () => {
+        const modos = ['recentes', 'antigos', 'az', 'za'];
+        const labels = { recentes: '🔃 Recentes', antigos: '⌛ Antigos', az: '🔠 A-Z', za: '🔡 Z-A' };
+        let i = modos.indexOf(sortModo);
+        sortModo = modos[(i + 1) % modos.length];
+        document.getElementById('sortBtn').innerText = 'Ordem: ' + labels[sortModo];
+        render();
+    };
+
+    document.getElementById('favFiltroBtn').onclick = () => {
+        filterFav = !filterFav;
+        render();
+    };
+
+    // --- TOKENS (SISTEMA PRESERVADO) ---
+    function renderTokenList() {
+        const div = document.getElementById('tokenList'); div.innerHTML = '';
+        db_tokens_ativos.forEach((t, i) => {
+            div.innerHTML += `<div style="background:rgba(0,255,0,0.1); border:1px solid rgba(0,255,0,0.2); color:#00ff00; padding:10px; border-radius:12px; font-size:11px; display:flex; justify-content:space-between; align-items:center"><span>${t}</span> <b onclick="desativarToken(${i})" style="cursor:pointer; color:#ff4757; font-size:14px">×</b></div>`;
+        });
+        db_tokens_usados.forEach((t) => {
+            div.innerHTML += `<div style="background:rgba(255,255,255,0.05); color:#555; padding:10px; border-radius:12px; font-size:11px; text-decoration:line-through"># ${t}</div>`;
+        });
+    }
+
+    function saveTokensLocal() {
+        localStorage.setItem('toolflix_tokens_atv', JSON.stringify(db_tokens_ativos));
+        localStorage.setItem('toolflix_tokens_usd', JSON.stringify(db_tokens_usados));
+    }
+
+    document.getElementById('genTokenBtn').onclick = () => {
+        const r = Math.random().toString(36).substring(2,8).toUpperCase();
+        db_tokens_ativos.push(r); saveTokensLocal(); render();
+    };
+
+    document.getElementById('exportTokensBtn').onclick = () => {
+        const data = { ativos: db_tokens_ativos, usados: db_tokens_usados };
+        const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'tokens_backup.json'; a.click();
+    };
+
+    document.getElementById('importTokensBtn').onclick = () => document.getElementById('fileInput').click();
+    document.getElementById('fileInput').onchange = (e) => {
+        const fr = new FileReader();
+        fr.onload = (ev) => {
+            try {
+                const data = JSON.parse(ev.target.result);
+                db_tokens_ativos = data.ativos || []; 
+                db_tokens_usados = data.usados || [];
+                saveTokensLocal(); render();
+                showToast("Lista de Tokens Atualizada!");
+            } catch(err) { showToast("Arquivo Inválido!"); }
+        };
+        fr.readAsText(e.target.files[0]);
+    };
+
+    window.desativarToken = (i) => {
+        const t = db_tokens_ativos.splice(i,1)[0];
+        if(!db_tokens_usados.includes(t)) db_tokens_usados.push(t);
+        saveTokensLocal(); render();
+    };
+
+    document.getElementById('clearUsedBtn').onclick = () => {
+        if(confirm("Limpar histórico de tokens usados?")) { db_tokens_usados = []; saveTokensLocal(); render(); }
+    };
+
+    // --- ADMIN E EDIT ---
+    window.editJogo = (idx) => {
+        const j = db_jogos[idx];
+        document.getElementById('nomeJogo').value = j.nome;
+        document.getElementById('linkCapa').value = j.capa;
+        document.getElementById('linkJogo').value = j.link;
+        document.getElementById('selectCategoria').value = j.categoria;
+        document.getElementById('addJogoBtn').innerText = "🆙 ATUALIZAR ITEM";
+        editandoIndex = idx;
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    };
+
+    document.getElementById('addJogoBtn').onclick = () => {
+        const n=document.getElementById('nomeJogo'), c=document.getElementById('linkCapa'), l=document.getElementById('linkJogo'), cat=document.getElementById('selectCategoria');
+        if(!n.value) return showToast("Insira o nome do jogo!");
+        if(editandoIndex > -1) {
+            db_jogos[editandoIndex] = {nome:n.value, capa:c.value, link:l.value, categoria:cat.value};
+            editandoIndex = -1;
+            document.getElementById('addJogoBtn').innerText = "💾 SALVAR CONTEÚDO";
+        } else {
+            db_jogos.push({nome:n.value, capa:c.value, link:l.value, categoria:cat.value});
+        }
+        localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
+        n.value=''; c.value=''; l.value=''; render(); showToast("Alterações salvas!");
+    };
+
+    // --- LOGIN E TEMAS ---
+    document.getElementById('loginSubmit').onclick = () => {
+        if(document.getElementById('loginInput').value === '@dm1nt1') {
+            modoAdmin = true; document.getElementById('loginModal').style.display='none';
+            document.getElementById('adminSection').style.display='block';
+            const sel = document.getElementById('selectCategoria'); sel.innerHTML = '';
+            document.querySelectorAll('.catBtn').forEach(b => { if(b.dataset.cat !== 'Todos') sel.innerHTML += `<option value="${b.dataset.cat}">${b.dataset.cat}</option>`; });
+            render();
+        } else { showToast("Senha Incorreta!"); }
+    };
+
+    document.getElementById('premiumSubmit').onclick = async () => {
+        const input = document.getElementById('premiumInput').value.toUpperCase().trim();
+        if(!input) return;
+        try {
+            const resp = await fetch(URL_TOKENS + '?t=' + new Date().getTime());
+            const data = await resp.json();
+            if ((data.ativos || []).includes(input) && !(data.usados || []).includes(input)) {
+
+                localStorage.setItem('toolflix_premium_atv', 'true');
+                localStorage.setItem('toolflix_token_ativador', input);
+                isPremium = true;
+                document.getElementById('premiumModal').style.display = 'none';
+                render(); showToast("💎 PREMIUM ATIVADO COM SUCESSO!");
+            } else { showToast("Token Inválido!"); }
+        } catch (e) { showToast("Erro ao validar token."); }
+    };
 
     document.getElementById('themeSelect').onchange = (e) => {
-        const sel = e.target;
-        const temaSelecionado = sel.value;
-const isTemaPremium = TEMAS_PREMIUM.hasOwnProperty(temaSelecionado);
+    const sel = e.target;
+    const isTemaPremium = sel.options[sel.selectedIndex].text.includes('💎');
 
-if (isTemaPremium && !isPremium && !modoAdmin) {
-    showToast("🔒 Apenas usuários Premium!");
-    sel.classList.add('card-shake');
-    setTimeout(() => sel.classList.remove('card-shake'), 400);
+    if (isTemaPremium && !isPremium && !modoAdmin) {
+        showToast("🔒 Apenas usuários Premium!");
 
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.value = 240;
-    gain.gain.value = 0.15;
-    osc.start();
-    osc.stop(ctx.currentTime + 0.12);
+        // vibração
+        sel.classList.add('card-shake');
+        setTimeout(() => sel.classList.remove('card-shake'), 400);
 
-    sel.value = 'default';
-    return;
-}
-document.body.className = 'theme-' + sel.value;
+        // som
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 240;
+        gain.gain.value = 0.15;
+        osc.start();
+        osc.stop(ctx.currentTime + 0.12);
+
+        sel.value = 'default';
+        return; // ⛔ impede aplicar o tema
+    }
+
+    document.body.className = 'theme-' + sel.value;
+
 
     };
 
+    window.addEventListener('keydown', (e) => {
+        if (e.key === "Escape") {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+            if(modoAdmin) { modoAdmin = false; document.getElementById('adminSection').style.display = 'none'; render(); }
+        }
+    });
+
+    // --- EVENTOS INICIAIS ---
+document.querySelectorAll('.catBtn').forEach(b => {
+    b.onclick = () => {
+
+        if (b.dataset.cat === 'Premium' && !isPremium && !modoAdmin) {
+            showToast("🔒 Categoria Premium!");
+			e.target.classList.add('card-shake');
+setTimeout(() => e.target.classList.remove('card-shake'), 400);
+
+const ctx = new (window.AudioContext || window.webkitAudioContext)();
+const osc = ctx.createOscillator();
+const gain = ctx.createGain();
+osc.connect(gain);
+gain.connect(ctx.destination);
+osc.frequency.value = 240;
+gain.gain.value = 0.15;
+osc.start();
+osc.stop(ctx.currentTime + 0.12);
+
+            return;
+        }
+
+        document.querySelector('.catBtn.active').classList.remove('active');
+        b.classList.add('active'); 
+        catAtiva = b.dataset.cat;
+        document.getElementById('sectionTitle').innerText = catAtiva; 
+        render();
+    };
+});
+
+
+    document.getElementById('exportBackupBtn').onclick = () => {
+        const blob = new Blob([JSON.stringify({jogos: db_jogos})], {type:'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'toolflix_data.json'; a.click();
+    };
+
+    window.toggleFav = (n) => {
+        const i = db_favs.indexOf(n);
+        if(i > -1) db_favs.splice(i,1); else db_favs.push(n);
+        localStorage.setItem('toolflix_favs', JSON.stringify(db_favs)); render();
+    };
+
+    window.delJogo = (nome) => {
+        if(confirm("Deseja mesmo excluir este conteúdo?")) {
+            db_jogos = db_jogos.filter(j => j.nome !== nome);
+            localStorage.setItem('jogosPS2', JSON.stringify(db_jogos)); render();
+        }
+    };
+
+    document.getElementById('adminBtn').onclick = () => { document.getElementById('loginModal').style.display='flex'; document.getElementById('loginInput').focus(); };
+    document.getElementById('premiumTriggerBtn').onclick = () => { document.getElementById('premiumModal').style.display='flex'; document.getElementById('premiumInput').focus(); };
+    document.getElementById('searchBar').oninput = render;
+
     checkPremiumSync();
     syncJogos();
-})();
+	// === SUPORTE FLUTUANTE ===
+window.toggleSuporte = function () {
+    const box = document.getElementById('suporteContainer');
+    if (box) box.classList.toggle('ativo');
+};
 
+})();
 </script>
 <!-- SUPORTE FLUTUANTE -->
 <div class="suporte-container" id="suporteContainer">
