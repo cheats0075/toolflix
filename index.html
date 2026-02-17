@@ -612,12 +612,34 @@ min-height: auto;
     };
 
     document.getElementById('themeSelect').onchange = (e) => {
-        const sel = e.target;
-        if(sel.options[sel.selectedIndex].text.includes('💎') && !isPremium && !modoAdmin) {
-            showToast("🔒 Apenas usuários Premium!");
-            sel.value = 'default';
-        }
-        document.body.className = 'theme-' + sel.value;
+    const sel = e.target;
+    const isTemaPremium = sel.options[sel.selectedIndex].text.includes('💎');
+
+    if (isTemaPremium && !isPremium && !modoAdmin) {
+        showToast("🔒 Apenas usuários Premium!");
+
+        // vibração
+        sel.classList.add('card-shake');
+        setTimeout(() => sel.classList.remove('card-shake'), 400);
+
+        // som
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 240;
+        gain.gain.value = 0.15;
+        osc.start();
+        osc.stop(ctx.currentTime + 0.12);
+
+        sel.value = 'default';
+        return; // ⛔ impede aplicar o tema
+    }
+
+    document.body.className = 'theme-' + sel.value;
+
+
     };
 
     window.addEventListener('keydown', (e) => {
@@ -633,6 +655,19 @@ document.querySelectorAll('.catBtn').forEach(b => {
 
         if (b.dataset.cat === 'Premium' && !isPremium && !modoAdmin) {
             showToast("🔒 Categoria Premium!");
+			e.target.classList.add('card-shake');
+setTimeout(() => e.target.classList.remove('card-shake'), 400);
+
+const ctx = new (window.AudioContext || window.webkitAudioContext)();
+const osc = ctx.createOscillator();
+const gain = ctx.createGain();
+osc.connect(gain);
+gain.connect(ctx.destination);
+osc.frequency.value = 240;
+gain.gain.value = 0.15;
+osc.start();
+osc.stop(ctx.currentTime + 0.12);
+
             return;
         }
 
