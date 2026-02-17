@@ -9,7 +9,7 @@
     <style>
         :root {
             --cor-accent: #00ffff;
-            --cor-bg-overlay: rgba(0, 0, 0, 0.75);
+            --cor-bg-overlay: rgba(0, 0, 0, 0.3);
             --glass-bg: rgba(20, 20, 20, 0.9);
             --glass-border: rgba(255, 255, 255, 0.08);
             --sidebar-width: 280px;
@@ -18,12 +18,36 @@
 
         /* --- TEMAS (PRESERVADOS) --- */
         body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdna.artstation.com/p/assets/covers/images/013/652/970/large/sm-bonin-athena-19.jpg?1540572163') !important; }
-        body.theme-dbz { --cor-accent: #ff8c00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://m.media-amazon.com/images/I/714yiDPJ7wL.jpg') !important; }
+        body.theme-dbz { --cor-accent: #ff8c00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpaper.dog/large/20399504.jpg') !important; }
         body.theme-mk { --cor-accent: #ff0000; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://i.redd.it/he010ipc19p51.jpg') !important; }
         body.theme-gta { --cor-accent: #2ecc71; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpapers.com/images/hd/gta-sa-4k-blonde-girl-z9zaoylvpq1ly51q.jpg') !important; }
         body.theme-gtav { --cor-accent: #fbc531; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://www.menosfios.com/wp-content/uploads/2013/12/gta5.jpg') !important; }
-        body.theme-cod { --cor-accent: #7dff00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images7.alphacoders.com/605/605587.jpg') !important; }
-        body.theme-re { --cor-accent: #ff0055; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpapers.com/images/hd/resident-evil-4-remake-leon-sk9m6v4n37160y7g.jpg') !important; }
+        body.theme-cod { --cor-accent: #7dff00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images.appspy.com/articles/13784/call-of-duty-mobile.webp') !important; }
+        body.theme-re { --cor-accent: #ff0055; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://t2.tudocdn.net/660435?w=1920') !important; }
+		body.theme-cyberPunk { --cor-accent: #ff0055; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://w0.peakpx.com/wallpaper/641/699/HD-wallpaper-2022-cyberpunk-2077-cyberpunk-2077-2022-games-games-deviantart-cosplay.jpg') !important; }
+		
+
+/* --- NOVOS TEMAS --- */
+body.theme-mario {
+    --cor-accent: #ff0000;
+    background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://image.geekship.com.br/XTVbV7sCcfbpG2E74-cgLhUN4No=/2200x0/smart/filters:strip_icc():format(webp)/hull.geekship.com.br/wp-content/uploads/2023/04/Super-Mario-Bros-O-Filme.jpg');
+}
+
+body.theme-zelda {
+    --cor-accent: #00ff00;
+    background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images7.alphacoders.com/557/557051.jpg');
+}
+
+body.theme-spiderman {
+    --cor-accent: #ff4500;
+    background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpapercave.com/wp/wp9147243.jpg');
+}
+
+body.theme-fortnite {
+    --cor-accent: #1e90ff;
+    background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdn1.epicgames.com/offer/fn/FNECO_39-40_LoveAndLegends_EGS_Launcher_KeyArt_Blade_2560x1440_2560x1440-407af99db5db41f2a0596d35eb57b7d4');
+}
+
 
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:'Segoe UI', system-ui, sans-serif; background:#050505; color:#f0f0f0; display: flex; min-height: 100vh; background-attachment: fixed; background-size: cover; background-position: center; transition: 0.5s; overflow-x: hidden; }
@@ -32,25 +56,39 @@
         .sidebar { width: var(--sidebar-width); height: 100vh; background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(30px); border-right: 1px solid var(--glass-border); position: fixed; left: 0; top: 0; display: flex; flex-direction: column; padding: 25px; z-index: 1000; }
         #logoToolFlix { font-family:'Impact', sans-serif; font-size:38px; background:linear-gradient(90deg,#fff, var(--cor-accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom: 30px; cursor: pointer; text-align: center; letter-spacing: 2px; }
         
-        /* BOTÕES EM FORMATO DE CÁPSULA */
-        .catBtn { 
-            background: rgba(255,255,255,0.03); 
-            color: #888; 
-            padding: 12px 22px; 
-            border-radius: 50px; /* CÁPSULA */
-            margin-bottom: 8px; 
-            font-weight: 500; 
-            cursor: pointer; 
-            border: 1px solid rgba(255,255,255,0.05); 
-            text-align: left; 
-            transition: all 0.3s ease; 
-            font-size: 13px; 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-        }
-        .catBtn:hover { background: rgba(255,255,255,0.1); color: #fff; transform: scale(1.03); border-color: var(--cor-accent); }
-        .catBtn.active { background: linear-gradient(135deg, var(--cor-accent), #008080); color: #000 !important; font-weight: 800; border: none; box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3); }
+        /* --- BOTÕES DE CATEGORIA ESTILO CÁPSULA BRILHANTE --- */
+.catBtn {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 50px; /* Cápsula */
+    margin-bottom: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: left;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.catBtn:hover {
+    background: linear-gradient(90deg, #00ffff, #00aaff);
+    color: #fff;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0,255,255,0.5);
+}
+
+.catBtn.active {
+    background: linear-gradient(90deg, #00ffff, #0080ff);
+    color: #000;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 0 15px rgba(0,255,255,0.6), inset 0 0 8px rgba(255,255,255,0.2);
+}
+
         
         /* MAIN CONTENT */
         main { margin-left: var(--sidebar-width); flex: 1; padding: 30px 50px; width: calc(100% - var(--sidebar-width)); }
@@ -155,6 +193,14 @@
             <option value="gtav">💎 GTA V</option>
             <option value="cod">💎 COD</option>
             <option value="re">💎 Resident Evil</option>
+			<option value="cyberPunk">💎 CyberPunk</option>
+
+			
+<option value="mario">🍄 Mario</option>
+<option value="zelda">🗡️ Zelda</option>
+<option value="spiderman">🕷️ Spiderman</option>
+<option value="fortnite">🎮 Fortnite</option>
+
         </select>
         <button class="nav-item" id="sortBtn">🔃 Ordem: Recentes</button>
         <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
