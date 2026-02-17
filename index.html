@@ -436,7 +436,12 @@ async function checkPremiumSync() {
                 <img src="${j.capa}">
                 <div style="margin-top:12px; text-align:center">
                     <span style="font-size:10px; color:var(--cor-accent); font-weight:800; letter-spacing:1px">${j.categoria}</span>
-                    <p style="font-weight:600; font-size:13px; margin-top:4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">${j.nome}</p>
+                    <p style="font-weight:600; font-size:13px; margin-top:4px; display:-webkit-box;white-space: normal;
+overflow: visible;
+display: block;
+min-height: auto;
+
+">${j.nome}</p>
                 </div>
                 ${modoAdmin ? `
                 <div style="display:flex; gap:5px; margin-top:10px">
