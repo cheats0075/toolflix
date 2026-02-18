@@ -699,7 +699,14 @@ min-height: auto;
         return; // ⛔ impede aplicar o tema
     }
 
-    document.body.className = 'theme-' + sel.value;
+    // remove qualquer tema antigo (classes que começam com "theme-")
+document.body.classList.forEach(cls => {
+    if (cls.startsWith('theme-')) document.body.classList.remove(cls);
+});
+
+// aplica o novo tema sem apagar outras classes (ex: premium-active)
+document.body.classList.add('theme-' + sel.value);
+
 
 
     };
