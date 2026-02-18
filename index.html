@@ -279,6 +279,108 @@ body.premium-active .catBtn[data-cat="Premium"] {
 .card-shake {
   animation: shake 0.35s ease;
   box-shadow: 0 0 12px rgba(255,0,0,.7);
+  /* ===== PREMIUM EXTRAS ===== */
+
+/* Fundo do overlay do modal com brilho dourado suave */
+#premiumWelcomeModal.modal-overlay {
+  background: radial-gradient(circle at 20% 10%, rgba(255,215,0,0.14), transparent 45%),
+              radial-gradient(circle at 80% 20%, rgba(255,140,0,0.12), transparent 50%),
+              rgba(0,0,0,0.92);
+  animation: premiumOverlayGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes premiumOverlayGlow {
+  from { filter: brightness(1); }
+  to   { filter: brightness(1.08); }
+}
+
+/* Caixa do modal com "shimmer" dourado */
+#premiumWelcomeModal .modal-box {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,215,0,0.35);
+  box-shadow: 0 0 25px rgba(255,215,0,0.18), 0 20px 60px rgba(0,0,0,0.7);
+}
+
+#premiumWelcomeModal .modal-box::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background: linear-gradient(120deg,
+    transparent 0%,
+    rgba(255,215,0,0.15) 20%,
+    rgba(255,140,0,0.12) 35%,
+    transparent 60%
+  );
+  transform: translateX(-40%);
+  animation: premiumShimmer 2.2s linear infinite;
+  pointer-events:none;
+}
+
+@keyframes premiumShimmer {
+  0%   { transform: translateX(-60%); }
+  100% { transform: translateX(60%); }
+}
+
+/* Efeito "pop" no logo quando abre o modal */
+#logoToolFlix.logo-premium-pop {
+  animation: logoPop 0.9s ease;
+}
+
+@keyframes logoPop {
+  0%   { transform: scale(1); filter: brightness(1); }
+  35%  { transform: scale(1.12); filter: brightness(1.25); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+/* Badge Premium fixo na sidebar */
+#premiumBadge {
+  display:none;
+  margin: 10px auto 0;
+  width: fit-content;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: .6px;
+  color: #111;
+  background: linear-gradient(90deg, #ffd700, #ffb700, #ffa500);
+  box-shadow: 0 0 14px rgba(255,215,0,.35);
+  border: 1px solid rgba(255,255,255,.18);
+}
+
+/* Contador premium na sidebar */
+#premiumCounter {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  font-size: 12px;
+  line-height: 1.35;
+  opacity: .92;
+}
+
+/* Efeito especial quando tenta clicar em item premium bloqueado */
+.lock-flash {
+  position: relative;
+}
+.lock-flash::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: 20px;
+  background: radial-gradient(circle at 50% 40%, rgba(255,215,0,0.22), transparent 55%);
+  animation: lockFlash 0.55s ease;
+  pointer-events:none;
+}
+
+@keyframes lockFlash {
+  0% { opacity:0; transform: scale(0.98); }
+  40%{ opacity:1; transform: scale(1); }
+  100%{ opacity:0; transform: scale(1.02); }
+}
+
 }
  
 	</style>
@@ -287,6 +389,9 @@ body.premium-active .catBtn[data-cat="Premium"] {
 
 <aside class="sidebar">
     <div id="logoToolFlix" onclick="location.reload()">ToolFlix</div>
+	<div id="premiumBadge">💎 PREMIUM ATIVO</div>
+<div id="premiumCounter"></div>
+
     <div style="margin-bottom:25px">
         <input type="text" id="searchBar" placeholder="🔍 Buscar jogos..." style="width:100%; padding:14px; border-radius:50px; border:1px solid #222; background:rgba(255,255,255,0.04); color:#fff; outline:none; font-size: 14px; padding-left: 20px;">
     </div>
@@ -513,6 +618,34 @@ async function checkPremiumSync() {
         document.getElementById('toast-container').appendChild(t);
         setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
     }
+function getPremiumStats() {
+  const totalPremium = db_jogos.filter(j => (j && (j.premium === true || j.categoria === 'Premium'))).length;
+  const totalItens = db_jogos.length;
+  const desbloqueados = (isPremium || modoAdmin) ? totalPremium : 0;
+  return { totalPremium, totalItens, desbloqueados };
+}
+
+function updatePremiumSidebar() {
+  const badge = document.getElementById('premiumBadge');
+  const counter = document.getElementById('premiumCounter');
+  if (!counter) return;
+
+  const s = getPremiumStats();
+
+  if (badge) badge.style.display = isPremium ? 'block' : 'none';
+
+  counter.innerHTML = `
+    <div style="font-weight:900; color:gold; margin-bottom:6px;">📊 Status Premium</div>
+    <div>🔓 Desbloqueados: <b>${s.desbloqueados}</b> / <b>${s.totalPremium}</b></div>
+    <div>📦 Total no catálogo: <b>${s.totalItens}</b></div>
+  `;
+}
+
+function lockFeedback(el) {
+  if (!el) return;
+  el.classList.add('lock-flash');
+  setTimeout(() => el.classList.remove('lock-flash'), 650);
+}
 
     // --- RENDERIZAÇÃO PRINCIPAL ---
     function render() {
@@ -568,6 +701,8 @@ grid.innerHTML = '';
     card.onclick = () => {
         if (lock) {
             showToast("🔒 Conteúdo Premium!");
+			lockFeedback(card);
+
 
             card.classList.add('card-shake');
             setTimeout(() => card.classList.remove('card-shake'), 400);
@@ -608,6 +743,7 @@ grid.innerHTML = '';
 
     grid.appendChild(card);
 });
+updatePremiumSidebar();
 
     
         renderTokenList();
@@ -770,6 +906,17 @@ document.getElementById('loginInput').addEventListener('keydown', function(e) {
                 isPremium = true;
                 document.getElementById('premiumModal').style.display = 'none';
                 render(); showToast("💎 PREMIUM ATIVADO COM SUCESSO!");
+				// efeito no logo
+const lg = document.getElementById('logoToolFlix');
+if (lg) {
+  lg.classList.add('logo-premium-pop');
+  setTimeout(() => lg.classList.remove('logo-premium-pop'), 950);
+}
+
+// abre o modal de boas-vindas (se existir)
+const w = document.getElementById('premiumWelcomeModal');
+if (w) w.style.display = 'flex';
+
 				// ✅ Mostra modal de boas-vindas (uma vez por token)
 const tokenAtivador = localStorage.getItem('toolflix_token_ativador') || '';
 const welcomeKey = 'toolflix_welcome_seen_' + tokenAtivador;
