@@ -660,6 +660,8 @@ min-height: auto;
 
     // --- LOGIN E TEMAS ---
     document.getElementById('loginSubmit').onclick = () => {
+
+
         if(document.getElementById('loginInput').value === '@dm1nt1') {
             modoAdmin = true; document.getElementById('loginModal').style.display='none';
             document.getElementById('adminSection').style.display='block';
@@ -668,6 +670,14 @@ min-height: auto;
             render();
         } else { showToast("Senha Incorreta!"); }
     };
+	// Entrar no Admin com Enter (sem mouse)
+document.getElementById('loginInput').addEventListener('keydown', function(e) {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        document.getElementById('loginSubmit').click();
+    }
+});
+
 
     document.getElementById('premiumSubmit').onclick = async () => {
         const input = document.getElementById('premiumInput').value.toUpperCase().trim();
