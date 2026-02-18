@@ -2,6 +2,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -57,6 +58,29 @@ body.theme-fortnite {
         /* SIDEBAR */
         .sidebar { width: var(--sidebar-width); height: 100vh; background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(30px); border-right: 1px solid var(--glass-border); position: fixed; left: 0; top: 0; display: flex; flex-direction: column; padding: 25px; z-index: 1000; }
         #logoToolFlix { font-family:'Impact', sans-serif; font-size:38px; background:linear-gradient(90deg,#fff, var(--cor-accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom: 30px; cursor: pointer; text-align: center; letter-spacing: 2px; }
+		/* Logo Premium - efeito neon dourado animado */
+body.premium-active #logoToolFlix {
+    background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: logoPulse 1.5s infinite alternate;
+    text-shadow: 0 0 5px gold, 0 0 10px orange;
+}
+/* Sidebar Premium */
+body.premium-active .sidebar {
+    background: linear-gradient(to bottom, rgba(40,40,40,0.85), rgba(25,25,25,0.7));
+    backdrop-filter: blur(50px);
+    border-right: 1px solid rgba(255,215,0,0.15);
+    transition: 0.5s;
+}
+
+
+@keyframes logoPulse {
+    0% { transform: scale(1); text-shadow: 0 0 5px gold, 0 0 10px orange; }
+    50% { transform: scale(1.08); text-shadow: 0 0 15px gold, 0 0 25px orange; }
+    100% { transform: scale(1); text-shadow: 0 0 5px gold, 0 0 10px orange; }
+}
+
         
         /* --- BOTÕES DE CATEGORIA ESTILO CÁPSULA BRILHANTE --- */
 .catBtn {
@@ -90,6 +114,34 @@ body.theme-fortnite {
     border: none;
     box-shadow: 0 0 15px rgba(0,255,255,0.6), inset 0 0 8px rgba(255,255,255,0.2);
 }
+/* Cápsula Premium - borda dourada, gradiente animado e glow */
+body.premium-active .catBtn[data-cat="Premium"] {
+    border: 2px solid gold;
+    background: linear-gradient(90deg, #ffd700, #ffb700, #ffa500);
+    background-size: 200% 100%;
+    animation: catBtnGradient 3s linear infinite;
+    box-shadow: 0 0 10px rgba(255,215,0,0.6), inset 0 0 6px rgba(255,255,255,0.2);
+}
+
+@keyframes catBtnGradient {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+}
+
+/* Cápsulas Premium */
+body.premium-active .catBtn[data-cat="Premium"] {
+    border: 2px solid gold;
+    background: linear-gradient(90deg, #ffd700, #ffb700, #ffa500);
+    background-size: 200% 100%;
+    animation: catBtnGradient 3s linear infinite;
+    box-shadow: 0 0 10px rgba(255,215,0,0.6), inset 0 0 6px rgba(255,255,255,0.2);
+}
+
+@keyframes catBtnGradient {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+}
+
 
         
         /* MAIN CONTENT */
@@ -407,7 +459,16 @@ async function checkPremiumSync() {
 
     // --- RENDERIZAÇÃO PRINCIPAL ---
     function render() {
-        const grid = document.getElementById('catalogo'); grid.innerHTML = '';
+        const grid = document.getElementById('catalogo'); 
+		// Ativa efeitos premium
+if(isPremium) {
+    document.body.classList.add('premium-active'); // adiciona classe para CSS premium
+    document.getElementById('logoToolFlix').innerText = 'ToolFlix Pro'; // muda o logo
+} else {
+    document.body.classList.remove('premium-active'); // remove classe se não for premium
+    document.getElementById('logoToolFlix').innerText = 'ToolFlix'; // volta ao nome normal
+}
+grid.innerHTML = '';
         const btnP = document.getElementById('premiumTriggerBtn');
         const btnS = document.getElementById('solicitarTokenBtn');
         const catP = document.getElementById('catPremiumBtn');
