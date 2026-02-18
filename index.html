@@ -3,6 +3,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -116,6 +117,17 @@ body.premium-active .sidebar {
 }
 /* Cápsula Premium - borda dourada, gradiente animado e glow */
 body.premium-active .catBtn[data-cat="Premium"] {
+/* Premium DESATIVADO → texto dourado em fundo escuro */
+body:not(.premium-active) .catBtn[data-cat="Premium"] {
+    color: gold;
+}
+
+/* Premium ATIVADO → texto escuro para contraste no fundo dourado */
+body.premium-active .catBtn[data-cat="Premium"] {
+    color: #111 !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+}
+
     border: 2px solid gold;
     background: linear-gradient(90deg, #ffd700, #ffb700, #ffa500);
     background-size: 200% 100%;
@@ -290,7 +302,8 @@ body.premium-active .catBtn[data-cat="Premium"] {
         <button class="catBtn" data-cat="Arquivos">🗄️ Arquivos</button>
         <button class="catBtn" data-cat="Roms">📀 Roms</button>
         <button class="catBtn" data-cat="Emuladores">🕹️ Emuladores</button>
-        <button class="catBtn" data-cat="Premium" id="catPremiumBtn" style="border: 1px dashed gold; color: gold !important; margin-top: 10px;">💎 Premium 🔒</button>
+        <button class="catBtn" data-cat="Premium" id="catPremiumBtn" style="border: 1px dashed gold; margin-top: 10px;">💎 Premium 🔒</button>
+
     </nav>
 </aside>
 
