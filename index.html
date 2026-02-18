@@ -4,6 +4,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -302,7 +303,7 @@ body.premium-active .catBtn[data-cat="Premium"] {
         <button class="catBtn" data-cat="Arquivos">🗄️ Arquivos</button>
         <button class="catBtn" data-cat="Roms">📀 Roms</button>
         <button class="catBtn" data-cat="Emuladores">🕹️ Emuladores</button>
-        <button class="catBtn" data-cat="Premium" id="catPremiumBtn" style="border: 1px dashed gold; margin-top: 10px;">💎 Premium 🔒</button>
+        
 
     </nav>
 </aside>
@@ -341,11 +342,20 @@ body.premium-active .catBtn[data-cat="Premium"] {
             <h2 style="color:var(--cor-accent); font-size: 24px;">🚀 Dashboard Admin</h2>
         </header>
         <div class="admin-grid">
-            <input type="text" id="nomeJogo" class="admin-input" placeholder="Nome do Título">
-            <input type="text" id="linkCapa" class="admin-input" placeholder="Link da Imagem (URL)">
-            <input type="text" id="linkJogo" class="admin-input" placeholder="Link do Download (URL)">
-            <select id="selectCategoria" class="admin-input"></select>
-        </div>
+    <input type="text" id="nomeJogo" class="admin-input" placeholder="Nome do Título">
+    <input type="text" id="linkCapa" class="admin-input" placeholder="Link da Imagem (URL)">
+    <input type="text" id="linkJogo" class="admin-input" placeholder="Link do Download (URL)">
+    <select id="selectCategoria" class="admin-input"></select>
+	
+
+
+    <!-- ✅ NOVO: marcar item como Premium -->
+    <label class="admin-input" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+        <input type="checkbox" id="isPremiumItem" style="transform: scale(1.2);">
+        💎 Item Premium
+    </label>
+</div>
+
         <div style="display: flex; gap: 12px; margin-bottom: 35px;">
             <button id="addJogoBtn" class="nav-item" style="background:var(--cor-accent); color:#000; border:none; flex: 2; font-size: 16px;">💾 SALVAR CONTEÚDO</button>
             <button id="exportBackupBtn" class="nav-item" style="background:#2ecc71; color:#000; border:none; flex: 1;">📂 BACKUP</button>
@@ -484,18 +494,18 @@ if(isPremium) {
 grid.innerHTML = '';
         const btnP = document.getElementById('premiumTriggerBtn');
         const btnS = document.getElementById('solicitarTokenBtn');
-        const catP = document.getElementById('catPremiumBtn');
+        
         const favBtn = document.getElementById('favFiltroBtn');
 
         favBtn.style.background = filterFav ? 'var(--cor-accent)' : 'rgba(255,255,255,0.05)';
         favBtn.style.color = filterFav ? '#000' : '#fff';
 
         if(isPremium) { 
-            catP.innerHTML = "💎 Premium 🔓"; 
+             
             btnP.style.display = 'none'; 
             btnS.style.display = 'none'; 
         } else { 
-            catP.innerHTML = "💎 Premium 🔒"; 
+             
             btnP.style.display = 'block'; 
             btnS.style.display = 'block'; 
         }
@@ -511,57 +521,61 @@ grid.innerHTML = '';
         else if(sortModo === 'recentes') lista.reverse();
 
         lista.forEach((j) => {
-            const idxOriginal = db_jogos.findIndex(item => item.nome === j.nome);
-            const isF = db_favs.includes(j.nome);
-            const isP = j.categoria === 'Premium';
-            const lock = isP && !isPremium && !modoAdmin;
-            const card = document.createElement('div');
-            card.className = `jogo ${isP ? 'jogo-premium' : ''} ${lock ? 'premium-locked' : ''}`;
-            
-            card.onclick = () => {
-    if (lock) {
-        showToast("🔒 Conteúdo Premium!");
+    const idxOriginal = db_jogos.findIndex(item => item.nome === j.nome);
+    const isF = db_favs.includes(j.nome);
 
-        card.classList.add('card-shake');
-        setTimeout(() => card.classList.remove('card-shake'), 400);
+    // ✅ Premium: aceita o novo campo + compatível com itens antigos (categoria "Premium")
+    const isP = (j.premium === true);
+    const lock = isP && !isPremium && !modoAdmin;
 
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.value = 180;
-        gain.gain.value = 0.2;
-        osc.start();
-        osc.stop(ctx.currentTime + 0.12);
+    const card = document.createElement('div');
+    card.className = `jogo ${isP ? 'jogo-premium' : ''} ${lock ? 'premium-locked' : ''}`;
 
-        return;
-    }
+    card.onclick = () => {
+        if (lock) {
+            showToast("🔒 Conteúdo Premium!");
 
-    window.open(j.link, '_blank');
-};
+            card.classList.add('card-shake');
+            setTimeout(() => card.classList.remove('card-shake'), 400);
 
-            card.innerHTML = `
-                <button onclick="event.stopPropagation(); window.toggleFav('${j.nome}')" style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.7); color:${isF?'#ff4757':'#fff'}; border:none; width:34px; height:34px; border-radius:50%; cursor:pointer; z-index:10; transition:0.3s; display:flex; align-items:center; justify-content:center; font-size:18px">${isF?'❤️':'🤍'}</button>
-                ${lock ? '<span style="position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:40px; z-index:5">🔒</span>' : ''}
-                <img src="${j.capa}">
-                <div style="margin-top:12px; text-align:center">
-                    <span style="font-size:10px; color:var(--cor-accent); font-weight:800; letter-spacing:1px">${j.categoria}</span>
-                    <p style="font-weight:600; font-size:13px; margin-top:4px; display:-webkit-box;white-space: normal;
-overflow: visible;
-display: block;
-min-height: auto;
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.frequency.value = 180;
+            gain.gain.value = 0.2;
+            osc.start();
+            osc.stop(ctx.currentTime + 0.12);
 
-">${j.nome}</p>
-                </div>
-                ${modoAdmin ? `
-                <div style="display:flex; gap:5px; margin-top:10px">
-                    <button onclick="event.stopPropagation(); window.editJogo(${idxOriginal})" style="flex:1; background:gold; color:#000; border:none; padding:8px; border-radius:10px; font-weight:bold; cursor:pointer; font-size:11px">EDITAR</button>
-                    <button onclick="event.stopPropagation(); window.delJogo('${j.nome}')" style="flex:1; background:#ff4757; color:#fff; border:none; padding:8px; border-radius:10px; cursor:pointer; font-size:11px">DELETAR</button>
-                </div>` : ''}
-            `;
-            grid.appendChild(card);
-        });
+            return;
+        }
+        window.open(j.link, '_blank');
+    };
+
+    card.innerHTML = `
+        <button onclick="event.stopPropagation(); window.toggleFav('${j.nome}')" style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.7); color:${isF?'#ff4757':'#fff'}; border:none; width:34px; height:34px; border-radius:50%; cursor:pointer; z-index:10; transition:0.3s; display:flex; align-items:center; justify-content:center; font-size:18px">${isF?'❤️':'🤍'}</button>
+        ${lock ? '<span style="position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:40px; z-index:5">🔒</span>' : ''}
+        <img src="${j.capa}">
+        <div style="margin-top:12px; text-align:center">
+            <span style="font-size:10px; color:var(--cor-accent); font-weight:800; letter-spacing:1px">
+                ${j.categoria}${isP ? ' 💎' : ''}
+            </span>
+            <p style="font-weight:600; font-size:13px; margin-top:4px; display:-webkit-box;white-space: normal; overflow: visible; display: block; min-height: auto;">
+                ${j.nome}
+            </p>
+        </div>
+        ${modoAdmin ? `
+        <div style="display:flex; gap:5px; margin-top:10px">
+            <button onclick="event.stopPropagation(); window.editJogo(${idxOriginal})" style="flex:1; background:gold; color:#000; border:none; padding:8px; border-radius:10px; font-weight:bold; cursor:pointer; font-size:11px">EDITAR</button>
+            <button onclick="event.stopPropagation(); window.delJogo('${j.nome}')" style="flex:1; background:#ff4757; color:#fff; border:none; padding:8px; border-radius:10px; cursor:pointer; font-size:11px">DELETAR</button>
+        </div>` : ''}
+    `;
+
+    grid.appendChild(card);
+});
+
+    
         renderTokenList();
     }
 
@@ -639,24 +653,54 @@ min-height: auto;
         document.getElementById('linkCapa').value = j.capa;
         document.getElementById('linkJogo').value = j.link;
         document.getElementById('selectCategoria').value = j.categoria;
+		const chk = document.getElementById('isPremiumItem');
+if (chk) chk.checked = !!db_jogos[idx].premium;
+
         document.getElementById('addJogoBtn').innerText = "🆙 ATUALIZAR ITEM";
         editandoIndex = idx;
         window.scrollTo({top: 0, behavior: 'smooth'});
     };
 
     document.getElementById('addJogoBtn').onclick = () => {
-        const n=document.getElementById('nomeJogo'), c=document.getElementById('linkCapa'), l=document.getElementById('linkJogo'), cat=document.getElementById('selectCategoria');
-        if(!n.value) return showToast("Insira o nome do jogo!");
-        if(editandoIndex > -1) {
-            db_jogos[editandoIndex] = {nome:n.value, capa:c.value, link:l.value, categoria:cat.value};
-            editandoIndex = -1;
-            document.getElementById('addJogoBtn').innerText = "💾 SALVAR CONTEÚDO";
-        } else {
-            db_jogos.push({nome:n.value, capa:c.value, link:l.value, categoria:cat.value});
-        }
-        localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
-        n.value=''; c.value=''; l.value=''; render(); showToast("Alterações salvas!");
+    const n = document.getElementById('nomeJogo');
+    const c = document.getElementById('linkCapa');
+    const l = document.getElementById('linkJogo');
+    const cat = document.getElementById('selectCategoria');
+    const chk = document.getElementById('isPremiumItem'); // ✅ checkbox
+
+    if (!n.value) return showToast("Insira o nome do jogo!");
+
+    // monta o item do jeito normal (simples)
+    const item = {
+        nome: n.value,
+        capa: c.value,
+        link: l.value,
+        categoria: cat.value
     };
+
+    // ✅ só adiciona o premium aqui
+    item.premium = !!(chk && chk.checked);
+
+    if (editandoIndex > -1) {
+        db_jogos[editandoIndex] = item;
+        editandoIndex = -1;
+        document.getElementById('addJogoBtn').innerText = "💾 SALVAR CONTEÚDO";
+    } else {
+        db_jogos.push(item);
+    }
+
+    localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
+
+    // limpa campos
+    n.value = '';
+    c.value = '';
+    l.value = '';
+    if (chk) chk.checked = false;
+
+    render();
+    showToast("Alterações salvas!");
+};
+
 
     // --- LOGIN E TEMAS ---
     document.getElementById('loginSubmit').onclick = () => {
@@ -745,23 +789,8 @@ document.body.classList.add('theme-' + sel.value);
 document.querySelectorAll('.catBtn').forEach(b => {
     b.onclick = () => {
 
-        if (b.dataset.cat === 'Premium' && !isPremium && !modoAdmin) {
-            showToast("🔒 Categoria Premium!");
-			e.target.classList.add('card-shake');
-setTimeout(() => e.target.classList.remove('card-shake'), 400);
-
-const ctx = new (window.AudioContext || window.webkitAudioContext)();
-const osc = ctx.createOscillator();
-const gain = ctx.createGain();
-osc.connect(gain);
-gain.connect(ctx.destination);
-osc.frequency.value = 240;
-gain.gain.value = 0.15;
-osc.start();
-osc.stop(ctx.currentTime + 0.12);
-
-            return;
-        }
+        
+        
 
         document.querySelector('.catBtn.active').classList.remove('active');
         b.classList.add('active'); 
