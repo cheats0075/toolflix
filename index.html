@@ -6,6 +6,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -117,44 +118,7 @@ body.premium-active .sidebar {
     border: none;
     box-shadow: 0 0 15px rgba(0,255,255,0.6), inset 0 0 8px rgba(255,255,255,0.2);
 }
-/* Cápsula Premium - borda dourada, gradiente animado e glow */
-body.premium-active .catBtn[data-cat="Premium"] {
-/* Premium DESATIVADO → texto dourado em fundo escuro */
-body:not(.premium-active) .catBtn[data-cat="Premium"] {
-    color: gold;
-}
 
-/* Premium ATIVADO → texto escuro para contraste no fundo dourado */
-body.premium-active .catBtn[data-cat="Premium"] {
-    color: #111 !important;
-    text-shadow: 0 1px 0 rgba(255,255,255,0.35);
-}
-
-    border: 2px solid gold;
-    background: linear-gradient(90deg, #ffd700, #ffb700, #ffa500);
-    background-size: 200% 100%;
-    animation: catBtnGradient 3s linear infinite;
-    box-shadow: 0 0 10px rgba(255,215,0,0.6), inset 0 0 6px rgba(255,255,255,0.2);
-}
-
-@keyframes catBtnGradient {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 200% 0%; }
-}
-
-/* Cápsulas Premium */
-body.premium-active .catBtn[data-cat="Premium"] {
-    border: 2px solid gold;
-    background: linear-gradient(90deg, #ffd700, #ffb700, #ffa500);
-    background-size: 200% 100%;
-    animation: catBtnGradient 3s linear infinite;
-    box-shadow: 0 0 10px rgba(255,215,0,0.6), inset 0 0 6px rgba(255,255,255,0.2);
-}
-
-@keyframes catBtnGradient {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 200% 0%; }
-}
 
 
         
@@ -211,7 +175,7 @@ body.premium-active .catBtn[data-cat="Premium"] {
 
 .premium-locked img { filter: grayscale(100%) blur(8px); opacity: 0.2; }
 
-        .premium-locked img { filter: grayscale(100%) blur(8px); opacity: 0.2; }
+        
 
         /* PAINEL ADMIN (PRESERVADO) */
         #adminSection { display:none; background: var(--admin-panel-bg); padding:30px; border-radius:24px; border: 1px solid var(--cor-accent); margin-bottom: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); animation: slideDown 0.4s ease; }
@@ -279,6 +243,8 @@ body.premium-active .catBtn[data-cat="Premium"] {
 .card-shake {
   animation: shake 0.35s ease;
   box-shadow: 0 0 12px rgba(255,0,0,.7);
+}
+
   /* ===== PREMIUM EXTRAS ===== */
 
 /* Fundo do overlay do modal com brilho dourado suave */
@@ -379,9 +345,9 @@ body.premium-active .catBtn[data-cat="Premium"] {
   0% { opacity:0; transform: scale(0.98); }
   40%{ opacity:1; transform: scale(1); }
   100%{ opacity:0; transform: scale(1.02); }
-}
 
-}
+
+
  
 	</style>
 </head>
@@ -599,7 +565,8 @@ async function checkPremiumSync() {
         const data = await response.json();
         const jogosRemotos = data.jogos || data;
 
-        const hashRemoto = JSON.stringify(jogosRemotos).length;
+        const hashRemoto = JSON.stringify(jogosRemotos);
+
         const hashLocal = localStorage.getItem('toolflix_jogos_hash');
 
         if (hashLocal != hashRemoto) {
@@ -691,8 +658,8 @@ grid.innerHTML = '';
     const idxOriginal = db_jogos.findIndex(item => item.nome === j.nome);
     const isF = db_favs.includes(j.nome);
 
-    // ✅ Premium: aceita o novo campo + compatível com itens antigos (categoria "Premium")
-    const isP = (j.premium === true);
+    const isP = (j.premium === true || j.categoria === 'Premium');
+
     const lock = isP && !isPremium && !modoAdmin;
 
     const card = document.createElement('div');
