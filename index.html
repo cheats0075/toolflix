@@ -327,6 +327,26 @@
     background: rgba(255,255,255,0.05);
     border-radius: 999px;
 }
+/* ===== FIX: menu do usuário acima dos cards ===== */
+.top-nav{
+  position: relative;
+  z-index: 99999;
+}
+
+#userArea{
+  position: relative;
+  z-index: 100000;
+}
+
+#userMenuBox{
+  position: absolute;
+  z-index: 100001;
+}
+
+#catalogo, .jogo{
+  position: relative;
+  z-index: 1;
+}
 
     </style>
 </head>
