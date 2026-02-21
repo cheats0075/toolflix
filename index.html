@@ -14,7 +14,7 @@
             --admin-panel-bg: rgba(25, 25, 25, 0.98);
         }
 
-        /* --- TEMAS (PRESERVADOS) --- */
+        /* --- TEMAS --- */
         body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdna.artstation.com/p/assets/covers/images/013/652/970/large/sm-bonin-athena-19.jpg?1540572163') !important; }
         body.theme-dbz { --cor-accent: #ff8c00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpaper.dog/large/20399504.jpg') !important; }
         body.theme-mk { --cor-accent: #ff0000; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://i.redd.it/he010ipc19p51.jpg') !important; }
@@ -22,34 +22,56 @@
         body.theme-gtav { --cor-accent: #fbc531; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://www.menosfios.com/wp-content/uploads/2013/12/gta5.jpg') !important; }
         body.theme-cod { --cor-accent: #7dff00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images.appspy.com/articles/13784/call-of-duty-mobile.webp') !important; }
         body.theme-re { --cor-accent: #ff0055; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://t2.tudocdn.net/660435?w=1920') !important; }
-		body.theme-cyberPunk { --cor-accent: #ff0055; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://w0.peakpx.com/wallpaper/641/699/HD-wallpaper-2022-cyberpunk-2077-cyberpunk-2077-2022-games-games-deviantart-cosplay.jpg') !important; }
+        body.theme-cyberPunk { --cor-accent: #ff0055; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://w0.peakpx.com/wallpaper/641/699/HD-wallpaper-2022-cyberpunk-2077-cyberpunk-2077-2022-games-games-deviantart-cosplay.jpg') !important; }
 
-        /* --- NOVOS TEMAS --- */
-        body.theme-mario {
-            --cor-accent: #ff0000;
-            background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://image.geekship.com.br/XTVbV7sCcfbpG2E74-cgLhUN4No=/2200x0/smart/filters:strip_icc():format(webp)/hull.geekship.com.br/wp-content/uploads/2023/04/Super-Mario-Bros-O-Filme.jpg');
-        }
-        body.theme-zelda {
-            --cor-accent: #00ff00;
-            background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images7.alphacoders.com/557/557051.jpg');
-        }
-        body.theme-spiderman {
-            --cor-accent: #ff4500;
-            background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpapercave.com/wp/wp9147243.jpg');
-        }
-        body.theme-fortnite {
-            --cor-accent: #1e90ff;
-            background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdn1.epicgames.com/offer/fn/FNECO_39-40_LoveAndLegends_EGS_Launcher_KeyArt_Blade_2560x1440_2560x1440-407af99db5db41f2a0596d35eb57b7d4');
-        }
+        body.theme-mario { --cor-accent: #ff0000; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://image.geekship.com.br/XTVbV7sCcfbpG2E74-cgLhUN4No=/2200x0/smart/filters:strip_icc():format(webp)/hull.geekship.com.br/wp-content/uploads/2023/04/Super-Mario-Bros-O-Filme.jpg'); }
+        body.theme-zelda { --cor-accent: #00ff00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images7.alphacoders.com/557/557051.jpg'); }
+        body.theme-spiderman { --cor-accent: #ff4500; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpapercave.com/wp/wp9147243.jpg'); }
+        body.theme-fortnite { --cor-accent: #1e90ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdn1.epicgames.com/offer/fn/FNECO_39-40_LoveAndLegends_EGS_Launcher_KeyArt_Blade_2560x1440_2560x1440-407af99db5db41f2a0596d35eb57b7d4'); }
 
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Segoe UI', system-ui, sans-serif; background:#050505; color:#f0f0f0; display: flex; min-height: 100vh; background-attachment: fixed; background-size: cover; background-position: center; transition: 0.5s; overflow-x: hidden; }
+        body {
+            font-family:'Segoe UI', system-ui, sans-serif;
+            background:#050505;
+            color:#f0f0f0;
+            display:flex;
+            min-height:100vh;
+            background-attachment:fixed;
+            background-size:cover;
+            background-position:center;
+            transition:0.5s;
+            overflow-x:hidden;
+        }
 
         /* SIDEBAR */
-        .sidebar { width: var(--sidebar-width); height: 100vh; background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(30px); border-right: 1px solid var(--glass-border); position: fixed; left: 0; top: 0; display: flex; flex-direction: column; padding: 25px; z-index: 1000; }
-        #logoToolFlix { font-family:'Impact', sans-serif; font-size:38px; background:linear-gradient(90deg,#fff, var(--cor-accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom: 30px; cursor: pointer; text-align: center; letter-spacing: 2px; }
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(30px);
+            border-right: 1px solid var(--glass-border);
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            z-index: 1000;
+        }
 
-        /* Logo Premium - efeito neon dourado animado */
+        #logoToolFlix {
+            font-family:'Impact', sans-serif;
+            font-size:38px;
+            background:linear-gradient(90deg,#fff, var(--cor-accent));
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            margin-bottom: 30px;
+            cursor: pointer;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        /* PREMIUM VISUAL */
         body.premium-active #logoToolFlix {
             background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700);
             -webkit-background-clip: text;
@@ -58,7 +80,6 @@
             text-shadow: 0 0 5px gold, 0 0 10px orange;
         }
 
-        /* Sidebar Premium */
         body.premium-active .sidebar {
             background: linear-gradient(to bottom, rgba(40,40,40,0.85), rgba(25,25,25,0.7));
             backdrop-filter: blur(50px);
@@ -72,7 +93,7 @@
             100% { transform: scale(1); text-shadow: 0 0 5px gold, 0 0 10px orange; }
         }
 
-        /* --- BOTÕES DE CATEGORIA ESTILO CÁPSULA BRILHANTE --- */
+        /* CATEGORIAS */
         .catBtn {
             background: rgba(255, 255, 255, 0.05);
             color: #fff;
@@ -105,31 +126,15 @@
             box-shadow: 0 0 15px rgba(0,255,255,0.6), inset 0 0 8px rgba(255,255,255,0.2);
         }
 
-        /* MAIN CONTENT */
+        /* MAIN */
         main { margin-left: var(--sidebar-width); flex: 1; padding: 30px 50px; width: calc(100% - var(--sidebar-width)); }
-        .top-nav { display: flex; justify-content: flex-end; align-items: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
-        .nav-item { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: #fff; padding: 12px 20px; border-radius: 50px; cursor: pointer; font-weight: 600; transition: 0.3s; font-size: 13px; outline: none; }
+        .top-nav { display:flex; justify-content:flex-end; align-items:center; gap:15px; margin-bottom:40px; flex-wrap:wrap; }
+        .nav-item { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color:#fff; padding:12px 20px; border-radius:50px; cursor:pointer; font-weight:600; transition:0.3s; font-size:13px; outline:none; }
         .nav-item:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
-		/* ===== Área do Usuário (Game UI) ===== */
-#userArea {
-    background: linear-gradient(145deg, #111, #1a1a1a) !important;
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 0 10px rgba(0,0,0,0.6);
-    border-radius: 50px;
-}
 
-#userArea #xpText {
-    color: #fff;
-    font-weight: 600;
-}
+        #themeSelect { background:#111; color:gold; border:1px solid gold; padding:10px 18px; border-radius:14px; font-weight:bold; cursor:pointer; }
 
-#userArea .xpBar {
-    background: #000;
-}
-
-        #themeSelect { background: #111; color: gold; border: 1px solid gold; padding: 10px 18px; border-radius: 14px; font-weight: bold; cursor: pointer; }
-
-        /* BOTÃO PREMIUM PULSANDO E BRILHANDO */
+        /* PREMIUM BTN */
         #premiumTriggerBtn {
             background: linear-gradient(135deg, #ffd700, #ff8c00) !important;
             color: #000 !important;
@@ -140,157 +145,34 @@
             position: relative;
             overflow: hidden;
         }
+        @keyframes pulsePremium { 0% {transform:scale(1)} 50% {transform:scale(1.05)} 100% {transform:scale(1)} }
+        @keyframes glowPremium { from { box-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700; } to { box-shadow: 0 0 20px #ffd700, 0 0 30px #ff8c00; } }
 
-        @keyframes pulsePremium {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
+        /* CATALOGO */
+        #catalogo { display:grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap:25px; }
+        .jogo { background: var(--glass-bg); border-radius:20px; padding:15px; border:1px solid var(--glass-border); position:relative; transition: all .4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor:pointer; overflow:hidden; }
+        .jogo:hover { transform: scale(1.06) translateY(-10px); border-color: var(--cor-accent); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 15px rgba(0, 255, 255, 0.2); z-index:2; }
+        .jogo img { width:100%; border-radius:14px; aspect-ratio:1/1; object-fit:cover; display:block; transition:.4s; }
 
-        @keyframes glowPremium {
-            from { box-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700; }
-            to { box-shadow: 0 0 20px #ffd700, 0 0 30px #ff8c00; }
-        }
-
-        /* CARDS */
-        #catalogo { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 25px; }
-        .jogo { background: var(--glass-bg); border-radius: 20px; padding: 15px; border: 1px solid var(--glass-border); position: relative; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; overflow: hidden; }
-        .jogo:hover { transform: scale(1.06) translateY(-10px); border-color: var(--cor-accent); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 15px rgba(0, 255, 255, 0.2); z-index: 2; }
-        .jogo img { width: 100%; border-radius: 14px; aspect-ratio: 1/1; object-fit: cover; display: block; transition: 0.4s; }
-
-        .jogo-premium {
-            border: 2px solid gold !important;
-            position: relative;
-            overflow: hidden;
-            animation: premiumGlow 2s infinite alternate;
-        }
-
-        @keyframes premiumGlow {
-            0% { box-shadow: 0 0 5px gold, 0 0 10px gold; }
-            50% { box-shadow: 0 0 15px gold, 0 0 25px gold; }
-            100% { box-shadow: 0 0 5px gold, 0 0 10px gold; }
-        }
-
+        .jogo-premium { border:2px solid gold !important; position:relative; overflow:hidden; animation: premiumGlow 2s infinite alternate; }
+        @keyframes premiumGlow { 0% { box-shadow: 0 0 5px gold, 0 0 10px gold; } 50% { box-shadow: 0 0 15px gold, 0 0 25px gold; } 100% { box-shadow: 0 0 5px gold, 0 0 10px gold; } }
         .premium-locked img { filter: grayscale(100%) blur(8px); opacity: 0.2; }
 
-        /* PAINEL ADMIN */
-        #adminSection { display:none; background: var(--admin-panel-bg); padding:30px; border-radius:24px; border: 1px solid var(--cor-accent); margin-bottom: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); animation: slideDown 0.4s ease; }
-        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .admin-input { background: rgba(255,255,255,0.03); border: 1px solid #333; padding: 14px; border-radius: 12px; color: #fff; font-size: 14px; transition: 0.3s; }
+        /* ADMIN */
+        #adminSection { display:none; background: var(--admin-panel-bg); padding:30px; border-radius:24px; border: 1px solid var(--cor-accent); margin-bottom: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); animation: slideDown .4s ease; }
+        .admin-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:25px; }
+        .admin-input { background: rgba(255,255,255,0.03); border:1px solid #333; padding:14px; border-radius:12px; color:#fff; font-size:14px; transition:.3s; }
 
-        /* MODAIS E TOASTS */
+        /* MODAIS / TOAST */
         .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.92); backdrop-filter:blur(15px); display:none; justify-content:center; align-items:center; z-index:9999; }
-        .modal-box { background: #111; padding: 45px; border-radius: 30px; width: 400px; text-align: center; border: 1px solid #333; }
+        .modal-box { background:#111; padding:45px; border-radius:30px; width:400px; text-align:center; border:1px solid #333; }
         #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 10000; }
-        .toast { background: #fff; color: #000; padding: 16px 28px; border-radius: 14px; margin-top: 12px; font-weight: bold; animation: toastIn 0.3s ease; }
+        .toast { background:#fff; color:#000; padding:16px 28px; border-radius:14px; margin-top:12px; font-weight:bold; animation: toastIn .3s ease; }
 
-        /* === SUPORTE FLUTUANTE === */
-        .suporte-container {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 9999;
-        }
+        @keyframes shake { 0%{transform:translateX(0)} 20%{transform:translateX(-4px)} 40%{transform:translateX(4px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} 100%{transform:translateX(0)} }
+        .card-shake { animation: shake 0.35s ease; box-shadow: 0 0 12px rgba(255,0,0,.7); }
 
-        .suporte-btn {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            border: none;
-            background: linear-gradient(135deg, #ffd700, #ffb700);
-            color: #000;
-            font-size: 30px;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.85);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: .25s;
-        }
-
-        .suporte-btn:hover {
-            transform: scale(1.08);
-        }
-
-        .suporte-painel {
-            position: absolute;
-            bottom: 78px;
-            right: 0;
-            width: 300px;
-            background: rgba(15, 15, 15, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 18px;
-            padding: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            display: none;
-        }
-
-        .suporte-container.ativo .suporte-painel { display: block; }
-
-        @keyframes shake {
-            0%{transform:translateX(0)}
-            20%{transform:translateX(-4px)}
-            40%{transform:translateX(4px)}
-            60%{transform:translateX(-3px)}
-            80%{transform:translateX(3px)}
-            100%{transform:translateX(0)}
-        }
-
-        .card-shake {
-            animation: shake 0.35s ease;
-            box-shadow: 0 0 12px rgba(255,0,0,.7);
-        }
-
-        /* ===== PREMIUM EXTRAS ===== */
-        #premiumWelcomeModal.modal-overlay {
-            background: radial-gradient(circle at 20% 10%, rgba(255,215,0,0.14), transparent 45%),
-                        radial-gradient(circle at 80% 20%, rgba(255,140,0,0.12), transparent 50%),
-                        rgba(0,0,0,0.92);
-            animation: premiumOverlayGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes premiumOverlayGlow {
-            from { filter: brightness(1); }
-            to   { filter: brightness(1.08); }
-        }
-
-        #premiumWelcomeModal .modal-box {
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255,215,0,0.35);
-            box-shadow: 0 0 25px rgba(255,215,0,0.18), 0 20px 60px rgba(0,0,0,0.7);
-        }
-
-        #premiumWelcomeModal .modal-box::before{
-            content:"";
-            position:absolute;
-            inset:-2px;
-            background: linear-gradient(120deg,
-                transparent 0%,
-                rgba(255,215,0,0.15) 20%,
-                rgba(255,140,0,0.12) 35%,
-                transparent 60%
-            );
-            transform: translateX(-40%);
-            animation: premiumShimmer 2.2s linear infinite;
-            pointer-events:none;
-        }
-
-        @keyframes premiumShimmer {
-            0%   { transform: translateX(-60%); }
-            100% { transform: translateX(60%); }
-        }
-
-        #logoToolFlix.logo-premium-pop {
-            animation: logoPop 0.9s ease;
-        }
-
-        @keyframes logoPop {
-            0%   { transform: scale(1); filter: brightness(1); }
-            35%  { transform: scale(1.12); filter: brightness(1.25); }
-            100% { transform: scale(1); filter: brightness(1); }
-        }
-
+        /* PREMIUM BADGE + COUNTER */
         #premiumBadge {
             display:none;
             margin: 10px auto 0;
@@ -305,7 +187,6 @@
             box-shadow: 0 0 14px rgba(255,215,0,.35);
             border: 1px solid rgba(255,255,255,.18);
         }
-
         #premiumCounter {
             margin-top: 10px;
             padding: 12px;
@@ -327,14 +208,9 @@
             animation: lockFlash 0.55s ease;
             pointer-events:none;
         }
+        @keyframes lockFlash { 0% { opacity:0; transform: scale(0.98); } 40%{ opacity:1; transform: scale(1); } 100%{ opacity:0; transform: scale(1.02); } }
 
-        @keyframes lockFlash {
-            0% { opacity:0; transform: scale(0.98); }
-            40%{ opacity:1; transform: scale(1); }
-            100%{ opacity:0; transform: scale(1.02); }
-        }
-
-        /* ===== GAME / XP UI (NOVO) ===== */
+        /* ===== GAME / XP UI ===== */
         .xpBar{
             width: 160px;
             height: 12px;
@@ -377,6 +253,81 @@
         }
         .userMenuItem:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.12); }
 
+        /* deixa a área do usuário sempre escura */
+        #userArea {
+            background: linear-gradient(145deg, #111, #1a1a1a) !important;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.6);
+            border-radius: 50px;
+        }
+        #userArea #xpText { color:#fff; font-weight:600; }
+        #userArea .xpBar { background:#000; }
+
+        /* ===== CONQUISTAS (TROFÉUS) ===== */
+        .ach-badge {
+          display:inline-flex;
+          align-items:center;
+          gap:8px;
+          padding:8px 12px;
+          border-radius:14px;
+          border:1px solid rgba(255,255,255,0.10);
+          background: rgba(255,255,255,0.04);
+          margin: 6px 0;
+        }
+        .ach-badge.locked { opacity:.55; filter: grayscale(100%); }
+        .ach-title { font-weight:900; }
+        .ach-meta { font-size:12px; opacity:.85; }
+        .ach-progress {
+          height:10px;
+          border-radius:999px;
+          background: rgba(255,255,255,0.08);
+          border:1px solid rgba(255,255,255,0.10);
+          overflow:hidden;
+          margin-top:6px;
+        }
+        .ach-progress > div{
+          height:100%;
+          border-radius:999px;
+          background: linear-gradient(90deg, #00ffff, #ffd700);
+          transition: width .25s ease;
+        }
+
+        /* SUPORTE */
+        .suporte-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; }
+        .suporte-btn {
+            width: 64px; height: 64px; border-radius: 50%;
+            border: none; background: linear-gradient(135deg, #ffd700, #ffb700);
+            color: #000; font-size: 30px; cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.85);
+            display:flex; align-items:center; justify-content:center;
+            transition: .25s;
+        }
+        .suporte-btn:hover { transform: scale(1.08); }
+        .suporte-painel {
+            position:absolute; bottom:78px; right:0; width:300px;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            display:none;
+        }
+        .suporte-container.ativo .suporte-painel { display:block; }
+		/* ===== Scroll bonito Conquistas ===== */
+#achList::-webkit-scrollbar {
+    width: 8px;
+}
+
+#achList::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, gold, orange);
+    border-radius: 999px;
+}
+
+#achList::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+    border-radius: 999px;
+}
+
     </style>
 </head>
 <body class="theme-default">
@@ -388,10 +339,12 @@
 
     <div style="margin-bottom:25px">
         <input type="text" id="searchBar" placeholder="🔍 Buscar jogos..."
-               style="width:100%; padding:14px; border-radius:50px; border:1px solid #222; background:rgba(255,255,255,0.04); color:#fff; outline:none; font-size: 14px; padding-left: 20px;">
+               style="width:100%; padding:14px; border-radius:50px; border:1px solid #222;
+               background:rgba(255,255,255,0.04); color:#fff; outline:none;
+               font-size:14px; padding-left:20px;">
     </div>
 
-    <nav id="categoriaBtns" style="overflow-y: auto; padding-right: 5px;">
+    <nav id="categoriaBtns" style="overflow-y:auto; padding-right:5px;">
         <button class="catBtn active" data-cat="Todos">📂 Todos</button>
         <button class="catBtn" data-cat="Jogos PS2">🎮 Jogos PS2</button>
         <button class="catBtn" data-cat="PS2 com Cheats">🔥 PS2 Cheats</button>
@@ -412,7 +365,6 @@
 
     <div class="top-nav">
 
-        <!-- SELETOR DE TEMAS -->
         <select id="themeSelect" class="nav-item">
             <option value="default">🎭 Padrão</option>
             <option value="gow">God of War⚔️</option>
@@ -429,48 +381,29 @@
             <option value="fortnite">💎 Fortnite🎮</option>
         </select>
 
-        <!-- 👤 ÁREA DO USUÁRIO + XP -->
-        <div id="userArea" class="nav-item" style="display:flex; align-items:center; gap:12px; padding:10px 14px; position:relative;">
-
-            <button id="userLoginBtn" class="nav-item" style="margin:0; padding:10px 14px;">
-                👤 Fazer login
-            </button>
-
-            <div id="xpWrap" style="display:none; align-items:center; gap:10px;">
-                <div style="font-weight:900; font-size:12px; color:gold;">
-                    Nv <span id="userLevel">1</span>
-                </div>
-
-                <div class="xpBar">
-                    <div class="xpFill" id="xpFill" style="width:0%"></div>
-                </div>
-
-                <div id="xpText"
-                     style="font-size:11px; opacity:.9; min-width:80px; text-align:right;">
-                    0/100
-                </div>
-            </div>
-
-            <!-- MENU DROPDOWN -->
-            <div id="userMenuBox" class="userMenuBox" style="display:none;">
-                <button class="userMenuItem" id="openGameBtn">🎮 Game</button>
-                <button class="userMenuItem" id="logoutBtn">🚪 Sair</button>
-            </div>
-
-        </div>
-
-        <!-- BOTÕES EXISTENTES -->
         <button class="nav-item" id="sortBtn">🔃 Ordem: Recentes</button>
         <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
         <button class="nav-item" id="adminBtn">⚙️ Admin</button>
 
+        <!-- ===== ÁREA DO USUÁRIO (GAME) ===== -->
+        <div id="userArea" class="nav-item" style="display:flex; align-items:center; gap:10px; position:relative; cursor:pointer;">
+            <span id="userNick">Entrar</span>
+            <div class="xpBar">
+                <div class="xpFill" id="xpFill" style="width:0%"></div>
+            </div>
+            <span id="xpText">0/100</span>
+
+            <div id="userMenuBox" class="userMenuBox" style="display:none;">
+                <button class="userMenuItem" id="openGameBtn">🎮 Game</button>
+                <button class="userMenuItem" id="openAchBtn">🏆 Conquistas</button>
+                <button class="userMenuItem" id="logoutBtn">🚪 Sair</button>
+            </div>
+        </div>
+
         <div style="display:flex; flex-direction:column; gap:8px;">
-            <button class="nav-item" id="premiumTriggerBtn">
-                💎 ATIVAR PREMIUM
-            </button>
-            <button class="nav-item"
-                    id="solicitarTokenBtn"
-                    onclick="window.open('https://www.youtube.com/watch?v=FbHaSemn5NI', '_blank')"
+            <button class="nav-item" id="premiumTriggerBtn">💎 ATIVAR PREMIUM</button>
+            <button class="nav-item" id="solicitarTokenBtn"
+                    onclick="window.open('https://www.youtube.com/watch?v=FbHaSemn5NI','_blank')"
                     style="background:#f1c40f; color:#000; font-size:11px;">
                 🎁 GANHAR TOKEN
             </button>
@@ -478,1294 +411,1410 @@
 
     </div>
 
-    <!-- TÍTULO -->
-	<section id="adminSection">
-    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-        <h2 style="color:var(--cor-accent); font-size: 24px;">🚀 Dashboard Admin</h2>
-    </header>
-
-    <div class="admin-grid">
-        <input type="text" id="nomeJogo" class="admin-input" placeholder="Nome do Título">
-        <input type="text" id="linkCapa" class="admin-input" placeholder="Link da Imagem (URL)">
-        <input type="text" id="linkJogo" class="admin-input" placeholder="Link do Download (URL)">
-        <select id="selectCategoria" class="admin-input"></select>
-
-        <!-- ✅ marcar item como Premium -->
-        <label class="admin-input" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
-            <input type="checkbox" id="isPremiumItem" style="transform: scale(1.2);">
-            💎 Item Premium
-        </label>
-    </div>
-
-    <div style="display: flex; gap: 12px; margin-bottom: 35px;">
-        <button id="addJogoBtn" class="nav-item" style="background:var(--cor-accent); color:#000; border:none; flex: 2; font-size: 16px;">💾 SALVAR CONTEÚDO</button>
-        <button id="exportBackupBtn" class="nav-item" style="background:#2ecc71; color:#000; border:none; flex: 1;">📂 BACKUP</button>
-    </div>
-
-    <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 18px; border: 1px solid #222;">
-        <h4 style="color:gold; margin-bottom:15px;">🔑 Tokens</h4>
-
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap:10px; margin-bottom:20px">
-            <button id="genTokenBtn" class="nav-item" style="color:gold; border-color:gold">➕ GERAR</button>
-            <button id="exportTokensBtn" class="nav-item">📤 EXPORTAR</button>
-            <button id="importTokensBtn" class="nav-item">📥 IMPORTAR</button>
-            <button id="clearUsedBtn" class="nav-item" style="background:#ff4757; border:none; color:#fff">🧹 LIMPAR</button>
+    <!-- ===== LOGIN GAME ===== -->
+    <div id="userLoginModal" class="modal-overlay">
+        <div class="modal-box">
+            <h2>👤 Entrar no Game</h2>
+            <input type="text" id="userNickInput" class="admin-input"
+                   placeholder="Escolha um nickname"
+                   style="width:100%; margin-top:15px;">
+            <button id="userLoginSubmit" class="nav-item"
+                    style="margin-top:15px; width:100%; background:var(--cor-accent); color:#000;">
+                Entrar
+            </button>
         </div>
-
-        <div id="tokenList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; max-height: 150px; overflow-y: auto;"></div>
-        <input type="file" id="fileInput" style="display:none" accept=".json">
     </div>
-</section>
-    <h2 id="sectionTitle"
-        style="margin-bottom:30px; font-size:28px;">
-        Todos
-    </h2>
 
-    <!-- CATÁLOGO -->
+    <!-- ===== MODAL GAME ===== -->
+    <div id="gameModal" class="modal-overlay">
+        <div class="modal-box" style="width:500px; max-width:92vw; text-align:left;">
+            <h2 style="color:gold;">🏆 Painel Game</h2>
+            <div id="gameContent" style="margin-top:15px;"></div>
+            <button onclick="document.getElementById('gameModal').style.display='none'"
+                    class="nav-item"
+                    style="margin-top:15px; width:100%;">
+                Fechar
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== MODAL CONQUISTAS ===== -->
+    <div id="achModal" class="modal-overlay">
+        <div class="modal-box" style="width:520px; max-width:92vw; text-align:left;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <h2 style="color:gold;">🏆 Conquistas</h2>
+                <button id="closeAchBtn" class="nav-item" style="padding:8px 12px;">✖</button>
+            </div>
+            <div id="achList" style="max-height:60vh; overflow-y:auto; padding-right:8px;"></div>
+            <div id="achPlatinum" style="margin-top:15px; font-weight:900; color:gold;"></div>
+        </div>
+    </div>
+
+    <section id="adminSection"></section>
+
+    <h2 id="sectionTitle" style="margin-bottom:30px; font-size:28px;">Todos</h2>
     <section id="catalogo"></section>
 
 </main>
-<!-- ================== MODAIS EXISTENTES (ADMIN / PREMIUM) ================== -->
 
-<div id="loginModal" class="modal-overlay">
-    <div class="modal-box">
-        <h2 style="margin-bottom:20px">🔐 Admin</h2>
-        <input type="password" id="loginInput" class="admin-input" style="width:100%" placeholder="Senha">
-        <button id="loginSubmit" class="nav-item" style="background:var(--cor-accent); color:#000; width:100%; margin-top:10px">Entrar</button>
-    </div>
-</div>
-
-<div id="premiumModal" class="modal-overlay">
-    <div class="modal-box">
-        <h2 style="color:gold; margin-bottom:20px">💎 Ativar Premium</h2>
-        <input type="text" id="premiumInput" maxlength="6" class="admin-input" style="width:100%; text-align:center" placeholder="TOKEN">
-        <button id="premiumSubmit" class="nav-item" style="background:gold; color:#000; width:100%; margin-top:10px">Validar</button>
-    </div>
-</div>
-
-<!-- 💎 MODAL BOAS-VINDAS PREMIUM (JÁ EXISTIA) -->
-<div id="premiumWelcomeModal" class="modal-overlay">
-    <div class="modal-box" style="border:2px solid gold; background:linear-gradient(145deg,#111,#1a1a1a);">
-
-        <h2 style="color:gold; font-size:28px; margin-bottom:15px;">
-            💎 Bem-vindo ao Premium
-        </h2>
-
-        <p style="opacity:0.9; margin-bottom:20px;">
-            Você desbloqueou todos os conteúdos exclusivos
-        </p>
-
-        <div style="text-align:left; margin-bottom:25px; line-height:1.8; font-size:14px;">
-            ✔ Temas exclusivos<br>
-            ✔ Jogos Premium<br>
-            ✔ Conteúdo antecipado
-        </div>
-
-        <button id="premiumWelcomeBtn"
-            style="background:linear-gradient(135deg,#ffd700,#ff8c00);
-                   border:none;
-                   color:#000;
-                   padding:12px 20px;
-                   border-radius:50px;
-                   font-weight:700;
-                   cursor:pointer;
-                   width:100%;">
-            🚀 Explorar Agora
-        </button>
-
-    </div>
-</div>
-
-<!-- ================== NOVOS MODAIS (LOGIN / WELCOME / GAME) ================== -->
-
-<!-- 👤 MODAL LOGIN -->
-<div id="userLoginModal" class="modal-overlay">
-  <div class="modal-box">
-    <h2 style="margin-bottom:16px; color:gold;">👤 Login</h2>
-    <p style="opacity:.85; font-size:13px; margin-bottom:12px;">
-      Escolha seu nickname (fica salvo neste navegador).
-    </p>
-    <input type="text" id="userNickInput" class="admin-input"
-           style="width:100%; text-align:center" placeholder="Seu Nick">
-    <button id="userLoginSubmit" class="nav-item"
-            style="background:gold; color:#000; width:100%; margin-top:10px">
-      Entrar
-    </button>
-  </div>
-</div>
-
-<!-- 🏆 MODAL BOAS-VINDAS (LOGIN) -->
-<div id="userWelcomeModal" class="modal-overlay">
-  <div class="modal-box" style="border:2px solid gold;">
-    <h2 style="color:gold; font-size:26px; margin-bottom:12px;">🏆 Bem-vindo ao ToolFlix PRO</h2>
-    <p style="opacity:.9; margin-bottom:18px;">
-      Complete missões e ganhe XP para subir de nível.
-    </p>
-    <button id="userWelcomeOk" class="nav-item"
-            style="background:linear-gradient(135deg,#ffd700,#ff8c00); border:none; color:#000; width:100%; font-weight:900;">
-      ✅ OK, vamos lá
-    </button>
-  </div>
-</div>
-
-<!-- 🎮 MODAL GAME (MISSÕES) -->
-<div id="gameModal" class="modal-overlay">
-  <div class="modal-box" style="width:520px; max-width:92vw; text-align:left;">
-    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px;">
-      <h2 style="color:gold;">🎮 Painel Game</h2>
-      <button class="nav-item" id="closeGameBtn" style="padding:8px 12px;">✖</button>
-    </div>
-
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
-      <div style="font-weight:900;">Nv <span id="gmLevel">1</span></div>
-      <div class="xpBar" style="flex:1;">
-        <div class="xpFill" id="gmXpFill" style="width:0%"></div>
-      </div>
-      <div id="gmXpText" style="font-size:12px; opacity:.9; min-width:110px; text-align:right;">0/100</div>
-    </div>
-
-    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:14px; margin-bottom:12px;">
-      <div style="font-weight:900; margin-bottom:10px;">🔥 Missões Diárias</div>
-      <div id="gmDailyList" style="line-height:1.9; font-size:13px;"></div>
-      <div id="gmYoutubeCooldown" style="margin-top:10px; font-size:12px; opacity:.85;"></div>
-    </div>
-
-    <div style="background:rgba(255,215,0,0.06); border:1px solid rgba(255,215,0,0.18); border-radius:18px; padding:14px;">
-      <div style="font-weight:900; margin-bottom:10px; color:gold;">💎 Missão Especial</div>
-      <div id="gmSpecial" style="line-height:1.9; font-size:13px;"></div>
-    </div>
-
-  </div>
-</div>
-
-<!-- TOAST -->
 <div id="toast-container"></div>
 <script>
 (function(){
-    // Configurações e URLs
-    const URL_TOKENS = "https://raw.githubusercontent.com/cheats0075/toolflix/main/tokens.json";
-    const URL_JOGOS  = "https://raw.githubusercontent.com/cheats0075/toolflix/main/toolflix_backup.json";
 
-    // Banco de Dados Local
-    let db_jogos = JSON.parse(localStorage.getItem('jogosPS2')) || [];
-    let db_favs = JSON.parse(localStorage.getItem('toolflix_favs')) || [];
-    let db_tokens_ativos = JSON.parse(localStorage.getItem('toolflix_tokens_atv')) || [];
-    let db_tokens_usados = JSON.parse(localStorage.getItem('toolflix_tokens_usd')) || [];
+/* ===============================
+   CONFIG
+================================= */
 
-    let isPremium = false;
-    let modoAdmin = false;
-    let catAtiva = 'Todos';
-    let premiumMembersCount = 0;
+const URL_TOKENS = "https://raw.githubusercontent.com/cheats0075/toolflix/main/tokens.json";
+const URL_JOGOS  = "https://raw.githubusercontent.com/cheats0075/toolflix/main/toolflix_backup.json";
 
-    let sortModo = 'recentes';
-    let filterFav = false;
-    let editandoIndex = -1;
+/* ===============================
+   STORAGE BASE
+================================= */
 
-    // --- TOAST ---
-    function showToast(msg) {
-        const t = document.createElement('div');
-        t.className = 'toast';
-        t.innerText = msg;
-        document.getElementById('toast-container').appendChild(t);
-        setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 10000);
+let db_jogos = JSON.parse(localStorage.getItem('jogosPS2')) || [];
+let db_favs  = JSON.parse(localStorage.getItem('toolflix_favs')) || [];
+
+let isPremium = false;
+let modoAdmin = false;
+let catAtiva  = 'Todos';
+let sortModo  = 'recentes';
+let filterFav = false;
+
+/* ===============================
+   USER / XP SYSTEM
+================================= */
+
+const USER_KEY = 'toolflix_user';
+
+function loadUser(){
+    try {
+        return JSON.parse(localStorage.getItem(USER_KEY));
+    } catch {
+        return null;
+    }
+}
+
+function saveUser(u){
+    u = u || {};
+    u.xp = Number(u.xp || 0);
+    localStorage.setItem(USER_KEY, JSON.stringify(u));
+}
+
+function todayKey(){
+    const d = new Date();
+    return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+}
+
+/* ===============================
+   XP REGRAS
+================================= */
+
+const XP_RULES = {
+    youtube: 15,
+    download: 10,
+    theme: 15,
+    favorite: 5,
+    premium: 100
+};
+
+const DAILY_KEY = 'toolflix_xp_daily_';
+
+function getDaily(){
+    try{
+        return JSON.parse(localStorage.getItem(DAILY_KEY + todayKey()) || '{"downloads":0,"themes":0,"favorites":0}');
+    }catch{
+        return {downloads:0,themes:0,favorites:0};
+    }
+}
+
+function setDaily(d){
+    localStorage.setItem(DAILY_KEY + todayKey(), JSON.stringify(d));
+}
+
+/* ===============================
+   LEVEL SYSTEM
+================================= */
+
+function getLevelInfo(totalXp){
+    if(totalXp < 100) return {level:1, min:0, max:100};
+    if(totalXp < 250) return {level:2, min:100, max:250};
+    if(totalXp < 500) return {level:3, min:250, max:500};
+
+    const extra = totalXp - 500;
+    const level = 4 + Math.floor(extra / 300);
+    const min   = 500 + (level-4)*300;
+    const max   = min + 300;
+    return {level, min, max};
+}
+
+function updateUserUI(){
+    const u = loadUser();
+    const nickEl = document.getElementById('userNick');
+    const xpFill = document.getElementById('xpFill');
+    const xpText = document.getElementById('xpText');
+
+    if(!u || !u.nick){
+        nickEl.innerText = "Entrar";
+        xpFill.style.width = "0%";
+        xpText.innerText = "0/100";
+        return;
     }
 
-    // --- PREMIUM STATS ---
-    function getPremiumStats() {
-        const totalPremium = db_jogos.filter(j => (j && (j.premium === true || j.categoria === 'Premium'))).length;
-        const totalItens = db_jogos.length;
-        const desbloqueados = (isPremium || modoAdmin) ? totalPremium : 0;
-        return { totalPremium, totalItens, desbloqueados };
+    nickEl.innerText = u.nick;
+
+    const info = getLevelInfo(u.xp);
+    const pct  = ((u.xp - info.min) / (info.max - info.min)) * 100;
+
+    xpFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
+    xpText.innerText   = `${u.xp - info.min}/${info.max - info.min} (Nv ${info.level})`;
+}
+
+/* ===============================
+   AWARD XP
+================================= */
+
+function awardXp(amount, reason){
+    const u = loadUser();
+    if(!u || !u.nick) return;
+
+    u.xp = Number(u.xp || 0) + Number(amount || 0);
+    saveUser(u);
+
+    showToast(`+${amount} XP (${reason})`);
+    updateUserUI();
+}
+
+/* ===============================
+   TOAST
+================================= */
+
+function showToast(msg){
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.innerText = msg;
+    document.getElementById('toast-container').appendChild(t);
+
+    setTimeout(()=>{
+        t.style.opacity = '0';
+        setTimeout(()=> t.remove(), 300);
+    }, 6000);
+}
+/* ===============================
+   LOGIN / MENU USUÁRIO
+================================= */
+
+function openLogin(){
+    const m = document.getElementById('userLoginModal');
+    const inp = document.getElementById('userNickInput');
+    if(m) m.style.display = 'flex';
+    if(inp) inp.focus();
+}
+
+function closeLogin(){
+    const m = document.getElementById('userLoginModal');
+    if(m) m.style.display = 'none';
+}
+
+function toggleUserMenu(forceClose=false){
+    const box = document.getElementById('userMenuBox');
+    if(!box) return;
+    if(forceClose){
+        box.style.display = 'none';
+        return;
     }
+    box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+}
 
-    function updatePremiumSidebar() {
-        const badge = document.getElementById('premiumBadge');
-        const counter = document.getElementById('premiumCounter');
-        if (!counter) return;
+const userArea = document.getElementById('userArea');
 
-        const s = getPremiumStats();
+if(userArea){
+    userArea.addEventListener('click', ()=>{
+        const u = loadUser();
+        if(!u || !u.nick){
+            openLogin();
+        } else {
+            toggleUserMenu();
+        }
+    });
+}
 
-        if (badge) badge.style.display = isPremium ? 'block' : 'none';
+document.addEventListener('click', (e)=>{
+    const box = document.getElementById('userMenuBox');
+    const area = document.getElementById('userArea');
+    if(!box || !area) return;
 
-        const headline = isPremium
-            ? `💎 Você é um dos <b>${premiumMembersCount}</b> usuários Premium`
-            : `💎 <b>${premiumMembersCount}</b> usuários Premium ativos`;
-
-        counter.innerHTML = `
-            <div style="font-weight:900; color:gold; margin-bottom:6px;">${headline}</div>
-            <div>🔓 Desbloqueados: <b>${s.desbloqueados}</b> / <b>${s.totalPremium}</b></div>
-            <div>📦 Total no catálogo: <b>${s.totalItens}</b></div>
-        `;
+    if(!area.contains(e.target) && !box.contains(e.target)){
+        box.style.display = 'none';
     }
+});
 
-    function lockFeedback(el) {
-        if (!el) return;
-        el.classList.add('lock-flash');
-        setTimeout(() => el.classList.remove('lock-flash'), 650);
-    }
+/* ===============================
+   LOGIN SUBMIT (MANTÉM XP)
+================================= */
 
-    // --- SEGURANÇA E VALIDAÇÃO PREMIUM ---
-    async function checkPremiumSync() {
-        const tokenAtivador = localStorage.getItem('toolflix_token_ativador');
+const userLoginSubmit = document.getElementById('userLoginSubmit');
 
-        if (!tokenAtivador) {
-            isPremium = false;
+if(userLoginSubmit){
+    userLoginSubmit.onclick = ()=>{
+        const inp = document.getElementById('userNickInput');
+        const nick = (inp?.value || '').trim().slice(0,18);
+
+        if(!nick){
+            showToast("Digite um nickname!");
+            return;
         }
 
-        try {
-            const resp = await fetch(URL_TOKENS + '?v=' + Date.now());
-            if (!resp.ok) throw new Error();
+        const old = loadUser();
+        const keepXp = old ? Number(old.xp || 0) : 0;
 
-            const data = await resp.json();
-            const ativos = data.ativos || [];
-            const usados = data.usados || [];
+        saveUser({ nick: nick, xp: keepXp });
 
-            premiumMembersCount = usados.length;
-            localStorage.setItem('toolflix_premium_members', String(premiumMembersCount));
+        closeLogin();
+        toggleUserMenu(true);
+        updateUserUI();
 
-            if (!tokenAtivador) {
-                render();
-                return;
+        showToast(`Bem-vindo, ${nick}!`);
+    };
+
+    const inp = document.getElementById('userNickInput');
+    if(inp){
+        inp.addEventListener('keydown', (e)=>{
+            if(e.key === 'Enter'){
+                e.preventDefault();
+                userLoginSubmit.click();
             }
+        });
+    }
+}
 
-            if (!ativos.includes(tokenAtivador) || usados.includes(tokenAtivador)) {
+/* ===============================
+   LOGOUT (NÃO APAGA XP)
+================================= */
+
+const logoutBtn = document.getElementById('logoutBtn');
+
+if(logoutBtn){
+    logoutBtn.onclick = ()=>{
+        const old = loadUser();
+        const keepXp = old ? Number(old.xp || 0) : 0;
+
+        saveUser({ nick: null, xp: keepXp });
+
+        toggleUserMenu(true);
+        updateUserUI();
+
+        showToast("Você saiu.");
+    };
+}
+
+/* ===============================
+   GAME PANEL (MISSÕES)
+================================= */
+
+const LAST_YT_KEY = 'toolflix_last_youtube_xp';
+
+function ytCooldownLeft(){
+    const last = Number(localStorage.getItem(LAST_YT_KEY) || 0);
+    const now = Date.now();
+    const cd = 5 * 60 * 1000;
+    return Math.max(0, cd - (now - last));
+}
+
+function fmtTime(ms){
+    const s = Math.ceil(ms/1000);
+    const m = Math.floor(s/60);
+    const r = s % 60;
+    return `${m}m ${String(r).padStart(2,'0')}s`;
+}
+
+function renderGamePanel(){
+    const u = loadUser();
+    const div = document.getElementById('gameContent');
+    if(!div) return;
+
+    if(!u || !u.nick){
+        div.innerHTML = "Faça login para ver suas missões.";
+        return;
+    }
+
+    const d = getDaily();
+    const info = getLevelInfo(u.xp);
+    const inLevel = u.xp - info.min;
+    const need = info.max - info.min;
+
+    const ytLeft = ytCooldownLeft();
+
+    div.innerHTML = `
+        <div style="margin-bottom:15px;">
+            <div style="display:flex; justify-content:space-between;">
+                <div style="font-weight:900; color:gold;">Nível ${info.level}</div>
+                <div>XP: <b>${inLevel}/${need}</b></div>
+            </div>
+            <div class="xpBar" style="width:100%; height:14px; margin-top:8px;">
+                <div class="xpFill" style="width:${Math.max(0,Math.min(100,(inLevel/need)*100))}%"></div>
+            </div>
+        </div>
+
+        <div style="font-weight:900; color:gold;">🔥 Missões Diárias</div>
+        <div style="margin-top:10px; font-size:13px; line-height:1.9;">
+            <div>🎮 Baixar 3 jogos → <b>${d.downloads}/3</b></div>
+            <div>❤️ Favoritar 5 jogos → <b>${d.favorites}/5</b></div>
+            <div>🎨 Trocar tema → <b>${d.themes}/1</b></div>
+            <div>🎥 YouTube →
+                ${
+                    ytLeft>0
+                    ? `⏳ ${fmtTime(ytLeft)}`
+                    : `<span style="color:#8cff8c; font-weight:900;">Pronto</span>`
+                }
+            </div>
+        </div>
+
+        <div style="margin-top:15px; font-weight:900; color:gold;">💎 Especial</div>
+        <div style="margin-top:8px;">Virar Premium → 100 XP (único)</div>
+    `;
+}
+
+const openGameBtn = document.getElementById('openGameBtn');
+
+if(openGameBtn){
+    openGameBtn.onclick = ()=>{
+        toggleUserMenu(true);
+        document.getElementById('gameModal').style.display = 'flex';
+        renderGamePanel();
+    };
+}
+
+setInterval(()=>{
+    const m = document.getElementById('gameModal');
+    if(m && m.style.display === 'flex'){
+        renderGamePanel();
+    }
+}, 1000);
+/* ===============================
+   PREMIUM SYNC + JOGOS SYNC
+================================= */
+
+let premiumMembersCount = 0;
+
+async function checkPremiumSync(){
+    const tokenAtivador = localStorage.getItem('toolflix_token_ativador');
+
+    if(!tokenAtivador){
+        isPremium = false;
+        localStorage.setItem('toolflix_premium_atv','false');
+    }
+
+    try{
+        const resp = await fetch(URL_TOKENS + '?v=' + Date.now());
+        if(!resp.ok) throw new Error();
+
+        const data = await resp.json();
+        const ativos = data.ativos || [];
+        const usados = data.usados || [];
+
+        premiumMembersCount = usados.length;
+        localStorage.setItem('toolflix_premium_members', String(premiumMembersCount));
+
+        if(!tokenAtivador){
+            isPremium = false;
+        } else {
+            if(!ativos.includes(tokenAtivador) || usados.includes(tokenAtivador)){
                 localStorage.removeItem('toolflix_premium_atv');
                 localStorage.removeItem('toolflix_token_ativador');
                 isPremium = false;
             } else {
                 isPremium = true;
-                localStorage.setItem('toolflix_premium_atv', 'true');
-            }
-
-            render();
-        } catch (e) {
-            // fallback se GitHub falhar
-            isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';
-            premiumMembersCount = parseInt(localStorage.getItem('toolflix_premium_members') || '0', 10);
-            render();
-        }
-    }
-
-    // --- SYNC CATÁLOGO REMOTO ---
-    async function syncJogos() {
-        try {
-            const response = await fetch(URL_JOGOS + '?v=' + Date.now());
-            if (!response.ok) return;
-
-            const data = await response.json();
-            const jogosRemotos = data.jogos || data;
-
-            const hashRemoto = JSON.stringify(jogosRemotos);
-            const hashLocal = localStorage.getItem('toolflix_jogos_hash');
-
-            if (hashLocal != hashRemoto) {
-                db_jogos = jogosRemotos;
-                localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
-                localStorage.setItem('toolflix_jogos_hash', hashRemoto);
-                render();
-            }
-        } catch (e) {
-            console.warn("Catálogo remoto indisponível.");
-        }
-    }
-	    // ================== GAME / XP SYSTEM (NOVO) ==================
-
-    const XP_RULES = {
-        youtube:  { xp: 15, cooldownMs: 5 * 60 * 1000 }, // 5 min
-        download: { xp: 10, dailyLimit: 3 },
-        theme:    { xp: 15, dailyLimit: 1 },
-        favorite: { xp: 5,  dailyLimit: 5 },
-        premiumOnce: { xp: 100 }
-    };
-
-    function todayKey() {
-        const d = new Date();
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2,'0');
-        const day = String(d.getDate()).padStart(2,'0');
-        return `${y}-${m}-${day}`;
-    }
-
-    function loadUser() {
-        try { return JSON.parse(localStorage.getItem('toolflix_user') || 'null'); }
-        catch { return null; }
-    }
-
-    function saveUser(u) {
-        localStorage.setItem('toolflix_user', JSON.stringify(u));
-    }
-
-    function getDaily() {
-        const k = 'toolflix_xp_daily_' + todayKey();
-        try {
-            return JSON.parse(localStorage.getItem(k) || '{"downloads":0,"favoritos":0,"tema":0,"youtube":0}');
-        } catch {
-            return { downloads:0, favoritos:0, tema:0, youtube:0 };
-        }
-    }
-
-    function setDaily(d) {
-        const k = 'toolflix_xp_daily_' + todayKey();
-        localStorage.setItem(k, JSON.stringify(d));
-    }
-
-    // Nível:
-    // Nv1: 0-99 (100)
-    // Nv2: 100-249 (150)
-    // Nv3: 250-499 (250)
-    // Nv4+: +300 por nível (ajustável)
-    function getLevelInfo(totalXp) {
-        const thresholds = [0, 100, 250, 500];
-
-        if (totalXp < thresholds[1]) return { level:1, start:0,   need:100, inLevel: totalXp };
-        if (totalXp < thresholds[2]) return { level:2, start:100, need:150, inLevel: totalXp - 100 };
-        if (totalXp < thresholds[3]) return { level:3, start:250, need:250, inLevel: totalXp - 250 };
-
-        const base = 500;
-        const perLevel = 300;
-        const extra = totalXp - base;
-        const n = Math.floor(extra / perLevel);
-
-        const level = 4 + n;
-        const start = base + (n * perLevel);
-        const inLevel = totalXp - start;
-
-        return { level, start, need: perLevel, inLevel };
-    }
-
-    function msToMinSec(ms) {
-        const s = Math.max(0, Math.ceil(ms / 1000));
-        const m = Math.floor(s / 60);
-        const r = s % 60;
-        return `${m}m ${String(r).padStart(2,'0')}s`;
-    }
-
-    function updateUserUI() {
-        const u = loadUser();
-
-        const btn = document.getElementById('userLoginBtn');
-        const xpWrap = document.getElementById('xpWrap');
-        const levelEl = document.getElementById('userLevel');
-        const fill = document.getElementById('xpFill');
-        const text = document.getElementById('xpText');
-
-        if (!btn || !xpWrap) return;
-
-        if (!u || !u.nick) {
-            btn.innerText = '👤 Fazer login';
-            xpWrap.style.display = 'none';
-            const menu = document.getElementById('userMenuBox');
-            if (menu) menu.style.display = 'none';
-            return;
-        }
-
-        btn.innerText = '👤 ' + u.nick;
-        xpWrap.style.display = 'flex';
-
-        const li = getLevelInfo(u.xp || 0);
-        const pct = Math.max(0, Math.min(100, (li.inLevel / li.need) * 100));
-
-        if (levelEl) levelEl.innerText = String(li.level);
-        if (fill) fill.style.width = pct.toFixed(1) + '%';
-        if (text) text.innerText = `${li.inLevel}/${li.need}`;
-
-        // atualiza também o game modal se estiver aberto
-        updateGameUI();
-    }
-
-    function awardXp(amount, reason) {
-        const u = loadUser();
-        if (!u || !u.nick) return;
-
-        u.xp = Number(u.xp || 0) + Number(amount || 0);
-        saveUser(u);
-
-        showToast(`🏆 +${amount} XP (${reason})`);
-        updateUserUI();
-    }
-
-    function updateGameUI() {
-        const u = loadUser();
-        if (!u || !u.nick) return;
-
-        const d = getDaily();
-        const li = getLevelInfo(u.xp || 0);
-        const pct = Math.max(0, Math.min(100, (li.inLevel / li.need) * 100));
-
-        // topo modal game
-        const gmLevel = document.getElementById('gmLevel');
-        const gmFill = document.getElementById('gmXpFill');
-        const gmText = document.getElementById('gmXpText');
-
-        if (gmLevel) gmLevel.innerText = String(li.level);
-        if (gmFill) gmFill.style.width = pct.toFixed(1) + '%';
-        if (gmText) gmText.innerText = `${li.inLevel}/${li.need}`;
-
-        // missões diárias
-        const list = document.getElementById('gmDailyList');
-        if (list) {
-            list.innerHTML = `
-                <div>🎮 Baixar jogos: <b>${d.downloads}/3</b> <span style="opacity:.85">(10 XP cada)</span></div>
-                <div>❤️ Favoritar: <b>${d.favoritos}/5</b> <span style="opacity:.85">(5 XP cada)</span></div>
-                <div>🎨 Trocar tema: <b>${d.tema}/1</b> <span style="opacity:.85">(15 XP)</span></div>
-                <div>🎥 Assistir YouTube: <b>${d.youtube}</b> <span style="opacity:.85">(15 XP a cada 5 min)</span></div>
-            `;
-        }
-
-        // cooldown youtube
-        const lastYt = parseInt(localStorage.getItem('toolflix_last_youtube_xp') || '0', 10);
-        const wait = XP_RULES.youtube.cooldownMs - (Date.now() - lastYt);
-        const cd = document.getElementById('gmYoutubeCooldown');
-        if (cd) {
-            cd.innerHTML = (wait > 0)
-                ? `⏳ Próximo XP do YouTube em: <b>${msToMinSec(wait)}</b>`
-                : `✅ YouTube pronto: ganhe <b>+15 XP</b> ao abrir outro vídeo.`;
-        }
-
-        // missão especial premium
-        const sp = document.getElementById('gmSpecial');
-        if (sp) {
-            const claimed = localStorage.getItem('toolflix_premium_xp_claimed') === '1';
-            sp.innerHTML = claimed
-                ? `💎 Virar Premium: <b>Concluído</b> ✅ <span style="opacity:.85">(100 XP)</span>`
-                : `💎 Virar Premium: <b>Pendente</b> <span style="opacity:.85">(100 XP - único)</span>`;
-        }
-    }
-
-    // ================== LOGIN / MENU / GAME MODAL (NOVO) ==================
-
-    function openGame() {
-        const gm = document.getElementById('gameModal');
-        if (!gm) return;
-        updateGameUI();
-        gm.style.display = 'flex';
-    }
-
-    function closeGame() {
-        const gm = document.getElementById('gameModal');
-        if (gm) gm.style.display = 'none';
-    }
-
-    // toggle menu do usuário (dropdown)
-    function toggleUserMenu() {
-        const box = document.getElementById('userMenuBox');
-        if (!box) return;
-        box.style.display = (box.style.display === 'block') ? 'none' : 'block';
-    }
-
-    function openLoginModal() {
-        const m = document.getElementById('userLoginModal');
-        const inp = document.getElementById('userNickInput');
-        if (m) m.style.display = 'flex';
-        if (inp) inp.focus();
-    }
-
-    function closeLoginModal() {
-        const m = document.getElementById('userLoginModal');
-        if (m) m.style.display = 'none';
-    }
-
-    // eventos UI (login / menu)
-    const userLoginBtn = document.getElementById('userLoginBtn');
-    if (userLoginBtn) {
-        userLoginBtn.onclick = () => {
-            const u = loadUser();
-            if (!u || !u.nick) {
-                openLoginModal();
-                return;
-            }
-            toggleUserMenu();
-        };
-    }
-
-    // fechar menu clicando fora
-    document.addEventListener('click', (e) => {
-        const box = document.getElementById('userMenuBox');
-        const btn = document.getElementById('userLoginBtn');
-        if (!box || !btn) return;
-
-        const clickedBtn = (e.target === btn) || btn.contains(e.target);
-        const clickedMenu = box.contains(e.target);
-
-        if (!clickedBtn && !clickedMenu) box.style.display = 'none';
-    });
-
-    // submit login
-    const userLoginSubmit = document.getElementById('userLoginSubmit');
-    if (userLoginSubmit) {
-        userLoginSubmit.onclick = () => {
-            const inp = document.getElementById('userNickInput');
-            const nick = (inp?.value || '').trim().slice(0, 18);
-            if (!nick) return showToast("Digite um nick!");
-
-            // mantém XP salvo mesmo após "Sair"
-const old = loadUser();
-const keepXp = old ? Number(old.xp || 0) : 0;
-
-const u = { nick: nick, xp: keepXp };
-saveUser(u);
-
-            closeLoginModal();
-            updateUserUI();
-
-            // boas-vindas 1x por nick
-            const key = 'toolflix_user_welcome_seen_' + nick.toLowerCase();
-            if (!localStorage.getItem(key)) {
-                const wm = document.getElementById('userWelcomeModal');
-                if (wm) wm.style.display = 'flex';
-                localStorage.setItem(key, '1');
-            } else {
-                openGame();
-            }
-        };
-
-        // Enter no input
-        const inp = document.getElementById('userNickInput');
-        if (inp) {
-            inp.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    userLoginSubmit.click();
-                }
-            });
-        }
-    }
-
-    // welcome ok
-    const userWelcomeOk = document.getElementById('userWelcomeOk');
-    if (userWelcomeOk) {
-        userWelcomeOk.onclick = () => {
-            const wm = document.getElementById('userWelcomeModal');
-            if (wm) wm.style.display = 'none';
-            openGame();
-        };
-    }
-
-    // abrir game
-    const openGameBtn = document.getElementById('openGameBtn');
-    if (openGameBtn) {
-        openGameBtn.onclick = () => {
-            const box = document.getElementById('userMenuBox');
-            if (box) box.style.display = 'none';
-            openGame();
-        };
-    }
-
-    // fechar game
-    const closeGameBtn = document.getElementById('closeGameBtn');
-    if (closeGameBtn) closeGameBtn.onclick = closeGame;
-
-    // logout
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.onclick = () => {
-            const raw = localStorage.getItem('toolflix_user');
-let u = null;
-
-try { u = raw ? JSON.parse(raw) : null; } catch(e) { u = null; }
-
-if (u) {
-  u.nick = null;                 // desloga só o nick
-  u.xp = Number(u.xp || 0);      // garante número
-  localStorage.setItem('toolflix_user', JSON.stringify(u));
-}
-            const box = document.getElementById('userMenuBox');
-            if (box) box.style.display = 'none';
-            updateUserUI();
-            showToast("Você saiu.");
-        };
-    }
-
-    // atualizar cooldown do game quando modal estiver aberto
-    setInterval(() => {
-        const gm = document.getElementById('gameModal');
-        if (gm && gm.style.display === 'flex') updateGameUI();
-    }, 1000);
-	    // ================== RENDER PRINCIPAL (COM XP HOOKS) ==================
-
-    function render() {
-        const grid = document.getElementById('catalogo');
-        if (!grid) return;
-
-        // Ativa efeitos premium (visual)
-        if (isPremium) {
-            document.body.classList.add('premium-active');
-            const lg = document.getElementById('logoToolFlix');
-            if (lg) lg.innerText = 'ToolFlix Pro';
-        } else {
-            document.body.classList.remove('premium-active');
-            const lg = document.getElementById('logoToolFlix');
-            if (lg) lg.innerText = 'ToolFlix';
-        }
-
-        grid.innerHTML = '';
-
-        // botões premium
-        const btnP = document.getElementById('premiumTriggerBtn');
-        const btnS = document.getElementById('solicitarTokenBtn');
-
-        if (btnP && btnS) {
-            if (isPremium) {
-                btnP.style.display = 'none';
-                btnS.style.display = 'none';
-            } else {
-                btnP.style.display = 'block';
-                btnS.style.display = 'block';
+                localStorage.setItem('toolflix_premium_atv','true');
             }
         }
-
-        // botão favoritos (visual)
-        const favBtn = document.getElementById('favFiltroBtn');
-        if (favBtn) {
-            favBtn.style.background = filterFav ? 'var(--cor-accent)' : 'rgba(255,255,255,0.05)';
-            favBtn.style.color = filterFav ? '#000' : '#fff';
-        }
-
-        // filtro por categoria
-        let lista = [...db_jogos];
-        if (catAtiva !== 'Todos') lista = lista.filter(j => j.categoria === catAtiva);
-
-        // busca
-        const searchEl = document.getElementById('searchBar');
-        const search = (searchEl ? searchEl.value : '').toLowerCase();
-        if (search) lista = lista.filter(j => (j.nome || '').toLowerCase().includes(search));
-
-        // favoritos
-        if (filterFav) lista = lista.filter(j => db_favs.includes(j.nome));
-
-        // ordenação
-        if (sortModo === 'az') lista.sort((a,b) => (a.nome||'').localeCompare(b.nome||''));
-        else if (sortModo === 'za') lista.sort((a,b) => (b.nome||'').localeCompare(a.nome||''));
-        else if (sortModo === 'recentes') lista.reverse();
-        // 'antigos' = ordem natural (não faz nada)
-
-        // render cards
-        lista.forEach((j) => {
-            const idxOriginal = db_jogos.findIndex(item => item.nome === j.nome);
-            const isF = db_favs.includes(j.nome);
-
-            const isP = (j.premium === true || j.categoria === 'Premium');
-            const lock = isP && !isPremium && !modoAdmin;
-
-            const card = document.createElement('div');
-            card.className = `jogo ${isP ? 'jogo-premium' : ''} ${lock ? 'premium-locked' : ''}`;
-
-            card.onclick = () => {
-                if (lock) {
-                    showToast("🔒 Conteúdo Premium!");
-                    lockFeedback(card);
-
-                    card.classList.add('card-shake');
-                    setTimeout(() => card.classList.remove('card-shake'), 400);
-
-                    // som
-                    try {
-                        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                        const osc = ctx.createOscillator();
-                        const gain = ctx.createGain();
-                        osc.connect(gain);
-                        gain.connect(ctx.destination);
-                        osc.frequency.value = 180;
-                        gain.gain.value = 0.2;
-                        osc.start();
-                        osc.stop(ctx.currentTime + 0.12);
-                    } catch(e) {}
-
-                    return;
-                }
-
-                // abre link
-                window.open(j.link, '_blank');
-
-                // XP só se estiver logado
-                const u = loadUser();
-                if (!u || !u.nick) return;
-
-                // 🎥 YouTube: +15 XP a cada 5 minutos (sem limite diário)
-                if (j.categoria === 'YouTube') {
-                    const last = parseInt(localStorage.getItem('toolflix_last_youtube_xp') || '0', 10);
-                    const now = Date.now();
-                    const wait = XP_RULES.youtube.cooldownMs - (now - last);
-
-                    const d = getDaily();
-                    if (wait <= 0) {
-                        localStorage.setItem('toolflix_last_youtube_xp', String(now));
-                        d.youtube += 1;
-                        setDaily(d);
-                        awardXp(XP_RULES.youtube.xp, 'YouTube');
-                    } else {
-                        showToast(`⏳ YouTube XP em ${msToMinSec(wait)}`);
-                        updateGameUI();
-                    }
-                    return;
-                }
-
-                // 🎮 Download: +10 XP por clique em jogo (limite 3/dia)
-                const d = getDaily();
-                if (d.downloads < XP_RULES.download.dailyLimit) {
-                    d.downloads += 1;
-                    setDaily(d);
-                    awardXp(XP_RULES.download.xp, 'Download');
-                } else {
-                    showToast("⚠️ Limite diário de XP por download atingido (3).");
-                }
-            };
-
-            card.innerHTML = `
-                <button onclick="event.stopPropagation(); window.toggleFav('${(j.nome||'').replace(/'/g,"\\'")}')"
-                    style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.7); color:${isF?'#ff4757':'#fff'}; border:none; width:34px; height:34px; border-radius:50%; cursor:pointer; z-index:10; transition:0.3s; display:flex; align-items:center; justify-content:center; font-size:18px">
-                    ${isF?'❤️':'🤍'}
-                </button>
-
-                ${lock ? '<span style="position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:40px; z-index:5">🔒</span>' : ''}
-
-                <img src="${j.capa}" alt="">
-                <div style="margin-top:12px; text-align:center">
-                    <span style="font-size:10px; color:var(--cor-accent); font-weight:800; letter-spacing:1px">
-                        ${j.categoria}${isP ? ' 💎' : ''}
-                    </span>
-                    <p style="font-weight:600; font-size:13px; margin-top:4px; white-space:normal; display:block;">
-                        ${j.nome}
-                    </p>
-                </div>
-
-                ${modoAdmin ? `
-                    <div style="display:flex; gap:5px; margin-top:10px">
-                        <button onclick="event.stopPropagation(); window.editJogo(${idxOriginal})"
-                            style="flex:1; background:gold; color:#000; border:none; padding:8px; border-radius:10px; font-weight:bold; cursor:pointer; font-size:11px">
-                            EDITAR
-                        </button>
-                        <button onclick="event.stopPropagation(); window.delJogo('${(j.nome||'').replace(/'/g,"\\'")}')"
-                            style="flex:1; background:#ff4757; color:#fff; border:none; padding:8px; border-radius:10px; cursor:pointer; font-size:11px">
-                            DELETAR
-                        </button>
-                    </div>
-                ` : ''}
-            `;
-
-            grid.appendChild(card);
-        });
 
         updatePremiumSidebar();
-        updateUserUI();
-
-        // (vai ser declarado na parte 7)
-        renderTokenList();
-    }
-	    // ================== TOKENS (SISTEMA) ==================
-
-    function renderTokenList() {
-        const div = document.getElementById('tokenList');
-        if (!div) return;
-
-        div.innerHTML = '';
-
-        db_tokens_ativos.forEach((t, i) => {
-            div.innerHTML += `
-                <div style="background:rgba(0,255,0,0.1); border:1px solid rgba(0,255,0,0.2); color:#00ff00; padding:10px; border-radius:12px; font-size:11px; display:flex; justify-content:space-between; align-items:center">
-                    <span>${t}</span>
-                    <b onclick="desativarToken(${i})" style="cursor:pointer; color:#ff4757; font-size:14px">×</b>
-                </div>
-            `;
-        });
-
-        db_tokens_usados.forEach((t) => {
-            div.innerHTML += `
-                <div style="background:rgba(255,255,255,0.05); color:#555; padding:10px; border-radius:12px; font-size:11px; text-decoration:line-through">
-                    # ${t}
-                </div>
-            `;
-        });
-    }
-
-    function saveTokensLocal() {
-        localStorage.setItem('toolflix_tokens_atv', JSON.stringify(db_tokens_ativos));
-        localStorage.setItem('toolflix_tokens_usd', JSON.stringify(db_tokens_usados));
-    }
-
-    const genTokenBtn = document.getElementById('genTokenBtn');
-    if (genTokenBtn) {
-        genTokenBtn.onclick = () => {
-            const r = Math.random().toString(36).substring(2,8).toUpperCase();
-            db_tokens_ativos.push(r);
-            saveTokensLocal();
-            render();
-        };
-    }
-
-    const exportTokensBtn = document.getElementById('exportTokensBtn');
-    if (exportTokensBtn) {
-        exportTokensBtn.onclick = () => {
-            const data = { ativos: db_tokens_ativos, usados: db_tokens_usados };
-            const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'tokens_backup.json';
-            a.click();
-        };
-    }
-
-    const importTokensBtn = document.getElementById('importTokensBtn');
-    if (importTokensBtn) {
-        importTokensBtn.onclick = () => document.getElementById('fileInput').click();
-    }
-
-    const fileInput = document.getElementById('fileInput');
-    if (fileInput) {
-        fileInput.onchange = (e) => {
-            const fr = new FileReader();
-            fr.onload = (ev) => {
-                try {
-                    const data = JSON.parse(ev.target.result);
-                    db_tokens_ativos = data.ativos || [];
-                    db_tokens_usados = data.usados || [];
-                    saveTokensLocal();
-                    render();
-                    showToast("Lista de Tokens Atualizada!");
-                } catch(err) {
-                    showToast("Arquivo Inválido!");
-                }
-            };
-            fr.readAsText(e.target.files[0]);
-        };
-    }
-
-    window.desativarToken = (i) => {
-        const t = db_tokens_ativos.splice(i,1)[0];
-        if (!db_tokens_usados.includes(t)) db_tokens_usados.push(t);
-        saveTokensLocal();
         render();
-    };
 
-    const clearUsedBtn = document.getElementById('clearUsedBtn');
-    if (clearUsedBtn) {
-        clearUsedBtn.onclick = () => {
-            if (confirm("Limpar histórico de tokens usados?")) {
-                db_tokens_usados = [];
-                saveTokensLocal();
-                render();
-            }
-        };
-    }
-
-    // ================== ADMIN (EDITAR / SALVAR / DELETAR) ==================
-
-    window.editJogo = (idx) => {
-        const j = db_jogos[idx];
-        if (!j) return;
-
-        document.getElementById('nomeJogo').value = j.nome || '';
-        document.getElementById('linkCapa').value = j.capa || '';
-        document.getElementById('linkJogo').value = j.link || '';
-        document.getElementById('selectCategoria').value = j.categoria || 'Jogos PS2';
-
-        const chk = document.getElementById('isPremiumItem');
-        if (chk) chk.checked = !!j.premium;
-
-        const btn = document.getElementById('addJogoBtn');
-        if (btn) btn.innerText = "🆙 ATUALIZAR ITEM";
-
-        editandoIndex = idx;
-        window.scrollTo({top: 0, behavior: 'smooth'});
-    };
-
-    const addJogoBtn = document.getElementById('addJogoBtn');
-    if (addJogoBtn) {
-        addJogoBtn.onclick = () => {
-            const n = document.getElementById('nomeJogo');
-            const c = document.getElementById('linkCapa');
-            const l = document.getElementById('linkJogo');
-            const cat = document.getElementById('selectCategoria');
-            const chk = document.getElementById('isPremiumItem');
-
-            if (!n.value) return showToast("Insira o nome do jogo!");
-
-            const item = {
-                nome: n.value,
-                capa: c.value,
-                link: l.value,
-                categoria: cat.value,
-                premium: !!(chk && chk.checked)
-            };
-
-            if (editandoIndex > -1) {
-                db_jogos[editandoIndex] = item;
-                editandoIndex = -1;
-                addJogoBtn.innerText = "💾 SALVAR CONTEÚDO";
-            } else {
-                db_jogos.push(item);
-            }
-
-            localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
-
-            // limpa campos
-            n.value = '';
-            c.value = '';
-            l.value = '';
-            if (chk) chk.checked = false;
-
-            render();
-            showToast("Alterações salvas!");
-        };
-    }
-
-    const exportBackupBtn = document.getElementById('exportBackupBtn');
-    if (exportBackupBtn) {
-        exportBackupBtn.onclick = () => {
-            const blob = new Blob([JSON.stringify({jogos: db_jogos})], {type:'application/json'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'toolflix_data.json';
-            a.click();
-        };
-    }
-
-    window.delJogo = (nome) => {
-        if (confirm("Deseja mesmo excluir este conteúdo?")) {
-            db_jogos = db_jogos.filter(j => j.nome !== nome);
-            localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
-            render();
-        }
-    };
-
-    // ================== FAVORITOS (COM XP) ==================
-    // +5 XP ao favoritar, limite 5/dia (não dá XP ao desfavoritar)
-
-    window.toggleFav = (n) => {
-        const u = loadUser();
-        const i = db_favs.indexOf(n);
-
-        // removendo favorito: sem XP
-        if (i > -1) {
-            db_favs.splice(i,1);
-            localStorage.setItem('toolflix_favs', JSON.stringify(db_favs));
-            render();
-            return;
-        }
-
-        // adicionando favorito
-        db_favs.push(n);
-        localStorage.setItem('toolflix_favs', JSON.stringify(db_favs));
-
-        // XP
-        if (u && u.nick) {
-            const d = getDaily();
-            if (d.favoritos < XP_RULES.favorite.dailyLimit) {
-                d.favoritos += 1;
-                setDaily(d);
-                awardXp(XP_RULES.favorite.xp, 'Favorito');
-            } else {
-                showToast("⚠️ Limite diário de XP por favoritos atingido (5).");
-            }
-        }
-
+    }catch(e){
+        isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';
+        premiumMembersCount = Number(localStorage.getItem('toolflix_premium_members') || 0);
+        updatePremiumSidebar();
         render();
-    };
-	    // ================== FILTROS / BOTÕES TOP ==================
+    }
+}
 
-    const sortBtn = document.getElementById('sortBtn');
-    if (sortBtn) {
-        sortBtn.onclick = () => {
-            const modos = ['recentes', 'antigos', 'az', 'za'];
-            const labels = {
-                recentes: '🔃 Recentes',
-                antigos:  '⌛ Antigos',
-                az:       '🔠 A-Z',
-                za:       '🔡 Z-A'
-            };
-            let i = modos.indexOf(sortModo);
-            sortModo = modos[(i + 1) % modos.length];
-            sortBtn.innerText = 'Ordem: ' + labels[sortModo];
+async function syncJogos(){
+    try{
+        const resp = await fetch(URL_JOGOS + '?v=' + Date.now());
+        if(!resp.ok) return;
+
+        const data = await resp.json();
+        const jogosRemotos = data.jogos || data;
+
+        const hashRemoto = JSON.stringify(jogosRemotos);
+        const hashLocal  = localStorage.getItem('toolflix_jogos_hash');
+
+        if(hashLocal !== hashRemoto){
+            db_jogos = jogosRemotos;
+            localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
+            localStorage.setItem('toolflix_jogos_hash', hashRemoto);
             render();
-        };
-    }
-
-    const favFiltroBtn = document.getElementById('favFiltroBtn');
-    if (favFiltroBtn) {
-        favFiltroBtn.onclick = () => {
-            filterFav = !filterFav;
-            render();
-        };
-    }
-
-    // ================== ADMIN LOGIN ==================
-
-    const adminBtn = document.getElementById('adminBtn');
-    if (adminBtn) {
-        adminBtn.onclick = () => {
-            const m = document.getElementById('loginModal');
-            const inp = document.getElementById('loginInput');
-            if (m) m.style.display = 'flex';
-            if (inp) inp.focus();
-        };
-    }
-
-    const loginSubmit = document.getElementById('loginSubmit');
-    if (loginSubmit) {
-        loginSubmit.onclick = () => {
-            const pass = document.getElementById('loginInput').value;
-
-            if (pass === '@dm1nt1') {
-                modoAdmin = true;
-
-                const m = document.getElementById('loginModal');
-                if (m) m.style.display = 'none';
-
-                const adminSection = document.getElementById('adminSection');
-                if (adminSection) adminSection.style.display = 'block';
-
-                // popular categorias no select
-                const sel = document.getElementById('selectCategoria');
-                if (sel) {
-                    sel.innerHTML = '';
-                    document.querySelectorAll('.catBtn').forEach(b => {
-                        if (b.dataset.cat !== 'Todos') {
-                            sel.innerHTML += `<option value="${b.dataset.cat}">${b.dataset.cat}</option>`;
-                        }
-                    });
-                }
-
-                render();
-            } else {
-                showToast("Senha Incorreta!");
-            }
-        };
-    }
-
-    // Enter no admin
-    const loginInput = document.getElementById('loginInput');
-    if (loginInput) {
-        loginInput.addEventListener('keydown', function(e) {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                loginSubmit && loginSubmit.click();
-            }
-        });
-    }
-
-    // ================== CATEGORIAS (SIDEBAR) ==================
-
-    document.querySelectorAll('.catBtn').forEach(b => {
-        b.onclick = () => {
-            const active = document.querySelector('.catBtn.active');
-            if (active) active.classList.remove('active');
-
-            b.classList.add('active');
-            catAtiva = b.dataset.cat;
-
-            const title = document.getElementById('sectionTitle');
-            if (title) title.innerText = catAtiva;
-
-            render();
-        };
-    });
-
-    // ================== BUSCA ==================
-    const searchBar = document.getElementById('searchBar');
-    if (searchBar) searchBar.oninput = render;
-
-    // ================== PREMIUM MODAL ABRIR ==================
-    const premiumTriggerBtn = document.getElementById('premiumTriggerBtn');
-    if (premiumTriggerBtn) {
-        premiumTriggerBtn.onclick = () => {
-            const m = document.getElementById('premiumModal');
-            const inp = document.getElementById('premiumInput');
-            if (m) m.style.display = 'flex';
-            if (inp) inp.focus();
-        };
-    }
-
-    // ================== TECLA ESC ==================
-    window.addEventListener('keydown', (e) => {
-        if (e.key === "Escape") {
-            document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
-
-            // sair do admin com ESC
-            if (modoAdmin) {
-                modoAdmin = false;
-                const adminSection = document.getElementById('adminSection');
-                if (adminSection) adminSection.style.display = 'none';
-                render();
-            }
         }
-    });
+    }catch(e){}
+}
 
-    // ================== TROCA DE TEMA (COM TRAVA PREMIUM + XP) ==================
+/* ===============================
+   PREMIUM SIDEBAR
+================================= */
 
-    const themeSelect = document.getElementById('themeSelect');
-    if (themeSelect) {
-        themeSelect.onchange = (e) => {
-            const sel = e.target;
+function getPremiumStats(){
+    const totalPremium = db_jogos.filter(j => j && (j.premium === true || j.categoria === 'Premium')).length;
+    const totalItens = db_jogos.length;
+    const desbloqueados = (isPremium || modoAdmin) ? totalPremium : 0;
+    return { totalPremium, totalItens, desbloqueados };
+}
 
-            // tema premium detectado pelo texto com 💎
-            const isTemaPremium = sel.options[sel.selectedIndex].text.includes('💎');
+function updatePremiumSidebar(){
+    const badge = document.getElementById('premiumBadge');
+    const counter = document.getElementById('premiumCounter');
+    if(!counter) return;
 
-            if (isTemaPremium && !isPremium && !modoAdmin) {
-                showToast("🔒 Apenas usuários Premium!");
+    if(badge) badge.style.display = isPremium ? 'block' : 'none';
 
-                // vibração
-                sel.classList.add('card-shake');
-                setTimeout(() => sel.classList.remove('card-shake'), 400);
+    const s = getPremiumStats();
 
-                // som
-                try {
-                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.frequency.value = 240;
-                    gain.gain.value = 0.15;
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.12);
-                } catch(e) {}
+    const headline = isPremium
+        ? `💎 Você é usuário Premium`
+        : `💎 <b>${premiumMembersCount}</b> usuários Premium ativos`;
 
-                sel.value = 'default';
+    counter.innerHTML = `
+      <div style="font-weight:900; color:gold; margin-bottom:6px;">${headline}</div>
+      <div>🔓 Desbloqueados: <b>${s.desbloqueados}</b> / <b>${s.totalPremium}</b></div>
+      <div>📦 Total no catálogo: <b>${s.totalItens}</b></div>
+    `;
+}
+
+/* ===============================
+   RENDER CATÁLOGO + XP
+================================= */
+
+function render(){
+    const grid = document.getElementById('catalogo');
+    if(!grid) return;
+
+    const lg = document.getElementById('logoToolFlix');
+    if(isPremium){
+        document.body.classList.add('premium-active');
+        if(lg) lg.innerText = 'ToolFlix Pro';
+    } else {
+        document.body.classList.remove('premium-active');
+        if(lg) lg.innerText = 'ToolFlix';
+    }
+
+    const btnP = document.getElementById('premiumTriggerBtn');
+    const btnS = document.getElementById('solicitarTokenBtn');
+    if(btnP && btnS){
+        btnP.style.display = isPremium ? 'none' : 'block';
+        btnS.style.display = isPremium ? 'none' : 'block';
+    }
+
+    grid.innerHTML = '';
+
+    let lista = [...db_jogos];
+
+    if(catAtiva !== 'Todos'){
+        lista = lista.filter(j => j.categoria === catAtiva);
+    }
+
+    const search = (document.getElementById('searchBar')?.value || '').toLowerCase();
+    if(search){
+        lista = lista.filter(j => j.nome.toLowerCase().includes(search));
+    }
+
+    if(filterFav){
+        lista = lista.filter(j => db_favs.includes(j.nome));
+    }
+
+    if(sortModo === 'az') lista.sort((a,b)=> a.nome.localeCompare(b.nome));
+    else if(sortModo === 'za') lista.sort((a,b)=> b.nome.localeCompare(a.nome));
+    else if(sortModo === 'recentes') lista.reverse();
+
+    lista.forEach(j => {
+
+        const isFav = db_favs.includes(j.nome);
+        const isP = (j.premium === true || j.categoria === 'Premium');
+        const lock = isP && !isPremium && !modoAdmin;
+
+        const card = document.createElement('div');
+        card.className = `jogo ${isP ? 'jogo-premium' : ''} ${lock ? 'premium-locked' : ''}`;
+
+        card.onclick = ()=>{
+            if(lock){
+                showToast("🔒 Conteúdo Premium!");
                 return;
             }
 
-            // remove temas antigos (classes theme-*)
-            document.body.classList.forEach(cls => {
-                if (cls.startsWith('theme-')) document.body.classList.remove(cls);
-            });
+            window.open(j.link, '_blank');
 
-            // aplica novo tema
-            document.body.classList.add('theme-' + sel.value);
-
-            // XP por trocar tema (15 XP, limite 1/dia)
             const u = loadUser();
-            if (u && u.nick) {
-                const d = getDaily();
-                if (d.tema < XP_RULES.theme.dailyLimit) {
-                    d.tema += 1;
-                    setDaily(d);
-                    awardXp(XP_RULES.theme.xp, 'Troca de tema');
+            if(!u || !u.nick) return;
+
+            // YOUTUBE XP (15xp a cada 5min)
+            if(j.categoria === 'YouTube'){
+                const left = ytCooldownLeft();
+                if(left <= 0){
+                    localStorage.setItem(LAST_YT_KEY, Date.now());
+                    awardXp(XP_RULES.youtube, "YouTube");
                 } else {
-                    showToast("⚠️ XP de tema já foi ganho hoje.");
+                    showToast("⏳ Aguarde 5 minutos para ganhar XP novamente.");
                 }
+                return;
+            }
+
+            // DOWNLOAD XP (10xp limite 3/dia)
+            const d = getDaily();
+            if(d.downloads < 3){
+                d.downloads++;
+                setDaily(d);
+                awardXp(XP_RULES.download, "Download");
+            } else {
+                showToast("⚠️ Limite diário de downloads atingido.");
             }
         };
-    }
-	    // ================== VALIDAR PREMIUM (COM XP 100 UMA ÚNICA VEZ) ==================
 
-    const premiumSubmit = document.getElementById('premiumSubmit');
-    if (premiumSubmit) {
-        premiumSubmit.onclick = async () => {
-            const input = (document.getElementById('premiumInput')?.value || '').toUpperCase().trim();
-            if (!input) return;
+        card.innerHTML = `
+    <button onclick="event.stopPropagation(); window.toggleFav('${(j.nome||'').replace(/'/g,"\\'")}')"
+        style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.7);
+        color:${isFav?'#ff4757':'#fff'}; border:none; width:34px; height:34px;
+        border-radius:50%; cursor:pointer; z-index:10;
+        display:flex; align-items:center; justify-content:center; font-size:18px;">
+        ${isFav?'❤️':'🤍'}
+    </button>
 
-            try {
-                const resp = await fetch(URL_TOKENS + '?t=' + new Date().getTime());
-                const data = await resp.json();
+    ${lock ? '<span style="position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:40px; z-index:5">🔒</span>' : ''}
 
-                const ativos = data.ativos || [];
-                const usados = data.usados || [];
+    <img src="${j.capa}" alt="">
 
-                if (ativos.includes(input) && !usados.includes(input)) {
+    <div style="margin-top:12px; text-align:center">
+        <span style="font-size:10px; color:var(--cor-accent); font-weight:800; letter-spacing:1px">
+            ${j.categoria}${isP ? ' 💎' : ''}
+        </span>
 
-                    // ativa premium local
-                    localStorage.setItem('toolflix_premium_atv', 'true');
-                    localStorage.setItem('toolflix_token_ativador', input);
-                    isPremium = true;
+        <p style="font-weight:600; font-size:13px; margin-top:4px;">
+            ${j.nome}
+        </p>
+    </div>
 
-                    // fecha modal premium
-                    const pm = document.getElementById('premiumModal');
-                    if (pm) pm.style.display = 'none';
+    ${modoAdmin ? `
+        <div style="display:flex; gap:5px; margin-top:10px">
+            <button onclick="event.stopPropagation(); window.editJogo(${db_jogos.findIndex(it => it.nome === j.nome)})"
+                style="flex:1; background:gold; color:#000; border:none;
+                padding:8px; border-radius:10px; font-weight:bold;
+                cursor:pointer; font-size:11px">
+                EDITAR
+            </button>
 
-                    render();
-                    showToast("💎 PREMIUM ATIVADO COM SUCESSO!");
-
-                    // efeito no logo
-                    const lg = document.getElementById('logoToolFlix');
-                    if (lg) {
-                        lg.classList.add('logo-premium-pop');
-                        setTimeout(() => lg.classList.remove('logo-premium-pop'), 950);
-                    }
-
-                    // mostra modal premium boas-vindas (apenas 1x por token)
-                    const tokenAtivador = localStorage.getItem('toolflix_token_ativador') || '';
-                    const welcomeKey = 'toolflix_welcome_seen_' + tokenAtivador;
-
-                    if (!localStorage.getItem(welcomeKey)) {
-                        const wm = document.getElementById('premiumWelcomeModal');
-                        if (wm) wm.style.display = 'flex';
-                        localStorage.setItem(welcomeKey, '1');
-                    }
-
-                    // ✅ XP 100 (uma única vez por usuário logado)
-                    const u = loadUser();
-                    if (u && u.nick && localStorage.getItem('toolflix_premium_xp_claimed') !== '1') {
-                        localStorage.setItem('toolflix_premium_xp_claimed', '1');
-                        awardXp(XP_RULES.premiumOnce.xp, 'Virou Premium');
-                    }
-
-                    // atualiza game UI
-                    updateGameUI();
-
-                } else {
-                    showToast("Token Inválido!");
-                }
-
-            } catch (e) {
-                showToast("Erro ao validar token.");
-            }
-        };
-    }
-
-    // Botão do modal premium boas-vindas
-    const premiumWelcomeBtn = document.getElementById('premiumWelcomeBtn');
-    if (premiumWelcomeBtn) {
-        premiumWelcomeBtn.onclick = () => {
-            const wm = document.getElementById('premiumWelcomeModal');
-            if (wm) wm.style.display = 'none';
-        };
-    }
-
-    // ================== SUPORTE FLUTUANTE (TOGGLE) ==================
-    window.toggleSuporte = function () {
-        const box = document.getElementById('suporteContainer');
-        if (box) box.classList.toggle('ativo');
-    };
-	    // ================== INICIALIZAÇÃO FINAL ==================
-
-    // fecha modais ao clicar fora (opcional: mantém seu comportamento atual)
-    // (não obrigatório)
-
-    // inicia premium + sync catálogo
-    checkPremiumSync();
-    syncJogos();
-
-    // prepara UI do usuário e primeira renderização
-    updateUserUI();
-    render();
-
-})(); 
-</script>
-
-<!-- ================== SUPORTE FLUTUANTE (HTML) ================== -->
-<div class="suporte-container" id="suporteContainer">
-    <button class="suporte-btn" onclick="toggleSuporte()">🎧</button>
-
-    <div class="suporte-painel">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <strong>📬 Suporte</strong>
-            <span style="cursor:pointer; font-size:20px;" onclick="toggleSuporte()">✖</span>
+            <button onclick="event.stopPropagation(); window.delJogo('${(j.nome||'').replace(/'/g,"\\'")}')"
+                style="flex:1; background:#ff4757; color:#fff; border:none;
+                padding:8px; border-radius:10px;
+                cursor:pointer; font-size:11px">
+                DELETAR
+            </button>
         </div>
+    ` : ''}
+`;
 
-        <div style="font-size:13px; opacity:0.85; margin-bottom:12px;">
+        grid.appendChild(card);
+    });
+
+    updatePremiumSidebar();
+    updateUserUI();
+}
+/* ===============================
+   CONQUISTAS (TOTAL - NÃO ZERA)
+   Integração: sempre que ganhar XP, conta progresso automaticamente
+================================= */
+
+const ACH_STATS_KEY  = 'toolflix_ach_stats';
+const ACH_UNLOCK_KEY = 'toolflix_ach_unlock';
+
+const ACH_LIST = [
+  // YouTube
+  { id:'yt_5',   type:'youtube',   title:'🎥 Aquecimento',        need:5 },
+  { id:'yt_15',  type:'youtube',   title:'🎥 Pegando ritmo',      need:15 },
+  { id:'yt_30',  type:'youtube',   title:'🎥 Maratonista',        need:30 },
+  { id:'yt_60',  type:'youtube',   title:'🎥 Sedento por views',  need:60 },
+  { id:'yt_120', type:'youtube',   title:'🎥 Lenda do YouTube',   need:120 },
+  { id:'yt_250', type:'youtube',   title:'🎥 Insano',             need:250 },
+
+  // Downloads
+  { id:'dl_3',   type:'downloads', title:'🎮 Primeiro download',      need:3 },
+  { id:'dl_10',  type:'downloads', title:'🎮 Começou a coleção',      need:10 },
+  { id:'dl_25',  type:'downloads', title:'🎮 HD cheio',               need:25 },
+  { id:'dl_50',  type:'downloads', title:'🎮 Viciado em instalar',    need:50 },
+  { id:'dl_100', type:'downloads', title:'🎮 Biblioteca braba',       need:100 },
+  { id:'dl_200', type:'downloads', title:'🎮 Arquivo vivo',           need:200 },
+
+  // Favoritos
+  { id:'fv_5',   type:'favorites', title:'❤️ Coração de gamer',   need:5 },
+  { id:'fv_15',  type:'favorites', title:'❤️ Curador',            need:15 },
+  { id:'fv_30',  type:'favorites', title:'❤️ Colecionador',       need:30 },
+  { id:'fv_60',  type:'favorites', title:'❤️ Seleção de elite',   need:60 },
+  { id:'fv_100', type:'favorites', title:'❤️ Museu ToolFlix',     need:100 },
+  { id:'fv_200', type:'favorites', title:'❤️ Amor infinito',      need:200 },
+
+  // Temas
+  { id:'th_1',   type:'themes',    title:'🎨 Mudou o clima',       need:1 },
+  { id:'th_5',   type:'themes',    title:'🎨 Estiloso',            need:5 },
+  { id:'th_15',  type:'themes',    title:'🎨 Camaleão',            need:15 },
+  { id:'th_30',  type:'themes',    title:'🎨 Designer',            need:30 },
+  { id:'th_60',  type:'themes',    title:'🎨 Modo DJ',             need:60 },
+  { id:'th_120', type:'themes',    title:'🎨 Multiverso',          need:120 },
+];
+
+function achLoadStats(){
+  try {
+    return JSON.parse(localStorage.getItem(ACH_STATS_KEY) || '{"youtube":0,"downloads":0,"favorites":0,"themes":0,"premium":0}');
+  } catch {
+    return { youtube:0, downloads:0, favorites:0, themes:0, premium:0 };
+  }
+}
+function achSaveStats(s){
+  localStorage.setItem(ACH_STATS_KEY, JSON.stringify(s || {}));
+}
+
+function achLoadUnlock(){
+  try {
+    return JSON.parse(localStorage.getItem(ACH_UNLOCK_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+function achSaveUnlock(u){
+  localStorage.setItem(ACH_UNLOCK_KEY, JSON.stringify(u || {}));
+}
+
+function achUnlockCheck(){
+  const stats = achLoadStats();
+  const unlock = achLoadUnlock();
+  let changed = false;
+
+  for(const a of ACH_LIST){
+    const cur = Number(stats[a.type] || 0);
+    if(!unlock[a.id] && cur >= a.need){
+      unlock[a.id] = true;
+      changed = true;
+      showToast(`🏆 Conquista desbloqueada: ${a.title}`);
+    }
+  }
+
+  // PLATINA TOOLFLIX: todas as conquistas acima
+  const allOk = ACH_LIST.every(a => unlock[a.id] === true);
+  if(allOk && !unlock['platinum_toolflix']){
+    unlock['platinum_toolflix'] = true;
+    changed = true;
+    showToast('🏆 PLATINA TOOLFLIX desbloqueada!');
+  }
+
+  if(changed) achSaveUnlock(unlock);
+}
+
+function achInc(type, amount=1){
+  const u = loadUser();
+  if(!u || !u.nick) return; // só conta logado
+
+  const stats = achLoadStats();
+  stats[type] = Number(stats[type] || 0) + Number(amount || 0);
+  achSaveStats(stats);
+
+  achUnlockCheck();
+}
+
+function achSection(title, items, stats, unlock){
+  const lines = items.map(a => {
+    const cur = Number(stats[a.type] || 0);
+    const done = !!unlock[a.id];
+    const prog = Math.min(cur, a.need);
+    const pct = Math.max(0, Math.min(100, (prog / a.need) * 100));
+    return `
+      <div class="ach-badge ${done ? '' : 'locked'}" style="width:100%;">
+        <div style="flex:1;">
+          <div class="ach-title">${done ? '✅' : '🔒'} ${a.title}</div>
+          <div class="ach-meta">${done ? 'Concluída' : `Progresso: ${prog}/${a.need}`}</div>
+          <div class="ach-progress"><div style="width:${pct.toFixed(1)}%"></div></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div style="margin-top:14px; font-weight:900; color:gold;">${title}</div>
+    <div style="margin-top:8px; display:flex; flex-direction:column; gap:6px;">
+      ${lines}
+    </div>
+  `;
+}
+
+function achRender(){
+  const list = document.getElementById('achList');
+  const plat = document.getElementById('achPlatinum');
+  if(!list) return;
+
+  const u = loadUser();
+  if(!u || !u.nick){
+    list.innerHTML = `<div style="opacity:.9">Faça login para ver suas conquistas.</div>`;
+    if(plat) plat.textContent = '';
+    return;
+  }
+
+  const stats = achLoadStats();
+  const unlock = achLoadUnlock();
+
+  const yt = ACH_LIST.filter(a => a.type === 'youtube');
+  const dl = ACH_LIST.filter(a => a.type === 'downloads');
+  const fv = ACH_LIST.filter(a => a.type === 'favorites');
+  const th = ACH_LIST.filter(a => a.type === 'themes');
+
+  list.innerHTML =
+    achSection('🎥 YouTube', yt, stats, unlock) +
+    achSection('🎮 Downloads', dl, stats, unlock) +
+    achSection('❤️ Favoritos', fv, stats, unlock) +
+    achSection('🎨 Temas', th, stats, unlock);
+
+  if(plat){
+    plat.textContent = unlock['platinum_toolflix']
+      ? '🏆 PLATINA TOOLFLIX: ✅ Desbloqueada'
+      : '🏆 PLATINA TOOLFLIX: ⏳ Complete todas as conquistas acima';
+  }
+}
+
+/* ===============================
+   BOTÃO CONQUISTAS (abre modal)
+================================= */
+
+const openAchBtn = document.getElementById('openAchBtn');
+if(openAchBtn){
+  openAchBtn.onclick = ()=>{
+    toggleUserMenu(true);
+    achRender();
+    document.getElementById('achModal').style.display = 'flex';
+  };
+}
+const closeAchBtn = document.getElementById('closeAchBtn');
+if(closeAchBtn){
+  closeAchBtn.onclick = ()=>{
+    document.getElementById('achModal').style.display = 'none';
+  };
+}
+
+/* ===============================
+   INTEGRAÇÃO AUTOMÁTICA:
+   Sempre que awardXp rodar, soma 1 no contador correspondente.
+   (Não precisa procurar nos cliques)
+================================= */
+
+const _awardXpOriginal = awardXp;
+awardXp = function(amount, reason){
+  _awardXpOriginal(amount, reason);
+
+  // conta conquistas baseado no motivo do XP
+  if(reason === 'YouTube')      achInc('youtube', 1);
+  if(reason === 'Download')     achInc('downloads', 1);
+  if(reason === 'Favorito')     achInc('favorites', 1);
+  if(reason === 'Troca de tema')achInc('themes', 1);
+  if(reason === 'Virou Premium')achInc('premium', 1); // (se usar depois)
+};
+/* ===============================
+   FAVORITOS (5 XP, LIMITE 5/DIA)
+================================= */
+
+window.toggleFav = (nome)=>{
+    const idx = db_favs.indexOf(nome);
+
+    // se já é favorito: remove (sem XP)
+    if(idx > -1){
+        db_favs.splice(idx, 1);
+        localStorage.setItem('toolflix_favs', JSON.stringify(db_favs));
+        render();
+        return;
+    }
+
+    // adiciona favorito
+    db_favs.push(nome);
+    localStorage.setItem('toolflix_favs', JSON.stringify(db_favs));
+
+    // XP favorito (se logado)
+    const u = loadUser();
+    if(u && u.nick){
+        const d = getDaily();
+        if(d.favorites < 5){
+            d.favorites++;
+            setDaily(d);
+            awardXp(XP_RULES.favorite, 'Favorito'); // <- já conta conquista via hook
+        } else {
+            showToast("⚠️ Limite diário de XP por favoritos (5).");
+        }
+    }
+
+    render();
+};
+
+/* ===============================
+   BOTÕES: ORDEM / FILTRO FAVORITOS
+================================= */
+
+const sortBtn = document.getElementById('sortBtn');
+if(sortBtn){
+    sortBtn.onclick = ()=>{
+        const modos = ['recentes','antigos','az','za'];
+        const labels = { recentes:'🔃 Recentes', antigos:'⌛ Antigos', az:'🔠 A-Z', za:'🔡 Z-A' };
+        const i = modos.indexOf(sortModo);
+        sortModo = modos[(i+1) % modos.length];
+        sortBtn.innerText = 'Ordem: ' + labels[sortModo];
+        render();
+    };
+}
+
+const favFiltroBtn = document.getElementById('favFiltroBtn');
+if(favFiltroBtn){
+    favFiltroBtn.onclick = ()=>{
+        filterFav = !filterFav;
+        render();
+    };
+}
+
+/* ===============================
+   CATEGORIAS + BUSCA
+================================= */
+
+document.querySelectorAll('.catBtn').forEach(btn=>{
+    btn.onclick = ()=>{
+        document.querySelectorAll('.catBtn').forEach(b=> b.classList.remove('active'));
+        btn.classList.add('active');
+        catAtiva = btn.dataset.cat;
+        const title = document.getElementById('sectionTitle');
+        if(title) title.innerText = catAtiva;
+        render();
+    };
+});
+
+const searchBar = document.getElementById('searchBar');
+if(searchBar){
+    searchBar.oninput = render;
+}
+
+/* ===============================
+   TEMA (15 XP, 1/DIA) + TRAVA PREMIUM
+================================= */
+
+const themeSelect = document.getElementById('themeSelect');
+if(themeSelect){
+    themeSelect.onchange = (e)=>{
+        const sel = e.target;
+        const isTemaPremium = sel.options[sel.selectedIndex].text.includes('💎');
+
+        if(isTemaPremium && !isPremium && !modoAdmin){
+            showToast("🔒 Apenas usuários Premium!");
+            sel.classList.add('card-shake');
+            setTimeout(()=> sel.classList.remove('card-shake'), 400);
+            sel.value = 'default';
+            return;
+        }
+
+        // remove temas antigos
+        document.body.classList.forEach(cls=>{
+            if(cls.startsWith('theme-')) document.body.classList.remove(cls);
+        });
+
+        // aplica novo tema
+        document.body.classList.add('theme-' + sel.value);
+
+        // XP troca de tema (1/dia) se logado
+        const u = loadUser();
+        if(u && u.nick){
+            const d = getDaily();
+            if(d.themes < 1){
+                d.themes++;
+                setDaily(d);
+                awardXp(XP_RULES.theme, 'Troca de tema'); // <- conta conquista via hook
+            } else {
+                showToast("⚠️ XP de tema já foi ganho hoje.");
+            }
+        }
+    };
+}
+
+/* ===============================
+   FECHAR MODAIS COM ESC
+================================= */
+
+window.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape'){
+        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+        toggleUserMenu(true);
+    }
+});
+/* ===============================
+   PREMIUM: MODAL + VALIDAR TOKEN + XP 100 (ÚNICO)
+================================= */
+
+const premiumTriggerBtn = document.getElementById('premiumTriggerBtn');
+if(premiumTriggerBtn){
+    premiumTriggerBtn.onclick = ()=>{
+        const m = document.getElementById('premiumModal');
+        if(m) m.style.display = 'flex';
+        const inp = document.getElementById('premiumInput');
+        if(inp) inp.focus();
+    };
+}
+
+// botão validar token
+const premiumSubmit = document.getElementById('premiumSubmit');
+if(premiumSubmit){
+    premiumSubmit.onclick = async ()=>{
+        const input = (document.getElementById('premiumInput')?.value || '').toUpperCase().trim();
+        if(!input) return;
+
+        try{
+            const resp = await fetch(URL_TOKENS + '?t=' + Date.now());
+            if(!resp.ok) throw new Error();
+
+            const data = await resp.json();
+            const ativos = data.ativos || [];
+            const usados = data.usados || [];
+
+            if(ativos.includes(input) && !usados.includes(input)){
+                // ativa premium
+                localStorage.setItem('toolflix_premium_atv','true');
+                localStorage.setItem('toolflix_token_ativador', input);
+                isPremium = true;
+
+                // XP por virar premium (uma única vez)
+                const premiumXpKey = 'toolflix_premium_xp_once';
+                if(localStorage.getItem(premiumXpKey) !== '1'){
+                    localStorage.setItem(premiumXpKey, '1');
+                    awardXp(XP_RULES.premium, 'Virou Premium'); // <- conta conquista premium no hook (se usar)
+                }
+
+                // fecha modal premium
+                const m = document.getElementById('premiumModal');
+                if(m) m.style.display = 'none';
+
+                showToast("💎 PREMIUM ATIVADO COM SUCESSO!");
+                updatePremiumSidebar();
+                updateUserUI();
+                render();
+
+                // modal boas-vindas (se existir)
+                const w = document.getElementById('premiumWelcomeModal');
+                if(w) w.style.display = 'flex';
+
+            } else {
+                showToast("Token inválido!");
+            }
+        }catch(e){
+            showToast("Erro ao validar token.");
+        }
+    };
+}
+
+// botão do welcome modal (se existir)
+const premiumWelcomeBtn = document.getElementById('premiumWelcomeBtn');
+if(premiumWelcomeBtn){
+    premiumWelcomeBtn.onclick = ()=>{
+        const w = document.getElementById('premiumWelcomeModal');
+        if(w) w.style.display = 'none';
+    };
+}
+/* ===============================
+   GARANTIR MODAIS (caso não existam no HTML)
+================================= */
+
+function ensureModal(id, html){
+    if(document.getElementById(id)) return;
+    const wrap = document.createElement('div');
+    wrap.innerHTML = html.trim();
+    document.body.appendChild(wrap.firstChild);
+}
+
+// Premium Modal (token)
+ensureModal('premiumModal', `
+<div id="premiumModal" class="modal-overlay">
+  <div class="modal-box">
+    <h2 style="color:gold; margin-bottom:20px">💎 Ativar Premium</h2>
+    <input type="text" id="premiumInput" maxlength="6" class="admin-input" style="width:100%; text-align:center" placeholder="TOKEN">
+    <button id="premiumSubmit" class="nav-item" style="background:gold; color:#000; width:100%; margin-top:10px">Validar</button>
+  </div>
+</div>
+`);
+
+// Premium Welcome Modal
+ensureModal('premiumWelcomeModal', `
+<div id="premiumWelcomeModal" class="modal-overlay">
+  <div class="modal-box" style="border:2px solid gold; background:linear-gradient(145deg,#111,#1a1a1a);">
+    <h2 style="color:gold; font-size:28px; margin-bottom:15px;">💎 Bem-vindo ao Premium</h2>
+    <p style="opacity:0.9; margin-bottom:20px;">Você desbloqueou todos os conteúdos exclusivos</p>
+    <div style="text-align:left; margin-bottom:25px; line-height:1.8; font-size:14px;">
+      ✔ Temas exclusivos<br>
+      ✔ Jogos Premium<br>
+      ✔ Conteúdo antecipado
+    </div>
+    <button id="premiumWelcomeBtn"
+      style="background:linear-gradient(135deg,#ffd700,#ff8c00); border:none; color:#000; padding:12px 20px; border-radius:50px; font-weight:700; cursor:pointer; width:100%;">
+      🚀 Explorar Agora
+    </button>
+  </div>
+</div>
+`);
+
+// Admin Login Modal (básico, pra não quebrar o botão)
+ensureModal('loginModal', `
+<div id="loginModal" class="modal-overlay">
+  <div class="modal-box">
+    <h2 style="margin-bottom:20px">🔐 Admin</h2>
+    <input type="password" id="loginInput" class="admin-input" style="width:100%" placeholder="Senha">
+    <button id="loginSubmit" class="nav-item" style="background:var(--cor-accent); color:#000; width:100%; margin-top:10px">Entrar</button>
+  </div>
+</div>
+`);
+
+/* ===============================
+   /* ===============================
+   ADMIN COMPLETO (RESTORE)
+   - Adicionar / editar / deletar jogos
+   - Marcar item premium
+   - Backup catálogo
+   - Tokens: gerar/exportar/importar/limpar
+================================= */
+
+// storage tokens
+let db_tokens_ativos = JSON.parse(localStorage.getItem('toolflix_tokens_atv')) || [];
+let db_tokens_usados = JSON.parse(localStorage.getItem('toolflix_tokens_usd')) || [];
+
+function saveTokensLocal(){
+  localStorage.setItem('toolflix_tokens_atv', JSON.stringify(db_tokens_ativos));
+  localStorage.setItem('toolflix_tokens_usd', JSON.stringify(db_tokens_usados));
+}
+
+let editandoIndex = -1;
+
+function ensureAdminUI(){
+  const admin = document.getElementById('adminSection');
+  if(!admin) return;
+
+  // se já montou, não monta de novo
+  if(admin.dataset.ready === '1') return;
+
+  admin.innerHTML = `
+    <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px;">
+      <h2 style="color:var(--cor-accent); font-size: 24px;">🚀 Dashboard Admin</h2>
+    </header>
+
+    <div class="admin-grid">
+      <input type="text" id="nomeJogo" class="admin-input" placeholder="Nome do Título">
+      <input type="text" id="linkCapa" class="admin-input" placeholder="Link da Imagem (URL)">
+      <input type="text" id="linkJogo" class="admin-input" placeholder="Link do Download (URL)">
+      <select id="selectCategoria" class="admin-input"></select>
+
+      <label class="admin-input" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+        <input type="checkbox" id="isPremiumItem" style="transform: scale(1.2);">
+        💎 Item Premium
+      </label>
+    </div>
+
+    <div style="display:flex; gap: 12px; margin-bottom: 35px;">
+      <button id="addJogoBtn" class="nav-item" style="background:var(--cor-accent); color:#000; border:none; flex: 2; font-size: 16px;">💾 SALVAR CONTEÚDO</button>
+      <button id="exportBackupBtn" class="nav-item" style="background:#2ecc71; color:#000; border:none; flex: 1;">📂 BACKUP</button>
+    </div>
+
+    <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 18px; border: 1px solid #222;">
+      <h4 style="color:gold; margin-bottom:15px;">🔑 Tokens</h4>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap:10px; margin-bottom:20px">
+        <button id="genTokenBtn" class="nav-item" style="color:gold; border-color:gold">➕ GERAR</button>
+        <button id="exportTokensBtn" class="nav-item">📤 EXPORTAR</button>
+        <button id="importTokensBtn" class="nav-item">📥 IMPORTAR</button>
+        <button id="clearUsedBtn" class="nav-item" style="background:#ff4757; border:none; color:#fff">🧹 LIMPAR</button>
+      </div>
+
+      <div id="tokenList" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap:10px; max-height: 150px; overflow-y:auto;"></div>
+      <input type="file" id="fileInput" style="display:none" accept=".json">
+    </div>
+  `;
+
+  admin.dataset.ready = '1';
+
+  // preencher categorias
+  const sel = document.getElementById('selectCategoria');
+  if(sel){
+    sel.innerHTML = '';
+    document.querySelectorAll('.catBtn').forEach(b=>{
+      if(b.dataset.cat && b.dataset.cat !== 'Todos'){
+        sel.innerHTML += `<option value="${b.dataset.cat}">${b.dataset.cat}</option>`;
+      }
+    });
+  }
+
+  // eventos
+  document.getElementById('addJogoBtn').onclick = ()=>{
+    const n = document.getElementById('nomeJogo');
+    const c = document.getElementById('linkCapa');
+    const l = document.getElementById('linkJogo');
+    const cat = document.getElementById('selectCategoria');
+    const chk = document.getElementById('isPremiumItem');
+
+    if(!n.value.trim()) return showToast("Insira o nome do jogo!");
+
+    const item = {
+      nome: n.value.trim(),
+      capa: (c.value || '').trim(),
+      link: (l.value || '').trim(),
+      categoria: cat.value,
+      premium: !!(chk && chk.checked)
+    };
+
+    if(editandoIndex > -1){
+      db_jogos[editandoIndex] = item;
+      editandoIndex = -1;
+      document.getElementById('addJogoBtn').innerText = "💾 SALVAR CONTEÚDO";
+    } else {
+      db_jogos.push(item);
+    }
+
+    localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
+    n.value = ''; c.value = ''; l.value = ''; if(chk) chk.checked = false;
+
+    render();
+    showToast("Alterações salvas!");
+  };
+
+  document.getElementById('exportBackupBtn').onclick = ()=>{
+    const blob = new Blob([JSON.stringify({jogos: db_jogos})], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'toolflix_data.json';
+    a.click();
+  };
+
+  // tokens
+  function renderTokenList(){
+    const div = document.getElementById('tokenList');
+    if(!div) return;
+    div.innerHTML = '';
+
+    db_tokens_ativos.forEach((t, i)=>{
+      div.innerHTML += `
+        <div style="background:rgba(0,255,0,0.1); border:1px solid rgba(0,255,0,0.2); color:#00ff00; padding:10px; border-radius:12px; font-size:11px; display:flex; justify-content:space-between; align-items:center">
+          <span>${t}</span>
+          <b style="cursor:pointer; color:#ff4757; font-size:14px" onclick="window.desativarToken(${i})">×</b>
+        </div>`;
+    });
+
+    db_tokens_usados.forEach((t)=>{
+      div.innerHTML += `<div style="background:rgba(255,255,255,0.05); color:#555; padding:10px; border-radius:12px; font-size:11px; text-decoration:line-through"># ${t}</div>`;
+    });
+  }
+
+  window.desativarToken = (i)=>{
+    const t = db_tokens_ativos.splice(i,1)[0];
+    if(t && !db_tokens_usados.includes(t)) db_tokens_usados.push(t);
+    saveTokensLocal();
+    renderTokenList();
+  };
+
+  document.getElementById('genTokenBtn').onclick = ()=>{
+    const r = Math.random().toString(36).substring(2,8).toUpperCase();
+    db_tokens_ativos.push(r);
+    saveTokensLocal();
+    renderTokenList();
+  };
+
+  document.getElementById('exportTokensBtn').onclick = ()=>{
+    const data = { ativos: db_tokens_ativos, usados: db_tokens_usados };
+    const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'tokens_backup.json';
+    a.click();
+  };
+
+  document.getElementById('importTokensBtn').onclick = ()=>{
+    document.getElementById('fileInput').click();
+  };
+
+  document.getElementById('fileInput').onchange = (e)=>{
+    const fr = new FileReader();
+    fr.onload = (ev)=>{
+      try{
+        const data = JSON.parse(ev.target.result);
+        db_tokens_ativos = data.ativos || [];
+        db_tokens_usados = data.usados || [];
+        saveTokensLocal();
+        renderTokenList();
+        showToast("Lista de Tokens Atualizada!");
+      } catch(err){
+        showToast("Arquivo inválido!");
+      }
+    };
+    fr.readAsText(e.target.files[0]);
+  };
+
+  document.getElementById('clearUsedBtn').onclick = ()=>{
+    if(confirm("Limpar histórico de tokens usados?")){
+      db_tokens_usados = [];
+      saveTokensLocal();
+      renderTokenList();
+    }
+  };
+
+  renderTokenList();
+}
+
+// EDIT / DELETE do catálogo (no modo admin)
+window.editJogo = (idx)=>{
+  const j = db_jogos[idx];
+  if(!j) return;
+
+  document.getElementById('nomeJogo').value = j.nome || '';
+  document.getElementById('linkCapa').value = j.capa || '';
+  document.getElementById('linkJogo').value = j.link || '';
+  document.getElementById('selectCategoria').value = j.categoria || 'Jogos PS2';
+
+  const chk = document.getElementById('isPremiumItem');
+  if(chk) chk.checked = !!j.premium;
+
+  document.getElementById('addJogoBtn').innerText = "🆙 ATUALIZAR ITEM";
+  editandoIndex = idx;
+  window.scrollTo({top: 0, behavior: 'smooth'});
+};
+
+window.delJogo = (nome)=>{
+  if(confirm("Deseja mesmo excluir este conteúdo?")){
+    db_jogos = db_jogos.filter(j => j.nome !== nome);
+    localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
+    render();
+  }
+};
+
+// quando logar admin, abre painel e prepara UI
+const loginSubmit2 = document.getElementById('loginSubmit');
+if(loginSubmit2){
+  loginSubmit2.onclick = ()=>{
+    const pass = document.getElementById('loginInput')?.value || '';
+    if(pass === '@dm1nt1'){
+      modoAdmin = true;
+      document.getElementById('loginModal').style.display = 'none';
+
+      const admin = document.getElementById('adminSection');
+      if(admin) admin.style.display = 'block';
+
+      ensureAdminUI();
+      render();
+      showToast("✅ Modo Admin ativado!");
+    } else {
+      showToast("Senha incorreta!");
+    }
+  };
+}
+
+/* ===============================
+   SUPORTE FLUTUANTE (cria se não existir)
+================================= */
+
+if(!document.getElementById('suporteContainer')){
+    const sup = document.createElement('div');
+    sup.innerHTML = `
+      <div class="suporte-container" id="suporteContainer">
+        <button class="suporte-btn" id="suporteBtn">🎧</button>
+        <div class="suporte-painel">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <strong>📬 Suporte</strong>
+            <span style="cursor:pointer; font-size:20px;" id="suporteClose">✖</span>
+          </div>
+          <div style="font-size:13px; opacity:0.85; margin-bottom:12px;">
             <div>• Pedidos de jogos no YouTube</div>
             <div>• Informar link off no Discord</div>
             <div>• Pedir token extra no YouTube</div>
             <div>• Ajuda para instalar no Telegram</div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <a href="https://t.me/gokugames0" target="_blank">✈️ Telegram</a>
+            <a href="https://discord.com/users/990270059068928011" target="_blank">🎮 Discord</a>
+            <a href="https://www.youtube.com/watch?v=BB0RbhXJWVc" target="_blank">📺 YouTube</a>
+          </div>
         </div>
+      </div>
+    `.trim();
+    document.body.appendChild(sup.firstChild);
+}
 
-        <div style="display:flex; flex-direction:column; gap:8px;">
-            <a href="https://t.me/gokugames0" target="_blank" style="color:#fff; text-decoration:none;">✈️ Telegram</a>
-            <a href="https://discord.com/users/990270059068928011" target="_blank" style="color:#fff; text-decoration:none;">🎮 Discord</a>
-            <a href="https://www.youtube.com/watch?v=BB0RbhXJWVc" target="_blank" style="color:#fff; text-decoration:none;">📺 YouTube</a>
-        </div>
-    </div>
-</div>
+function toggleSuporte(){
+    const box = document.getElementById('suporteContainer');
+    if(box) box.classList.toggle('ativo');
+}
+document.getElementById('suporteBtn')?.addEventListener('click', toggleSuporte);
+document.getElementById('suporteClose')?.addEventListener('click', toggleSuporte);
 
+/* ===============================
+   INIT FINAL
+================================= */
+
+updateUserUI();
+updatePremiumSidebar();
+render();
+
+// sync
+checkPremiumSync();
+syncJogos();
+
+// re-sync catálogo de tempos em tempos (leve)
+setInterval(syncJogos, 60 * 1000);
+setInterval(checkPremiumSync, 3 * 60 * 1000);
+// ===== FIX: Admin clicável (força o handler) =====
+(function adminClickFix(){
+  const btn = document.getElementById('adminBtn');
+  const modal = document.getElementById('loginModal');
+  const input = document.getElementById('loginInput');
+  if(!btn || !modal) return;
+
+  btn.style.pointerEvents = 'auto';
+  btn.style.zIndex = '5';
+
+  btn.onclick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    modal.style.display = 'flex';
+    if(input) input.focus();
+  };
+  /* ===============================
+   SAIR DO MODO ADMIN
+================================= */
+
+function exitAdmin(){
+    modoAdmin = false;
+
+    const admin = document.getElementById('adminSection');
+    if(admin) admin.style.display = 'none';
+
+    render();
+    showToast("Modo Admin desativado.");
+}
+
+// ESC sai do admin
+window.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape' && modoAdmin){
+        exitAdmin();
+    }
+});
+
+// Clicar novamente no botão Admin sai do modo admin
+const adminBtnFix = document.getElementById('adminBtn');
+if(adminBtnFix){
+    adminBtnFix.addEventListener('dblclick', ()=>{
+        if(modoAdmin){
+            exitAdmin();
+        }
+    });
+}
+})();
+
+})();
+</script>
 </body>
 </html>
