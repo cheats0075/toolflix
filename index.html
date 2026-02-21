@@ -2106,6 +2106,21 @@ function bindPremiumUI(){
 
 // chama uma vez e também após garantir modais
 bindPremiumUI();
+/* ===== FIX: botão "Explorar Agora" fecha o Welcome ===== */
+function bindPremiumWelcomeClose(){
+  const btn = document.getElementById('premiumWelcomeBtn');
+  const modal = document.getElementById('premiumWelcomeModal');
+  if(!btn || !modal) return;
+
+  btn.onclick = (e)=>{
+    e.preventDefault();
+    modal.style.display = 'none';
+  };
+}
+
+// roda agora e também depois (caso o modal seja recriado)
+bindPremiumWelcomeClose();
+setTimeout(bindPremiumWelcomeClose, 0);
 })();
 </script>
 </body>
