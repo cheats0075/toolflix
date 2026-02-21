@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -506,6 +507,18 @@
 
 <div id="toast-container"></div>
 <script>
+// === API (Render) ===
+const API_URL = "https://toolflix-api.onrender.com";
+
+// === ID único do usuário (fica salvo no navegador) ===
+function getUserId(){
+  let id = localStorage.getItem("toolflix_userId");
+  if(!id){
+    id = "u_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+    localStorage.setItem("toolflix_userId", id);
+  }
+  return id;
+}
 (function(){
 
 /* ===============================
@@ -1489,7 +1502,7 @@ ensureModal('premiumModal', `
 <div id="premiumModal" class="modal-overlay">
   <div class="modal-box">
     <h2 style="color:gold; margin-bottom:20px">💎 Ativar Premium</h2>
-    <input type="text" id="premiumInput" maxlength="6" class="admin-input" style="width:100%; text-align:center" placeholder="TOKEN">
+    <input type="text" id="premiumInput" maxlength="25" class="admin-input" style="width:100%; text-align:center" placeholder="TOKEN">
     <button id="premiumSubmit" class="nav-item" style="background:gold; color:#000; width:100%; margin-top:10px">Validar</button>
   </div>
 </div>
@@ -2058,48 +2071,57 @@ function bindPremiumUI(){
   // validar token
   if(submit){
     submit.onclick = async ()=>{
-      const token = (document.getElementById('premiumInput')?.value || '').toUpperCase().trim();
+      const token = (document.getElementById('premiumInput')?.value || '')
+  .toUpperCase()
+  .trim()
+  .replace(/\s+/g, '');
       if(!token) return showToast("Digite o TOKEN!");
 
-      try{
-        const resp = await fetch(URL_TOKENS + '?t=' + Date.now());
-        if(!resp.ok) throw new Error('fetch');
+  try{
+  const resp = await fetch(`${API_URL}/api/validar-token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      token: token,
+      userId: getUserId()
+    })
+  });
 
-        const data = await resp.json();
-        const ativos = data.ativos || [];
-        const usados = data.usados || [];
+  const data = await resp.json();
 
-        if(ativos.includes(token) && !usados.includes(token)){
-          localStorage.setItem('toolflix_premium_atv','true');
-          localStorage.setItem('toolflix_token_ativador', token);
-          isPremium = true;
+  if(data.ok && data.valid){
+    localStorage.setItem('toolflix_premium_atv','true');
+    localStorage.setItem('toolflix_token_ativador', token);
+    isPremium = true;
 
-          // XP 100 apenas uma vez
-          const premiumXpKey = 'toolflix_premium_xp_once';
-          if(localStorage.getItem(premiumXpKey) !== '1'){
-            localStorage.setItem(premiumXpKey, '1');
-            awardXp(XP_RULES.premium, 'Virou Premium');
-          }
+    // XP 100 apenas uma vez
+    const premiumXpKey = 'toolflix_premium_xp_once';
+    if(localStorage.getItem(premiumXpKey) !== '1'){
+      localStorage.setItem(premiumXpKey, '1');
+      awardXp(XP_RULES.premium, 'Virou Premium');
+    }
 
-          // fecha modal
-          const m = document.getElementById('premiumModal');
-          if(m) m.style.display = 'none';
+    // fecha modal
+    const m = document.getElementById('premiumModal');
+    if(m) m.style.display = 'none';
 
-          showToast("💎 PREMIUM ATIVADO!");
-          updatePremiumSidebar();
-          updateUserUI();
-          render();
+    showToast("💎 PREMIUM ATIVADO!");
+    updatePremiumSidebar();
+    updateUserUI();
+    render();
 
-          // welcome modal
-          const w = document.getElementById('premiumWelcomeModal');
-          if(w) w.style.display = 'flex';
-        } else {
-          showToast("Token inválido!");
-        }
+    // welcome modal
+    const w = document.getElementById('premiumWelcomeModal');
+    if(w) w.style.display = 'flex';
+  } else {
+  showToast("Token inválido: " + (data.reason || "SEM_MOTIVO"));
+  console.log("DEBUG validar-token:", data);
+}
 
-      }catch(e){
-        showToast("Erro ao validar token (GitHub indisponível?).");
-      }
+}catch(e){
+  console.error(e);
+  showToast("Erro ao validar token (servidor indisponível?).");
+}
     };
   }
 }
