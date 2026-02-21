@@ -517,6 +517,18 @@ function getUserId(){
     id = "u_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
     localStorage.setItem("toolflix_userId", id);
   }
+  // === Carrega catálogo do backend (banco) ===
+async function loadGamesFromApi(){
+  try{
+    const r = await fetch(`${API_URL}/api/games?ts=` + Date.now());
+    const data = await r.json();
+    if(!data.ok) throw new Error(data.error || "API_GAMES_FAIL");
+    return data.games; // lista do banco
+  }catch(e){
+    console.error("loadGamesFromApi:", e);
+    return null;
+  }
+}
   return id;
 }
 (function(){
@@ -526,7 +538,7 @@ function getUserId(){
 ================================= */
 
 const URL_TOKENS = "https://raw.githubusercontent.com/cheats0075/toolflix/main/tokens.json";
-const URL_JOGOS  = "https://raw.githubusercontent.com/cheats0075/toolflix/main/toolflix_backup.json";
+const URL_JOGOS  = `${API_URL}/api/games`;
 
 /* ===============================
    STORAGE BASE
@@ -906,13 +918,24 @@ async function syncJogos(){
         if(!resp.ok) return;
 
         const data = await resp.json();
-        const jogosRemotos = data.jogos || data;
+        const jogosRemotos = Array.isArray(data.games) ? data.games : [];
+
+// Se a API vier vazia, NÃO sobrescreve seu catálogo atual
+if(jogosRemotos.length === 0){
+  console.log("API sem jogos ainda — mantendo catálogo do cache/local.");
+  return;
+}
 
         const hashRemoto = JSON.stringify(jogosRemotos);
         const hashLocal  = localStorage.getItem('toolflix_jogos_hash');
 
         if(hashLocal !== hashRemoto){
-            db_jogos = jogosRemotos;
+            db_jogos = jogosRemotos.map(g => ({
+  ...g,
+  nome: g.title ?? g.nome ?? "",
+  url:  g.link  ?? g.url  ?? "",
+  img:  g.image ?? g.img  ?? ""
+}));
             localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
             localStorage.setItem('toolflix_jogos_hash', hashRemoto);
             render();
@@ -2114,7 +2137,7 @@ function bindPremiumUI(){
     const w = document.getElementById('premiumWelcomeModal');
     if(w) w.style.display = 'flex';
   } else {
-  showToast("Token inválido: " + (data.reason || "SEM_MOTIVO"));
+  showToast("Token inválido: " + (data.reason || "SEM_REASON"));
   console.log("DEBUG validar-token:", data);
 }
 
