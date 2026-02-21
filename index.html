@@ -2039,7 +2039,73 @@ window.playLevelUpSound = playLevelUpSound;
 
 // atalhos fáceis (F-keys às vezes não funcionam)
 
+/* ===== FIX: Premium validar sempre funciona ===== */
+function bindPremiumUI(){
+  const openBtn = document.getElementById('premiumTriggerBtn');
+  const modal   = document.getElementById('premiumModal');
+  const input   = document.getElementById('premiumInput');
+  const submit  = document.getElementById('premiumSubmit');
 
+  // abrir modal
+  if(openBtn && modal){
+    openBtn.onclick = (e)=>{
+      e.preventDefault();
+      modal.style.display = 'flex';
+      if(input) input.focus();
+    };
+  }
+
+  // validar token
+  if(submit){
+    submit.onclick = async ()=>{
+      const token = (document.getElementById('premiumInput')?.value || '').toUpperCase().trim();
+      if(!token) return showToast("Digite o TOKEN!");
+
+      try{
+        const resp = await fetch(URL_TOKENS + '?t=' + Date.now());
+        if(!resp.ok) throw new Error('fetch');
+
+        const data = await resp.json();
+        const ativos = data.ativos || [];
+        const usados = data.usados || [];
+
+        if(ativos.includes(token) && !usados.includes(token)){
+          localStorage.setItem('toolflix_premium_atv','true');
+          localStorage.setItem('toolflix_token_ativador', token);
+          isPremium = true;
+
+          // XP 100 apenas uma vez
+          const premiumXpKey = 'toolflix_premium_xp_once';
+          if(localStorage.getItem(premiumXpKey) !== '1'){
+            localStorage.setItem(premiumXpKey, '1');
+            awardXp(XP_RULES.premium, 'Virou Premium');
+          }
+
+          // fecha modal
+          const m = document.getElementById('premiumModal');
+          if(m) m.style.display = 'none';
+
+          showToast("💎 PREMIUM ATIVADO!");
+          updatePremiumSidebar();
+          updateUserUI();
+          render();
+
+          // welcome modal
+          const w = document.getElementById('premiumWelcomeModal');
+          if(w) w.style.display = 'flex';
+        } else {
+          showToast("Token inválido!");
+        }
+
+      }catch(e){
+        showToast("Erro ao validar token (GitHub indisponível?).");
+      }
+    };
+  }
+}
+
+// chama uma vez e também após garantir modais
+bindPremiumUI();
 })();
 </script>
 </body>
