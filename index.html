@@ -1812,6 +1812,49 @@ if(adminBtnFix){
         }
     });
 }
+/* ===============================
+   ADMIN LOGIN UX: Enter + limpar senha
+================================= */
+
+function clearAdminPassword(){
+  const inp = document.getElementById('loginInput');
+  if(inp) inp.value = '';
+}
+
+// Enter no campo senha dispara login
+(function adminEnterFix(){
+  const inp = document.getElementById('loginInput');
+  const btn = document.getElementById('loginSubmit');
+  if(!inp || !btn) return;
+
+  inp.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      btn.click();
+    }
+  });
+})();
+
+// Ao abrir o modal admin, limpar senha
+(function adminOpenClear(){
+  const btn = document.getElementById('adminBtn');
+  const modal = document.getElementById('loginModal');
+  const inp = document.getElementById('loginInput');
+  if(!btn || !modal) return;
+
+  btn.addEventListener('click', ()=>{
+    clearAdminPassword();
+    // foco no input quando modal abrir
+    setTimeout(()=> { if(inp) inp.focus(); }, 0);
+  });
+})();
+
+// Ao sair do admin, limpar senha também
+const _exitAdminOld = exitAdmin;
+exitAdmin = function(){
+  _exitAdminOld();
+  clearAdminPassword();
+};
 })();
 
 })();
