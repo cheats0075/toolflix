@@ -1160,6 +1160,7 @@ function achUnlockCheck(){
     changed = true;
     showToast('🏆 PLATINA TOOLFLIX desbloqueada!');
 	playTrophySound();
+	
   }
 
   if(changed) achSaveUnlock(unlock);
@@ -1962,10 +1963,82 @@ function triggerLevelUpFx(newLevel){
 
     if(afterLv > beforeLv){
       triggerLevelUpFx(afterLv);
+	  // === expor (pra testar e evitar "not defined") ===
+window.playTrophySound = playTrophySound;
+window.playLevelUpSound = playLevelUpSound;
+
+// === atalho de teste ===
+// (clique 1x na página e aperte F2/F3)
+window.addEventListener('keydown', (e)=>{
+  if(e.key === 'F2') playTrophySound();
+  if(e.key === 'F3') playLevelUpSound();
+});
     }
   };
 })();
 })();
+/* ===== AUDIO UNLOCK + PLAYER (GARANTIDO) ===== */
+let TF_AUDIO_CTX = null;
+
+function tfInitAudio(){
+  try{
+    if(!TF_AUDIO_CTX){
+      TF_AUDIO_CTX = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if(TF_AUDIO_CTX.state === 'suspended'){
+      TF_AUDIO_CTX.resume();
+    }
+  }catch(e){}
+}
+
+// desbloqueia áudio no primeiro clique/toque
+window.addEventListener('pointerdown', tfInitAudio, { once:true });
+
+// playTone usando contexto único (mais compatível)
+function playTone(freq, dur=0.09, vol=0.25, type='triangle'){
+  try{
+    tfInitAudio();
+    if(!TF_AUDIO_CTX) return;
+
+    const osc = TF_AUDIO_CTX.createOscillator();
+    const gain = TF_AUDIO_CTX.createGain();
+
+    osc.type = type;
+    osc.frequency.value = freq;
+
+    // envelope (evita click estourado)
+    const t = TF_AUDIO_CTX.currentTime;
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(vol, t + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+
+    osc.connect(gain);
+    gain.connect(TF_AUDIO_CTX.destination);
+
+    osc.start(t);
+    osc.stop(t + dur + 0.02);
+  }catch(e){}
+}
+
+function playTrophySound(){
+  playTone(784,  0.08, 0.14, 'triangle');
+  setTimeout(()=> playTone(988,  0.08, 0.14, 'triangle'), 90);
+  setTimeout(()=> playTone(1175, 0.10, 0.16, 'triangle'), 180);
+}
+
+function playLevelUpSound(){
+  playTone(523, 0.08, 0.13, 'sine');
+  setTimeout(()=> playTone(659, 0.08, 0.13, 'sine'), 90);
+  setTimeout(()=> playTone(784, 0.09, 0.14, 'sine'), 180);
+  setTimeout(()=> playTone(1046,0.11, 0.16, 'sine'), 280);
+}
+
+// expõe pra testar
+window.playTrophySound = playTrophySound;
+window.playLevelUpSound = playLevelUpSound;
+
+// atalhos fáceis (F-keys às vezes não funcionam)
+
 
 })();
 </script>
