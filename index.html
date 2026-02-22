@@ -421,6 +421,9 @@
         <input type="text" id="userNickInput" class="admin-input"
           placeholder="Escolha um nickname"
           style="width:100%; margin-top:15px;">
+		  <input type="password" id="userPassInput" class="admin-input"
+  placeholder="Digite sua senha"
+  style="width:100%; margin-top:10px;">
         <button id="userLoginSubmit" class="nav-item"
           style="margin-top:15px; width:100%; background:var(--cor-accent); color:#000;">
           Entrar
@@ -590,6 +593,25 @@
 
   const USER_KEY = 'toolflix_user';
   const USER_ID_KEY = 'toolflix_user_id';
+  const API_BASE = 'https://toolflix-api.onrender.com';
+const AUTH_KEY = 'toolflix_auth'; // { token, userId, nick }
+
+function loadAuth(){
+  try { return JSON.parse(localStorage.getItem(AUTH_KEY)); }
+  catch { return null; }
+}
+function saveAuth(a){
+  localStorage.setItem(AUTH_KEY, JSON.stringify(a || null));
+}
+function clearAuth(){
+  localStorage.removeItem(AUTH_KEY);
+}
+
+// retorna token ou string vazia
+function getToken(){
+  const a = loadAuth();
+  return a?.token || '';
+}
 
   function getOrCreateUserId(){
     let id = localStorage.getItem(USER_ID_KEY);
@@ -799,20 +821,40 @@
     if(!area.contains(e.target) && !box.contains(e.target)) box.style.display = 'none';
   });
 
-  document.getElementById('userLoginSubmit')?.addEventListener('click', ()=>{
-    const inp = document.getElementById('userNickInput');
-    const nick = (inp?.value || '').trim().slice(0,18);
-    if(!nick){ showToast("Digite um nickname!"); return; }
+  document.getElementById('userLoginSubmit')?.addEventListener('click', async ()=>{
+  const nick = (document.getElementById('userNickInput')?.value || '').trim().slice(0,18);
+  const pass = (document.getElementById('userPassInput')?.value || '');
 
-    const old = loadUser();
-    const keepXp = old ? Number(old.xp || 0) : 0;
+  if(!nick){ showToast("Digite um nickname!"); return; }
+  if(!pass || pass.length < 6){ showToast("Senha mínima: 6 caracteres."); return; }
 
-    saveUser({ nick, xp: keepXp });
+  try{
+    const r = await fetch(API_BASE + "/api/login", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ nick, password: pass })
+    });
+
+    const j = await r.json();
+
+    if(!j?.ok){
+      showToast("Nick ou senha inválidos.");
+      return;
+    }
+
+    // salva token e dados do usuário
+    saveAuth({ token: j.token, userId: j.user.id, nick: j.user.nick });
+    saveUser({ nick: j.user.nick, xp: Number(j.user.xp || 0) });
+
     closeLogin();
     toggleUserMenu(true);
     updateUserUI();
-    showToast(`Bem-vindo, ${nick}!`);
-  });
+    showToast(`Bem-vindo, ${j.user.nick}!`);
+
+  }catch(e){
+    showToast("Erro ao conectar com servidor.");
+  }
+});
 
   document.getElementById('userNickInput')?.addEventListener('keydown', (e)=>{
     if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('userLoginSubmit')?.click(); }
