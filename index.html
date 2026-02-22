@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -1898,6 +1899,41 @@ document.getElementById("chatToggleBtn")?.addEventListener("click", ()=>{
 document.getElementById("chatInput")?.addEventListener("keydown", (e)=>{
   if(e.key === "Enter"){
     e.preventDefault();
+	document.getElementById("chatSendBtn")?.addEventListener("click", async ()=>{
+  const input = document.getElementById("chatInput");
+  const msg = (input?.value || "").trim();
+  if(!msg) return;
+
+  const token = getToken();
+  if(!token){
+    alert("Você precisa estar logado.");
+    return;
+  }
+
+  try{
+    const r = await fetch(API_URL + "/api/chat/send", {
+      method: "POST",
+      headers: {
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + token
+      },
+      body: JSON.stringify({ message: msg })
+    });
+
+    const j = await r.json();
+
+    if(j?.ok){
+      input.value = "";
+      loadChatMessages();
+    }else if(j?.error === "SPAM"){
+      alert("Aguarde 30s para enviar outra mensagem.");
+    }else{
+      alert("Erro ao enviar mensagem.");
+    }
+  }catch(e){
+    alert("Erro de conexão.");
+  }
+});
     document.getElementById("chatSendBtn")?.click();
   }
 });
