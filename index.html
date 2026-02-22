@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -348,7 +350,8 @@
         background:rgba(255,255,255,0.04); color:#fff; outline:none;
         font-size:14px; padding-left:20px;">
     </div>
-	    <nav id="categoriaBtns" style="overflow-y:auto; padding-right:5px;">
+
+    <nav id="categoriaBtns" style="overflow-y:auto; padding-right:5px;">
       <button class="catBtn active" data-cat="Todos">📂 Todos</button>
       <button class="catBtn" data-cat="Jogos PS2">🎮 Jogos PS2</button>
       <button class="catBtn" data-cat="PS2 com Cheats">🔥 PS2 Cheats</button>
@@ -411,7 +414,6 @@
         </button>
       </div>
     </div>
-
     <!-- ===== LOGIN GAME ===== -->
     <div id="userLoginModal" class="modal-overlay">
       <div class="modal-box">
@@ -455,12 +457,16 @@
 
   <div id="toast-container"></div>
 
-  <!-- ===== PREMIUM MODAL (já no HTML pra não falhar bind) ===== -->
+  <!-- ===== PREMIUM MODAL ===== -->
   <div id="premiumModal" class="modal-overlay">
     <div class="modal-box">
       <h2 style="color:gold; margin-bottom:20px">💎 Ativar Premium</h2>
-      <input type="text" id="premiumInput" maxlength="25" class="admin-input" style="width:100%; text-align:center" placeholder="TOKEN">
-      <button id="premiumSubmit" class="nav-item" style="background:gold; color:#000; width:100%; margin-top:10px">Validar</button>
+      <input type="text" id="premiumInput" maxlength="40" class="admin-input"
+        style="width:100%; text-align:center" placeholder="TOKEN">
+      <button id="premiumSubmit" class="nav-item"
+        style="background:gold; color:#000; width:100%; margin-top:10px">
+        Validar
+      </button>
     </div>
   </div>
 
@@ -484,8 +490,12 @@
   <div id="loginModal" class="modal-overlay">
     <div class="modal-box">
       <h2 style="margin-bottom:20px">🔐 Admin</h2>
-      <input type="password" id="loginInput" class="admin-input" style="width:100%" placeholder="Senha">
-      <button id="loginSubmit" class="nav-item" style="background:var(--cor-accent); color:#000; width:100%; margin-top:10px">Entrar</button>
+      <input type="password" id="loginInput" class="admin-input"
+        style="width:100%" placeholder="Senha">
+      <button id="loginSubmit" class="nav-item"
+        style="background:var(--cor-accent); color:#000; width:100%; margin-top:10px">
+        Entrar
+      </button>
     </div>
   </div>
 
@@ -512,1126 +522,1141 @@
   </div>
 
   <script>
+    /* ===============================
+     CONFIG / API
+  ================================= */
+
+  const API_URL = "https://toolflix-api.onrender.com";
+  const URL_JOGOS  = `${API_URL}/api/games`;
+
   /* ===============================
-   CONFIG / API
-================================= */
+     HELPERS / NORMALIZAÇÃO
+  ================================= */
 
-const API_URL = "https://toolflix-api.onrender.com";
-const URL_TOKENS = "https://raw.githubusercontent.com/cheats0075/toolflix/main/tokens.json";
-const URL_JOGOS  = `${API_URL}/api/games`;
-
-/* ===============================
-   HELPERS / NORMALIZAÇÃO
-================================= */
-
-function safeStr(v, fallback=""){
-  if(v === null || v === undefined) return fallback;
-  return String(v);
-}
-
-function normalizeCategoria(raw){
-  const c = safeStr(raw, "").trim();
-  if(!c) return "Jogos PS2";
-  return c;
-}
-
-function normalizeGame(g){
-  // Aceita vários formatos vindos do backend/local e padroniza
-  const nome = safeStr(g?.nome ?? g?.title ?? g?.name ?? "Sem nome").trim() || "Sem nome";
-  const categoria = normalizeCategoria(g?.categoria ?? g?.category ?? g?.cat);
-  const link = safeStr(g?.link ?? g?.url ?? g?.href ?? "").trim();
-  const capa = safeStr(g?.capa ?? g?.img ?? g?.image ?? g?.cover ?? "").trim();
-  const premium = Boolean(g?.premium === true || categoria === "Premium" || g?.isPremium === true);
-
-  return { nome, categoria, link, capa, premium };
-}
-
-/* ===============================
-   STORAGE
-================================= */
-
-const LS_JOGOS = 'jogosPS2';
-const LS_FAVS  = 'toolflix_favs';
-
-let db_jogos = (()=>{
-  try{
-    const raw = JSON.parse(localStorage.getItem(LS_JOGOS) || '[]');
-    return Array.isArray(raw) ? raw.map(normalizeGame) : [];
-  }catch{
-    return [];
-  }
-})();
-
-let db_favs = (()=>{
-  try{
-    const raw = JSON.parse(localStorage.getItem(LS_FAVS) || '[]');
-    return Array.isArray(raw) ? raw : [];
-  }catch{
-    return [];
-  }
-})();
-
-let isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';
-let modoAdmin = false;
-let catAtiva  = 'Todos';
-let sortModo  = 'recentes';
-let filterFav = false;
-
-/* ===============================
-   USER / XP SYSTEM
-================================= */
-
-const USER_KEY = 'toolflix_user';
-
-function loadUser(){
-  try { return JSON.parse(localStorage.getItem(USER_KEY)); }
-  catch { return null; }
-}
-function saveUser(u){
-  u = u || {};
-  u.xp = Number(u.xp || 0);
-  localStorage.setItem(USER_KEY, JSON.stringify(u));
-}
-
-function todayKey(){
-  const d = new Date();
-  return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
-}
-
-const XP_RULES = { youtube: 15, download: 10, theme: 15, favorite: 5, premium: 100 };
-const DAILY_KEY = 'toolflix_xp_daily_';
-
-function getDaily(){
-  try{
-    return JSON.parse(localStorage.getItem(DAILY_KEY + todayKey()) || '{"downloads":0,"themes":0,"favorites":0}');
-  }catch{
-    return {downloads:0,themes:0,favorites:0};
-  }
-}
-function setDaily(d){
-  localStorage.setItem(DAILY_KEY + todayKey(), JSON.stringify(d));
-}
-
-function getLevelInfo(totalXp){
-  totalXp = Number(totalXp || 0);
-  if(totalXp < 100) return {level:1, min:0, max:100};
-  if(totalXp < 250) return {level:2, min:100, max:250};
-  if(totalXp < 500) return {level:3, min:250, max:500};
-
-  const extra = totalXp - 500;
-  const level = 4 + Math.floor(extra / 300);
-  const min   = 500 + (level-4)*300;
-  const max   = min + 300;
-  return {level, min, max};
-}
-
-function showToast(msg){
-  const c = document.getElementById('toast-container');
-  if(!c) return;
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.innerText = msg;
-  c.appendChild(t);
-  setTimeout(()=>{
-    t.style.opacity = '0';
-    setTimeout(()=> t.remove(), 300);
-  }, 3500);
-}
-
-function updateUserUI(){
-  const u = loadUser();
-  const nickEl = document.getElementById('userNick');
-  const xpFill = document.getElementById('xpFill');
-  const xpText = document.getElementById('xpText');
-
-  if(!u || !u.nick){
-    nickEl.innerText = "Entrar";
-    xpFill.style.width = "0%";
-    xpText.innerText = "0/100";
-    return;
+  function safeStr(v, fallback=""){
+    if(v === null || v === undefined) return fallback;
+    return String(v);
   }
 
-  nickEl.innerText = u.nick;
-  const info = getLevelInfo(u.xp);
-  const pct  = ((u.xp - info.min) / (info.max - info.min)) * 100;
+  function normalizeCategoria(raw){
+    const c = safeStr(raw, "").trim();
+    if(!c) return "Jogos PS2";
+    return c;
+  }
 
-  xpFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
-  xpText.innerText   = `${u.xp - info.min}/${info.max - info.min} (Nv ${info.level})`;
-}
+  function normalizeGame(g){
+    const nome = safeStr(g?.nome ?? g?.title ?? g?.name ?? "Sem nome").trim() || "Sem nome";
+    const categoria = normalizeCategoria(g?.categoria ?? g?.category ?? g?.cat);
+    const link = safeStr(g?.link ?? g?.url ?? g?.href ?? "").trim();
+    const capa = safeStr(g?.capa ?? g?.img ?? g?.image ?? g?.cover ?? "").trim();
+    const premium = Boolean(g?.premium === true || categoria === "Premium" || g?.isPremium === true);
 
-/* ===============================
-   AUDIO (1 único sistema, volume maior)
-================================= */
+    return { nome, categoria, link, capa, premium };
+  }
 
-let TF_AUDIO_CTX = null;
+  /* ===============================
+     STORAGE
+  ================================= */
 
-function tfInitAudio(){
-  try{
-    if(!TF_AUDIO_CTX){
-      TF_AUDIO_CTX = new (window.AudioContext || window.webkitAudioContext)();
+  const LS_JOGOS = 'jogosPS2';
+  const LS_FAVS  = 'toolflix_favs';
+
+  let db_jogos = (()=> {
+    try{
+      const raw = JSON.parse(localStorage.getItem(LS_JOGOS) || '[]');
+      return Array.isArray(raw) ? raw.map(normalizeGame) : [];
+    }catch{
+      return [];
     }
-    if(TF_AUDIO_CTX.state === 'suspended') TF_AUDIO_CTX.resume();
-  }catch(e){}
-}
-window.addEventListener('pointerdown', tfInitAudio, { once:true });
+  })();
 
-function playTone(freq, dur=0.09, vol=0.28, type='triangle'){
-  try{
-    tfInitAudio();
-    if(!TF_AUDIO_CTX) return;
+  let db_favs = (()=> {
+    try{
+      const raw = JSON.parse(localStorage.getItem(LS_FAVS) || '[]');
+      return Array.isArray(raw) ? raw : [];
+    }catch{
+      return [];
+    }
+  })();
 
-    const osc = TF_AUDIO_CTX.createOscillator();
-    const gain = TF_AUDIO_CTX.createGain();
-    osc.type = type;
-    osc.frequency.value = freq;
+  let isPremium = false;
+  let modoAdmin = false;
+  let catAtiva  = 'Todos';
+  let sortModo  = 'recentes';
+  let filterFav = false;
 
-    const t = TF_AUDIO_CTX.currentTime;
-    gain.gain.setValueAtTime(0.0001, t);
-    gain.gain.exponentialRampToValueAtTime(vol, t + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  /* ===============================
+     USER / XP SYSTEM
+  ================================= */
 
-    osc.connect(gain);
-    gain.connect(TF_AUDIO_CTX.destination);
+  const USER_KEY = 'toolflix_user';
+  const USER_ID_KEY = 'toolflix_user_id';
 
-    osc.start(t);
-    osc.stop(t + dur + 0.02);
-  }catch(e){}
-}
-
-function playTrophySound(){
-  playTone(784,  0.08, 0.18, 'triangle');
-  setTimeout(()=> playTone(988,  0.08, 0.18, 'triangle'), 90);
-  setTimeout(()=> playTone(1175, 0.10, 0.22, 'triangle'), 180);
-}
-function playLevelUpSound(){
-  playTone(523, 0.08, 0.16, 'sine');
-  setTimeout(()=> playTone(659, 0.08, 0.16, 'sine'), 90);
-  setTimeout(()=> playTone(784, 0.09, 0.18, 'sine'), 180);
-  setTimeout(()=> playTone(1046,0.11, 0.22, 'sine'), 280);
-}
-window.playTrophySound = playTrophySound;
-window.playLevelUpSound = playLevelUpSound;
-
-/* ===============================
-   XP / LEVEL UP
-================================= */
-
-function triggerLevelUpFx(newLevel){
-  const el = document.getElementById('userArea');
-  if(!el) return;
-  el.classList.remove('level-up-pop');
-  void el.offsetWidth;
-  el.classList.add('level-up-pop');
-  setTimeout(()=> el.classList.remove('level-up-pop'), 850);
-
-  playLevelUpSound();
-  showToast(`🎉 UP! Você subiu para o nível ${newLevel}!`);
-}
-
-function awardXp(amount, reason){
-  const u = loadUser();
-  if(!u || !u.nick) return;
-
-  const beforeXp = Number(u.xp || 0);
-  const beforeLv = getLevelInfo(beforeXp).level;
-
-  u.xp = Number(u.xp || 0) + Number(amount || 0);
-  saveUser(u);
-
-  showToast(`+${amount} XP (${reason})`);
-  updateUserUI();
-
-  const afterLv = getLevelInfo(u.xp).level;
-  if(afterLv > beforeLv){
-    triggerLevelUpFx(afterLv);
-  }
-}
-
-/* ===============================
-   USER MENU / LOGIN
-================================= */
-
-function openLogin(){
-  const m = document.getElementById('userLoginModal');
-  const inp = document.getElementById('userNickInput');
-  if(m) m.style.display = 'flex';
-  if(inp) inp.focus();
-}
-function closeLogin(){
-  const m = document.getElementById('userLoginModal');
-  if(m) m.style.display = 'none';
-}
-function toggleUserMenu(forceClose=false){
-  const box = document.getElementById('userMenuBox');
-  if(!box) return;
-  if(forceClose){ box.style.display = 'none'; return; }
-  box.style.display = (box.style.display === 'block') ? 'none' : 'block';
-}
-
-document.getElementById('userArea')?.addEventListener('click', ()=>{
-  const u = loadUser();
-  if(!u || !u.nick) openLogin();
-  else toggleUserMenu();
-});
-
-document.addEventListener('click', (e)=>{
-  const box = document.getElementById('userMenuBox');
-  const area = document.getElementById('userArea');
-  if(!box || !area) return;
-  if(!area.contains(e.target) && !box.contains(e.target)) box.style.display = 'none';
-});
-
-document.getElementById('userLoginSubmit')?.addEventListener('click', ()=>{
-  const inp = document.getElementById('userNickInput');
-  const nick = (inp?.value || '').trim().slice(0,18);
-  if(!nick){ showToast("Digite um nickname!"); return; }
-
-  const old = loadUser();
-  const keepXp = old ? Number(old.xp || 0) : 0;
-
-  saveUser({ nick, xp: keepXp });
-  closeLogin();
-  toggleUserMenu(true);
-  updateUserUI();
-  showToast(`Bem-vindo, ${nick}!`);
-});
-
-document.getElementById('userNickInput')?.addEventListener('keydown', (e)=>{
-  if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('userLoginSubmit')?.click(); }
-});
-
-document.getElementById('logoutBtn')?.addEventListener('click', ()=>{
-  const old = loadUser();
-  const keepXp = old ? Number(old.xp || 0) : 0;
-  saveUser({ nick: null, xp: keepXp });
-  toggleUserMenu(true);
-  updateUserUI();
-  showToast("Você saiu.");
-});
-
-/* ===============================
-   GAME PANEL
-================================= */
-
-const LAST_YT_KEY = 'toolflix_last_youtube_xp';
-function ytCooldownLeft(){
-  const last = Number(localStorage.getItem(LAST_YT_KEY) || 0);
-  const now = Date.now();
-  const cd = 5 * 60 * 1000;
-  return Math.max(0, cd - (now - last));
-}
-function fmtTime(ms){
-  const s = Math.ceil(ms/1000);
-  const m = Math.floor(s/60);
-  const r = s % 60;
-  return `${m}m ${String(r).padStart(2,'0')}s`;
-}
-function renderGamePanel(){
-  const u = loadUser();
-  const div = document.getElementById('gameContent');
-  if(!div) return;
-
-  if(!u || !u.nick){
-    div.innerHTML = "Faça login para ver suas missões.";
-    return;
+  function getOrCreateUserId(){
+    let id = localStorage.getItem(USER_ID_KEY);
+    if(!id){
+      id = 'u_' + Math.random().toString(36).slice(2,12);
+      localStorage.setItem(USER_ID_KEY, id);
+    }
+    return id;
   }
 
-  const d = getDaily();
-  const info = getLevelInfo(u.xp);
-  const inLevel = u.xp - info.min;
-  const need = info.max - info.min;
-  const ytLeft = ytCooldownLeft();
+  function loadUser(){
+    try { return JSON.parse(localStorage.getItem(USER_KEY)); }
+    catch { return null; }
+  }
 
-  div.innerHTML = `
-    <div style="margin-bottom:15px;">
-      <div style="display:flex; justify-content:space-between;">
-        <div style="font-weight:900; color:gold;">Nível ${info.level}</div>
-        <div>XP: <b>${inLevel}/${need}</b></div>
-      </div>
-      <div class="xpBar" style="width:100%; height:14px; margin-top:8px;">
-        <div class="xpFill" style="width:${Math.max(0,Math.min(100,(inLevel/need)*100))}%"></div>
-      </div>
-    </div>
+  function saveUser(u){
+    u = u || {};
+    u.xp = Number(u.xp || 0);
+    localStorage.setItem(USER_KEY, JSON.stringify(u));
+  }
 
-    <div style="font-weight:900; color:gold;">🔥 Missões Diárias</div>
-    <div style="margin-top:10px; font-size:13px; line-height:1.9;">
-      <div>🎮 Baixar 3 jogos → <b>${d.downloads}/3</b></div>
-      <div>❤️ Favoritar 5 jogos → <b>${d.favorites}/5</b></div>
-      <div>🎨 Trocar tema → <b>${d.themes}/1</b></div>
-      <div>🎥 YouTube → ${ytLeft>0 ? `⏳ ${fmtTime(ytLeft)}` : `<span style="color:#8cff8c; font-weight:900;">Pronto</span>`}</div>
-    </div>
+  function todayKey(){
+    const d = new Date();
+    return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+  }
 
-    <div style="margin-top:15px; font-weight:900; color:gold;">💎 Especial</div>
-    <div style="margin-top:8px;">Virar Premium → 100 XP (único)</div>
-  `;
-}
+  const XP_RULES = { youtube: 15, download: 10, theme: 15, favorite: 5, premium: 100 };
+  const DAILY_KEY = 'toolflix_xp_daily_';
 
-document.getElementById('openGameBtn')?.addEventListener('click', ()=>{
-  toggleUserMenu(true);
-  document.getElementById('gameModal').style.display = 'flex';
-  renderGamePanel();
-});
-document.getElementById('closeGameBtn')?.addEventListener('click', ()=>{
-  document.getElementById('gameModal').style.display = 'none';
-});
-
-setInterval(()=>{
-  const m = document.getElementById('gameModal');
-  if(m && m.style.display === 'flex') renderGamePanel();
-}, 1000);
-
-/* ===============================
-   CONQUISTAS
-================================= */
-
-const ACH_STATS_KEY  = 'toolflix_ach_stats';
-const ACH_UNLOCK_KEY = 'toolflix_ach_unlock';
-
-const ACH_LIST = [
-  { id:'yt_5',   type:'youtube',   title:'🎥 Aquecimento',        need:5 },
-  { id:'yt_15',  type:'youtube',   title:'🎥 Pegando ritmo',      need:15 },
-  { id:'yt_30',  type:'youtube',   title:'🎥 Maratonista',        need:30 },
-  { id:'yt_60',  type:'youtube',   title:'🎥 Sedento por views',  need:60 },
-  { id:'yt_120', type:'youtube',   title:'🎥 Lenda do YouTube',   need:120 },
-  { id:'yt_250', type:'youtube',   title:'🎥 Insano',             need:250 },
-
-  { id:'dl_3',   type:'downloads', title:'🎮 Primeiro download',      need:3 },
-  { id:'dl_10',  type:'downloads', title:'🎮 Começou a coleção',      need:10 },
-  { id:'dl_25',  type:'downloads', title:'🎮 HD cheio',               need:25 },
-  { id:'dl_50',  type:'downloads', title:'🎮 Viciado em instalar',    need:50 },
-  { id:'dl_100', type:'downloads', title:'🎮 Biblioteca braba',       need:100 },
-  { id:'dl_200', type:'downloads', title:'🎮 Arquivo vivo',           need:200 },
-
-  { id:'fv_5',   type:'favorites', title:'❤️ Coração de gamer',   need:5 },
-  { id:'fv_15',  type:'favorites', title:'❤️ Curador',            need:15 },
-  { id:'fv_30',  type:'favorites', title:'❤️ Colecionador',       need:30 },
-  { id:'fv_60',  type:'favorites', title:'❤️ Seleção de elite',   need:60 },
-  { id:'fv_100', type:'favorites', title:'❤️ Museu ToolFlix',     need:100 },
-  { id:'fv_200', type:'favorites', title:'❤️ Amor infinito',      need:200 },
-
-  { id:'th_1',   type:'themes',    title:'🎨 Mudou o clima',       need:1 },
-  { id:'th_5',   type:'themes',    title:'🎨 Estiloso',            need:5 },
-  { id:'th_15',  type:'themes',    title:'🎨 Camaleão',            need:15 },
-  { id:'th_30',  type:'themes',    title:'🎨 Designer',            need:30 },
-  { id:'th_60',  type:'themes',    title:'🎨 Modo DJ',             need:60 },
-  { id:'th_120', type:'themes',    title:'🎨 Multiverso',          need:120 },
-];
-
-function achLoadStats(){
-  try { return JSON.parse(localStorage.getItem(ACH_STATS_KEY) || '{"youtube":0,"downloads":0,"favorites":0,"themes":0,"premium":0}'); }
-  catch { return { youtube:0, downloads:0, favorites:0, themes:0, premium:0 }; }
-}
-function achSaveStats(s){ localStorage.setItem(ACH_STATS_KEY, JSON.stringify(s || {})); }
-
-function achLoadUnlock(){
-  try { return JSON.parse(localStorage.getItem(ACH_UNLOCK_KEY) || '{}'); }
-  catch { return {}; }
-}
-function achSaveUnlock(u){ localStorage.setItem(ACH_UNLOCK_KEY, JSON.stringify(u || {})); }
-
-function achUnlockCheck(){
-  const stats = achLoadStats();
-  const unlock = achLoadUnlock();
-  let changed = false;
-
-  for(const a of ACH_LIST){
-    const cur = Number(stats[a.type] || 0);
-    if(!unlock[a.id] && cur >= a.need){
-      unlock[a.id] = true;
-      changed = true;
-      showToast(`🏆 Conquista desbloqueada: ${a.title}`);
-      playTrophySound();
+  function getDaily(){
+    try{
+      return JSON.parse(localStorage.getItem(DAILY_KEY + todayKey()) || '{"downloads":0,"themes":0,"favorites":0}');
+    }catch{
+      return {downloads:0,themes:0,favorites:0};
     }
   }
 
-  const allOk = ACH_LIST.every(a => unlock[a.id] === true);
-  if(allOk && !unlock['platinum_toolflix']){
-    unlock['platinum_toolflix'] = true;
-    changed = true;
-    showToast('🏆 PLATINA TOOLFLIX desbloqueada!');
-    playTrophySound();
+  function setDaily(d){
+    localStorage.setItem(DAILY_KEY + todayKey(), JSON.stringify(d));
   }
 
-  if(changed) achSaveUnlock(unlock);
-}
+  function getLevelInfo(totalXp){
+    totalXp = Number(totalXp || 0);
+    if(totalXp < 100) return {level:1, min:0, max:100};
+    if(totalXp < 250) return {level:2, min:100, max:250};
+    if(totalXp < 500) return {level:3, min:250, max:500};
 
-function achInc(type, amount=1){
-  const u = loadUser();
-  if(!u || !u.nick) return;
-
-  const stats = achLoadStats();
-  stats[type] = Number(stats[type] || 0) + Number(amount || 0);
-  achSaveStats(stats);
-  achUnlockCheck();
-}
-
-function achSection(title, items, stats, unlock){
-  const lines = items.map(a => {
-    const cur = Number(stats[a.type] || 0);
-    const done = !!unlock[a.id];
-    const prog = Math.min(cur, a.need);
-    const pct = Math.max(0, Math.min(100, (prog / a.need) * 100));
-    return `
-      <div class="ach-badge ${done ? '' : 'locked'}" style="width:100%;">
-        <div style="flex:1;">
-          <div class="ach-title">${done ? '✅' : '🔒'} ${a.title}</div>
-          <div class="ach-meta">${done ? 'Concluída' : `Progresso: ${prog}/${a.need}`}</div>
-          <div class="ach-progress"><div style="width:${pct.toFixed(1)}%"></div></div>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  return `
-    <div style="margin-top:14px; font-weight:900; color:gold;">${title}</div>
-    <div style="margin-top:8px; display:flex; flex-direction:column; gap:6px;">
-      ${lines}
-    </div>
-  `;
-}
-
-function achRender(){
-  const list = document.getElementById('achList');
-  const plat = document.getElementById('achPlatinum');
-  if(!list) return;
-
-  const u = loadUser();
-  if(!u || !u.nick){
-    list.innerHTML = `<div style="opacity:.9">Faça login para ver suas conquistas.</div>`;
-    if(plat) plat.textContent = '';
-    return;
+    const extra = totalXp - 500;
+    const level = 4 + Math.floor(extra / 300);
+    const min   = 500 + (level-4)*300;
+    const max   = min + 300;
+    return {level, min, max};
   }
 
-  const stats = achLoadStats();
-  const unlock = achLoadUnlock();
-
-  const yt = ACH_LIST.filter(a => a.type === 'youtube');
-  const dl = ACH_LIST.filter(a => a.type === 'downloads');
-  const fv = ACH_LIST.filter(a => a.type === 'favorites');
-  const th = ACH_LIST.filter(a => a.type === 'themes');
-
-  list.innerHTML =
-    achSection('🎥 YouTube', yt, stats, unlock) +
-    achSection('🎮 Downloads', dl, stats, unlock) +
-    achSection('❤️ Favoritos', fv, stats, unlock) +
-    achSection('🎨 Temas', th, stats, unlock);
-
-  if(plat){
-    plat.textContent = unlock['platinum_toolflix']
-      ? '🏆 PLATINA TOOLFLIX: ✅ Desbloqueada'
-      : '🏆 PLATINA TOOLFLIX: ⏳ Complete todas as conquistas acima';
-  }
-}
-
-document.getElementById('openAchBtn')?.addEventListener('click', ()=>{
-  toggleUserMenu(true);
-  achRender();
-  document.getElementById('achModal').style.display = 'flex';
-});
-document.getElementById('closeAchBtn')?.addEventListener('click', ()=>{
-  document.getElementById('achModal').style.display = 'none';
-});
-
-// Hook: toda vez que ganhar XP, incrementa conquistas
-const _awardXpOriginal = awardXp;
-awardXp = function(amount, reason){
-  _awardXpOriginal(amount, reason);
-  if(reason === 'YouTube')       achInc('youtube', 1);
-  if(reason === 'Download')      achInc('downloads', 1);
-  if(reason === 'Favorito')      achInc('favorites', 1);
-  if(reason === 'Troca de tema') achInc('themes', 1);
-  if(reason === 'Virou Premium') achInc('premium', 1);
-};
-
-/* ===============================
-   PREMIUM (SYNC + SIDEBAR)
-================================= */
-
-let premiumMembersCount = 0;
-
-function getPremiumStats(){
-  const totalPremium = db_jogos.filter(j => j && j.premium === true).length;
-  const totalItens = db_jogos.length;
-  const desbloqueados = (isPremium || modoAdmin) ? totalPremium : 0;
-  return { totalPremium, totalItens, desbloqueados };
-}
-
-function updatePremiumSidebar(){
-  const badge = document.getElementById('premiumBadge');
-  const counter = document.getElementById('premiumCounter');
-  if(!counter) return;
-
-  if(badge) badge.style.display = isPremium ? 'block' : 'none';
-
-  const s = getPremiumStats();
-  const headline = isPremium
-    ? `💎 Você é usuário Premium`
-    : `💎 <b>${premiumMembersCount}</b> usuários Premium ativos`;
-
-  counter.innerHTML = `
-    <div style="font-weight:900; color:gold; margin-bottom:6px;">${headline}</div>
-    <div>🔓 Desbloqueados: <b>${s.desbloqueados}</b> / <b>${s.totalPremium}</b></div>
-    <div>📦 Total no catálogo: <b>${s.totalItens}</b></div>
-  `;
-}
-
-async function checkPremiumSync(){
-  const tokenAtivador = localStorage.getItem('toolflix_token_ativador');
-
-  if(!tokenAtivador){
-    isPremium = false;
-    localStorage.setItem('toolflix_premium_atv','false');
+  function showToast(msg){
+    const c = document.getElementById('toast-container');
+    if(!c) return;
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.innerText = msg;
+    c.appendChild(t);
+    setTimeout(()=>{
+      t.style.opacity = '0';
+      setTimeout(()=> t.remove(), 300);
+    }, 3500);
   }
 
-  try{
-    const resp = await fetch(URL_TOKENS + '?v=' + Date.now());
-    if(!resp.ok) throw new Error("TOKENS_FAIL");
-    const data = await resp.json();
+  function updateUserUI(){
+    const u = loadUser();
+    const nickEl = document.getElementById('userNick');
+    const xpFill = document.getElementById('xpFill');
+    const xpText = document.getElementById('xpText');
 
-    const usados = Array.isArray(data.usados) ? data.usados : [];
-    premiumMembersCount = usados.length;
-    localStorage.setItem('toolflix_premium_members', String(premiumMembersCount));
-
-    // se tem token local, ainda precisa estar válido
-    const ativos = Array.isArray(data.ativos) ? data.ativos : [];
-    if(tokenAtivador){
-      if(!ativos.includes(tokenAtivador) || usados.includes(tokenAtivador)){
-        localStorage.setItem('toolflix_premium_atv','false');
-        localStorage.removeItem('toolflix_token_ativador');
-        isPremium = false;
-      } else {
-        localStorage.setItem('toolflix_premium_atv','true');
-        isPremium = true;
-      }
-    }
-
-    updatePremiumSidebar();
-    render();
-
-  }catch(e){
-    isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';
-    premiumMembersCount = Number(localStorage.getItem('toolflix_premium_members') || 0);
-    updatePremiumSidebar();
-    render();
-  }
-}
-
-/* ===============================
-   CATALOGO SYNC
-================================= */
-
-async function syncJogos(){
-  try{
-    const resp = await fetch(URL_JOGOS + '?v=' + Date.now());
-    if(!resp.ok) return;
-
-    const data = await resp.json();
-    const jogosRemotos = Array.isArray(data.games) ? data.games : Array.isArray(data) ? data : [];
-
-    if(jogosRemotos.length === 0){
-      console.log("API sem jogos — mantendo local.");
+    if(!u || !u.nick){
+      nickEl.innerText = "Entrar";
+      xpFill.style.width = "0%";
+      xpText.innerText = "0/100";
       return;
     }
 
-    const normalizados = jogosRemotos.map(normalizeGame);
+    nickEl.innerText = u.nick;
+    const info = getLevelInfo(u.xp);
+    const pct  = ((u.xp - info.min) / (info.max - info.min)) * 100;
 
-    // evita sobrescrever com lixo
-    const ok = normalizados.some(j => j.nome && j.nome !== "Sem nome");
-    if(!ok) return;
-
-    db_jogos = normalizados;
-    localStorage.setItem(LS_JOGOS, JSON.stringify(db_jogos));
-    render();
-  }catch(e){
-    console.warn("syncJogos fail:", e);
+    xpFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
+    xpText.innerText   = `${u.xp - info.min}/${info.max - info.min} (Nv ${info.level})`;
   }
-}
+    /* ===============================
+     AUDIO
+  ================================= */
 
-/* ===============================
-   RENDER (CAPAS + CATEGORIAS FIX)
-================================= */
+  let TF_AUDIO_CTX = null;
 
-function render(){
-  const grid = document.getElementById('catalogo');
-  if(!grid) return;
-
-  const lg = document.getElementById('logoToolFlix');
-  if(isPremium){
-    document.body.classList.add('premium-active');
-    if(lg) lg.innerText = 'ToolFlix Pro';
-  } else {
-    document.body.classList.remove('premium-active');
-    if(lg) lg.innerText = 'ToolFlix';
-  }
-
-  const btnP = document.getElementById('premiumTriggerBtn');
-  const btnS = document.getElementById('solicitarTokenBtn');
-  if(btnP && btnS){
-    btnP.style.display = isPremium ? 'none' : 'block';
-    btnS.style.display = isPremium ? 'none' : 'block';
-  }
-
-  grid.innerHTML = '';
-
-  let lista = db_jogos.map(normalizeGame);
-
-  if(catAtiva !== 'Todos'){
-    lista = lista.filter(j => normalizeCategoria(j.categoria) === catAtiva);
-  }
-
-  const search = (document.getElementById('searchBar')?.value || '').toLowerCase();
-  if(search){
-    lista = lista.filter(j => safeStr(j.nome,'').toLowerCase().includes(search));
-  }
-
-  if(filterFav){
-    lista = lista.filter(j => db_favs.includes(j.nome));
-  }
-
-  if(sortModo === 'az') lista.sort((a,b)=> a.nome.localeCompare(b.nome));
-  else if(sortModo === 'za') lista.sort((a,b)=> b.nome.localeCompare(a.nome));
-  else if(sortModo === 'recentes') lista.reverse();
-
-  lista.forEach(j => {
-    const isFav = db_favs.includes(j.nome);
-    const isP = j.premium === true;
-    const lock = isP && !isPremium && !modoAdmin;
-
-    const card = document.createElement('div');
-    card.className = `jogo ${isP ? 'jogo-premium' : ''} ${lock ? 'premium-locked' : ''}`;
-
-    card.onclick = ()=>{
-      if(lock){
-        showToast("🔒 Conteúdo Premium!");
-        return;
+  function tfInitAudio(){
+    try{
+      if(!TF_AUDIO_CTX){
+        TF_AUDIO_CTX = new (window.AudioContext || window.webkitAudioContext)();
       }
+      if(TF_AUDIO_CTX.state === 'suspended') TF_AUDIO_CTX.resume();
+    }catch(e){}
+  }
+  window.addEventListener('pointerdown', tfInitAudio, { once:true });
 
-      const link = j.link;
-      if(link){
-        window.open(link, '_blank');
-      }else{
-        showToast("Link inválido.");
-        return;
-      }
+  function playTone(freq, dur=0.09, vol=0.28, type='triangle'){
+    try{
+      tfInitAudio();
+      if(!TF_AUDIO_CTX) return;
 
-      const u = loadUser();
-      if(!u || !u.nick) return;
+      const osc = TF_AUDIO_CTX.createOscillator();
+      const gain = TF_AUDIO_CTX.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
 
-      if(j.categoria === 'YouTube'){
-        const left = ytCooldownLeft();
-        if(left <= 0){
-          localStorage.setItem(LAST_YT_KEY, Date.now());
-          awardXp(XP_RULES.youtube, "YouTube");
-        }else{
-          showToast("⏳ Aguarde 5 minutos para ganhar XP novamente.");
-        }
-        return;
-      }
+      const t = TF_AUDIO_CTX.currentTime;
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.exponentialRampToValueAtTime(vol, t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
 
-      const d = getDaily();
-      if(d.downloads < 3){
-        d.downloads++;
-        setDaily(d);
-        awardXp(XP_RULES.download, "Download");
-      } else {
-        showToast("⚠️ Limite diário de downloads atingido.");
-      }
-    };
+      osc.connect(gain);
+      gain.connect(TF_AUDIO_CTX.destination);
 
-    const capaFinal = j.capa || "https://via.placeholder.com/512x512.png?text=ToolFlix";
-    const catFinal = normalizeCategoria(j.categoria);
+      osc.start(t);
+      osc.stop(t + dur + 0.02);
+    }catch(e){}
+  }
 
-    card.innerHTML = `
-      <button onclick="event.stopPropagation(); window.toggleFav('${safeStr(j.nome).replace(/'/g,"\\'")}')"
-        style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.7);
-        color:${isFav?'#ff4757':'#fff'}; border:none; width:34px; height:34px;
-        border-radius:50%; cursor:pointer; z-index:10;
-        display:flex; align-items:center; justify-content:center; font-size:18px;">
-        ${isFav?'❤️':'🤍'}
-      </button>
+  function playTrophySound(){
+    playTone(784,  0.08, 0.18, 'triangle');
+    setTimeout(()=> playTone(988,  0.08, 0.18, 'triangle'), 90);
+    setTimeout(()=> playTone(1175, 0.10, 0.22, 'triangle'), 180);
+  }
+  function playLevelUpSound(){
+    playTone(523, 0.08, 0.16, 'sine');
+    setTimeout(()=> playTone(659, 0.08, 0.16, 'sine'), 90);
+    setTimeout(()=> playTone(784, 0.09, 0.18, 'sine'), 180);
+    setTimeout(()=> playTone(1046,0.11, 0.22, 'sine'), 280);
+  }
+  window.playTrophySound = playTrophySound;
+  window.playLevelUpSound = playLevelUpSound;
 
-      ${lock ? '<span style="position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:40px; z-index:5">🔒</span>' : ''}
+  /* ===============================
+     XP / LEVEL UP
+  ================================= */
 
-      <img src="${capaFinal}" alt="" onerror="this.src='https://via.placeholder.com/512x512.png?text=ToolFlix';">
+  function triggerLevelUpFx(newLevel){
+    const el = document.getElementById('userArea');
+    if(!el) return;
+    el.classList.remove('level-up-pop');
+    void el.offsetWidth;
+    el.classList.add('level-up-pop');
+    setTimeout(()=> el.classList.remove('level-up-pop'), 850);
 
-      <div style="margin-top:12px; text-align:center">
-        <span style="font-size:10px; color:var(--cor-accent); font-weight:800; letter-spacing:1px">
-          ${catFinal}${isP ? ' 💎' : ''}
-        </span>
-        <p style="font-weight:600; font-size:13px; margin-top:4px;">
-          ${safeStr(j.nome,'Sem nome')}
-        </p>
+    playLevelUpSound();
+    showToast(`🎉 UP! Você subiu para o nível ${newLevel}!`);
+  }
+
+  function awardXp(amount, reason){
+    const u = loadUser();
+    if(!u || !u.nick) return;
+
+    const beforeXp = Number(u.xp || 0);
+    const beforeLv = getLevelInfo(beforeXp).level;
+
+    u.xp = Number(u.xp || 0) + Number(amount || 0);
+    saveUser(u);
+
+    showToast(`+${amount} XP (${reason})`);
+    updateUserUI();
+
+    const afterLv = getLevelInfo(u.xp).level;
+    if(afterLv > beforeLv){
+      triggerLevelUpFx(afterLv);
+    }
+  }
+
+  /* ===============================
+     USER MENU / LOGIN
+  ================================= */
+
+  function openLogin(){
+    const m = document.getElementById('userLoginModal');
+    const inp = document.getElementById('userNickInput');
+    if(m) m.style.display = 'flex';
+    if(inp) inp.focus();
+  }
+  function closeLogin(){
+    const m = document.getElementById('userLoginModal');
+    if(m) m.style.display = 'none';
+  }
+  function toggleUserMenu(forceClose=false){
+    const box = document.getElementById('userMenuBox');
+    if(!box) return;
+    if(forceClose){ box.style.display = 'none'; return; }
+    box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+  }
+
+  document.getElementById('userArea')?.addEventListener('click', ()=>{
+    const u = loadUser();
+    if(!u || !u.nick) openLogin();
+    else toggleUserMenu();
+  });
+
+  document.addEventListener('click', (e)=>{
+    const box = document.getElementById('userMenuBox');
+    const area = document.getElementById('userArea');
+    if(!box || !area) return;
+    if(!area.contains(e.target) && !box.contains(e.target)) box.style.display = 'none';
+  });
+
+  document.getElementById('userLoginSubmit')?.addEventListener('click', ()=>{
+    const inp = document.getElementById('userNickInput');
+    const nick = (inp?.value || '').trim().slice(0,18);
+    if(!nick){ showToast("Digite um nickname!"); return; }
+
+    const old = loadUser();
+    const keepXp = old ? Number(old.xp || 0) : 0;
+
+    saveUser({ nick, xp: keepXp });
+    closeLogin();
+    toggleUserMenu(true);
+    updateUserUI();
+    showToast(`Bem-vindo, ${nick}!`);
+  });
+
+  document.getElementById('userNickInput')?.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('userLoginSubmit')?.click(); }
+  });
+
+  document.getElementById('logoutBtn')?.addEventListener('click', ()=>{
+    const old = loadUser();
+    const keepXp = old ? Number(old.xp || 0) : 0;
+    saveUser({ nick: null, xp: keepXp });
+    toggleUserMenu(true);
+    updateUserUI();
+    showToast("Você saiu.");
+  });
+    /* ===============================
+     GAME PANEL
+  ================================= */
+
+  const LAST_YT_KEY = 'toolflix_last_youtube_xp';
+
+  function ytCooldownLeft(){
+    const last = Number(localStorage.getItem(LAST_YT_KEY) || 0);
+    const now = Date.now();
+    const cd = 5 * 60 * 1000;
+    return Math.max(0, cd - (now - last));
+  }
+
+  function fmtTime(ms){
+    const s = Math.ceil(ms/1000);
+    const m = Math.floor(s/60);
+    const r = s % 60;
+    return `${m}m ${String(r).padStart(2,'0')}s`;
+  }
+
+  function renderGamePanel(){
+    const u = loadUser();
+    const div = document.getElementById('gameContent');
+    if(!div) return;
+
+    if(!u || !u.nick){
+      div.innerHTML = "Faça login para ver suas missões.";
+      return;
+    }
+
+    const d = getDaily();
+    const info = getLevelInfo(u.xp);
+    const inLevel = u.xp - info.min;
+    const need = info.max - info.min;
+    const ytLeft = ytCooldownLeft();
+
+    div.innerHTML = `
+      <div style="margin-bottom:15px;">
+        <div style="display:flex; justify-content:space-between;">
+          <div style="font-weight:900; color:gold;">Nível ${info.level}</div>
+          <div>XP: <b>${inLevel}/${need}</b></div>
+        </div>
+        <div class="xpBar" style="width:100%; height:14px; margin-top:8px;">
+          <div class="xpFill" style="width:${Math.max(0,Math.min(100,(inLevel/need)*100))}%"></div>
+        </div>
       </div>
 
-      ${modoAdmin ? `
-        <div style="display:flex; gap:5px; margin-top:10px">
-          <button onclick="event.stopPropagation(); window.editJogo('${safeStr(j.nome).replace(/'/g,"\\'")}')"
-            style="flex:1; background:gold; color:#000; border:none;
-            padding:8px; border-radius:10px; font-weight:bold;
-            cursor:pointer; font-size:11px">
-            EDITAR
-          </button>
-          <button onclick="event.stopPropagation(); window.delJogo('${safeStr(j.nome).replace(/'/g,"\\'")}')"
-            style="flex:1; background:#ff4757; color:#fff; border:none;
-            padding:8px; border-radius:10px;
-            cursor:pointer; font-size:11px">
-            DELETAR
-          </button>
+      <div style="font-weight:900; color:gold;">🔥 Missões Diárias</div>
+      <div style="margin-top:10px; font-size:13px; line-height:1.9;">
+        <div>🎮 Baixar 3 jogos → <b>${d.downloads}/3</b></div>
+        <div>❤️ Favoritar 5 jogos → <b>${d.favorites}/5</b></div>
+        <div>🎨 Trocar tema → <b>${d.themes}/1</b></div>
+        <div>🎥 YouTube → ${ytLeft>0 ? `⏳ ${fmtTime(ytLeft)}` : `<span style="color:#8cff8c; font-weight:900;">Pronto</span>`}</div>
+      </div>
+
+      <div style="margin-top:15px; font-weight:900; color:gold;">💎 Especial</div>
+      <div style="margin-top:8px;">Virar Premium → 100 XP (único)</div>
+    `;
+  }
+
+  document.getElementById('openGameBtn')?.addEventListener('click', ()=>{
+    toggleUserMenu(true);
+    document.getElementById('gameModal').style.display = 'flex';
+    renderGamePanel();
+  });
+  document.getElementById('closeGameBtn')?.addEventListener('click', ()=>{
+    document.getElementById('gameModal').style.display = 'none';
+  });
+
+  setInterval(()=>{
+    const m = document.getElementById('gameModal');
+    if(m && m.style.display === 'flex') renderGamePanel();
+  }, 1000);
+
+  /* ===============================
+     CONQUISTAS
+  ================================= */
+
+  const ACH_STATS_KEY  = 'toolflix_ach_stats';
+  const ACH_UNLOCK_KEY = 'toolflix_ach_unlock';
+
+  const ACH_LIST = [
+    { id:'yt_5',   type:'youtube',   title:'🎥 Aquecimento',        need:5 },
+    { id:'yt_15',  type:'youtube',   title:'🎥 Pegando ritmo',      need:15 },
+    { id:'yt_30',  type:'youtube',   title:'🎥 Maratonista',        need:30 },
+    { id:'yt_60',  type:'youtube',   title:'🎥 Sedento por views',  need:60 },
+    { id:'yt_120', type:'youtube',   title:'🎥 Lenda do YouTube',   need:120 },
+    { id:'yt_250', type:'youtube',   title:'🎥 Insano',             need:250 },
+
+    { id:'dl_3',   type:'downloads', title:'🎮 Primeiro download',      need:3 },
+    { id:'dl_10',  type:'downloads', title:'🎮 Começou a coleção',      need:10 },
+    { id:'dl_25',  type:'downloads', title:'🎮 HD cheio',               need:25 },
+    { id:'dl_50',  type:'downloads', title:'🎮 Viciado em instalar',    need:50 },
+    { id:'dl_100', type:'downloads', title:'🎮 Biblioteca braba',       need:100 },
+    { id:'dl_200', type:'downloads', title:'🎮 Arquivo vivo',           need:200 },
+
+    { id:'fv_5',   type:'favorites', title:'❤️ Coração de gamer',   need:5 },
+    { id:'fv_15',  type:'favorites', title:'❤️ Curador',            need:15 },
+    { id:'fv_30',  type:'favorites', title:'❤️ Colecionador',       need:30 },
+    { id:'fv_60',  type:'favorites', title:'❤️ Seleção de elite',   need:60 },
+    { id:'fv_100', type:'favorites', title:'❤️ Museu ToolFlix',     need:100 },
+    { id:'fv_200', type:'favorites', title:'❤️ Amor infinito',      need:200 },
+
+    { id:'th_1',   type:'themes',    title:'🎨 Mudou o clima',       need:1 },
+    { id:'th_5',   type:'themes',    title:'🎨 Estiloso',            need:5 },
+    { id:'th_15',  type:'themes',    title:'🎨 Camaleão',            need:15 },
+    { id:'th_30',  type:'themes',    title:'🎨 Designer',            need:30 },
+    { id:'th_60',  type:'themes',    title:'🎨 Modo DJ',             need:60 },
+    { id:'th_120', type:'themes',    title:'🎨 Multiverso',          need:120 },
+  ];
+
+  function achLoadStats(){
+    try { return JSON.parse(localStorage.getItem(ACH_STATS_KEY) || '{"youtube":0,"downloads":0,"favorites":0,"themes":0,"premium":0}'); }
+    catch { return { youtube:0, downloads:0, favorites:0, themes:0, premium:0 }; }
+  }
+  function achSaveStats(s){ localStorage.setItem(ACH_STATS_KEY, JSON.stringify(s || {})); }
+
+  function achLoadUnlock(){
+    try { return JSON.parse(localStorage.getItem(ACH_UNLOCK_KEY) || '{}'); }
+    catch { return {}; }
+  }
+  function achSaveUnlock(u){ localStorage.setItem(ACH_UNLOCK_KEY, JSON.stringify(u || {})); }
+
+  function achUnlockCheck(){
+    const stats = achLoadStats();
+    const unlock = achLoadUnlock();
+    let changed = false;
+
+    for(const a of ACH_LIST){
+      const cur = Number(stats[a.type] || 0);
+      if(!unlock[a.id] && cur >= a.need){
+        unlock[a.id] = true;
+        changed = true;
+        showToast(`🏆 Conquista desbloqueada: ${a.title}`);
+        playTrophySound();
+      }
+    }
+
+    const allOk = ACH_LIST.every(a => unlock[a.id] === true);
+    if(allOk && !unlock['platinum_toolflix']){
+      unlock['platinum_toolflix'] = true;
+      changed = true;
+      showToast('🏆 PLATINA TOOLFLIX desbloqueada!');
+      playTrophySound();
+    }
+
+    if(changed) achSaveUnlock(unlock);
+  }
+
+  function achInc(type, amount=1){
+    const u = loadUser();
+    if(!u || !u.nick) return;
+
+    const stats = achLoadStats();
+    stats[type] = Number(stats[type] || 0) + Number(amount || 0);
+    achSaveStats(stats);
+    achUnlockCheck();
+  }
+
+  function achSection(title, items, stats, unlock){
+    const lines = items.map(a => {
+      const cur = Number(stats[a.type] || 0);
+      const done = !!unlock[a.id];
+      const prog = Math.min(cur, a.need);
+      const pct = Math.max(0, Math.min(100, (prog / a.need) * 100));
+      return `
+        <div class="ach-badge ${done ? '' : 'locked'}" style="width:100%;">
+          <div style="flex:1;">
+            <div class="ach-title">${done ? '✅' : '🔒'} ${a.title}</div>
+            <div class="ach-meta">${done ? 'Concluída' : `Progresso: ${prog}/${a.need}`}</div>
+            <div class="ach-progress"><div style="width:${pct.toFixed(1)}%"></div></div>
+          </div>
         </div>
-      ` : ''}
+      `;
+    }).join('');
+
+    return `
+      <div style="margin-top:14px; font-weight:900; color:gold;">${title}</div>
+      <div style="margin-top:8px; display:flex; flex-direction:column; gap:6px;">
+        ${lines}
+      </div>
+    `;
+  }
+
+  function achRender(){
+    const list = document.getElementById('achList');
+    const plat = document.getElementById('achPlatinum');
+    if(!list) return;
+
+    const u = loadUser();
+    if(!u || !u.nick){
+      list.innerHTML = `<div style="opacity:.9">Faça login para ver suas conquistas.</div>`;
+      if(plat) plat.textContent = '';
+      return;
+    }
+
+    const stats = achLoadStats();
+    const unlock = achLoadUnlock();
+
+    const yt = ACH_LIST.filter(a => a.type === 'youtube');
+    const dl = ACH_LIST.filter(a => a.type === 'downloads');
+    const fv = ACH_LIST.filter(a => a.type === 'favorites');
+    const th = ACH_LIST.filter(a => a.type === 'themes');
+
+    list.innerHTML =
+      achSection('🎥 YouTube', yt, stats, unlock) +
+      achSection('🎮 Downloads', dl, stats, unlock) +
+      achSection('❤️ Favoritos', fv, stats, unlock) +
+      achSection('🎨 Temas', th, stats, unlock);
+
+    if(plat){
+      plat.textContent = unlock['platinum_toolflix']
+        ? '🏆 PLATINA TOOLFLIX: ✅ Desbloqueada'
+        : '🏆 PLATINA TOOLFLIX: ⏳ Complete todas as conquistas acima';
+    }
+  }
+
+  document.getElementById('openAchBtn')?.addEventListener('click', ()=>{
+    toggleUserMenu(true);
+    achRender();
+    document.getElementById('achModal').style.display = 'flex';
+  });
+  document.getElementById('closeAchBtn')?.addEventListener('click', ()=>{
+    document.getElementById('achModal').style.display = 'none';
+  });
+
+  const _awardXpOriginal = awardXp;
+  awardXp = function(amount, reason){
+    _awardXpOriginal(amount, reason);
+    if(reason === 'YouTube')       achInc('youtube', 1);
+    if(reason === 'Download')      achInc('downloads', 1);
+    if(reason === 'Favorito')      achInc('favorites', 1);
+    if(reason === 'Troca de tema') achInc('themes', 1);
+    if(reason === 'Virou Premium') achInc('premium', 1);
+  };
+    /* ===============================
+     PREMIUM (Render only)
+  ================================= */
+
+  let premiumMembersCount = 0;
+
+  function getPremiumStats(){
+    const totalPremium = db_jogos.filter(j => j && j.premium === true).length;
+    const totalItens = db_jogos.length;
+    const desbloqueados = (isPremium || modoAdmin) ? totalPremium : 0;
+    return { totalPremium, totalItens, desbloqueados };
+  }
+
+  function updatePremiumSidebar(){
+    const badge = document.getElementById('premiumBadge');
+    const counter = document.getElementById('premiumCounter');
+    if(!counter) return;
+
+    if(badge) badge.style.display = isPremium ? 'block' : 'none';
+
+    const s = getPremiumStats();
+    const headline = isPremium
+      ? `💎 Você é usuário Premium`
+      : `💎 <b>${premiumMembersCount}</b> usuários Premium ativos`;
+
+    counter.innerHTML = `
+      <div style="font-weight:900; color:gold; margin-bottom:6px;">${headline}</div>
+      <div>🔓 Desbloqueados: <b>${s.desbloqueados}</b> / <b>${s.totalPremium}</b></div>
+      <div>📦 Total no catálogo: <b>${s.totalItens}</b></div>
+    `;
+  }
+
+  async function refreshPremiumCount(){
+    try{
+      const r = await fetch(`${API_URL}/api/total-premium?v=` + Date.now());
+      if(!r.ok) throw new Error("TOTAL_PREMIUM_FAIL");
+      const data = await r.json();
+      premiumMembersCount = Number(data?.totalPremium || 0);
+      localStorage.setItem('toolflix_premium_members', String(premiumMembersCount));
+    }catch{
+      premiumMembersCount = Number(localStorage.getItem('toolflix_premium_members') || 0);
+    }
+  }
+
+  async function syncPremiumStatus(){
+    // userId fixo (não depende do nick)
+    const userId = getOrCreateUserId();
+
+    // se tiver token salvo, tenta checar no backend se user é premium
+    const tokenAtivador = localStorage.getItem('toolflix_token_ativador');
+    if(!tokenAtivador){
+      isPremium = false;
+      localStorage.setItem('toolflix_premium_atv','false');
+      return;
+    }
+
+    try{
+      const r = await fetch(`${API_URL}/api/is-premium/${encodeURIComponent(userId)}?v=` + Date.now());
+      if(!r.ok) throw new Error("IS_PREMIUM_FAIL");
+      const data = await r.json();
+      isPremium = !!data?.premium;
+      localStorage.setItem('toolflix_premium_atv', isPremium ? 'true' : 'false');
+      if(!isPremium){
+        localStorage.removeItem('toolflix_token_ativador');
+      }
+    }catch{
+      isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';
+    }
+  }
+
+  async function checkPremiumSync(){
+    await Promise.all([refreshPremiumCount(), syncPremiumStatus()]);
+    updatePremiumSidebar();
+    render();
+  }
+
+  /* ===============================
+     CATALOGO SYNC
+  ================================= */
+
+  async function syncJogos(){
+    try{
+      const resp = await fetch(URL_JOGOS + '?v=' + Date.now());
+      if(!resp.ok) return;
+
+      const data = await resp.json();
+      const jogosRemotos = Array.isArray(data.games) ? data.games : Array.isArray(data) ? data : [];
+
+      if(jogosRemotos.length === 0){
+        console.log("API sem jogos — mantendo local.");
+        return;
+      }
+
+      const normalizados = jogosRemotos.map(normalizeGame);
+
+      const ok = normalizados.some(j => j.nome && j.nome !== "Sem nome");
+      if(!ok) return;
+
+      db_jogos = normalizados;
+      localStorage.setItem(LS_JOGOS, JSON.stringify(db_jogos));
+      render();
+    }catch(e){
+      console.warn("syncJogos fail:", e);
+    }
+  }
+    /* ===============================
+     RENDER
+  ================================= */
+
+  function render(){
+    const grid = document.getElementById('catalogo');
+    if(!grid) return;
+
+    const lg = document.getElementById('logoToolFlix');
+    if(isPremium){
+      document.body.classList.add('premium-active');
+      if(lg) lg.innerText = 'ToolFlix Pro';
+    } else {
+      document.body.classList.remove('premium-active');
+      if(lg) lg.innerText = 'ToolFlix';
+    }
+
+    const btnP = document.getElementById('premiumTriggerBtn');
+    const btnS = document.getElementById('solicitarTokenBtn');
+    if(btnP && btnS){
+      btnP.style.display = isPremium ? 'none' : 'block';
+      btnS.style.display = isPremium ? 'none' : 'block';
+    }
+
+    grid.innerHTML = '';
+
+    let lista = db_jogos.map(normalizeGame);
+
+    if(catAtiva !== 'Todos'){
+      lista = lista.filter(j => normalizeCategoria(j.categoria) === catAtiva);
+    }
+
+    const search = (document.getElementById('searchBar')?.value || '').toLowerCase();
+    if(search){
+      lista = lista.filter(j => safeStr(j.nome,'').toLowerCase().includes(search));
+    }
+
+    if(filterFav){
+      lista = lista.filter(j => db_favs.includes(j.nome));
+    }
+
+    if(sortModo === 'az') lista.sort((a,b)=> a.nome.localeCompare(b.nome));
+    else if(sortModo === 'za') lista.sort((a,b)=> b.nome.localeCompare(a.nome));
+    else if(sortModo === 'recentes') lista.reverse();
+
+    lista.forEach(j => {
+      const isFav = db_favs.includes(j.nome);
+      const isP = j.premium === true;
+      const lock = isP && !isPremium && !modoAdmin;
+
+      const card = document.createElement('div');
+      card.className = `jogo ${isP ? 'jogo-premium' : ''} ${lock ? 'premium-locked' : ''}`;
+
+      card.onclick = ()=>{
+        if(lock){
+          showToast("🔒 Conteúdo Premium!");
+          return;
+        }
+
+        const link = j.link;
+        if(link){
+          window.open(link, '_blank');
+        }else{
+          showToast("Link inválido.");
+          return;
+        }
+
+        const u = loadUser();
+        if(!u || !u.nick) return;
+
+        if(j.categoria === 'YouTube'){
+          const left = ytCooldownLeft();
+          if(left <= 0){
+            localStorage.setItem(LAST_YT_KEY, Date.now());
+            awardXp(XP_RULES.youtube, "YouTube");
+          }else{
+            showToast("⏳ Aguarde 5 minutos para ganhar XP novamente.");
+          }
+          return;
+        }
+
+        const d = getDaily();
+        if(d.downloads < 3){
+          d.downloads++;
+          setDaily(d);
+          awardXp(XP_RULES.download, "Download");
+        } else {
+          showToast("⚠️ Limite diário de downloads atingido.");
+        }
+      };
+
+      const capaFinal = j.capa || "https://via.placeholder.com/512x512.png?text=ToolFlix";
+      const catFinal = normalizeCategoria(j.categoria);
+
+      card.innerHTML = `
+        <button onclick="event.stopPropagation(); window.toggleFav('${safeStr(j.nome).replace(/'/g,"\\'")}')"
+          style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.7);
+          color:${isFav?'#ff4757':'#fff'}; border:none; width:34px; height:34px;
+          border-radius:50%; cursor:pointer; z-index:10;
+          display:flex; align-items:center; justify-content:center; font-size:18px;">
+          ${isFav?'❤️':'🤍'}
+        </button>
+
+        ${lock ? '<span style="position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:40px; z-index:5">🔒</span>' : ''}
+
+        <img src="${capaFinal}" alt="" onerror="this.src='https://via.placeholder.com/512x512.png?text=ToolFlix';">
+
+        <div style="margin-top:12px; text-align:center">
+          <span style="font-size:10px; color:var(--cor-accent); font-weight:800; letter-spacing:1px">
+            ${catFinal}${isP ? ' 💎' : ''}
+          </span>
+          <p style="font-weight:600; font-size:13px; margin-top:4px;">
+            ${safeStr(j.nome,'Sem nome')}
+          </p>
+        </div>
+
+        ${modoAdmin ? `
+          <div style="display:flex; gap:5px; margin-top:10px">
+            <button onclick="event.stopPropagation(); window.editJogo('${safeStr(j.nome).replace(/'/g,"\\'")}')"
+              style="flex:1; background:gold; color:#000; border:none;
+              padding:8px; border-radius:10px; font-weight:bold;
+              cursor:pointer; font-size:11px">
+              EDITAR
+            </button>
+            <button onclick="event.stopPropagation(); window.delJogo('${safeStr(j.nome).replace(/'/g,"\\'")}')"
+              style="flex:1; background:#ff4757; color:#fff; border:none;
+              padding:8px; border-radius:10px;
+              cursor:pointer; font-size:11px">
+              DELETAR
+            </button>
+          </div>
+        ` : ''}
+      `;
+
+      grid.appendChild(card);
+    });
+
+    updatePremiumSidebar();
+    updateUserUI();
+  }
+
+  /* ===============================
+     FAVORITOS
+  ================================= */
+
+  window.toggleFav = (nome)=>{
+    const idx = db_favs.indexOf(nome);
+
+    if(idx > -1){
+      db_favs.splice(idx, 1);
+      localStorage.setItem(LS_FAVS, JSON.stringify(db_favs));
+      render();
+      return;
+    }
+
+    db_favs.push(nome);
+    localStorage.setItem(LS_FAVS, JSON.stringify(db_favs));
+
+    const u = loadUser();
+    if(u && u.nick){
+      const d = getDaily();
+      if(d.favorites < 5){
+        d.favorites++;
+        setDaily(d);
+        awardXp(XP_RULES.favorite, 'Favorito');
+      } else {
+        showToast("⚠️ Limite diário de XP por favoritos (5).");
+      }
+    }
+
+    render();
+  };
+    /* ===============================
+     BOTÕES UI
+  ================================= */
+
+  document.getElementById('sortBtn')?.addEventListener('click', ()=>{
+    const modos = ['recentes','az','za'];
+    const labels = { recentes:'🔃 Recentes', az:'🔠 A-Z', za:'🔡 Z-A' };
+    const i = modos.indexOf(sortModo);
+    sortModo = modos[(i+1) % modos.length];
+    document.getElementById('sortBtn').innerText = 'Ordem: ' + labels[sortModo];
+    render();
+  });
+
+  document.getElementById('favFiltroBtn')?.addEventListener('click', ()=>{
+    filterFav = !filterFav;
+    render();
+  });
+
+  document.querySelectorAll('.catBtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.catBtn').forEach(b=> b.classList.remove('active'));
+      btn.classList.add('active');
+      catAtiva = btn.dataset.cat;
+      document.getElementById('sectionTitle').innerText = catAtiva;
+      render();
+    });
+  });
+
+  document.getElementById('searchBar')?.addEventListener('input', render);
+
+  /* ===============================
+     TEMA (premium + XP)
+  ================================= */
+
+  document.getElementById('themeSelect')?.addEventListener('change', (e)=>{
+    const sel = e.target;
+    const isTemaPremium = sel.options[sel.selectedIndex].text.includes('💎');
+
+    if(isTemaPremium && !isPremium && !modoAdmin){
+      showToast("🔒 Apenas usuários Premium!");
+      sel.classList.add('card-shake');
+      setTimeout(()=> sel.classList.remove('card-shake'), 400);
+      sel.value = 'default';
+      return;
+    }
+
+    document.body.classList.forEach(cls=>{
+      if(cls.startsWith('theme-')) document.body.classList.remove(cls);
+    });
+    document.body.classList.add('theme-' + sel.value);
+
+    const u = loadUser();
+    if(u && u.nick){
+      const d = getDaily();
+      if(d.themes < 1){
+        d.themes++;
+        setDaily(d);
+        awardXp(XP_RULES.theme, 'Troca de tema');
+      } else {
+        showToast("⚠️ XP de tema já foi ganho hoje.");
+      }
+    }
+  });
+
+  /* ===============================
+     PREMIUM UI (Render)
+  ================================= */
+
+  document.getElementById('premiumTriggerBtn')?.addEventListener('click', ()=>{
+    document.getElementById('premiumModal').style.display = 'flex';
+    document.getElementById('premiumInput')?.focus();
+  });
+
+  document.getElementById('premiumWelcomeBtn')?.addEventListener('click', ()=>{
+    document.getElementById('premiumWelcomeModal').style.display = 'none';
+  });
+
+  document.getElementById('premiumSubmit')?.addEventListener('click', async ()=>{
+    const token = (document.getElementById('premiumInput')?.value || '')
+      .toUpperCase().trim().replace(/\s+/g,'');
+
+    if(!token) return showToast("Digite o TOKEN!");
+
+    const userId = getOrCreateUserId();
+
+    try{
+      const r = await fetch(`${API_URL}/api/validar-token`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, userId })
+      });
+
+      const data = await r.json().catch(()=> ({}));
+
+      if(r.ok && data?.valid){
+        localStorage.setItem('toolflix_premium_atv','true');
+        localStorage.setItem('toolflix_token_ativador', token);
+        isPremium = true;
+
+        const premiumXpKey = 'toolflix_premium_xp_once';
+        if(localStorage.getItem(premiumXpKey) !== '1'){
+          localStorage.setItem(premiumXpKey, '1');
+          awardXp(XP_RULES.premium, 'Virou Premium');
+        }
+
+        document.getElementById('premiumModal').style.display = 'none';
+        showToast("💎 PREMIUM ATIVADO!");
+        await refreshPremiumCount();
+        updatePremiumSidebar();
+        updateUserUI();
+        render();
+
+        document.getElementById('premiumWelcomeModal').style.display = 'flex';
+      } else {
+        const reason = data?.reason || data?.error || '';
+        if(reason === 'TOKEN_EXPIRADO') return showToast("Token expirado!");
+        if(reason === 'TOKEN_JA_USADO') return showToast("Token já foi usado!");
+        showToast("Token inválido!");
+      }
+    }catch(e){
+      console.error(e);
+      showToast("Erro ao validar token.");
+    }
+  });
+    /* ===============================
+     ADMIN (UI simples + editar/deletar)
+  ================================= */
+
+  let editandoNome = null;
+
+  function ensureAdminUI(){
+    const admin = document.getElementById('adminSection');
+    if(!admin) return;
+    if(admin.dataset.ready === '1') return;
+
+    admin.innerHTML = `
+      <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px;">
+        <h2 style="color:var(--cor-accent); font-size: 24px;">🚀 Dashboard Admin</h2>
+        <button id="exitAdminBtn" class="nav-item" style="background:#ff4757; border:none; color:#fff;">Sair</button>
+      </header>
+
+      <div class="admin-grid">
+        <input type="text" id="nomeJogo" class="admin-input" placeholder="Nome do Título">
+        <input type="text" id="linkCapa" class="admin-input" placeholder="Link da Imagem (URL)">
+        <input type="text" id="linkJogo" class="admin-input" placeholder="Link do Download (URL)">
+        <select id="selectCategoria" class="admin-input"></select>
+
+        <label class="admin-input" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+          <input type="checkbox" id="isPremiumItem" style="transform: scale(1.2);">
+          💎 Item Premium
+        </label>
+      </div>
+
+      <div style="display:flex; gap: 12px; margin-bottom: 10px;">
+        <button id="addJogoBtn" class="nav-item" style="background:var(--cor-accent); color:#000; border:none; flex: 2; font-size: 16px;">💾 SALVAR CONTEÚDO</button>
+        <button id="exportBackupBtn" class="nav-item" style="background:#2ecc71; color:#000; border:none; flex: 1;">📂 BACKUP</button>
+      </div>
+
+      <div style="opacity:.8; font-size:12px; margin-top:8px;">
+        Dica: clique em “EDITAR” em um card pra carregar aqui.
+      </div>
     `;
 
-    grid.appendChild(card);
-  });
+    admin.dataset.ready = '1';
 
-  updatePremiumSidebar();
-  updateUserUI();
-}
-
-/* ===============================
-   FAVORITOS
-================================= */
-
-window.toggleFav = (nome)=>{
-  const idx = db_favs.indexOf(nome);
-
-  if(idx > -1){
-    db_favs.splice(idx, 1);
-    localStorage.setItem(LS_FAVS, JSON.stringify(db_favs));
-    render();
-    return;
-  }
-
-  db_favs.push(nome);
-  localStorage.setItem(LS_FAVS, JSON.stringify(db_favs));
-
-  const u = loadUser();
-  if(u && u.nick){
-    const d = getDaily();
-    if(d.favorites < 5){
-      d.favorites++;
-      setDaily(d);
-      awardXp(XP_RULES.favorite, 'Favorito');
-    } else {
-      showToast("⚠️ Limite diário de XP por favoritos (5).");
+    const sel = document.getElementById('selectCategoria');
+    if(sel){
+      sel.innerHTML = '';
+      document.querySelectorAll('.catBtn').forEach(b=>{
+        if(b.dataset.cat && b.dataset.cat !== 'Todos'){
+          sel.innerHTML += `<option value="${b.dataset.cat}">${b.dataset.cat}</option>`;
+        }
+      });
     }
-  }
 
-  render();
-};
+    document.getElementById('exitAdminBtn')?.addEventListener('click', ()=> exitAdmin());
 
-/* ===============================
-   BOTÕES UI
-================================= */
+    document.getElementById('addJogoBtn')?.addEventListener('click', ()=>{
+      const n = document.getElementById('nomeJogo');
+      const c = document.getElementById('linkCapa');
+      const l = document.getElementById('linkJogo');
+      const cat = document.getElementById('selectCategoria');
+      const chk = document.getElementById('isPremiumItem');
 
-document.getElementById('sortBtn')?.addEventListener('click', ()=>{
-  const modos = ['recentes','az','za'];
-  const labels = { recentes:'🔃 Recentes', az:'🔠 A-Z', za:'🔡 Z-A' };
-  const i = modos.indexOf(sortModo);
-  sortModo = modos[(i+1) % modos.length];
-  document.getElementById('sortBtn').innerText = 'Ordem: ' + labels[sortModo];
-  render();
-});
+      const nome = (n.value || '').trim();
+      if(!nome) return showToast("Insira o nome!");
 
-document.getElementById('favFiltroBtn')?.addEventListener('click', ()=>{
-  filterFav = !filterFav;
-  render();
-});
+      const item = normalizeGame({
+        nome,
+        capa: (c.value || '').trim(),
+        link: (l.value || '').trim(),
+        categoria: cat.value,
+        premium: !!(chk && chk.checked)
+      });
 
-document.querySelectorAll('.catBtn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.catBtn').forEach(b=> b.classList.remove('active'));
-    btn.classList.add('active');
-    catAtiva = btn.dataset.cat;
-    document.getElementById('sectionTitle').innerText = catAtiva;
-    render();
-  });
-});
-
-document.getElementById('searchBar')?.addEventListener('input', render);
-
-/* ===============================
-   TEMA (premium + XP)
-================================= */
-
-document.getElementById('themeSelect')?.addEventListener('change', (e)=>{
-  const sel = e.target;
-  const isTemaPremium = sel.options[sel.selectedIndex].text.includes('💎');
-
-  if(isTemaPremium && !isPremium && !modoAdmin){
-    showToast("🔒 Apenas usuários Premium!");
-    sel.classList.add('card-shake');
-    setTimeout(()=> sel.classList.remove('card-shake'), 400);
-    sel.value = 'default';
-    return;
-  }
-
-  document.body.classList.forEach(cls=>{
-    if(cls.startsWith('theme-')) document.body.classList.remove(cls);
-  });
-  document.body.classList.add('theme-' + sel.value);
-
-  const u = loadUser();
-  if(u && u.nick){
-    const d = getDaily();
-    if(d.themes < 1){
-      d.themes++;
-      setDaily(d);
-      awardXp(XP_RULES.theme, 'Troca de tema');
-    } else {
-      showToast("⚠️ XP de tema já foi ganho hoje.");
-    }
-  }
-});
-
-/* ===============================
-   PREMIUM UI
-================================= */
-
-document.getElementById('premiumTriggerBtn')?.addEventListener('click', ()=>{
-  document.getElementById('premiumModal').style.display = 'flex';
-  document.getElementById('premiumInput')?.focus();
-});
-
-document.getElementById('premiumWelcomeBtn')?.addEventListener('click', ()=>{
-  document.getElementById('premiumWelcomeModal').style.display = 'none';
-});
-
-document.getElementById('premiumSubmit')?.addEventListener('click', async ()=>{
-  const token = (document.getElementById('premiumInput')?.value || '')
-    .toUpperCase().trim().replace(/\s+/g,'');
-
-  if(!token) return showToast("Digite o TOKEN!");
-
-  try{
-    const resp = await fetch(URL_TOKENS + '?t=' + Date.now());
-    if(!resp.ok) throw new Error("TOKENS_FETCH_FAIL");
-
-    const data = await resp.json();
-    const ativos = Array.isArray(data.ativos) ? data.ativos : [];
-    const usados = Array.isArray(data.usados) ? data.usados : [];
-
-    if(ativos.includes(token) && !usados.includes(token)){
-      localStorage.setItem('toolflix_premium_atv','true');
-      localStorage.setItem('toolflix_token_ativador', token);
-      isPremium = true;
-
-      const premiumXpKey = 'toolflix_premium_xp_once';
-      if(localStorage.getItem(premiumXpKey) !== '1'){
-        localStorage.setItem(premiumXpKey, '1');
-        awardXp(XP_RULES.premium, 'Virou Premium');
+      if(editandoNome){
+        db_jogos = db_jogos.map(j => j.nome === editandoNome ? item : j);
+        editandoNome = null;
+        document.getElementById('addJogoBtn').innerText = "💾 SALVAR CONTEÚDO";
+      }else{
+        db_jogos.push(item);
       }
 
-      document.getElementById('premiumModal').style.display = 'none';
-      showToast("💎 PREMIUM ATIVADO!");
-      updatePremiumSidebar();
-      updateUserUI();
+      localStorage.setItem(LS_JOGOS, JSON.stringify(db_jogos));
+      n.value = ''; c.value = ''; l.value = '';
+      if(chk) chk.checked = false;
+
       render();
+      showToast("Alterações salvas!");
+    });
 
-      document.getElementById('premiumWelcomeModal').style.display = 'flex';
-    } else {
-      showToast("Token inválido!");
-    }
-  }catch(e){
-    console.error(e);
-    showToast("Erro ao validar token.");
-  }
-});
-
-/* ===============================
-   ADMIN (UI simples + editar/deletar)
-================================= */
-
-let editandoNome = null;
-
-function ensureAdminUI(){
-  const admin = document.getElementById('adminSection');
-  if(!admin) return;
-  if(admin.dataset.ready === '1') return;
-
-  admin.innerHTML = `
-    <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px;">
-      <h2 style="color:var(--cor-accent); font-size: 24px;">🚀 Dashboard Admin</h2>
-      <button id="exitAdminBtn" class="nav-item" style="background:#ff4757; border:none; color:#fff;">Sair</button>
-    </header>
-
-    <div class="admin-grid">
-      <input type="text" id="nomeJogo" class="admin-input" placeholder="Nome do Título">
-      <input type="text" id="linkCapa" class="admin-input" placeholder="Link da Imagem (URL)">
-      <input type="text" id="linkJogo" class="admin-input" placeholder="Link do Download (URL)">
-      <select id="selectCategoria" class="admin-input"></select>
-
-      <label class="admin-input" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
-        <input type="checkbox" id="isPremiumItem" style="transform: scale(1.2);">
-        💎 Item Premium
-      </label>
-    </div>
-
-    <div style="display:flex; gap: 12px; margin-bottom: 10px;">
-      <button id="addJogoBtn" class="nav-item" style="background:var(--cor-accent); color:#000; border:none; flex: 2; font-size: 16px;">💾 SALVAR CONTEÚDO</button>
-      <button id="exportBackupBtn" class="nav-item" style="background:#2ecc71; color:#000; border:none; flex: 1;">📂 BACKUP</button>
-    </div>
-
-    <div style="opacity:.8; font-size:12px; margin-top:8px;">
-      Dica: clique em “EDITAR” em um card pra carregar aqui.
-    </div>
-  `;
-
-  admin.dataset.ready = '1';
-
-  const sel = document.getElementById('selectCategoria');
-  if(sel){
-    sel.innerHTML = '';
-    document.querySelectorAll('.catBtn').forEach(b=>{
-      if(b.dataset.cat && b.dataset.cat !== 'Todos'){
-        sel.innerHTML += `<option value="${b.dataset.cat}">${b.dataset.cat}</option>`;
-      }
+    document.getElementById('exportBackupBtn')?.addEventListener('click', ()=>{
+      const blob = new Blob([JSON.stringify({jogos: db_jogos}, null, 2)], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'toolflix_data.json';
+      a.click();
     });
   }
 
-  document.getElementById('exitAdminBtn')?.addEventListener('click', ()=> exitAdmin());
+  window.editJogo = (nome)=>{
+    const j = db_jogos.find(x => x.nome === nome);
+    if(!j) return;
 
-  document.getElementById('addJogoBtn')?.addEventListener('click', ()=>{
-    const n = document.getElementById('nomeJogo');
-    const c = document.getElementById('linkCapa');
-    const l = document.getElementById('linkJogo');
-    const cat = document.getElementById('selectCategoria');
-    const chk = document.getElementById('isPremiumItem');
-
-    const nome = (n.value || '').trim();
-    if(!nome) return showToast("Insira o nome!");
-
-    const item = normalizeGame({
-      nome,
-      capa: (c.value || '').trim(),
-      link: (l.value || '').trim(),
-      categoria: cat.value,
-      premium: !!(chk && chk.checked)
-    });
-
-    if(editandoNome){
-      db_jogos = db_jogos.map(j => j.nome === editandoNome ? item : j);
-      editandoNome = null;
-      document.getElementById('addJogoBtn').innerText = "💾 SALVAR CONTEÚDO";
-    }else{
-      db_jogos.push(item);
-    }
-
-    localStorage.setItem(LS_JOGOS, JSON.stringify(db_jogos));
-    n.value = ''; c.value = ''; l.value = '';
-    if(chk) chk.checked = false;
-
-    render();
-    showToast("Alterações salvas!");
-  });
-
-  document.getElementById('exportBackupBtn')?.addEventListener('click', ()=>{
-    const blob = new Blob([JSON.stringify({jogos: db_jogos}, null, 2)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'toolflix_data.json';
-    a.click();
-  });
-}
-
-window.editJogo = (nome)=>{
-  const j = db_jogos.find(x => x.nome === nome);
-  if(!j) return;
-
-  ensureAdminUI();
-  document.getElementById('adminSection').style.display = 'block';
-
-  document.getElementById('nomeJogo').value = j.nome || '';
-  document.getElementById('linkCapa').value = j.capa || '';
-  document.getElementById('linkJogo').value = j.link || '';
-  document.getElementById('selectCategoria').value = j.categoria || 'Jogos PS2';
-
-  const chk = document.getElementById('isPremiumItem');
-  if(chk) chk.checked = !!j.premium;
-
-  document.getElementById('addJogoBtn').innerText = "🆙 ATUALIZAR ITEM";
-  editandoNome = nome;
-
-  window.scrollTo({top: 0, behavior: 'smooth'});
-};
-
-window.delJogo = (nome)=>{
-  if(confirm("Deseja mesmo excluir este conteúdo?")){
-    db_jogos = db_jogos.filter(j => j.nome !== nome);
-    localStorage.setItem(LS_JOGOS, JSON.stringify(db_jogos));
-    render();
-  }
-};
-
-function exitAdmin(){
-  modoAdmin = false;
-  const admin = document.getElementById('adminSection');
-  if(admin) admin.style.display = 'none';
-  showToast("Modo Admin desativado.");
-  render();
-}
-
-document.getElementById('adminBtn')?.addEventListener('click', (e)=>{
-  e.preventDefault();
-  e.stopPropagation();
-  document.getElementById('loginModal').style.display = 'flex';
-  document.getElementById('loginInput')?.focus();
-});
-
-document.getElementById('loginSubmit')?.addEventListener('click', ()=>{
-  const pass = document.getElementById('loginInput')?.value || '';
-  if(pass === '@dm1nt1'){
-    modoAdmin = true;
-    document.getElementById('loginModal').style.display = 'none';
-    const admin = document.getElementById('adminSection');
-    if(admin) admin.style.display = 'block';
     ensureAdminUI();
-    showToast("✅ Modo Admin ativado!");
+    document.getElementById('adminSection').style.display = 'block';
+
+    document.getElementById('nomeJogo').value = j.nome || '';
+    document.getElementById('linkCapa').value = j.capa || '';
+    document.getElementById('linkJogo').value = j.link || '';
+    document.getElementById('selectCategoria').value = j.categoria || 'Jogos PS2';
+
+    const chk = document.getElementById('isPremiumItem');
+    if(chk) chk.checked = !!j.premium;
+
+    document.getElementById('addJogoBtn').innerText = "🆙 ATUALIZAR ITEM";
+    editandoNome = nome;
+
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  };
+
+  window.delJogo = (nome)=>{
+    if(confirm("Deseja mesmo excluir este conteúdo?")){
+      db_jogos = db_jogos.filter(j => j.nome !== nome);
+      localStorage.setItem(LS_JOGOS, JSON.stringify(db_jogos));
+      render();
+    }
+  };
+
+  function exitAdmin(){
+    modoAdmin = false;
+    const admin = document.getElementById('adminSection');
+    if(admin) admin.style.display = 'none';
+    showToast("Modo Admin desativado.");
     render();
-  }else{
-    showToast("Senha incorreta!");
   }
-});
-document.getElementById('loginInput')?.addEventListener('keydown', (e)=>{
-  if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('loginSubmit')?.click(); }
-});
 
-/* ===============================
-   SUPORTE
-================================= */
+  document.getElementById('adminBtn')?.addEventListener('click', (e)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    document.getElementById('loginModal').style.display = 'flex';
+    document.getElementById('loginInput')?.focus();
+  });
 
-function toggleSuporte(){
-  document.getElementById('suporteContainer')?.classList.toggle('ativo');
-}
-document.getElementById('suporteBtn')?.addEventListener('click', toggleSuporte);
-document.getElementById('suporteClose')?.addEventListener('click', toggleSuporte);
+  document.getElementById('loginSubmit')?.addEventListener('click', ()=>{
+    const pass = document.getElementById('loginInput')?.value || '';
+    if(pass === '@dm1nt1'){
+      modoAdmin = true;
+      document.getElementById('loginModal').style.display = 'none';
+      const admin = document.getElementById('adminSection');
+      if(admin) admin.style.display = 'block';
+      ensureAdminUI();
+      showToast("✅ Modo Admin ativado!");
+      render();
+    }else{
+      showToast("Senha incorreta!");
+    }
+  });
 
-/* ===============================
-   ESC fecha modais
-================================= */
+  document.getElementById('loginInput')?.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('loginSubmit')?.click(); }
+  });
 
-window.addEventListener('keydown', (e)=>{
-  if(e.key === 'Escape'){
-    document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
-    toggleUserMenu(true);
-    if(modoAdmin) exitAdmin();
+  /* ===============================
+     SUPORTE
+  ================================= */
+
+  function toggleSuporte(){
+    document.getElementById('suporteContainer')?.classList.toggle('ativo');
   }
-});
+  document.getElementById('suporteBtn')?.addEventListener('click', toggleSuporte);
+  document.getElementById('suporteClose')?.addEventListener('click', toggleSuporte);
 
-/* ===============================
-   INIT
-================================= */
+  /* ===============================
+     ESC fecha modais
+  ================================= */
 
-updateUserUI();
-updatePremiumSidebar();
-render();
+  window.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape'){
+      document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+      toggleUserMenu(true);
+      if(modoAdmin) exitAdmin();
+    }
+  });
 
-checkPremiumSync();
-syncJogos();
+  /* ===============================
+     INIT
+  ================================= */
 
-setInterval(syncJogos, 60 * 1000);
-setInterval(checkPremiumSync, 3 * 60 * 1000);
+  updateUserUI();
+  updatePremiumSidebar();
+  render();
 
-</script>
+  checkPremiumSync();
+  syncJogos();
+
+  setInterval(syncJogos, 60 * 1000);
+  setInterval(checkPremiumSync, 3 * 60 * 1000);
+    </script>
 </body>
 </html>
