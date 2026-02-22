@@ -1,553 +1,577 @@
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>ToolFlix Pro - Oficial</title>
-    <style>
-        :root {
-            --cor-accent: #00ffff;
-            --cor-bg-overlay: rgba(0, 0, 0, 0.3);
-            --glass-bg: rgba(20, 20, 20, 0.9);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --sidebar-width: 280px;
-            --admin-panel-bg: rgba(25, 25, 25, 0.98);
-        }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ToolFlix Pro - Oficial</title>
 
-        /* --- TEMAS --- */
-        body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdna.artstation.com/p/assets/covers/images/013/652/970/large/sm-bonin-athena-19.jpg?1540572163') !important; }
-        body.theme-dbz { --cor-accent: #ff8c00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpaper.dog/large/20399504.jpg') !important; }
-        body.theme-mk { --cor-accent: #ff0000; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://i.redd.it/he010ipc19p51.jpg') !important; }
-        body.theme-gta { --cor-accent: #2ecc71; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpapers.com/images/hd/gta-sa-4k-blonde-girl-z9zaoylvpq1ly51q.jpg') !important; }
-        body.theme-gtav { --cor-accent: #fbc531; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://www.menosfios.com/wp-content/uploads/2013/12/gta5.jpg') !important; }
-        body.theme-cod { --cor-accent: #7dff00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images.appspy.com/articles/13784/call-of-duty-mobile.webp') !important; }
-        body.theme-re { --cor-accent: #ff0055; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://t2.tudocdn.net/660435?w=1920') !important; }
-        body.theme-cyberPunk { --cor-accent: #ff0055; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://w0.peakpx.com/wallpaper/641/699/HD-wallpaper-2022-cyberpunk-2077-cyberpunk-2077-2022-games-games-deviantart-cosplay.jpg') !important; }
+  <style>
+    :root {
+      --cor-accent: #00ffff;
+      --cor-bg-overlay: rgba(0, 0, 0, 0.3);
+      --glass-bg: rgba(20, 20, 20, 0.9);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --sidebar-width: 280px;
+      --admin-panel-bg: rgba(25, 25, 25, 0.98);
+    }
 
-        body.theme-mario { --cor-accent: #ff0000; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://image.geekship.com.br/XTVbV7sCcfbpG2E74-cgLhUN4No=/2200x0/smart/filters:strip_icc():format(webp)/hull.geekship.com.br/wp-content/uploads/2023/04/Super-Mario-Bros-O-Filme.jpg'); }
-        body.theme-zelda { --cor-accent: #00ff00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images7.alphacoders.com/557/557051.jpg'); }
-        body.theme-spiderman { --cor-accent: #ff4500; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpapercave.com/wp/wp9147243.jpg'); }
-        body.theme-fortnite { --cor-accent: #1e90ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdn1.epicgames.com/offer/fn/FNECO_39-40_LoveAndLegends_EGS_Launcher_KeyArt_Blade_2560x1440_2560x1440-407af99db5db41f2a0596d35eb57b7d4'); }
+    /* --- TEMAS --- */
+    body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdna.artstation.com/p/assets/covers/images/013/652/970/large/sm-bonin-athena-19.jpg?1540572163') !important; }
+    body.theme-dbz { --cor-accent: #ff8c00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpaper.dog/large/20399504.jpg') !important; }
+    body.theme-mk { --cor-accent: #ff0000; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://i.redd.it/he010ipc19p51.jpg') !important; }
+    body.theme-gta { --cor-accent: #2ecc71; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpapers.com/images/hd/gta-sa-4k-blonde-girl-z9zaoylvpq1ly51q.jpg') !important; }
+    body.theme-gtav { --cor-accent: #fbc531; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://www.menosfios.com/wp-content/uploads/2013/12/gta5.jpg') !important; }
+    body.theme-cod { --cor-accent: #7dff00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images.appspy.com/articles/13784/call-of-duty-mobile.webp') !important; }
+    body.theme-re { --cor-accent: #ff0055; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://t2.tudocdn.net/660435?w=1920') !important; }
+    body.theme-cyberPunk { --cor-accent: #ff0055; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://w0.peakpx.com/wallpaper/641/699/HD-wallpaper-2022-cyberpunk-2077-cyberpunk-2077-2022-games-games-deviantart-cosplay.jpg') !important; }
 
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            font-family:'Segoe UI', system-ui, sans-serif;
-            background:#050505;
-            color:#f0f0f0;
-            display:flex;
-            min-height:100vh;
-            background-attachment:fixed;
-            background-size:cover;
-            background-position:center;
-            transition:0.5s;
-            overflow-x:hidden;
-        }
+    body.theme-mario { --cor-accent: #ff0000; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://image.geekship.com.br/XTVbV7sCcfbpG2E74-cgLhUN4No=/2200x0/smart/filters:strip_icc():format(webp)/hull.geekship.com.br/wp-content/uploads/2023/04/Super-Mario-Bros-O-Filme.jpg'); }
+    body.theme-zelda { --cor-accent: #00ff00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://images7.alphacoders.com/557/557051.jpg'); }
+    body.theme-spiderman { --cor-accent: #ff4500; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://wallpapercave.com/wp/wp9147243.jpg'); }
+    body.theme-fortnite { --cor-accent: #1e90ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('https://cdn1.epicgames.com/offer/fn/FNECO_39-40_LoveAndLegends_EGS_Launcher_KeyArt_Blade_2560x1440_2560x1440-407af99db5db41f2a0596d35eb57b7d4'); }
 
-        /* SIDEBAR */
-        .sidebar {
-            width: var(--sidebar-width);
-            height: 100vh;
-            background: rgba(5, 5, 5, 0.95);
-            backdrop-filter: blur(30px);
-            border-right: 1px solid var(--glass-border);
-            position: fixed;
-            left: 0;
-            top: 0;
-            display: flex;
-            flex-direction: column;
-            padding: 25px;
-            z-index: 1000;
-        }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Segoe UI', system-ui, sans-serif;
+      background:#050505;
+      color:#f0f0f0;
+      display:flex;
+      min-height:100vh;
+      background-attachment:fixed;
+      background-size:cover;
+      background-position:center;
+      transition:0.5s;
+      overflow-x:hidden;
+    }
 
-        #logoToolFlix {
-            font-family:'Impact', sans-serif;
-            font-size:38px;
-            background:linear-gradient(90deg,#fff, var(--cor-accent));
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            margin-bottom: 30px;
-            cursor: pointer;
-            text-align: center;
-            letter-spacing: 2px;
-        }
+    /* SIDEBAR */
+    .sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
+      background: rgba(5, 5, 5, 0.95);
+      backdrop-filter: blur(30px);
+      border-right: 1px solid var(--glass-border);
+      position: fixed;
+      left: 0;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 25px;
+      z-index: 1000;
+    }
 
-        /* PREMIUM VISUAL */
-        body.premium-active #logoToolFlix {
-            background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: logoPulse 1.5s infinite alternate;
-            text-shadow: 0 0 5px gold, 0 0 10px orange;
-        }
+    #logoToolFlix {
+      font-family:'Impact', sans-serif;
+      font-size:38px;
+      background:linear-gradient(90deg,#fff, var(--cor-accent));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom: 30px;
+      cursor: pointer;
+      text-align: center;
+      letter-spacing: 2px;
+    }
 
-        body.premium-active .sidebar {
-            background: linear-gradient(to bottom, rgba(40,40,40,0.85), rgba(25,25,25,0.7));
-            backdrop-filter: blur(50px);
-            border-right: 1px solid rgba(255,215,0,0.15);
-            transition: 0.5s;
-        }
+    /* PREMIUM VISUAL */
+    body.premium-active #logoToolFlix {
+      background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: logoPulse 1.5s infinite alternate;
+      text-shadow: 0 0 5px gold, 0 0 10px orange;
+    }
 
-        @keyframes logoPulse {
-            0% { transform: scale(1); text-shadow: 0 0 5px gold, 0 0 10px orange; }
-            50% { transform: scale(1.08); text-shadow: 0 0 15px gold, 0 0 25px orange; }
-            100% { transform: scale(1); text-shadow: 0 0 5px gold, 0 0 10px orange; }
-        }
+    body.premium-active .sidebar {
+      background: linear-gradient(to bottom, rgba(40,40,40,0.85), rgba(25,25,25,0.7));
+      backdrop-filter: blur(50px);
+      border-right: 1px solid rgba(255,215,0,0.15);
+      transition: 0.5s;
+    }
 
-        /* CATEGORIAS */
-        .catBtn {
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            padding: 12px 22px;
-            border-radius: 50px;
-            margin-bottom: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.1);
-            text-align: left;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
+    @keyframes logoPulse {
+      0% { transform: scale(1); text-shadow: 0 0 5px gold, 0 0 10px orange; }
+      50% { transform: scale(1.08); text-shadow: 0 0 15px gold, 0 0 25px orange; }
+      100% { transform: scale(1); text-shadow: 0 0 5px gold, 0 0 10px orange; }
+    }
 
-        .catBtn:hover {
-            background: linear-gradient(90deg, #00ffff, #00aaff);
-            color: #fff;
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(0,255,255,0.5);
-        }
+    /* CATEGORIAS */
+    .catBtn {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 50px;
+      margin-bottom: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.1);
+      text-align: left;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .catBtn:hover {
+      background: linear-gradient(90deg, #00ffff, #00aaff);
+      color: #fff;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 6px 20px rgba(0,255,255,0.5);
+    }
+    .catBtn.active {
+      background: linear-gradient(90deg, #00ffff, #0080ff);
+      color: #000;
+      font-weight: 700;
+      border: none;
+      box-shadow: 0 0 15px rgba(0,255,255,0.6), inset 0 0 8px rgba(255,255,255,0.2);
+    }
 
-        .catBtn.active {
-            background: linear-gradient(90deg, #00ffff, #0080ff);
-            color: #000;
-            font-weight: 700;
-            border: none;
-            box-shadow: 0 0 15px rgba(0,255,255,0.6), inset 0 0 8px rgba(255,255,255,0.2);
-        }
+    /* MAIN */
+    main { margin-left: var(--sidebar-width); flex: 1; padding: 30px 50px; width: calc(100% - var(--sidebar-width)); }
+    .top-nav { display:flex; justify-content:flex-end; align-items:center; gap:15px; margin-bottom:40px; flex-wrap:wrap; position:relative; z-index: 99999; }
+    .nav-item { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color:#fff; padding:12px 20px; border-radius:50px; cursor:pointer; font-weight:600; transition:0.3s; font-size:13px; outline:none; }
+    .nav-item:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
 
-        /* MAIN */
-        main { margin-left: var(--sidebar-width); flex: 1; padding: 30px 50px; width: calc(100% - var(--sidebar-width)); }
-        .top-nav { display:flex; justify-content:flex-end; align-items:center; gap:15px; margin-bottom:40px; flex-wrap:wrap; }
-        .nav-item { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color:#fff; padding:12px 20px; border-radius:50px; cursor:pointer; font-weight:600; transition:0.3s; font-size:13px; outline:none; }
-        .nav-item:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+    #themeSelect { background:#111; color:gold; border:1px solid gold; padding:10px 18px; border-radius:14px; font-weight:bold; cursor:pointer; }
 
-        #themeSelect { background:#111; color:gold; border:1px solid gold; padding:10px 18px; border-radius:14px; font-weight:bold; cursor:pointer; }
+    /* PREMIUM BTN */
+    #premiumTriggerBtn {
+      background: linear-gradient(135deg, #ffd700, #ff8c00) !important;
+      color: #000 !important;
+      border: none !important;
+      font-weight: 900 !important;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      animation: pulsePremium 1.5s infinite ease-in-out, glowPremium 1.5s infinite alternate;
+      position: relative;
+      overflow: hidden;
+    }
+    @keyframes pulsePremium { 0% {transform:scale(1)} 50% {transform:scale(1.05)} 100% {transform:scale(1)} }
+    @keyframes glowPremium { from { box-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700; } to { box-shadow: 0 0 20px #ffd700, 0 0 30px #ff8c00; } }
 
-        /* PREMIUM BTN */
-        #premiumTriggerBtn {
-            background: linear-gradient(135deg, #ffd700, #ff8c00) !important;
-            color: #000 !important;
-            border: none !important;
-            font-weight: 900 !important;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-            animation: pulsePremium 1.5s infinite ease-in-out, glowPremium 1.5s infinite alternate;
-            position: relative;
-            overflow: hidden;
-        }
-        @keyframes pulsePremium { 0% {transform:scale(1)} 50% {transform:scale(1.05)} 100% {transform:scale(1)} }
-        @keyframes glowPremium { from { box-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700; } to { box-shadow: 0 0 20px #ffd700, 0 0 30px #ff8c00; } }
+    /* CATALOGO */
+    #catalogo { display:grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap:25px; position: relative; z-index: 1; }
+    .jogo { background: var(--glass-bg); border-radius:20px; padding:15px; border:1px solid var(--glass-border); position:relative; transition: all .4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor:pointer; overflow:hidden; z-index:1; }
+    .jogo:hover { transform: scale(1.06) translateY(-10px); border-color: var(--cor-accent); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 15px rgba(0, 255, 255, 0.2); z-index:2; }
+    .jogo img { width:100%; border-radius:14px; aspect-ratio:1/1; object-fit:cover; display:block; transition:.4s; background: rgba(255,255,255,0.04); }
 
-        /* CATALOGO */
-        #catalogo { display:grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap:25px; }
-        .jogo { background: var(--glass-bg); border-radius:20px; padding:15px; border:1px solid var(--glass-border); position:relative; transition: all .4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor:pointer; overflow:hidden; }
-        .jogo:hover { transform: scale(1.06) translateY(-10px); border-color: var(--cor-accent); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 15px rgba(0, 255, 255, 0.2); z-index:2; }
-        .jogo img { width:100%; border-radius:14px; aspect-ratio:1/1; object-fit:cover; display:block; transition:.4s; }
+    .jogo-premium { border:2px solid gold !important; position:relative; overflow:hidden; animation: premiumGlow 2s infinite alternate; }
+    @keyframes premiumGlow { 0% { box-shadow: 0 0 5px gold, 0 0 10px gold; } 50% { box-shadow: 0 0 15px gold, 0 0 25px gold; } 100% { box-shadow: 0 0 5px gold, 0 0 10px gold; } }
+    .premium-locked img { filter: grayscale(100%) blur(8px); opacity: 0.2; }
 
-        .jogo-premium { border:2px solid gold !important; position:relative; overflow:hidden; animation: premiumGlow 2s infinite alternate; }
-        @keyframes premiumGlow { 0% { box-shadow: 0 0 5px gold, 0 0 10px gold; } 50% { box-shadow: 0 0 15px gold, 0 0 25px gold; } 100% { box-shadow: 0 0 5px gold, 0 0 10px gold; } }
-        .premium-locked img { filter: grayscale(100%) blur(8px); opacity: 0.2; }
+    /* ADMIN */
+    #adminSection { display:none; background: var(--admin-panel-bg); padding:30px; border-radius:24px; border: 1px solid var(--cor-accent); margin-bottom: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); animation: slideDown .4s ease; }
+    .admin-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:25px; }
+    .admin-input { background: rgba(255,255,255,0.03); border:1px solid #333; padding:14px; border-radius:12px; color:#fff; font-size:14px; transition:.3s; }
 
-        /* ADMIN */
-        #adminSection { display:none; background: var(--admin-panel-bg); padding:30px; border-radius:24px; border: 1px solid var(--cor-accent); margin-bottom: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); animation: slideDown .4s ease; }
-        .admin-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:25px; }
-        .admin-input { background: rgba(255,255,255,0.03); border:1px solid #333; padding:14px; border-radius:12px; color:#fff; font-size:14px; transition:.3s; }
+    /* MODAIS / TOAST */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.92); backdrop-filter:blur(15px); display:none; justify-content:center; align-items:center; z-index:9999; }
+    .modal-box { background:#111; padding:45px; border-radius:30px; width:400px; text-align:center; border:1px solid #333; }
+    #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 10000; }
+    .toast { background:#fff; color:#000; padding:16px 28px; border-radius:14px; margin-top:12px; font-weight:bold; animation: toastIn .3s ease; }
 
-        /* MODAIS / TOAST */
-        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.92); backdrop-filter:blur(15px); display:none; justify-content:center; align-items:center; z-index:9999; }
-        .modal-box { background:#111; padding:45px; border-radius:30px; width:400px; text-align:center; border:1px solid #333; }
-        #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 10000; }
-        .toast { background:#fff; color:#000; padding:16px 28px; border-radius:14px; margin-top:12px; font-weight:bold; animation: toastIn .3s ease; }
+    @keyframes shake { 0%{transform:translateX(0)} 20%{transform:translateX(-4px)} 40%{transform:translateX(4px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} 100%{transform:translateX(0)} }
+    .card-shake { animation: shake 0.35s ease; box-shadow: 0 0 12px rgba(255,0,0,.7); }
 
-        @keyframes shake { 0%{transform:translateX(0)} 20%{transform:translateX(-4px)} 40%{transform:translateX(4px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} 100%{transform:translateX(0)} }
-        .card-shake { animation: shake 0.35s ease; box-shadow: 0 0 12px rgba(255,0,0,.7); }
+    /* PREMIUM BADGE + COUNTER */
+    #premiumBadge {
+      display:none;
+      margin: 10px auto 0;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: .6px;
+      color: #111;
+      background: linear-gradient(90deg, #ffd700, #ffb700, #ffa500);
+      box-shadow: 0 0 14px rgba(255,215,0,.35);
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    #premiumCounter {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 12px;
+      line-height: 1.35;
+      opacity: .92;
+    }
 
-        /* PREMIUM BADGE + COUNTER */
-        #premiumBadge {
-            display:none;
-            margin: 10px auto 0;
-            width: fit-content;
-            padding: 8px 12px;
-            border-radius: 999px;
-            font-weight: 900;
-            font-size: 12px;
-            letter-spacing: .6px;
-            color: #111;
-            background: linear-gradient(90deg, #ffd700, #ffb700, #ffa500);
-            box-shadow: 0 0 14px rgba(255,215,0,.35);
-            border: 1px solid rgba(255,255,255,.18);
-        }
-        #premiumCounter {
-            margin-top: 10px;
-            padding: 12px;
-            border-radius: 16px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            font-size: 12px;
-            line-height: 1.35;
-            opacity: .92;
-        }
+    /* ===== GAME / XP UI ===== */
+    .xpBar{
+      width: 160px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.10);
+      overflow: hidden;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.35);
+    }
+    .xpFill{
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #00ffff, #ffd700);
+      box-shadow: 0 0 12px rgba(0,255,255,0.35);
+      transition: width .35s ease;
+    }
+    .userMenuBox{
+      position:absolute;
+      top: 44px;
+      right: 0;
+      width: 170px;
+      background: rgba(10,10,10,0.96);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 16px;
+      padding: 8px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      backdrop-filter: blur(12px);
+      z-index: 100001;
+    }
+    .userMenuItem{
+      width:100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      color:#fff;
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight: 700;
+      margin: 6px 0;
+    }
+    .userMenuItem:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.12); }
 
-        .lock-flash { position: relative; }
-        .lock-flash::after{
-            content:"";
-            position:absolute;
-            inset:0;
-            border-radius: 20px;
-            background: radial-gradient(circle at 50% 40%, rgba(255,215,0,0.22), transparent 55%);
-            animation: lockFlash 0.55s ease;
-            pointer-events:none;
-        }
-        @keyframes lockFlash { 0% { opacity:0; transform: scale(0.98); } 40%{ opacity:1; transform: scale(1); } 100%{ opacity:0; transform: scale(1.02); } }
+    /* deixa a área do usuário sempre escura */
+    #userArea {
+      background: linear-gradient(145deg, #111, #1a1a1a) !important;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+      border-radius: 50px;
+      position: relative;
+      z-index: 100000;
+    }
+    #userArea #xpText { color:#fff; font-weight:600; }
+    #userArea .xpBar { background:#000; }
 
-        /* ===== GAME / XP UI ===== */
-        .xpBar{
-            width: 160px;
-            height: 12px;
-            border-radius: 999px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.10);
-            overflow: hidden;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.35);
-        }
-        .xpFill{
-            height: 100%;
-            border-radius: 999px;
-            background: linear-gradient(90deg, #00ffff, #ffd700);
-            box-shadow: 0 0 12px rgba(0,255,255,0.35);
-            transition: width .35s ease;
-        }
-        .userMenuBox{
-            position:absolute;
-            top: 44px;
-            right: 0;
-            width: 170px;
-            background: rgba(10,10,10,0.96);
-            border: 1px solid rgba(255,255,255,0.10);
-            border-radius: 16px;
-            padding: 8px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            backdrop-filter: blur(12px);
-            z-index: 9999;
-        }
-        .userMenuItem{
-            width:100%;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.08);
-            color:#fff;
-            padding: 10px 12px;
-            border-radius: 12px;
-            cursor:pointer;
-            font-weight: 700;
-            margin: 6px 0;
-        }
-        .userMenuItem:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.12); }
+    /* ===== CONQUISTAS ===== */
+    .ach-badge {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      margin: 6px 0;
+    }
+    .ach-badge.locked { opacity:.55; filter: grayscale(100%); }
+    .ach-title { font-weight:900; }
+    .ach-meta { font-size:12px; opacity:.85; }
+    .ach-progress {
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.10);
+      overflow:hidden;
+      margin-top:6px;
+    }
+    .ach-progress > div{
+      height:100%;
+      border-radius:999px;
+      background: linear-gradient(90deg, #00ffff, #ffd700);
+      transition: width .25s ease;
+    }
 
-        /* deixa a área do usuário sempre escura */
-        #userArea {
-            background: linear-gradient(145deg, #111, #1a1a1a) !important;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 0 10px rgba(0,0,0,0.6);
-            border-radius: 50px;
-        }
-        #userArea #xpText { color:#fff; font-weight:600; }
-        #userArea .xpBar { background:#000; }
+    /* SUPORTE */
+    .suporte-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; }
+    .suporte-btn {
+      width: 64px; height: 64px; border-radius: 50%;
+      border: none; background: linear-gradient(135deg, #ffd700, #ffb700);
+      color: #000; font-size: 30px; cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.85);
+      display:flex; align-items:center; justify-content:center;
+      transition: .25s;
+    }
+    .suporte-btn:hover { transform: scale(1.08); }
+    .suporte-painel {
+      position:absolute; bottom:78px; right:0; width:300px;
+      background: rgba(15, 15, 15, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      display:none;
+    }
+    .suporte-container.ativo .suporte-painel { display:block; }
 
-        /* ===== CONQUISTAS (TROFÉUS) ===== */
-        .ach-badge {
-          display:inline-flex;
-          align-items:center;
-          gap:8px;
-          padding:8px 12px;
-          border-radius:14px;
-          border:1px solid rgba(255,255,255,0.10);
-          background: rgba(255,255,255,0.04);
-          margin: 6px 0;
-        }
-        .ach-badge.locked { opacity:.55; filter: grayscale(100%); }
-        .ach-title { font-weight:900; }
-        .ach-meta { font-size:12px; opacity:.85; }
-        .ach-progress {
-          height:10px;
-          border-radius:999px;
-          background: rgba(255,255,255,0.08);
-          border:1px solid rgba(255,255,255,0.10);
-          overflow:hidden;
-          margin-top:6px;
-        }
-        .ach-progress > div{
-          height:100%;
-          border-radius:999px;
-          background: linear-gradient(90deg, #00ffff, #ffd700);
-          transition: width .25s ease;
-        }
+    /* Scroll bonito conquistas */
+    #achList::-webkit-scrollbar { width: 8px; }
+    #achList::-webkit-scrollbar-thumb { background: linear-gradient(180deg, gold, orange); border-radius: 999px; }
+    #achList::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 999px; }
 
-        /* SUPORTE */
-        .suporte-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; }
-        .suporte-btn {
-            width: 64px; height: 64px; border-radius: 50%;
-            border: none; background: linear-gradient(135deg, #ffd700, #ffb700);
-            color: #000; font-size: 30px; cursor: pointer;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.85);
-            display:flex; align-items:center; justify-content:center;
-            transition: .25s;
-        }
-        .suporte-btn:hover { transform: scale(1.08); }
-        .suporte-painel {
-            position:absolute; bottom:78px; right:0; width:300px;
-            background: rgba(15, 15, 15, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 18px;
-            padding: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            display:none;
-        }
-        .suporte-container.ativo .suporte-painel { display:block; }
-		/* ===== Scroll bonito Conquistas ===== */
-#achList::-webkit-scrollbar {
-    width: 8px;
-}
-
-#achList::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, gold, orange);
-    border-radius: 999px;
-}
-
-#achList::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.05);
-    border-radius: 999px;
-}
-/* ===== FIX: menu do usuário acima dos cards ===== */
-.top-nav{
-  position: relative;
-  z-index: 99999;
-}
-
-#userArea{
-  position: relative;
-  z-index: 100000;
-}
-
-#userMenuBox{
-  position: absolute;
-  z-index: 100001;
-}
-
-#catalogo, .jogo{
-  position: relative;
-  z-index: 1;
-}
-
-    /* ===== LEVEL UP FX ===== */
-@keyframes levelPop {
-  0% { transform: translateY(0) scale(1); box-shadow: 0 0 0 rgba(255,215,0,0); }
-  35% { transform: translateY(-2px) scale(1.06); box-shadow: 0 0 24px rgba(255,215,0,0.35); }
-  100% { transform: translateY(0) scale(1); box-shadow: 0 0 0 rgba(255,215,0,0); }
-}
-@keyframes levelRing {
-  0% { opacity: 0; transform: scale(0.9); }
-  20% { opacity: 1; }
-  100% { opacity: 0; transform: scale(1.25); }
-}
-
-#userArea.level-up-pop {
-  animation: levelPop 0.75s ease;
-  border-color: rgba(255,215,0,0.55) !important;
-}
-
-#userArea.level-up-pop::after{
-  content:"";
-  position:absolute;
-  inset:-6px;
-  border-radius: 999px;
-  border: 2px solid rgba(255,215,0,0.25);
-  animation: levelRing 0.75s ease;
-  pointer-events:none;
-}
-	</style>
+    /* Level up fx */
+    @keyframes levelPop {
+      0% { transform: translateY(0) scale(1); box-shadow: 0 0 0 rgba(255,215,0,0); }
+      35% { transform: translateY(-2px) scale(1.06); box-shadow: 0 0 24px rgba(255,215,0,0.35); }
+      100% { transform: translateY(0) scale(1); box-shadow: 0 0 0 rgba(255,215,0,0); }
+    }
+    @keyframes levelRing {
+      0% { opacity: 0; transform: scale(0.9); }
+      20% { opacity: 1; }
+      100% { opacity: 0; transform: scale(1.25); }
+    }
+    #userArea.level-up-pop {
+      animation: levelPop 0.75s ease;
+      border-color: rgba(255,215,0,0.55) !important;
+    }
+    #userArea.level-up-pop::after{
+      content:"";
+      position:absolute;
+      inset:-6px;
+      border-radius: 999px;
+      border: 2px solid rgba(255,215,0,0.25);
+      animation: levelRing 0.75s ease;
+      pointer-events:none;
+    }
+  </style>
 </head>
+
 <body class="theme-default">
-<aside class="sidebar">
+  <aside class="sidebar">
     <div id="logoToolFlix" onclick="location.reload()">ToolFlix</div>
 
     <div id="premiumBadge">💎 PREMIUM ATIVO</div>
     <div id="premiumCounter"></div>
 
     <div style="margin-bottom:25px">
-        <input type="text" id="searchBar" placeholder="🔍 Buscar jogos..."
-               style="width:100%; padding:14px; border-radius:50px; border:1px solid #222;
-               background:rgba(255,255,255,0.04); color:#fff; outline:none;
-               font-size:14px; padding-left:20px;">
+      <input type="text" id="searchBar" placeholder="🔍 Buscar jogos..."
+        style="width:100%; padding:14px; border-radius:50px; border:1px solid #222;
+        background:rgba(255,255,255,0.04); color:#fff; outline:none;
+        font-size:14px; padding-left:20px;">
     </div>
-
-    <nav id="categoriaBtns" style="overflow-y:auto; padding-right:5px;">
-        <button class="catBtn active" data-cat="Todos">📂 Todos</button>
-        <button class="catBtn" data-cat="Jogos PS2">🎮 Jogos PS2</button>
-        <button class="catBtn" data-cat="PS2 com Cheats">🔥 PS2 Cheats</button>
-        <button class="catBtn" data-cat="Jogos PS3">🎮 Jogos PS3</button>
-        <button class="catBtn" data-cat="PS3 com Cheats">🔥 PS3 Cheats</button>
-        <button class="catBtn" data-cat="Jogos PS1">🎮 Jogos PS1</button>
-        <button class="catBtn" data-cat="PS1 com Cheats">🔥 PS1 Cheats</button>
-        <button class="catBtn" data-cat="YouTube">📺 YouTube</button>
-        <button class="catBtn" data-cat="Jogos PC">💻 Jogos PC</button>
-        <button class="catBtn" data-cat="Fix SteamTools">🛠️ SteamTools</button>
-        <button class="catBtn" data-cat="Arquivos">🗄️ Arquivos</button>
-        <button class="catBtn" data-cat="Roms">📀 Roms</button>
-        <button class="catBtn" data-cat="Emuladores">🕹️ Emuladores</button>
+	    <nav id="categoriaBtns" style="overflow-y:auto; padding-right:5px;">
+      <button class="catBtn active" data-cat="Todos">📂 Todos</button>
+      <button class="catBtn" data-cat="Jogos PS2">🎮 Jogos PS2</button>
+      <button class="catBtn" data-cat="PS2 com Cheats">🔥 PS2 Cheats</button>
+      <button class="catBtn" data-cat="Jogos PS3">🎮 Jogos PS3</button>
+      <button class="catBtn" data-cat="PS3 com Cheats">🔥 PS3 Cheats</button>
+      <button class="catBtn" data-cat="Jogos PS1">🎮 Jogos PS1</button>
+      <button class="catBtn" data-cat="PS1 com Cheats">🔥 PS1 Cheats</button>
+      <button class="catBtn" data-cat="YouTube">📺 YouTube</button>
+      <button class="catBtn" data-cat="Jogos PC">💻 Jogos PC</button>
+      <button class="catBtn" data-cat="Fix SteamTools">🛠️ SteamTools</button>
+      <button class="catBtn" data-cat="Arquivos">🗄️ Arquivos</button>
+      <button class="catBtn" data-cat="Roms">📀 Roms</button>
+      <button class="catBtn" data-cat="Emuladores">🕹️ Emuladores</button>
     </nav>
-</aside>
+  </aside>
 
-<main>
-
+  <main>
     <div class="top-nav">
+      <select id="themeSelect" class="nav-item">
+        <option value="default">🎭 Padrão</option>
+        <option value="gow">God of War⚔️</option>
+        <option value="dbz">Dragon Ball🐉</option>
+        <option value="mk">💎 MK🥷</option>
+        <option value="gta">💎 GTA SA🚒</option>
+        <option value="gtav">💎 GTA V🚓</option>
+        <option value="cod">💎 COD🪖</option>
+        <option value="re">💎 Resident Evil👮</option>
+        <option value="cyberPunk">💎 CyberPunk🔫</option>
+        <option value="mario">💎 Mario🍄</option>
+        <option value="zelda">💎 Zelda🗡️</option>
+        <option value="spiderman">💎 Spiderman🕷️</option>
+        <option value="fortnite">💎 Fortnite🎮</option>
+      </select>
 
-        <select id="themeSelect" class="nav-item">
-            <option value="default">🎭 Padrão</option>
-            <option value="gow">God of War⚔️</option>
-            <option value="dbz">Dragon Ball🐉</option>
-            <option value="mk">💎 MK🥷</option>
-            <option value="gta">💎 GTA SA🚒</option>
-            <option value="gtav">💎 GTA V🚓</option>
-            <option value="cod">💎 COD🪖</option>
-            <option value="re">💎 Resident Evil👮</option>
-            <option value="cyberPunk">💎 CyberPunk🔫</option>
-            <option value="mario">💎 Mario🍄</option>
-            <option value="zelda">💎 Zelda🗡️</option>
-            <option value="spiderman">💎 Spiderman🕷️</option>
-            <option value="fortnite">💎 Fortnite🎮</option>
-        </select>
+      <button class="nav-item" id="sortBtn">🔃 Ordem: Recentes</button>
+      <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
+      <button class="nav-item" id="adminBtn">⚙️ Admin</button>
 
-        <button class="nav-item" id="sortBtn">🔃 Ordem: Recentes</button>
-        <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
-        <button class="nav-item" id="adminBtn">⚙️ Admin</button>
-
-        <!-- ===== ÁREA DO USUÁRIO (GAME) ===== -->
-        <div id="userArea" class="nav-item" style="display:flex; align-items:center; gap:10px; position:relative; cursor:pointer;">
-            <span id="userNick">Entrar</span>
-            <div class="xpBar">
-                <div class="xpFill" id="xpFill" style="width:0%"></div>
-            </div>
-            <span id="xpText">0/100</span>
-
-            <div id="userMenuBox" class="userMenuBox" style="display:none;">
-                <button class="userMenuItem" id="openGameBtn">🎮 Game</button>
-                <button class="userMenuItem" id="openAchBtn">🏆 Conquistas</button>
-                <button class="userMenuItem" id="logoutBtn">🚪 Sair</button>
-            </div>
+      <!-- ===== ÁREA DO USUÁRIO (GAME) ===== -->
+      <div id="userArea" class="nav-item" style="display:flex; align-items:center; gap:10px; position:relative; cursor:pointer;">
+        <span id="userNick">Entrar</span>
+        <div class="xpBar">
+          <div class="xpFill" id="xpFill" style="width:0%"></div>
         </div>
+        <span id="xpText">0/100</span>
 
-        <div style="display:flex; flex-direction:column; gap:8px;">
-            <button class="nav-item" id="premiumTriggerBtn">💎 ATIVAR PREMIUM</button>
-            <button class="nav-item" id="solicitarTokenBtn"
-                    onclick="window.open('https://www.youtube.com/watch?v=FbHaSemn5NI','_blank')"
-                    style="background:#f1c40f; color:#000; font-size:11px;">
-                🎁 GANHAR TOKEN
-            </button>
+        <div id="userMenuBox" class="userMenuBox" style="display:none;">
+          <button class="userMenuItem" id="openGameBtn">🎮 Game</button>
+          <button class="userMenuItem" id="openAchBtn">🏆 Conquistas</button>
+          <button class="userMenuItem" id="logoutBtn">🚪 Sair</button>
         </div>
+      </div>
 
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="nav-item" id="premiumTriggerBtn">💎 ATIVAR PREMIUM</button>
+        <button class="nav-item" id="solicitarTokenBtn"
+          onclick="window.open('https://www.youtube.com/watch?v=FbHaSemn5NI','_blank')"
+          style="background:#f1c40f; color:#000; font-size:11px;">
+          🎁 GANHAR TOKEN
+        </button>
+      </div>
     </div>
 
     <!-- ===== LOGIN GAME ===== -->
     <div id="userLoginModal" class="modal-overlay">
-        <div class="modal-box">
-            <h2>👤 Entrar no Game</h2>
-            <input type="text" id="userNickInput" class="admin-input"
-                   placeholder="Escolha um nickname"
-                   style="width:100%; margin-top:15px;">
-            <button id="userLoginSubmit" class="nav-item"
-                    style="margin-top:15px; width:100%; background:var(--cor-accent); color:#000;">
-                Entrar
-            </button>
-        </div>
+      <div class="modal-box">
+        <h2>👤 Entrar no Game</h2>
+        <input type="text" id="userNickInput" class="admin-input"
+          placeholder="Escolha um nickname"
+          style="width:100%; margin-top:15px;">
+        <button id="userLoginSubmit" class="nav-item"
+          style="margin-top:15px; width:100%; background:var(--cor-accent); color:#000;">
+          Entrar
+        </button>
+      </div>
     </div>
 
     <!-- ===== MODAL GAME ===== -->
     <div id="gameModal" class="modal-overlay">
-        <div class="modal-box" style="width:500px; max-width:92vw; text-align:left;">
-            <h2 style="color:gold;">🏆 Painel Game</h2>
-            <div id="gameContent" style="margin-top:15px;"></div>
-            <button onclick="document.getElementById('gameModal').style.display='none'"
-                    class="nav-item"
-                    style="margin-top:15px; width:100%;">
-                Fechar
-            </button>
-        </div>
+      <div class="modal-box" style="width:500px; max-width:92vw; text-align:left;">
+        <h2 style="color:gold;">🏆 Painel Game</h2>
+        <div id="gameContent" style="margin-top:15px;"></div>
+        <button id="closeGameBtn" class="nav-item" style="margin-top:15px; width:100%;">Fechar</button>
+      </div>
     </div>
 
     <!-- ===== MODAL CONQUISTAS ===== -->
     <div id="achModal" class="modal-overlay">
-        <div class="modal-box" style="width:520px; max-width:92vw; text-align:left;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                <h2 style="color:gold;">🏆 Conquistas</h2>
-                <button id="closeAchBtn" class="nav-item" style="padding:8px 12px;">✖</button>
-            </div>
-            <div id="achList" style="max-height:60vh; overflow-y:auto; padding-right:8px;"></div>
-            <div id="achPlatinum" style="margin-top:15px; font-weight:900; color:gold;"></div>
+      <div class="modal-box" style="width:520px; max-width:92vw; text-align:left;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <h2 style="color:gold;">🏆 Conquistas</h2>
+          <button id="closeAchBtn" class="nav-item" style="padding:8px 12px;">✖</button>
         </div>
+        <div id="achList" style="max-height:60vh; overflow-y:auto; padding-right:8px;"></div>
+        <div id="achPlatinum" style="margin-top:15px; font-weight:900; color:gold;"></div>
+      </div>
     </div>
 
     <section id="adminSection"></section>
 
     <h2 id="sectionTitle" style="margin-bottom:30px; font-size:28px;">Todos</h2>
     <section id="catalogo"></section>
+  </main>
 
-</main>
+  <div id="toast-container"></div>
 
-<div id="toast-container"></div>
-<script>
-// === API (Render) ===
-const API_URL = "https://toolflix-api.onrender.com";
+  <!-- ===== PREMIUM MODAL (já no HTML pra não falhar bind) ===== -->
+  <div id="premiumModal" class="modal-overlay">
+    <div class="modal-box">
+      <h2 style="color:gold; margin-bottom:20px">💎 Ativar Premium</h2>
+      <input type="text" id="premiumInput" maxlength="25" class="admin-input" style="width:100%; text-align:center" placeholder="TOKEN">
+      <button id="premiumSubmit" class="nav-item" style="background:gold; color:#000; width:100%; margin-top:10px">Validar</button>
+    </div>
+  </div>
 
-// === ID único do usuário (fica salvo no navegador) ===
-function getUserId(){
-  let id = localStorage.getItem("toolflix_userId");
-  if(!id){
-    id = "u_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
-    localStorage.setItem("toolflix_userId", id);
-  }
-  // === Carrega catálogo do backend (banco) ===
-async function loadGamesFromApi(){
-  try{
-    const r = await fetch(`${API_URL}/api/games?ts=` + Date.now());
-    const data = await r.json();
-    if(!data.ok) throw new Error(data.error || "API_GAMES_FAIL");
-    return data.games; // lista do banco
-  }catch(e){
-    console.error("loadGamesFromApi:", e);
-    return null;
-  }
-}
-  return id;
-}
-(function(){
+  <div id="premiumWelcomeModal" class="modal-overlay">
+    <div class="modal-box" style="border:2px solid gold; background:linear-gradient(145deg,#111,#1a1a1a);">
+      <h2 style="color:gold; font-size:28px; margin-bottom:15px;">💎 Bem-vindo ao Premium</h2>
+      <p style="opacity:0.9; margin-bottom:20px;">Você desbloqueou todos os conteúdos exclusivos</p>
+      <div style="text-align:left; margin-bottom:25px; line-height:1.8; font-size:14px;">
+        ✔ Temas exclusivos<br>
+        ✔ Jogos Premium<br>
+        ✔ Conteúdo antecipado
+      </div>
+      <button id="premiumWelcomeBtn"
+        style="background:linear-gradient(135deg,#ffd700,#ff8c00); border:none; color:#000; padding:12px 20px; border-radius:50px; font-weight:700; cursor:pointer; width:100%;">
+        🚀 Explorar Agora
+      </button>
+    </div>
+  </div>
 
-/* ===============================
-   CONFIG
+  <!-- ===== ADMIN MODAL ===== -->
+  <div id="loginModal" class="modal-overlay">
+    <div class="modal-box">
+      <h2 style="margin-bottom:20px">🔐 Admin</h2>
+      <input type="password" id="loginInput" class="admin-input" style="width:100%" placeholder="Senha">
+      <button id="loginSubmit" class="nav-item" style="background:var(--cor-accent); color:#000; width:100%; margin-top:10px">Entrar</button>
+    </div>
+  </div>
+
+  <!-- SUPORTE -->
+  <div class="suporte-container" id="suporteContainer">
+    <button class="suporte-btn" id="suporteBtn">🎧</button>
+    <div class="suporte-painel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <strong>📬 Suporte</strong>
+        <span style="cursor:pointer; font-size:20px;" id="suporteClose">✖</span>
+      </div>
+      <div style="font-size:13px; opacity:0.85; margin-bottom:12px;">
+        <div>• Pedidos de jogos no YouTube</div>
+        <div>• Informar link off no Discord</div>
+        <div>• Pedir token extra no YouTube</div>
+        <div>• Ajuda para instalar no Telegram</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <a href="https://t.me/gokugames0" target="_blank">✈️ Telegram</a>
+        <a href="https://discord.com/users/990270059068928011" target="_blank">🎮 Discord</a>
+        <a href="https://www.youtube.com/watch?v=BB0RbhXJWVc" target="_blank">📺 YouTube</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  /* ===============================
+   CONFIG / API
 ================================= */
 
+const API_URL = "https://toolflix-api.onrender.com";
 const URL_TOKENS = "https://raw.githubusercontent.com/cheats0075/toolflix/main/tokens.json";
 const URL_JOGOS  = `${API_URL}/api/games`;
 
 /* ===============================
-   STORAGE BASE
+   HELPERS / NORMALIZAÇÃO
 ================================= */
 
-let db_jogos = JSON.parse(localStorage.getItem('jogosPS2')) || [];
-let db_favs  = JSON.parse(localStorage.getItem('toolflix_favs')) || [];
+function safeStr(v, fallback=""){
+  if(v === null || v === undefined) return fallback;
+  return String(v);
+}
 
-let isPremium = false;
+function normalizeCategoria(raw){
+  const c = safeStr(raw, "").trim();
+  if(!c) return "Jogos PS2";
+  return c;
+}
+
+function normalizeGame(g){
+  // Aceita vários formatos vindos do backend/local e padroniza
+  const nome = safeStr(g?.nome ?? g?.title ?? g?.name ?? "Sem nome").trim() || "Sem nome";
+  const categoria = normalizeCategoria(g?.categoria ?? g?.category ?? g?.cat);
+  const link = safeStr(g?.link ?? g?.url ?? g?.href ?? "").trim();
+  const capa = safeStr(g?.capa ?? g?.img ?? g?.image ?? g?.cover ?? "").trim();
+  const premium = Boolean(g?.premium === true || categoria === "Premium" || g?.isPremium === true);
+
+  return { nome, categoria, link, capa, premium };
+}
+
+/* ===============================
+   STORAGE
+================================= */
+
+const LS_JOGOS = 'jogosPS2';
+const LS_FAVS  = 'toolflix_favs';
+
+let db_jogos = (()=>{
+  try{
+    const raw = JSON.parse(localStorage.getItem(LS_JOGOS) || '[]');
+    return Array.isArray(raw) ? raw.map(normalizeGame) : [];
+  }catch{
+    return [];
+  }
+})();
+
+let db_favs = (()=>{
+  try{
+    const raw = JSON.parse(localStorage.getItem(LS_FAVS) || '[]');
+    return Array.isArray(raw) ? raw : [];
+  }catch{
+    return [];
+  }
+})();
+
+let isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';
 let modoAdmin = false;
 let catAtiva  = 'Todos';
 let sortModo  = 'recentes';
@@ -560,566 +584,310 @@ let filterFav = false;
 const USER_KEY = 'toolflix_user';
 
 function loadUser(){
-    try {
-        return JSON.parse(localStorage.getItem(USER_KEY));
-    } catch {
-        return null;
-    }
+  try { return JSON.parse(localStorage.getItem(USER_KEY)); }
+  catch { return null; }
 }
-
 function saveUser(u){
-    u = u || {};
-    u.xp = Number(u.xp || 0);
-    localStorage.setItem(USER_KEY, JSON.stringify(u));
+  u = u || {};
+  u.xp = Number(u.xp || 0);
+  localStorage.setItem(USER_KEY, JSON.stringify(u));
 }
 
 function todayKey(){
-    const d = new Date();
-    return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+  const d = new Date();
+  return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
 }
 
-/* ===============================
-   XP REGRAS
-================================= */
-
-const XP_RULES = {
-    youtube: 15,
-    download: 10,
-    theme: 15,
-    favorite: 5,
-    premium: 100
-};
-
+const XP_RULES = { youtube: 15, download: 10, theme: 15, favorite: 5, premium: 100 };
 const DAILY_KEY = 'toolflix_xp_daily_';
 
 function getDaily(){
-    try{
-        return JSON.parse(localStorage.getItem(DAILY_KEY + todayKey()) || '{"downloads":0,"themes":0,"favorites":0}');
-    }catch{
-        return {downloads:0,themes:0,favorites:0};
-    }
+  try{
+    return JSON.parse(localStorage.getItem(DAILY_KEY + todayKey()) || '{"downloads":0,"themes":0,"favorites":0}');
+  }catch{
+    return {downloads:0,themes:0,favorites:0};
+  }
 }
-
 function setDaily(d){
-    localStorage.setItem(DAILY_KEY + todayKey(), JSON.stringify(d));
+  localStorage.setItem(DAILY_KEY + todayKey(), JSON.stringify(d));
 }
-
-/* ===============================
-   LEVEL SYSTEM
-================================= */
 
 function getLevelInfo(totalXp){
-    if(totalXp < 100) return {level:1, min:0, max:100};
-    if(totalXp < 250) return {level:2, min:100, max:250};
-    if(totalXp < 500) return {level:3, min:250, max:500};
+  totalXp = Number(totalXp || 0);
+  if(totalXp < 100) return {level:1, min:0, max:100};
+  if(totalXp < 250) return {level:2, min:100, max:250};
+  if(totalXp < 500) return {level:3, min:250, max:500};
 
-    const extra = totalXp - 500;
-    const level = 4 + Math.floor(extra / 300);
-    const min   = 500 + (level-4)*300;
-    const max   = min + 300;
-    return {level, min, max};
+  const extra = totalXp - 500;
+  const level = 4 + Math.floor(extra / 300);
+  const min   = 500 + (level-4)*300;
+  const max   = min + 300;
+  return {level, min, max};
+}
+
+function showToast(msg){
+  const c = document.getElementById('toast-container');
+  if(!c) return;
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerText = msg;
+  c.appendChild(t);
+  setTimeout(()=>{
+    t.style.opacity = '0';
+    setTimeout(()=> t.remove(), 300);
+  }, 3500);
 }
 
 function updateUserUI(){
-    const u = loadUser();
-    const nickEl = document.getElementById('userNick');
-    const xpFill = document.getElementById('xpFill');
-    const xpText = document.getElementById('xpText');
+  const u = loadUser();
+  const nickEl = document.getElementById('userNick');
+  const xpFill = document.getElementById('xpFill');
+  const xpText = document.getElementById('xpText');
 
-    if(!u || !u.nick){
-        nickEl.innerText = "Entrar";
-        xpFill.style.width = "0%";
-        xpText.innerText = "0/100";
-        return;
-    }
+  if(!u || !u.nick){
+    nickEl.innerText = "Entrar";
+    xpFill.style.width = "0%";
+    xpText.innerText = "0/100";
+    return;
+  }
 
-    nickEl.innerText = u.nick;
+  nickEl.innerText = u.nick;
+  const info = getLevelInfo(u.xp);
+  const pct  = ((u.xp - info.min) / (info.max - info.min)) * 100;
 
-    const info = getLevelInfo(u.xp);
-    const pct  = ((u.xp - info.min) / (info.max - info.min)) * 100;
-
-    xpFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
-    xpText.innerText   = `${u.xp - info.min}/${info.max - info.min} (Nv ${info.level})`;
+  xpFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
+  xpText.innerText   = `${u.xp - info.min}/${info.max - info.min} (Nv ${info.level})`;
 }
 
 /* ===============================
-   AWARD XP
+   AUDIO (1 único sistema, volume maior)
 ================================= */
+
+let TF_AUDIO_CTX = null;
+
+function tfInitAudio(){
+  try{
+    if(!TF_AUDIO_CTX){
+      TF_AUDIO_CTX = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if(TF_AUDIO_CTX.state === 'suspended') TF_AUDIO_CTX.resume();
+  }catch(e){}
+}
+window.addEventListener('pointerdown', tfInitAudio, { once:true });
+
+function playTone(freq, dur=0.09, vol=0.28, type='triangle'){
+  try{
+    tfInitAudio();
+    if(!TF_AUDIO_CTX) return;
+
+    const osc = TF_AUDIO_CTX.createOscillator();
+    const gain = TF_AUDIO_CTX.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+
+    const t = TF_AUDIO_CTX.currentTime;
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(vol, t + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+
+    osc.connect(gain);
+    gain.connect(TF_AUDIO_CTX.destination);
+
+    osc.start(t);
+    osc.stop(t + dur + 0.02);
+  }catch(e){}
+}
+
+function playTrophySound(){
+  playTone(784,  0.08, 0.18, 'triangle');
+  setTimeout(()=> playTone(988,  0.08, 0.18, 'triangle'), 90);
+  setTimeout(()=> playTone(1175, 0.10, 0.22, 'triangle'), 180);
+}
+function playLevelUpSound(){
+  playTone(523, 0.08, 0.16, 'sine');
+  setTimeout(()=> playTone(659, 0.08, 0.16, 'sine'), 90);
+  setTimeout(()=> playTone(784, 0.09, 0.18, 'sine'), 180);
+  setTimeout(()=> playTone(1046,0.11, 0.22, 'sine'), 280);
+}
+window.playTrophySound = playTrophySound;
+window.playLevelUpSound = playLevelUpSound;
+
+/* ===============================
+   XP / LEVEL UP
+================================= */
+
+function triggerLevelUpFx(newLevel){
+  const el = document.getElementById('userArea');
+  if(!el) return;
+  el.classList.remove('level-up-pop');
+  void el.offsetWidth;
+  el.classList.add('level-up-pop');
+  setTimeout(()=> el.classList.remove('level-up-pop'), 850);
+
+  playLevelUpSound();
+  showToast(`🎉 UP! Você subiu para o nível ${newLevel}!`);
+}
 
 function awardXp(amount, reason){
-    const u = loadUser();
-    if(!u || !u.nick) return;
+  const u = loadUser();
+  if(!u || !u.nick) return;
 
-    u.xp = Number(u.xp || 0) + Number(amount || 0);
-    saveUser(u);
+  const beforeXp = Number(u.xp || 0);
+  const beforeLv = getLevelInfo(beforeXp).level;
 
-    showToast(`+${amount} XP (${reason})`);
-    updateUserUI();
+  u.xp = Number(u.xp || 0) + Number(amount || 0);
+  saveUser(u);
+
+  showToast(`+${amount} XP (${reason})`);
+  updateUserUI();
+
+  const afterLv = getLevelInfo(u.xp).level;
+  if(afterLv > beforeLv){
+    triggerLevelUpFx(afterLv);
+  }
 }
 
 /* ===============================
-   TOAST
-================================= */
-
-function showToast(msg){
-    const t = document.createElement('div');
-    t.className = 'toast';
-    t.innerText = msg;
-    document.getElementById('toast-container').appendChild(t);
-
-    setTimeout(()=>{
-        t.style.opacity = '0';
-        setTimeout(()=> t.remove(), 300);
-    }, 6000);
-}
-/* ===============================
-   LOGIN / MENU USUÁRIO
+   USER MENU / LOGIN
 ================================= */
 
 function openLogin(){
-    const m = document.getElementById('userLoginModal');
-    const inp = document.getElementById('userNickInput');
-    if(m) m.style.display = 'flex';
-    if(inp) inp.focus();
+  const m = document.getElementById('userLoginModal');
+  const inp = document.getElementById('userNickInput');
+  if(m) m.style.display = 'flex';
+  if(inp) inp.focus();
 }
-
 function closeLogin(){
-    const m = document.getElementById('userLoginModal');
-    if(m) m.style.display = 'none';
+  const m = document.getElementById('userLoginModal');
+  if(m) m.style.display = 'none';
 }
-
 function toggleUserMenu(forceClose=false){
-    const box = document.getElementById('userMenuBox');
-    if(!box) return;
-    if(forceClose){
-        box.style.display = 'none';
-        return;
-    }
-    box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+  const box = document.getElementById('userMenuBox');
+  if(!box) return;
+  if(forceClose){ box.style.display = 'none'; return; }
+  box.style.display = (box.style.display === 'block') ? 'none' : 'block';
 }
 
-const userArea = document.getElementById('userArea');
-
-if(userArea){
-    userArea.addEventListener('click', ()=>{
-        const u = loadUser();
-        if(!u || !u.nick){
-            openLogin();
-        } else {
-            toggleUserMenu();
-        }
-    });
-}
+document.getElementById('userArea')?.addEventListener('click', ()=>{
+  const u = loadUser();
+  if(!u || !u.nick) openLogin();
+  else toggleUserMenu();
+});
 
 document.addEventListener('click', (e)=>{
-    const box = document.getElementById('userMenuBox');
-    const area = document.getElementById('userArea');
-    if(!box || !area) return;
+  const box = document.getElementById('userMenuBox');
+  const area = document.getElementById('userArea');
+  if(!box || !area) return;
+  if(!area.contains(e.target) && !box.contains(e.target)) box.style.display = 'none';
+});
 
-    if(!area.contains(e.target) && !box.contains(e.target)){
-        box.style.display = 'none';
-    }
+document.getElementById('userLoginSubmit')?.addEventListener('click', ()=>{
+  const inp = document.getElementById('userNickInput');
+  const nick = (inp?.value || '').trim().slice(0,18);
+  if(!nick){ showToast("Digite um nickname!"); return; }
+
+  const old = loadUser();
+  const keepXp = old ? Number(old.xp || 0) : 0;
+
+  saveUser({ nick, xp: keepXp });
+  closeLogin();
+  toggleUserMenu(true);
+  updateUserUI();
+  showToast(`Bem-vindo, ${nick}!`);
+});
+
+document.getElementById('userNickInput')?.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('userLoginSubmit')?.click(); }
+});
+
+document.getElementById('logoutBtn')?.addEventListener('click', ()=>{
+  const old = loadUser();
+  const keepXp = old ? Number(old.xp || 0) : 0;
+  saveUser({ nick: null, xp: keepXp });
+  toggleUserMenu(true);
+  updateUserUI();
+  showToast("Você saiu.");
 });
 
 /* ===============================
-   LOGIN SUBMIT (MANTÉM XP)
-================================= */
-
-const userLoginSubmit = document.getElementById('userLoginSubmit');
-
-if(userLoginSubmit){
-    userLoginSubmit.onclick = ()=>{
-        const inp = document.getElementById('userNickInput');
-        const nick = (inp?.value || '').trim().slice(0,18);
-
-        if(!nick){
-            showToast("Digite um nickname!");
-            return;
-        }
-
-        const old = loadUser();
-        const keepXp = old ? Number(old.xp || 0) : 0;
-
-        saveUser({ nick: nick, xp: keepXp });
-
-        closeLogin();
-        toggleUserMenu(true);
-        updateUserUI();
-
-        showToast(`Bem-vindo, ${nick}!`);
-    };
-
-    const inp = document.getElementById('userNickInput');
-    if(inp){
-        inp.addEventListener('keydown', (e)=>{
-            if(e.key === 'Enter'){
-                e.preventDefault();
-                userLoginSubmit.click();
-            }
-        });
-    }
-}
-
-/* ===============================
-   LOGOUT (NÃO APAGA XP)
-================================= */
-
-const logoutBtn = document.getElementById('logoutBtn');
-
-if(logoutBtn){
-    logoutBtn.onclick = ()=>{
-        const old = loadUser();
-        const keepXp = old ? Number(old.xp || 0) : 0;
-
-        saveUser({ nick: null, xp: keepXp });
-
-        toggleUserMenu(true);
-        updateUserUI();
-
-        showToast("Você saiu.");
-    };
-}
-
-/* ===============================
-   GAME PANEL (MISSÕES)
+   GAME PANEL
 ================================= */
 
 const LAST_YT_KEY = 'toolflix_last_youtube_xp';
-
 function ytCooldownLeft(){
-    const last = Number(localStorage.getItem(LAST_YT_KEY) || 0);
-    const now = Date.now();
-    const cd = 5 * 60 * 1000;
-    return Math.max(0, cd - (now - last));
+  const last = Number(localStorage.getItem(LAST_YT_KEY) || 0);
+  const now = Date.now();
+  const cd = 5 * 60 * 1000;
+  return Math.max(0, cd - (now - last));
 }
-
 function fmtTime(ms){
-    const s = Math.ceil(ms/1000);
-    const m = Math.floor(s/60);
-    const r = s % 60;
-    return `${m}m ${String(r).padStart(2,'0')}s`;
+  const s = Math.ceil(ms/1000);
+  const m = Math.floor(s/60);
+  const r = s % 60;
+  return `${m}m ${String(r).padStart(2,'0')}s`;
 }
-
 function renderGamePanel(){
-    const u = loadUser();
-    const div = document.getElementById('gameContent');
-    if(!div) return;
+  const u = loadUser();
+  const div = document.getElementById('gameContent');
+  if(!div) return;
 
-    if(!u || !u.nick){
-        div.innerHTML = "Faça login para ver suas missões.";
-        return;
-    }
+  if(!u || !u.nick){
+    div.innerHTML = "Faça login para ver suas missões.";
+    return;
+  }
 
-    const d = getDaily();
-    const info = getLevelInfo(u.xp);
-    const inLevel = u.xp - info.min;
-    const need = info.max - info.min;
+  const d = getDaily();
+  const info = getLevelInfo(u.xp);
+  const inLevel = u.xp - info.min;
+  const need = info.max - info.min;
+  const ytLeft = ytCooldownLeft();
 
-    const ytLeft = ytCooldownLeft();
-
-    div.innerHTML = `
-        <div style="margin-bottom:15px;">
-            <div style="display:flex; justify-content:space-between;">
-                <div style="font-weight:900; color:gold;">Nível ${info.level}</div>
-                <div>XP: <b>${inLevel}/${need}</b></div>
-            </div>
-            <div class="xpBar" style="width:100%; height:14px; margin-top:8px;">
-                <div class="xpFill" style="width:${Math.max(0,Math.min(100,(inLevel/need)*100))}%"></div>
-            </div>
-        </div>
-
-        <div style="font-weight:900; color:gold;">🔥 Missões Diárias</div>
-        <div style="margin-top:10px; font-size:13px; line-height:1.9;">
-            <div>🎮 Baixar 3 jogos → <b>${d.downloads}/3</b></div>
-            <div>❤️ Favoritar 5 jogos → <b>${d.favorites}/5</b></div>
-            <div>🎨 Trocar tema → <b>${d.themes}/1</b></div>
-            <div>🎥 YouTube →
-                ${
-                    ytLeft>0
-                    ? `⏳ ${fmtTime(ytLeft)}`
-                    : `<span style="color:#8cff8c; font-weight:900;">Pronto</span>`
-                }
-            </div>
-        </div>
-
-        <div style="margin-top:15px; font-weight:900; color:gold;">💎 Especial</div>
-        <div style="margin-top:8px;">Virar Premium → 100 XP (único)</div>
-    `;
-}
-
-const openGameBtn = document.getElementById('openGameBtn');
-
-if(openGameBtn){
-    openGameBtn.onclick = ()=>{
-        toggleUserMenu(true);
-        document.getElementById('gameModal').style.display = 'flex';
-        renderGamePanel();
-    };
-}
-
-setInterval(()=>{
-    const m = document.getElementById('gameModal');
-    if(m && m.style.display === 'flex'){
-        renderGamePanel();
-    }
-}, 1000);
-/* ===============================
-   PREMIUM SYNC + JOGOS SYNC
-================================= */
-
-let premiumMembersCount = 0;
-
-async function checkPremiumSync(){
-    const tokenAtivador = localStorage.getItem('toolflix_token_ativador');
-
-    if(!tokenAtivador){
-        isPremium = false;
-        localStorage.setItem('toolflix_premium_atv','false');
-    }
-
-    try{
-        const resp = await fetch(URL_TOKENS + '?v=' + Date.now());
-        if(!resp.ok) throw new Error();
-
-        const data = await resp.json();
-        const ativos = data.ativos || [];
-        const usados = data.usados || [];
-
-        premiumMembersCount = usados.length;
-        localStorage.setItem('toolflix_premium_members', String(premiumMembersCount));
-
-        if(!tokenAtivador){
-            isPremium = false;
-        } else {
-            if(!ativos.includes(tokenAtivador) || usados.includes(tokenAtivador)){
-                localStorage.removeItem('toolflix_premium_atv');
-                localStorage.removeItem('toolflix_token_ativador');
-                isPremium = false;
-            } else {
-                isPremium = true;
-                localStorage.setItem('toolflix_premium_atv','true');
-            }
-        }
-
-        updatePremiumSidebar();
-        render();
-
-    }catch(e){
-        isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';
-        premiumMembersCount = Number(localStorage.getItem('toolflix_premium_members') || 0);
-        updatePremiumSidebar();
-        render();
-    }
-}
-
-async function syncJogos(){
-    try{
-        const resp = await fetch(URL_JOGOS + '?v=' + Date.now());
-        if(!resp.ok) return;
-
-        const data = await resp.json();
-        const jogosRemotos = Array.isArray(data.games) ? data.games : [];
-
-// Se a API vier vazia, NÃO sobrescreve seu catálogo atual
-if(jogosRemotos.length === 0){
-  console.log("API sem jogos ainda — mantendo catálogo do cache/local.");
-  return;
-}
-
-        const hashRemoto = JSON.stringify(jogosRemotos);
-        const hashLocal  = localStorage.getItem('toolflix_jogos_hash');
-
-        if(hashLocal !== hashRemoto){
-            db_jogos = jogosRemotos.map(g => ({
-  ...g,
-  nome: g.title ?? g.nome ?? "",
-  url:  g.link  ?? g.url  ?? "",
-  img:  g.image ?? g.img  ?? ""
-}));
-            localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
-            localStorage.setItem('toolflix_jogos_hash', hashRemoto);
-            render();
-        }
-    }catch(e){}
-}
-
-/* ===============================
-   PREMIUM SIDEBAR
-================================= */
-
-function getPremiumStats(){
-    const totalPremium = db_jogos.filter(j => j && (j.premium === true || j.categoria === 'Premium')).length;
-    const totalItens = db_jogos.length;
-    const desbloqueados = (isPremium || modoAdmin) ? totalPremium : 0;
-    return { totalPremium, totalItens, desbloqueados };
-}
-
-function updatePremiumSidebar(){
-    const badge = document.getElementById('premiumBadge');
-    const counter = document.getElementById('premiumCounter');
-    if(!counter) return;
-
-    if(badge) badge.style.display = isPremium ? 'block' : 'none';
-
-    const s = getPremiumStats();
-
-    const headline = isPremium
-        ? `💎 Você é usuário Premium`
-        : `💎 <b>${premiumMembersCount}</b> usuários Premium ativos`;
-
-    counter.innerHTML = `
-      <div style="font-weight:900; color:gold; margin-bottom:6px;">${headline}</div>
-      <div>🔓 Desbloqueados: <b>${s.desbloqueados}</b> / <b>${s.totalPremium}</b></div>
-      <div>📦 Total no catálogo: <b>${s.totalItens}</b></div>
-    `;
-}
-
-/* ===============================
-   RENDER CATÁLOGO + XP
-================================= */
-
-function render(){
-    const grid = document.getElementById('catalogo');
-    if(!grid) return;
-
-    const lg = document.getElementById('logoToolFlix');
-    if(isPremium){
-        document.body.classList.add('premium-active');
-        if(lg) lg.innerText = 'ToolFlix Pro';
-    } else {
-        document.body.classList.remove('premium-active');
-        if(lg) lg.innerText = 'ToolFlix';
-    }
-
-    const btnP = document.getElementById('premiumTriggerBtn');
-    const btnS = document.getElementById('solicitarTokenBtn');
-    if(btnP && btnS){
-        btnP.style.display = isPremium ? 'none' : 'block';
-        btnS.style.display = isPremium ? 'none' : 'block';
-    }
-
-    grid.innerHTML = '';
-
-    let lista = [...db_jogos];
-
-    if(catAtiva !== 'Todos'){
-        lista = lista.filter(j => j.categoria === catAtiva);
-    }
-
-    const search = (document.getElementById('searchBar')?.value || '').toLowerCase();
-    if(search){
-        lista = lista.filter(j => j.nome.toLowerCase().includes(search));
-    }
-
-    if(filterFav){
-        lista = lista.filter(j => db_favs.includes(j.nome));
-    }
-
-    if(sortModo === 'az') lista.sort((a,b)=> a.nome.localeCompare(b.nome));
-    else if(sortModo === 'za') lista.sort((a,b)=> b.nome.localeCompare(a.nome));
-    else if(sortModo === 'recentes') lista.reverse();
-
-    lista.forEach(j => {
-
-        const isFav = db_favs.includes(j.nome);
-        const isP = (j.premium === true || j.categoria === 'Premium');
-        const lock = isP && !isPremium && !modoAdmin;
-
-        const card = document.createElement('div');
-        card.className = `jogo ${isP ? 'jogo-premium' : ''} ${lock ? 'premium-locked' : ''}`;
-
-        card.onclick = ()=>{
-            if(lock){
-                showToast("🔒 Conteúdo Premium!");
-                return;
-            }
-
-            window.open(j.link, '_blank');
-
-            const u = loadUser();
-            if(!u || !u.nick) return;
-
-            // YOUTUBE XP (15xp a cada 5min)
-            if(j.categoria === 'YouTube'){
-                const left = ytCooldownLeft();
-                if(left <= 0){
-                    localStorage.setItem(LAST_YT_KEY, Date.now());
-                    awardXp(XP_RULES.youtube, "YouTube");
-                } else {
-                    showToast("⏳ Aguarde 5 minutos para ganhar XP novamente.");
-                }
-                return;
-            }
-
-            // DOWNLOAD XP (10xp limite 3/dia)
-            const d = getDaily();
-            if(d.downloads < 3){
-                d.downloads++;
-                setDaily(d);
-                awardXp(XP_RULES.download, "Download");
-            } else {
-                showToast("⚠️ Limite diário de downloads atingido.");
-            }
-        };
-
-        card.innerHTML = `
-    <button onclick="event.stopPropagation(); window.toggleFav('${(j.nome||'').replace(/'/g,"\\'")}')"
-        style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.7);
-        color:${isFav?'#ff4757':'#fff'}; border:none; width:34px; height:34px;
-        border-radius:50%; cursor:pointer; z-index:10;
-        display:flex; align-items:center; justify-content:center; font-size:18px;">
-        ${isFav?'❤️':'🤍'}
-    </button>
-
-    ${lock ? '<span style="position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:40px; z-index:5">🔒</span>' : ''}
-
-    <img src="${j.capa}" alt="">
-
-    <div style="margin-top:12px; text-align:center">
-        <span style="font-size:10px; color:var(--cor-accent); font-weight:800; letter-spacing:1px">
-            ${j.categoria}${isP ? ' 💎' : ''}
-        </span>
-
-        <p style="font-weight:600; font-size:13px; margin-top:4px;">
-            ${j.nome}
-        </p>
+  div.innerHTML = `
+    <div style="margin-bottom:15px;">
+      <div style="display:flex; justify-content:space-between;">
+        <div style="font-weight:900; color:gold;">Nível ${info.level}</div>
+        <div>XP: <b>${inLevel}/${need}</b></div>
+      </div>
+      <div class="xpBar" style="width:100%; height:14px; margin-top:8px;">
+        <div class="xpFill" style="width:${Math.max(0,Math.min(100,(inLevel/need)*100))}%"></div>
+      </div>
     </div>
 
-    ${modoAdmin ? `
-        <div style="display:flex; gap:5px; margin-top:10px">
-            <button onclick="event.stopPropagation(); window.editJogo(${db_jogos.findIndex(it => it.nome === j.nome)})"
-                style="flex:1; background:gold; color:#000; border:none;
-                padding:8px; border-radius:10px; font-weight:bold;
-                cursor:pointer; font-size:11px">
-                EDITAR
-            </button>
+    <div style="font-weight:900; color:gold;">🔥 Missões Diárias</div>
+    <div style="margin-top:10px; font-size:13px; line-height:1.9;">
+      <div>🎮 Baixar 3 jogos → <b>${d.downloads}/3</b></div>
+      <div>❤️ Favoritar 5 jogos → <b>${d.favorites}/5</b></div>
+      <div>🎨 Trocar tema → <b>${d.themes}/1</b></div>
+      <div>🎥 YouTube → ${ytLeft>0 ? `⏳ ${fmtTime(ytLeft)}` : `<span style="color:#8cff8c; font-weight:900;">Pronto</span>`}</div>
+    </div>
 
-            <button onclick="event.stopPropagation(); window.delJogo('${(j.nome||'').replace(/'/g,"\\'")}')"
-                style="flex:1; background:#ff4757; color:#fff; border:none;
-                padding:8px; border-radius:10px;
-                cursor:pointer; font-size:11px">
-                DELETAR
-            </button>
-        </div>
-    ` : ''}
-`;
-
-        grid.appendChild(card);
-    });
-
-    updatePremiumSidebar();
-    updateUserUI();
+    <div style="margin-top:15px; font-weight:900; color:gold;">💎 Especial</div>
+    <div style="margin-top:8px;">Virar Premium → 100 XP (único)</div>
+  `;
 }
+
+document.getElementById('openGameBtn')?.addEventListener('click', ()=>{
+  toggleUserMenu(true);
+  document.getElementById('gameModal').style.display = 'flex';
+  renderGamePanel();
+});
+document.getElementById('closeGameBtn')?.addEventListener('click', ()=>{
+  document.getElementById('gameModal').style.display = 'none';
+});
+
+setInterval(()=>{
+  const m = document.getElementById('gameModal');
+  if(m && m.style.display === 'flex') renderGamePanel();
+}, 1000);
+
 /* ===============================
-   CONQUISTAS (TOTAL - NÃO ZERA)
-   Integração: sempre que ganhar XP, conta progresso automaticamente
+   CONQUISTAS
 ================================= */
 
 const ACH_STATS_KEY  = 'toolflix_ach_stats';
 const ACH_UNLOCK_KEY = 'toolflix_ach_unlock';
 
 const ACH_LIST = [
-  // YouTube
   { id:'yt_5',   type:'youtube',   title:'🎥 Aquecimento',        need:5 },
   { id:'yt_15',  type:'youtube',   title:'🎥 Pegando ritmo',      need:15 },
   { id:'yt_30',  type:'youtube',   title:'🎥 Maratonista',        need:30 },
@@ -1127,7 +895,6 @@ const ACH_LIST = [
   { id:'yt_120', type:'youtube',   title:'🎥 Lenda do YouTube',   need:120 },
   { id:'yt_250', type:'youtube',   title:'🎥 Insano',             need:250 },
 
-  // Downloads
   { id:'dl_3',   type:'downloads', title:'🎮 Primeiro download',      need:3 },
   { id:'dl_10',  type:'downloads', title:'🎮 Começou a coleção',      need:10 },
   { id:'dl_25',  type:'downloads', title:'🎮 HD cheio',               need:25 },
@@ -1135,7 +902,6 @@ const ACH_LIST = [
   { id:'dl_100', type:'downloads', title:'🎮 Biblioteca braba',       need:100 },
   { id:'dl_200', type:'downloads', title:'🎮 Arquivo vivo',           need:200 },
 
-  // Favoritos
   { id:'fv_5',   type:'favorites', title:'❤️ Coração de gamer',   need:5 },
   { id:'fv_15',  type:'favorites', title:'❤️ Curador',            need:15 },
   { id:'fv_30',  type:'favorites', title:'❤️ Colecionador',       need:30 },
@@ -1143,7 +909,6 @@ const ACH_LIST = [
   { id:'fv_100', type:'favorites', title:'❤️ Museu ToolFlix',     need:100 },
   { id:'fv_200', type:'favorites', title:'❤️ Amor infinito',      need:200 },
 
-  // Temas
   { id:'th_1',   type:'themes',    title:'🎨 Mudou o clima',       need:1 },
   { id:'th_5',   type:'themes',    title:'🎨 Estiloso',            need:5 },
   { id:'th_15',  type:'themes',    title:'🎨 Camaleão',            need:15 },
@@ -1153,26 +918,16 @@ const ACH_LIST = [
 ];
 
 function achLoadStats(){
-  try {
-    return JSON.parse(localStorage.getItem(ACH_STATS_KEY) || '{"youtube":0,"downloads":0,"favorites":0,"themes":0,"premium":0}');
-  } catch {
-    return { youtube:0, downloads:0, favorites:0, themes:0, premium:0 };
-  }
+  try { return JSON.parse(localStorage.getItem(ACH_STATS_KEY) || '{"youtube":0,"downloads":0,"favorites":0,"themes":0,"premium":0}'); }
+  catch { return { youtube:0, downloads:0, favorites:0, themes:0, premium:0 }; }
 }
-function achSaveStats(s){
-  localStorage.setItem(ACH_STATS_KEY, JSON.stringify(s || {}));
-}
+function achSaveStats(s){ localStorage.setItem(ACH_STATS_KEY, JSON.stringify(s || {})); }
 
 function achLoadUnlock(){
-  try {
-    return JSON.parse(localStorage.getItem(ACH_UNLOCK_KEY) || '{}');
-  } catch {
-    return {};
-  }
+  try { return JSON.parse(localStorage.getItem(ACH_UNLOCK_KEY) || '{}'); }
+  catch { return {}; }
 }
-function achSaveUnlock(u){
-  localStorage.setItem(ACH_UNLOCK_KEY, JSON.stringify(u || {}));
-}
+function achSaveUnlock(u){ localStorage.setItem(ACH_UNLOCK_KEY, JSON.stringify(u || {})); }
 
 function achUnlockCheck(){
   const stats = achLoadStats();
@@ -1185,18 +940,16 @@ function achUnlockCheck(){
       unlock[a.id] = true;
       changed = true;
       showToast(`🏆 Conquista desbloqueada: ${a.title}`);
-	  playTrophySound();
+      playTrophySound();
     }
   }
 
-  // PLATINA TOOLFLIX: todas as conquistas acima
   const allOk = ACH_LIST.every(a => unlock[a.id] === true);
   if(allOk && !unlock['platinum_toolflix']){
     unlock['platinum_toolflix'] = true;
     changed = true;
     showToast('🏆 PLATINA TOOLFLIX desbloqueada!');
-	playTrophySound();
-	
+    playTrophySound();
   }
 
   if(changed) achSaveUnlock(unlock);
@@ -1204,12 +957,11 @@ function achUnlockCheck(){
 
 function achInc(type, amount=1){
   const u = loadUser();
-  if(!u || !u.nick) return; // só conta logado
+  if(!u || !u.nick) return;
 
   const stats = achLoadStats();
   stats[type] = Number(stats[type] || 0) + Number(amount || 0);
   achSaveStats(stats);
-
   achUnlockCheck();
 }
 
@@ -1271,326 +1023,436 @@ function achRender(){
   }
 }
 
-/* ===============================
-   BOTÃO CONQUISTAS (abre modal)
-================================= */
+document.getElementById('openAchBtn')?.addEventListener('click', ()=>{
+  toggleUserMenu(true);
+  achRender();
+  document.getElementById('achModal').style.display = 'flex';
+});
+document.getElementById('closeAchBtn')?.addEventListener('click', ()=>{
+  document.getElementById('achModal').style.display = 'none';
+});
 
-const openAchBtn = document.getElementById('openAchBtn');
-if(openAchBtn){
-  openAchBtn.onclick = ()=>{
-    toggleUserMenu(true);
-    achRender();
-    document.getElementById('achModal').style.display = 'flex';
-  };
-}
-const closeAchBtn = document.getElementById('closeAchBtn');
-if(closeAchBtn){
-  closeAchBtn.onclick = ()=>{
-    document.getElementById('achModal').style.display = 'none';
-  };
-}
-
-/* ===============================
-   INTEGRAÇÃO AUTOMÁTICA:
-   Sempre que awardXp rodar, soma 1 no contador correspondente.
-   (Não precisa procurar nos cliques)
-================================= */
-
+// Hook: toda vez que ganhar XP, incrementa conquistas
 const _awardXpOriginal = awardXp;
 awardXp = function(amount, reason){
   _awardXpOriginal(amount, reason);
-
-  // conta conquistas baseado no motivo do XP
-  if(reason === 'YouTube')      achInc('youtube', 1);
-  if(reason === 'Download')     achInc('downloads', 1);
-  if(reason === 'Favorito')     achInc('favorites', 1);
-  if(reason === 'Troca de tema')achInc('themes', 1);
-  if(reason === 'Virou Premium')achInc('premium', 1); // (se usar depois)
+  if(reason === 'YouTube')       achInc('youtube', 1);
+  if(reason === 'Download')      achInc('downloads', 1);
+  if(reason === 'Favorito')      achInc('favorites', 1);
+  if(reason === 'Troca de tema') achInc('themes', 1);
+  if(reason === 'Virou Premium') achInc('premium', 1);
 };
+
 /* ===============================
-   FAVORITOS (5 XP, LIMITE 5/DIA)
+   PREMIUM (SYNC + SIDEBAR)
+================================= */
+
+let premiumMembersCount = 0;
+
+function getPremiumStats(){
+  const totalPremium = db_jogos.filter(j => j && j.premium === true).length;
+  const totalItens = db_jogos.length;
+  const desbloqueados = (isPremium || modoAdmin) ? totalPremium : 0;
+  return { totalPremium, totalItens, desbloqueados };
+}
+
+function updatePremiumSidebar(){
+  const badge = document.getElementById('premiumBadge');
+  const counter = document.getElementById('premiumCounter');
+  if(!counter) return;
+
+  if(badge) badge.style.display = isPremium ? 'block' : 'none';
+
+  const s = getPremiumStats();
+  const headline = isPremium
+    ? `💎 Você é usuário Premium`
+    : `💎 <b>${premiumMembersCount}</b> usuários Premium ativos`;
+
+  counter.innerHTML = `
+    <div style="font-weight:900; color:gold; margin-bottom:6px;">${headline}</div>
+    <div>🔓 Desbloqueados: <b>${s.desbloqueados}</b> / <b>${s.totalPremium}</b></div>
+    <div>📦 Total no catálogo: <b>${s.totalItens}</b></div>
+  `;
+}
+
+async function checkPremiumSync(){
+  const tokenAtivador = localStorage.getItem('toolflix_token_ativador');
+
+  if(!tokenAtivador){
+    isPremium = false;
+    localStorage.setItem('toolflix_premium_atv','false');
+  }
+
+  try{
+    const resp = await fetch(URL_TOKENS + '?v=' + Date.now());
+    if(!resp.ok) throw new Error("TOKENS_FAIL");
+    const data = await resp.json();
+
+    const usados = Array.isArray(data.usados) ? data.usados : [];
+    premiumMembersCount = usados.length;
+    localStorage.setItem('toolflix_premium_members', String(premiumMembersCount));
+
+    // se tem token local, ainda precisa estar válido
+    const ativos = Array.isArray(data.ativos) ? data.ativos : [];
+    if(tokenAtivador){
+      if(!ativos.includes(tokenAtivador) || usados.includes(tokenAtivador)){
+        localStorage.setItem('toolflix_premium_atv','false');
+        localStorage.removeItem('toolflix_token_ativador');
+        isPremium = false;
+      } else {
+        localStorage.setItem('toolflix_premium_atv','true');
+        isPremium = true;
+      }
+    }
+
+    updatePremiumSidebar();
+    render();
+
+  }catch(e){
+    isPremium = localStorage.getItem('toolflix_premium_atv') === 'true';
+    premiumMembersCount = Number(localStorage.getItem('toolflix_premium_members') || 0);
+    updatePremiumSidebar();
+    render();
+  }
+}
+
+/* ===============================
+   CATALOGO SYNC
+================================= */
+
+async function syncJogos(){
+  try{
+    const resp = await fetch(URL_JOGOS + '?v=' + Date.now());
+    if(!resp.ok) return;
+
+    const data = await resp.json();
+    const jogosRemotos = Array.isArray(data.games) ? data.games : Array.isArray(data) ? data : [];
+
+    if(jogosRemotos.length === 0){
+      console.log("API sem jogos — mantendo local.");
+      return;
+    }
+
+    const normalizados = jogosRemotos.map(normalizeGame);
+
+    // evita sobrescrever com lixo
+    const ok = normalizados.some(j => j.nome && j.nome !== "Sem nome");
+    if(!ok) return;
+
+    db_jogos = normalizados;
+    localStorage.setItem(LS_JOGOS, JSON.stringify(db_jogos));
+    render();
+  }catch(e){
+    console.warn("syncJogos fail:", e);
+  }
+}
+
+/* ===============================
+   RENDER (CAPAS + CATEGORIAS FIX)
+================================= */
+
+function render(){
+  const grid = document.getElementById('catalogo');
+  if(!grid) return;
+
+  const lg = document.getElementById('logoToolFlix');
+  if(isPremium){
+    document.body.classList.add('premium-active');
+    if(lg) lg.innerText = 'ToolFlix Pro';
+  } else {
+    document.body.classList.remove('premium-active');
+    if(lg) lg.innerText = 'ToolFlix';
+  }
+
+  const btnP = document.getElementById('premiumTriggerBtn');
+  const btnS = document.getElementById('solicitarTokenBtn');
+  if(btnP && btnS){
+    btnP.style.display = isPremium ? 'none' : 'block';
+    btnS.style.display = isPremium ? 'none' : 'block';
+  }
+
+  grid.innerHTML = '';
+
+  let lista = db_jogos.map(normalizeGame);
+
+  if(catAtiva !== 'Todos'){
+    lista = lista.filter(j => normalizeCategoria(j.categoria) === catAtiva);
+  }
+
+  const search = (document.getElementById('searchBar')?.value || '').toLowerCase();
+  if(search){
+    lista = lista.filter(j => safeStr(j.nome,'').toLowerCase().includes(search));
+  }
+
+  if(filterFav){
+    lista = lista.filter(j => db_favs.includes(j.nome));
+  }
+
+  if(sortModo === 'az') lista.sort((a,b)=> a.nome.localeCompare(b.nome));
+  else if(sortModo === 'za') lista.sort((a,b)=> b.nome.localeCompare(a.nome));
+  else if(sortModo === 'recentes') lista.reverse();
+
+  lista.forEach(j => {
+    const isFav = db_favs.includes(j.nome);
+    const isP = j.premium === true;
+    const lock = isP && !isPremium && !modoAdmin;
+
+    const card = document.createElement('div');
+    card.className = `jogo ${isP ? 'jogo-premium' : ''} ${lock ? 'premium-locked' : ''}`;
+
+    card.onclick = ()=>{
+      if(lock){
+        showToast("🔒 Conteúdo Premium!");
+        return;
+      }
+
+      const link = j.link;
+      if(link){
+        window.open(link, '_blank');
+      }else{
+        showToast("Link inválido.");
+        return;
+      }
+
+      const u = loadUser();
+      if(!u || !u.nick) return;
+
+      if(j.categoria === 'YouTube'){
+        const left = ytCooldownLeft();
+        if(left <= 0){
+          localStorage.setItem(LAST_YT_KEY, Date.now());
+          awardXp(XP_RULES.youtube, "YouTube");
+        }else{
+          showToast("⏳ Aguarde 5 minutos para ganhar XP novamente.");
+        }
+        return;
+      }
+
+      const d = getDaily();
+      if(d.downloads < 3){
+        d.downloads++;
+        setDaily(d);
+        awardXp(XP_RULES.download, "Download");
+      } else {
+        showToast("⚠️ Limite diário de downloads atingido.");
+      }
+    };
+
+    const capaFinal = j.capa || "https://via.placeholder.com/512x512.png?text=ToolFlix";
+    const catFinal = normalizeCategoria(j.categoria);
+
+    card.innerHTML = `
+      <button onclick="event.stopPropagation(); window.toggleFav('${safeStr(j.nome).replace(/'/g,"\\'")}')"
+        style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.7);
+        color:${isFav?'#ff4757':'#fff'}; border:none; width:34px; height:34px;
+        border-radius:50%; cursor:pointer; z-index:10;
+        display:flex; align-items:center; justify-content:center; font-size:18px;">
+        ${isFav?'❤️':'🤍'}
+      </button>
+
+      ${lock ? '<span style="position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:40px; z-index:5">🔒</span>' : ''}
+
+      <img src="${capaFinal}" alt="" onerror="this.src='https://via.placeholder.com/512x512.png?text=ToolFlix';">
+
+      <div style="margin-top:12px; text-align:center">
+        <span style="font-size:10px; color:var(--cor-accent); font-weight:800; letter-spacing:1px">
+          ${catFinal}${isP ? ' 💎' : ''}
+        </span>
+        <p style="font-weight:600; font-size:13px; margin-top:4px;">
+          ${safeStr(j.nome,'Sem nome')}
+        </p>
+      </div>
+
+      ${modoAdmin ? `
+        <div style="display:flex; gap:5px; margin-top:10px">
+          <button onclick="event.stopPropagation(); window.editJogo('${safeStr(j.nome).replace(/'/g,"\\'")}')"
+            style="flex:1; background:gold; color:#000; border:none;
+            padding:8px; border-radius:10px; font-weight:bold;
+            cursor:pointer; font-size:11px">
+            EDITAR
+          </button>
+          <button onclick="event.stopPropagation(); window.delJogo('${safeStr(j.nome).replace(/'/g,"\\'")}')"
+            style="flex:1; background:#ff4757; color:#fff; border:none;
+            padding:8px; border-radius:10px;
+            cursor:pointer; font-size:11px">
+            DELETAR
+          </button>
+        </div>
+      ` : ''}
+    `;
+
+    grid.appendChild(card);
+  });
+
+  updatePremiumSidebar();
+  updateUserUI();
+}
+
+/* ===============================
+   FAVORITOS
 ================================= */
 
 window.toggleFav = (nome)=>{
-    const idx = db_favs.indexOf(nome);
+  const idx = db_favs.indexOf(nome);
 
-    // se já é favorito: remove (sem XP)
-    if(idx > -1){
-        db_favs.splice(idx, 1);
-        localStorage.setItem('toolflix_favs', JSON.stringify(db_favs));
-        render();
-        return;
-    }
-
-    // adiciona favorito
-    db_favs.push(nome);
-    localStorage.setItem('toolflix_favs', JSON.stringify(db_favs));
-
-    // XP favorito (se logado)
-    const u = loadUser();
-    if(u && u.nick){
-        const d = getDaily();
-        if(d.favorites < 5){
-            d.favorites++;
-            setDaily(d);
-            awardXp(XP_RULES.favorite, 'Favorito'); // <- já conta conquista via hook
-        } else {
-            showToast("⚠️ Limite diário de XP por favoritos (5).");
-        }
-    }
-
+  if(idx > -1){
+    db_favs.splice(idx, 1);
+    localStorage.setItem(LS_FAVS, JSON.stringify(db_favs));
     render();
+    return;
+  }
+
+  db_favs.push(nome);
+  localStorage.setItem(LS_FAVS, JSON.stringify(db_favs));
+
+  const u = loadUser();
+  if(u && u.nick){
+    const d = getDaily();
+    if(d.favorites < 5){
+      d.favorites++;
+      setDaily(d);
+      awardXp(XP_RULES.favorite, 'Favorito');
+    } else {
+      showToast("⚠️ Limite diário de XP por favoritos (5).");
+    }
+  }
+
+  render();
 };
 
 /* ===============================
-   BOTÕES: ORDEM / FILTRO FAVORITOS
+   BOTÕES UI
 ================================= */
 
-const sortBtn = document.getElementById('sortBtn');
-if(sortBtn){
-    sortBtn.onclick = ()=>{
-        const modos = ['recentes','antigos','az','za'];
-        const labels = { recentes:'🔃 Recentes', antigos:'⌛ Antigos', az:'🔠 A-Z', za:'🔡 Z-A' };
-        const i = modos.indexOf(sortModo);
-        sortModo = modos[(i+1) % modos.length];
-        sortBtn.innerText = 'Ordem: ' + labels[sortModo];
-        render();
-    };
-}
+document.getElementById('sortBtn')?.addEventListener('click', ()=>{
+  const modos = ['recentes','az','za'];
+  const labels = { recentes:'🔃 Recentes', az:'🔠 A-Z', za:'🔡 Z-A' };
+  const i = modos.indexOf(sortModo);
+  sortModo = modos[(i+1) % modos.length];
+  document.getElementById('sortBtn').innerText = 'Ordem: ' + labels[sortModo];
+  render();
+});
 
-const favFiltroBtn = document.getElementById('favFiltroBtn');
-if(favFiltroBtn){
-    favFiltroBtn.onclick = ()=>{
-        filterFav = !filterFav;
-        render();
-    };
-}
-
-/* ===============================
-   CATEGORIAS + BUSCA
-================================= */
+document.getElementById('favFiltroBtn')?.addEventListener('click', ()=>{
+  filterFav = !filterFav;
+  render();
+});
 
 document.querySelectorAll('.catBtn').forEach(btn=>{
-    btn.onclick = ()=>{
-        document.querySelectorAll('.catBtn').forEach(b=> b.classList.remove('active'));
-        btn.classList.add('active');
-        catAtiva = btn.dataset.cat;
-        const title = document.getElementById('sectionTitle');
-        if(title) title.innerText = catAtiva;
-        render();
-    };
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.catBtn').forEach(b=> b.classList.remove('active'));
+    btn.classList.add('active');
+    catAtiva = btn.dataset.cat;
+    document.getElementById('sectionTitle').innerText = catAtiva;
+    render();
+  });
 });
 
-const searchBar = document.getElementById('searchBar');
-if(searchBar){
-    searchBar.oninput = render;
-}
+document.getElementById('searchBar')?.addEventListener('input', render);
 
 /* ===============================
-   TEMA (15 XP, 1/DIA) + TRAVA PREMIUM
+   TEMA (premium + XP)
 ================================= */
 
-const themeSelect = document.getElementById('themeSelect');
-if(themeSelect){
-    themeSelect.onchange = (e)=>{
-        const sel = e.target;
-        const isTemaPremium = sel.options[sel.selectedIndex].text.includes('💎');
+document.getElementById('themeSelect')?.addEventListener('change', (e)=>{
+  const sel = e.target;
+  const isTemaPremium = sel.options[sel.selectedIndex].text.includes('💎');
 
-        if(isTemaPremium && !isPremium && !modoAdmin){
-            showToast("🔒 Apenas usuários Premium!");
-            sel.classList.add('card-shake');
-            setTimeout(()=> sel.classList.remove('card-shake'), 400);
-            sel.value = 'default';
-            return;
-        }
+  if(isTemaPremium && !isPremium && !modoAdmin){
+    showToast("🔒 Apenas usuários Premium!");
+    sel.classList.add('card-shake');
+    setTimeout(()=> sel.classList.remove('card-shake'), 400);
+    sel.value = 'default';
+    return;
+  }
 
-        // remove temas antigos
-        document.body.classList.forEach(cls=>{
-            if(cls.startsWith('theme-')) document.body.classList.remove(cls);
-        });
+  document.body.classList.forEach(cls=>{
+    if(cls.startsWith('theme-')) document.body.classList.remove(cls);
+  });
+  document.body.classList.add('theme-' + sel.value);
 
-        // aplica novo tema
-        document.body.classList.add('theme-' + sel.value);
-
-        // XP troca de tema (1/dia) se logado
-        const u = loadUser();
-        if(u && u.nick){
-            const d = getDaily();
-            if(d.themes < 1){
-                d.themes++;
-                setDaily(d);
-                awardXp(XP_RULES.theme, 'Troca de tema'); // <- conta conquista via hook
-            } else {
-                showToast("⚠️ XP de tema já foi ganho hoje.");
-            }
-        }
-    };
-}
-
-/* ===============================
-   FECHAR MODAIS COM ESC
-================================= */
-
-window.addEventListener('keydown', (e)=>{
-    if(e.key === 'Escape'){
-        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
-        toggleUserMenu(true);
+  const u = loadUser();
+  if(u && u.nick){
+    const d = getDaily();
+    if(d.themes < 1){
+      d.themes++;
+      setDaily(d);
+      awardXp(XP_RULES.theme, 'Troca de tema');
+    } else {
+      showToast("⚠️ XP de tema já foi ganho hoje.");
     }
+  }
 });
-/* ===============================
-   PREMIUM: MODAL + VALIDAR TOKEN + XP 100 (ÚNICO)
-================================= */
-
-const premiumTriggerBtn = document.getElementById('premiumTriggerBtn');
-if(premiumTriggerBtn){
-    premiumTriggerBtn.onclick = ()=>{
-        const m = document.getElementById('premiumModal');
-        if(m) m.style.display = 'flex';
-        const inp = document.getElementById('premiumInput');
-        if(inp) inp.focus();
-    };
-}
-
-// botão validar token
-const premiumSubmit = document.getElementById('premiumSubmit');
-if(premiumSubmit){
-    premiumSubmit.onclick = async ()=>{
-        const input = (document.getElementById('premiumInput')?.value || '').toUpperCase().trim();
-        if(!input) return;
-
-        try{
-            const resp = await fetch(URL_TOKENS + '?t=' + Date.now());
-            if(!resp.ok) throw new Error();
-
-            const data = await resp.json();
-            const ativos = data.ativos || [];
-            const usados = data.usados || [];
-
-            if(ativos.includes(input) && !usados.includes(input)){
-                // ativa premium
-                localStorage.setItem('toolflix_premium_atv','true');
-                localStorage.setItem('toolflix_token_ativador', input);
-                isPremium = true;
-
-                // XP por virar premium (uma única vez)
-                const premiumXpKey = 'toolflix_premium_xp_once';
-                if(localStorage.getItem(premiumXpKey) !== '1'){
-                    localStorage.setItem(premiumXpKey, '1');
-                    awardXp(XP_RULES.premium, 'Virou Premium'); // <- conta conquista premium no hook (se usar)
-                }
-
-                // fecha modal premium
-                const m = document.getElementById('premiumModal');
-                if(m) m.style.display = 'none';
-
-                showToast("💎 PREMIUM ATIVADO COM SUCESSO!");
-                updatePremiumSidebar();
-                updateUserUI();
-                render();
-
-                // modal boas-vindas (se existir)
-                const w = document.getElementById('premiumWelcomeModal');
-                if(w) w.style.display = 'flex';
-
-            } else {
-                showToast("Token inválido!");
-            }
-        }catch(e){
-            showToast("Erro ao validar token.");
-        }
-    };
-}
-
-// botão do welcome modal (se existir)
-const premiumWelcomeBtn = document.getElementById('premiumWelcomeBtn');
-if(premiumWelcomeBtn){
-    premiumWelcomeBtn.onclick = ()=>{
-        const w = document.getElementById('premiumWelcomeModal');
-        if(w) w.style.display = 'none';
-    };
-}
-/* ===============================
-   GARANTIR MODAIS (caso não existam no HTML)
-================================= */
-
-function ensureModal(id, html){
-    if(document.getElementById(id)) return;
-    const wrap = document.createElement('div');
-    wrap.innerHTML = html.trim();
-    document.body.appendChild(wrap.firstChild);
-}
-
-// Premium Modal (token)
-ensureModal('premiumModal', `
-<div id="premiumModal" class="modal-overlay">
-  <div class="modal-box">
-    <h2 style="color:gold; margin-bottom:20px">💎 Ativar Premium</h2>
-    <input type="text" id="premiumInput" maxlength="25" class="admin-input" style="width:100%; text-align:center" placeholder="TOKEN">
-    <button id="premiumSubmit" class="nav-item" style="background:gold; color:#000; width:100%; margin-top:10px">Validar</button>
-  </div>
-</div>
-`);
-
-// Premium Welcome Modal
-ensureModal('premiumWelcomeModal', `
-<div id="premiumWelcomeModal" class="modal-overlay">
-  <div class="modal-box" style="border:2px solid gold; background:linear-gradient(145deg,#111,#1a1a1a);">
-    <h2 style="color:gold; font-size:28px; margin-bottom:15px;">💎 Bem-vindo ao Premium</h2>
-    <p style="opacity:0.9; margin-bottom:20px;">Você desbloqueou todos os conteúdos exclusivos</p>
-    <div style="text-align:left; margin-bottom:25px; line-height:1.8; font-size:14px;">
-      ✔ Temas exclusivos<br>
-      ✔ Jogos Premium<br>
-      ✔ Conteúdo antecipado
-    </div>
-    <button id="premiumWelcomeBtn"
-      style="background:linear-gradient(135deg,#ffd700,#ff8c00); border:none; color:#000; padding:12px 20px; border-radius:50px; font-weight:700; cursor:pointer; width:100%;">
-      🚀 Explorar Agora
-    </button>
-  </div>
-</div>
-`);
-
-// Admin Login Modal (básico, pra não quebrar o botão)
-ensureModal('loginModal', `
-<div id="loginModal" class="modal-overlay">
-  <div class="modal-box">
-    <h2 style="margin-bottom:20px">🔐 Admin</h2>
-    <input type="password" id="loginInput" class="admin-input" style="width:100%" placeholder="Senha">
-    <button id="loginSubmit" class="nav-item" style="background:var(--cor-accent); color:#000; width:100%; margin-top:10px">Entrar</button>
-  </div>
-</div>
-`);
 
 /* ===============================
-   /* ===============================
-   ADMIN COMPLETO (RESTORE)
-   - Adicionar / editar / deletar jogos
-   - Marcar item premium
-   - Backup catálogo
-   - Tokens: gerar/exportar/importar/limpar
+   PREMIUM UI
 ================================= */
 
-// storage tokens
-let db_tokens_ativos = JSON.parse(localStorage.getItem('toolflix_tokens_atv')) || [];
-let db_tokens_usados = JSON.parse(localStorage.getItem('toolflix_tokens_usd')) || [];
+document.getElementById('premiumTriggerBtn')?.addEventListener('click', ()=>{
+  document.getElementById('premiumModal').style.display = 'flex';
+  document.getElementById('premiumInput')?.focus();
+});
 
-function saveTokensLocal(){
-  localStorage.setItem('toolflix_tokens_atv', JSON.stringify(db_tokens_ativos));
-  localStorage.setItem('toolflix_tokens_usd', JSON.stringify(db_tokens_usados));
-}
+document.getElementById('premiumWelcomeBtn')?.addEventListener('click', ()=>{
+  document.getElementById('premiumWelcomeModal').style.display = 'none';
+});
 
-let editandoIndex = -1;
+document.getElementById('premiumSubmit')?.addEventListener('click', async ()=>{
+  const token = (document.getElementById('premiumInput')?.value || '')
+    .toUpperCase().trim().replace(/\s+/g,'');
+
+  if(!token) return showToast("Digite o TOKEN!");
+
+  try{
+    const resp = await fetch(URL_TOKENS + '?t=' + Date.now());
+    if(!resp.ok) throw new Error("TOKENS_FETCH_FAIL");
+
+    const data = await resp.json();
+    const ativos = Array.isArray(data.ativos) ? data.ativos : [];
+    const usados = Array.isArray(data.usados) ? data.usados : [];
+
+    if(ativos.includes(token) && !usados.includes(token)){
+      localStorage.setItem('toolflix_premium_atv','true');
+      localStorage.setItem('toolflix_token_ativador', token);
+      isPremium = true;
+
+      const premiumXpKey = 'toolflix_premium_xp_once';
+      if(localStorage.getItem(premiumXpKey) !== '1'){
+        localStorage.setItem(premiumXpKey, '1');
+        awardXp(XP_RULES.premium, 'Virou Premium');
+      }
+
+      document.getElementById('premiumModal').style.display = 'none';
+      showToast("💎 PREMIUM ATIVADO!");
+      updatePremiumSidebar();
+      updateUserUI();
+      render();
+
+      document.getElementById('premiumWelcomeModal').style.display = 'flex';
+    } else {
+      showToast("Token inválido!");
+    }
+  }catch(e){
+    console.error(e);
+    showToast("Erro ao validar token.");
+  }
+});
+
+/* ===============================
+   ADMIN (UI simples + editar/deletar)
+================================= */
+
+let editandoNome = null;
 
 function ensureAdminUI(){
   const admin = document.getElementById('adminSection');
   if(!admin) return;
-
-  // se já montou, não monta de novo
   if(admin.dataset.ready === '1') return;
 
   admin.innerHTML = `
     <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px;">
       <h2 style="color:var(--cor-accent); font-size: 24px;">🚀 Dashboard Admin</h2>
+      <button id="exitAdminBtn" class="nav-item" style="background:#ff4757; border:none; color:#fff;">Sair</button>
     </header>
 
     <div class="admin-grid">
@@ -1605,28 +1467,18 @@ function ensureAdminUI(){
       </label>
     </div>
 
-    <div style="display:flex; gap: 12px; margin-bottom: 35px;">
+    <div style="display:flex; gap: 12px; margin-bottom: 10px;">
       <button id="addJogoBtn" class="nav-item" style="background:var(--cor-accent); color:#000; border:none; flex: 2; font-size: 16px;">💾 SALVAR CONTEÚDO</button>
       <button id="exportBackupBtn" class="nav-item" style="background:#2ecc71; color:#000; border:none; flex: 1;">📂 BACKUP</button>
     </div>
 
-    <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 18px; border: 1px solid #222;">
-      <h4 style="color:gold; margin-bottom:15px;">🔑 Tokens</h4>
-      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap:10px; margin-bottom:20px">
-        <button id="genTokenBtn" class="nav-item" style="color:gold; border-color:gold">➕ GERAR</button>
-        <button id="exportTokensBtn" class="nav-item">📤 EXPORTAR</button>
-        <button id="importTokensBtn" class="nav-item">📥 IMPORTAR</button>
-        <button id="clearUsedBtn" class="nav-item" style="background:#ff4757; border:none; color:#fff">🧹 LIMPAR</button>
-      </div>
-
-      <div id="tokenList" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap:10px; max-height: 150px; overflow-y:auto;"></div>
-      <input type="file" id="fileInput" style="display:none" accept=".json">
+    <div style="opacity:.8; font-size:12px; margin-top:8px;">
+      Dica: clique em “EDITAR” em um card pra carregar aqui.
     </div>
   `;
 
   admin.dataset.ready = '1';
 
-  // preencher categorias
   const sel = document.getElementById('selectCategoria');
   if(sel){
     sel.innerHTML = '';
@@ -1637,125 +1489,57 @@ function ensureAdminUI(){
     });
   }
 
-  // eventos
-  document.getElementById('addJogoBtn').onclick = ()=>{
+  document.getElementById('exitAdminBtn')?.addEventListener('click', ()=> exitAdmin());
+
+  document.getElementById('addJogoBtn')?.addEventListener('click', ()=>{
     const n = document.getElementById('nomeJogo');
     const c = document.getElementById('linkCapa');
     const l = document.getElementById('linkJogo');
     const cat = document.getElementById('selectCategoria');
     const chk = document.getElementById('isPremiumItem');
 
-    if(!n.value.trim()) return showToast("Insira o nome do jogo!");
+    const nome = (n.value || '').trim();
+    if(!nome) return showToast("Insira o nome!");
 
-    const item = {
-      nome: n.value.trim(),
+    const item = normalizeGame({
+      nome,
       capa: (c.value || '').trim(),
       link: (l.value || '').trim(),
       categoria: cat.value,
       premium: !!(chk && chk.checked)
-    };
+    });
 
-    if(editandoIndex > -1){
-      db_jogos[editandoIndex] = item;
-      editandoIndex = -1;
+    if(editandoNome){
+      db_jogos = db_jogos.map(j => j.nome === editandoNome ? item : j);
+      editandoNome = null;
       document.getElementById('addJogoBtn').innerText = "💾 SALVAR CONTEÚDO";
-    } else {
+    }else{
       db_jogos.push(item);
     }
 
-    localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
-    n.value = ''; c.value = ''; l.value = ''; if(chk) chk.checked = false;
+    localStorage.setItem(LS_JOGOS, JSON.stringify(db_jogos));
+    n.value = ''; c.value = ''; l.value = '';
+    if(chk) chk.checked = false;
 
     render();
     showToast("Alterações salvas!");
-  };
+  });
 
-  document.getElementById('exportBackupBtn').onclick = ()=>{
-    const blob = new Blob([JSON.stringify({jogos: db_jogos})], {type:'application/json'});
+  document.getElementById('exportBackupBtn')?.addEventListener('click', ()=>{
+    const blob = new Blob([JSON.stringify({jogos: db_jogos}, null, 2)], {type:'application/json'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'toolflix_data.json';
     a.click();
-  };
-
-  // tokens
-  function renderTokenList(){
-    const div = document.getElementById('tokenList');
-    if(!div) return;
-    div.innerHTML = '';
-
-    db_tokens_ativos.forEach((t, i)=>{
-      div.innerHTML += `
-        <div style="background:rgba(0,255,0,0.1); border:1px solid rgba(0,255,0,0.2); color:#00ff00; padding:10px; border-radius:12px; font-size:11px; display:flex; justify-content:space-between; align-items:center">
-          <span>${t}</span>
-          <b style="cursor:pointer; color:#ff4757; font-size:14px" onclick="window.desativarToken(${i})">×</b>
-        </div>`;
-    });
-
-    db_tokens_usados.forEach((t)=>{
-      div.innerHTML += `<div style="background:rgba(255,255,255,0.05); color:#555; padding:10px; border-radius:12px; font-size:11px; text-decoration:line-through"># ${t}</div>`;
-    });
-  }
-
-  window.desativarToken = (i)=>{
-    const t = db_tokens_ativos.splice(i,1)[0];
-    if(t && !db_tokens_usados.includes(t)) db_tokens_usados.push(t);
-    saveTokensLocal();
-    renderTokenList();
-  };
-
-  document.getElementById('genTokenBtn').onclick = ()=>{
-    const r = Math.random().toString(36).substring(2,8).toUpperCase();
-    db_tokens_ativos.push(r);
-    saveTokensLocal();
-    renderTokenList();
-  };
-
-  document.getElementById('exportTokensBtn').onclick = ()=>{
-    const data = { ativos: db_tokens_ativos, usados: db_tokens_usados };
-    const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'tokens_backup.json';
-    a.click();
-  };
-
-  document.getElementById('importTokensBtn').onclick = ()=>{
-    document.getElementById('fileInput').click();
-  };
-
-  document.getElementById('fileInput').onchange = (e)=>{
-    const fr = new FileReader();
-    fr.onload = (ev)=>{
-      try{
-        const data = JSON.parse(ev.target.result);
-        db_tokens_ativos = data.ativos || [];
-        db_tokens_usados = data.usados || [];
-        saveTokensLocal();
-        renderTokenList();
-        showToast("Lista de Tokens Atualizada!");
-      } catch(err){
-        showToast("Arquivo inválido!");
-      }
-    };
-    fr.readAsText(e.target.files[0]);
-  };
-
-  document.getElementById('clearUsedBtn').onclick = ()=>{
-    if(confirm("Limpar histórico de tokens usados?")){
-      db_tokens_usados = [];
-      saveTokensLocal();
-      renderTokenList();
-    }
-  };
-
-  renderTokenList();
+  });
 }
 
-// EDIT / DELETE do catálogo (no modo admin)
-window.editJogo = (idx)=>{
-  const j = db_jogos[idx];
+window.editJogo = (nome)=>{
+  const j = db_jogos.find(x => x.nome === nome);
   if(!j) return;
+
+  ensureAdminUI();
+  document.getElementById('adminSection').style.display = 'block';
 
   document.getElementById('nomeJogo').value = j.nome || '';
   document.getElementById('linkCapa').value = j.capa || '';
@@ -1766,407 +1550,88 @@ window.editJogo = (idx)=>{
   if(chk) chk.checked = !!j.premium;
 
   document.getElementById('addJogoBtn').innerText = "🆙 ATUALIZAR ITEM";
-  editandoIndex = idx;
+  editandoNome = nome;
+
   window.scrollTo({top: 0, behavior: 'smooth'});
 };
 
 window.delJogo = (nome)=>{
   if(confirm("Deseja mesmo excluir este conteúdo?")){
     db_jogos = db_jogos.filter(j => j.nome !== nome);
-    localStorage.setItem('jogosPS2', JSON.stringify(db_jogos));
+    localStorage.setItem(LS_JOGOS, JSON.stringify(db_jogos));
     render();
   }
 };
 
-// quando logar admin, abre painel e prepara UI
-const loginSubmit2 = document.getElementById('loginSubmit');
-if(loginSubmit2){
-  loginSubmit2.onclick = ()=>{
-    const pass = document.getElementById('loginInput')?.value || '';
-    if(pass === '@dm1nt1'){
-      modoAdmin = true;
-      document.getElementById('loginModal').style.display = 'none';
-
-      const admin = document.getElementById('adminSection');
-      if(admin) admin.style.display = 'block';
-
-      ensureAdminUI();
-      render();
-      showToast("✅ Modo Admin ativado!");
-    } else {
-      showToast("Senha incorreta!");
-    }
-  };
+function exitAdmin(){
+  modoAdmin = false;
+  const admin = document.getElementById('adminSection');
+  if(admin) admin.style.display = 'none';
+  showToast("Modo Admin desativado.");
+  render();
 }
+
+document.getElementById('adminBtn')?.addEventListener('click', (e)=>{
+  e.preventDefault();
+  e.stopPropagation();
+  document.getElementById('loginModal').style.display = 'flex';
+  document.getElementById('loginInput')?.focus();
+});
+
+document.getElementById('loginSubmit')?.addEventListener('click', ()=>{
+  const pass = document.getElementById('loginInput')?.value || '';
+  if(pass === '@dm1nt1'){
+    modoAdmin = true;
+    document.getElementById('loginModal').style.display = 'none';
+    const admin = document.getElementById('adminSection');
+    if(admin) admin.style.display = 'block';
+    ensureAdminUI();
+    showToast("✅ Modo Admin ativado!");
+    render();
+  }else{
+    showToast("Senha incorreta!");
+  }
+});
+document.getElementById('loginInput')?.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('loginSubmit')?.click(); }
+});
 
 /* ===============================
-   SUPORTE FLUTUANTE (cria se não existir)
+   SUPORTE
 ================================= */
 
-if(!document.getElementById('suporteContainer')){
-    const sup = document.createElement('div');
-    sup.innerHTML = `
-      <div class="suporte-container" id="suporteContainer">
-        <button class="suporte-btn" id="suporteBtn">🎧</button>
-        <div class="suporte-painel">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <strong>📬 Suporte</strong>
-            <span style="cursor:pointer; font-size:20px;" id="suporteClose">✖</span>
-          </div>
-          <div style="font-size:13px; opacity:0.85; margin-bottom:12px;">
-            <div>• Pedidos de jogos no YouTube</div>
-            <div>• Informar link off no Discord</div>
-            <div>• Pedir token extra no YouTube</div>
-            <div>• Ajuda para instalar no Telegram</div>
-          </div>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-            <a href="https://t.me/gokugames0" target="_blank">✈️ Telegram</a>
-            <a href="https://discord.com/users/990270059068928011" target="_blank">🎮 Discord</a>
-            <a href="https://www.youtube.com/watch?v=BB0RbhXJWVc" target="_blank">📺 YouTube</a>
-          </div>
-        </div>
-      </div>
-    `.trim();
-    document.body.appendChild(sup.firstChild);
-}
-
 function toggleSuporte(){
-    const box = document.getElementById('suporteContainer');
-    if(box) box.classList.toggle('ativo');
+  document.getElementById('suporteContainer')?.classList.toggle('ativo');
 }
 document.getElementById('suporteBtn')?.addEventListener('click', toggleSuporte);
 document.getElementById('suporteClose')?.addEventListener('click', toggleSuporte);
 
 /* ===============================
-   INIT FINAL
+   ESC fecha modais
+================================= */
+
+window.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){
+    document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+    toggleUserMenu(true);
+    if(modoAdmin) exitAdmin();
+  }
+});
+
+/* ===============================
+   INIT
 ================================= */
 
 updateUserUI();
 updatePremiumSidebar();
 render();
 
-// sync
 checkPremiumSync();
 syncJogos();
 
-// re-sync catálogo de tempos em tempos (leve)
 setInterval(syncJogos, 60 * 1000);
 setInterval(checkPremiumSync, 3 * 60 * 1000);
-// ===== FIX: Admin clicável (força o handler) =====
-(function adminClickFix(){
-  const btn = document.getElementById('adminBtn');
-  const modal = document.getElementById('loginModal');
-  const input = document.getElementById('loginInput');
-  if(!btn || !modal) return;
 
-  btn.style.pointerEvents = 'auto';
-  btn.style.zIndex = '5';
-
-  btn.onclick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    modal.style.display = 'flex';
-    if(input) input.focus();
-  };
-  /* ===============================
-   SAIR DO MODO ADMIN
-================================= */
-
-function exitAdmin(){
-    modoAdmin = false;
-
-    const admin = document.getElementById('adminSection');
-    if(admin) admin.style.display = 'none';
-
-    render();
-    showToast("Modo Admin desativado.");
-}
-
-// ESC sai do admin
-window.addEventListener('keydown', (e)=>{
-    if(e.key === 'Escape' && modoAdmin){
-        exitAdmin();
-    }
-});
-
-// Clicar novamente no botão Admin sai do modo admin
-const adminBtnFix = document.getElementById('adminBtn');
-if(adminBtnFix){
-    adminBtnFix.addEventListener('dblclick', ()=>{
-        if(modoAdmin){
-            exitAdmin();
-        }
-    });
-}
-/* ===============================
-   ADMIN LOGIN UX: Enter + limpar senha
-================================= */
-
-function clearAdminPassword(){
-  const inp = document.getElementById('loginInput');
-  if(inp) inp.value = '';
-}
-
-// Enter no campo senha dispara login
-(function adminEnterFix(){
-  const inp = document.getElementById('loginInput');
-  const btn = document.getElementById('loginSubmit');
-  if(!inp || !btn) return;
-
-  inp.addEventListener('keydown', (e)=>{
-    if(e.key === 'Enter'){
-      e.preventDefault();
-      btn.click();
-    }
-  });
-})();
-
-// Ao abrir o modal admin, limpar senha
-(function adminOpenClear(){
-  const btn = document.getElementById('adminBtn');
-  const modal = document.getElementById('loginModal');
-  const inp = document.getElementById('loginInput');
-  if(!btn || !modal) return;
-
-  btn.addEventListener('click', ()=>{
-    clearAdminPassword();
-    // foco no input quando modal abrir
-    setTimeout(()=> { if(inp) inp.focus(); }, 0);
-  });
-})();
-
-// Ao sair do admin, limpar senha também
-const _exitAdminOld = exitAdmin;
-exitAdmin = function(){
-  _exitAdminOld();
-  clearAdminPassword();
-};
-/* ===== SONS (PS-style simples) ===== */
-function playTone(freq, dur=0.08, vol=0.12, type='sine'){
-  try{
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = type;
-    osc.frequency.value = freq;
-    gain.gain.value = vol;
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + dur);
-    osc.onended = () => ctx.close && ctx.close();
-  }catch(e){}
-}
-
-function playTrophySound(){
-  // “bling” tipo troféu (3 notas rápidas)
-  playTone(784, 0.06, 0.10, 'triangle');   // G5
-  setTimeout(()=> playTone(988, 0.07, 0.10, 'triangle'), 70);   // B5
-  setTimeout(()=> playTone(1175,0.09, 0.12, 'triangle'), 150);  // D6
-}
-
-function playLevelUpSound(){
-  // “subida” (4 notas)
-  playTone(523, 0.07, 0.10, 'sine'); // C5
-  setTimeout(()=> playTone(659, 0.07, 0.10, 'sine'), 70); // E5
-  setTimeout(()=> playTone(784, 0.08, 0.11, 'sine'), 140);// G5
-  setTimeout(()=> playTone(1046,0.10, 0.12, 'sine'), 220);// C6
-}
-
-function triggerLevelUpFx(newLevel){
-  const el = document.getElementById('userArea');
-  if(!el) return;
-  el.classList.remove('level-up-pop');
-  // reflow
-  void el.offsetWidth;
-  el.classList.add('level-up-pop');
-  setTimeout(()=> el.classList.remove('level-up-pop'), 850);
-
-  playLevelUpSound();
-  showToast(`🎉 UP! Você subiu para o nível ${newLevel}!`);
-}
-/* ===== DETECTA LEVEL UP (sem mexer no seu awardXp antigo) ===== */
-(function patchLevelUp(){
-  const _awardXpPrev = awardXp; // pega a versão atual (já com conquistas)
-  awardXp = function(amount, reason){
-    const beforeXp = Number(loadUser()?.xp || 0);
-    const beforeLv = getLevelInfo(beforeXp).level;
-
-    _awardXpPrev(amount, reason);
-
-    const afterXp = Number(loadUser()?.xp || 0);
-    const afterLv = getLevelInfo(afterXp).level;
-
-    if(afterLv > beforeLv){
-      triggerLevelUpFx(afterLv);
-	  // === expor (pra testar e evitar "not defined") ===
-window.playTrophySound = playTrophySound;
-window.playLevelUpSound = playLevelUpSound;
-
-// === atalho de teste ===
-// (clique 1x na página e aperte F2/F3)
-window.addEventListener('keydown', (e)=>{
-  if(e.key === 'F2') playTrophySound();
-  if(e.key === 'F3') playLevelUpSound();
-});
-    }
-  };
-})();
-})();
-/* ===== AUDIO UNLOCK + PLAYER (GARANTIDO) ===== */
-let TF_AUDIO_CTX = null;
-
-function tfInitAudio(){
-  try{
-    if(!TF_AUDIO_CTX){
-      TF_AUDIO_CTX = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if(TF_AUDIO_CTX.state === 'suspended'){
-      TF_AUDIO_CTX.resume();
-    }
-  }catch(e){}
-}
-
-// desbloqueia áudio no primeiro clique/toque
-window.addEventListener('pointerdown', tfInitAudio, { once:true });
-
-// playTone usando contexto único (mais compatível)
-function playTone(freq, dur=0.09, vol=0.25, type='triangle'){
-  try{
-    tfInitAudio();
-    if(!TF_AUDIO_CTX) return;
-
-    const osc = TF_AUDIO_CTX.createOscillator();
-    const gain = TF_AUDIO_CTX.createGain();
-
-    osc.type = type;
-    osc.frequency.value = freq;
-
-    // envelope (evita click estourado)
-    const t = TF_AUDIO_CTX.currentTime;
-    gain.gain.setValueAtTime(0.0001, t);
-    gain.gain.exponentialRampToValueAtTime(vol, t + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-
-    osc.connect(gain);
-    gain.connect(TF_AUDIO_CTX.destination);
-
-    osc.start(t);
-    osc.stop(t + dur + 0.02);
-  }catch(e){}
-}
-
-function playTrophySound(){
-  playTone(784,  0.08, 0.14, 'triangle');
-  setTimeout(()=> playTone(988,  0.08, 0.14, 'triangle'), 90);
-  setTimeout(()=> playTone(1175, 0.10, 0.16, 'triangle'), 180);
-}
-
-function playLevelUpSound(){
-  playTone(523, 0.08, 0.13, 'sine');
-  setTimeout(()=> playTone(659, 0.08, 0.13, 'sine'), 90);
-  setTimeout(()=> playTone(784, 0.09, 0.14, 'sine'), 180);
-  setTimeout(()=> playTone(1046,0.11, 0.16, 'sine'), 280);
-}
-
-// expõe pra testar
-window.playTrophySound = playTrophySound;
-window.playLevelUpSound = playLevelUpSound;
-
-// atalhos fáceis (F-keys às vezes não funcionam)
-
-/* ===== FIX: Premium validar sempre funciona ===== */
-function bindPremiumUI(){
-  const openBtn = document.getElementById('premiumTriggerBtn');
-  const modal   = document.getElementById('premiumModal');
-  const input   = document.getElementById('premiumInput');
-  const submit  = document.getElementById('premiumSubmit');
-
-  // abrir modal
-  if(openBtn && modal){
-    openBtn.onclick = (e)=>{
-      e.preventDefault();
-      modal.style.display = 'flex';
-      if(input) input.focus();
-    };
-  }
-
-  // validar token
-  if(submit){
-    submit.onclick = async ()=>{
-      const token = (document.getElementById('premiumInput')?.value || '')
-  .toUpperCase()
-  .trim()
-  .replace(/\s+/g, '');
-      if(!token) return showToast("Digite o TOKEN!");
-
-  try{
-  const resp = await fetch(`${API_URL}/api/validar-token`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      token: token,
-      userId: getUserId()
-    })
-  });
-
-  const data = await resp.json();
-
-  if(data.ok && data.valid){
-    localStorage.setItem('toolflix_premium_atv','true');
-    localStorage.setItem('toolflix_token_ativador', token);
-    isPremium = true;
-
-    // XP 100 apenas uma vez
-    const premiumXpKey = 'toolflix_premium_xp_once';
-    if(localStorage.getItem(premiumXpKey) !== '1'){
-      localStorage.setItem(premiumXpKey, '1');
-      awardXp(XP_RULES.premium, 'Virou Premium');
-    }
-
-    // fecha modal
-    const m = document.getElementById('premiumModal');
-    if(m) m.style.display = 'none';
-
-    showToast("💎 PREMIUM ATIVADO!");
-    updatePremiumSidebar();
-    updateUserUI();
-    render();
-
-    // welcome modal
-    const w = document.getElementById('premiumWelcomeModal');
-    if(w) w.style.display = 'flex';
-  } else {
-  showToast("Token inválido: " + (data.reason || "SEM_REASON"));
-  console.log("DEBUG validar-token:", data);
-}
-
-}catch(e){
-  console.error(e);
-  showToast("Erro ao validar token (servidor indisponível?).");
-}
-    };
-  }
-}
-
-// chama uma vez e também após garantir modais
-bindPremiumUI();
-/* ===== FIX: botão "Explorar Agora" fecha o Welcome ===== */
-function bindPremiumWelcomeClose(){
-  const btn = document.getElementById('premiumWelcomeBtn');
-  const modal = document.getElementById('premiumWelcomeModal');
-  if(!btn || !modal) return;
-
-  btn.onclick = (e)=>{
-    e.preventDefault();
-    modal.style.display = 'none';
-  };
-}
-
-// roda agora e também depois (caso o modal seja recriado)
-bindPremiumWelcomeClose();
-setTimeout(bindPremiumWelcomeClose, 0);
-})();
 </script>
 </body>
 </html>
