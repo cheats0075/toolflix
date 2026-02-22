@@ -1610,6 +1610,15 @@ if(chatBox){
     <div style="width:55%;display:flex;flex-direction:column;">
       <div id="adminChatHeader" style="padding:8px;border-bottom:1px solid #222;color:#aaa;">Selecione um chat…</div>
       <div id="adminChatMsgs" style="padding:10px;max-height:260px;overflow:auto;display:flex;flex-direction:column;gap:6px;color:#fff;"></div>
+	  <div style="display:flex;border-top:1px solid #222;">
+  <input id="adminReplyInput" type="text"
+    placeholder="Responder como admin..."
+    style="flex:1;padding:8px;border:none;background:#111;color:#fff;">
+  <button id="adminReplyBtn"
+    style="padding:8px 12px;background:var(--cor-accent);border:none;color:#000;">
+    Enviar
+  </button>
+</div>
     </div>
   </div>
 </div>
@@ -1620,6 +1629,45 @@ if(chatBox){
     `;
 
     admin.dataset.ready = '1';
+	let adminSelectedChatId = null;
+
+// Atualiza quando clicar em um chat
+const oldLoadAdminChatMessages = loadAdminChatMessages;
+loadAdminChatMessages = async function(chatId, nick){
+  adminSelectedChatId = chatId;
+  await oldLoadAdminChatMessages(chatId, nick);
+};
+
+document.getElementById("adminReplyBtn")?.addEventListener("click", async ()=>{
+  if(!adminSelectedChatId) return alert("Selecione um chat primeiro.");
+
+  const input = document.getElementById("adminReplyInput");
+  const msg = (input.value || "").trim();
+  if(!msg) return;
+
+  const key = localStorage.getItem("toolflix_admin_key") || "";
+  if(!key) return alert("Admin key não encontrada.");
+
+  try{
+    const r = await fetch(API_URL + `/api/admin/chats/${adminSelectedChatId}/send`, {
+      method: "POST",
+      headers:{
+        "Content-Type":"application/json",
+        "x-admin-key": key
+      },
+      body: JSON.stringify({ message: msg })
+    });
+
+    if(r.ok){
+      input.value = "";
+      await loadAdminChatMessages(adminSelectedChatId);
+    }else{
+      alert("Erro ao enviar resposta.");
+    }
+  }catch(e){
+    alert("Erro de conexão.");
+  }
+});
 	// ===== ADMIN CHATS =====
 async function adminFetch(url){
   const adminKey =
