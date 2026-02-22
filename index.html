@@ -385,6 +385,9 @@
         <option value="spiderman">💎 Spiderman🕷️</option>
         <option value="fortnite">💎 Fortnite🎮</option>
       </select>
+	  <button id="chatToggleBtn" class="nav-item">
+  💬 Chat
+</button>
 
       <button class="nav-item" id="sortBtn">🔃 Ordem: Recentes</button>
       <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
@@ -717,6 +720,11 @@ function getToken(){
     const nickEl = document.getElementById('userNick');
     const xpFill = document.getElementById('xpFill');
     const xpText = document.getElementById('xpText');
+	const auth = loadAuth();
+const chatBox = document.getElementById("miniChat");
+if(chatBox){
+  chatBox.style.display = auth?.token ? "flex" : "none";
+}
 
     if(!u || !u.nick){
       nickEl.innerText = "Entrar";
@@ -1808,13 +1816,99 @@ document.getElementById('addJogoBtn')?.addEventListener('click', async ()=>{
 
   setInterval(syncJogos, 60 * 1000);
   setInterval(checkPremiumSync, 3 * 60 * 1000);
-    </script>
-	<!-- ===== MINI CHAT ===== -->
+  document.getElementById("chatSendBtn")?.addEventListener("click", async ()=>{
+  const input = document.getElementById("chatInput");
+  const msg = (input?.value || "").trim();
+  if(!msg) return;
+
+  const token = getToken();
+  if(!token){
+    alert("Você precisa estar logado.");
+    return;
+  }
+
+  try{
+    const r = await fetch(API_BASE + "/api/chat/send", {
+      method: "POST",
+      headers: {
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + token
+      },
+      body: JSON.stringify({ message: msg })
+    });
+
+    const j = await r.json();
+
+    if(j?.ok){
+      input.value = "";
+      await loadChatMessages();
+    }else if(j?.error === "SPAM"){
+      alert("Aguarde 30s para enviar outra mensagem.");
+    }else{
+      alert("Erro ao enviar mensagem.");
+    }
+  }catch(e){
+    alert("Erro de conexão.");
+  }
+});
+
+async function loadChatMessages(){
+  const token = getToken();
+  if(!token) return;
+
+  try{
+    const r = await fetch(API_BASE + "/api/chat/messages", {
+      headers:{
+        "Authorization":"Bearer " + token
+      }
+    });
+
+    const j = await r.json();
+    if(!j?.ok) return;
+
+    const box = document.getElementById("chatMessages");
+    if(!box) return;
+
+    box.innerHTML = "";
+
+    (j.messages || []).forEach(m=>{
+      const div = document.createElement("div");
+      div.textContent = (m.sender === "admin" ? "👑 " : "👤 ") + m.message;
+      box.appendChild(div);
+    });
+
+    box.scrollTop = box.scrollHeight;
+  }catch{}
+}
+
+// Botão Chat (ABRIR/FECHAR) — DEIXE APENAS ESTE
+document.getElementById("chatToggleBtn")?.addEventListener("click", ()=>{
+  const chat = document.getElementById("miniChat");
+  if(!chat) return;
+
+  const open = chat.style.display !== "flex";
+  chat.style.display = open ? "flex" : "none";
+
+  if(open){
+    loadChatMessages();
+  }
+});
+
+// Enter para enviar
+document.getElementById("chatInput")?.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter"){
+    e.preventDefault();
+    document.getElementById("chatSendBtn")?.click();
+  }
+});
+</script>
+
+<!-- MINI CHAT -->
 <div id="miniChat" style="
   position:fixed;
   bottom:20px;
   right:20px;
-  width:300px;
+  width:320px;
   background:#111;
   border:1px solid #333;
   border-radius:12px;
@@ -1822,8 +1916,8 @@ document.getElementById('addJogoBtn')?.addEventListener('click', async ()=>{
   flex-direction:column;
   z-index:9999;
   font-size:14px;
+  box-shadow:0 0 20px rgba(0,0,0,0.5);
 ">
-
   <div style="padding:10px;background:#000;border-bottom:1px solid #222;">
     💬 Suporte
   </div>
@@ -1846,7 +1940,7 @@ document.getElementById('addJogoBtn')?.addEventListener('click', async ()=>{
       Enviar
     </button>
   </div>
-
 </div>
+
 </body>
 </html>
