@@ -1467,7 +1467,7 @@
      ADMIN (UI simples + editar/deletar)
   ================================= */
 
-  let editandoNome = null;
+  let editandoNome = null; // vai guardar o LINK antigo do item em edição
 
   function ensureAdminUI(){
     const admin = document.getElementById('adminSection');
@@ -1516,39 +1516,81 @@
 
     document.getElementById('exitAdminBtn')?.addEventListener('click', ()=> exitAdmin());
 
-    document.getElementById('addJogoBtn')?.addEventListener('click', ()=>{
-      const n = document.getElementById('nomeJogo');
-      const c = document.getElementById('linkCapa');
-      const l = document.getElementById('linkJogo');
-      const cat = document.getElementById('selectCategoria');
-      const chk = document.getElementById('isPremiumItem');
+// === AdminKey (salva no navegador pra não digitar sempre) ===
+const LS_ADMINKEY = "toolflix_admin_key";
+function getAdminKey(){
+  let k = localStorage.getItem(LS_ADMINKEY) || "";
+  if(!k){
+    k = prompt("Digite a ADMIN KEY da API:") || "";
+    k = k.trim();
+    if(k) localStorage.setItem(LS_ADMINKEY, k);
+  }
+  return k.trim();
+}
 
-      const nome = (n.value || '').trim();
-      if(!nome) return showToast("Insira o nome!");
+document.getElementById('addJogoBtn')?.addEventListener('click', async ()=>{
+  const n = document.getElementById('nomeJogo');
+  const c = document.getElementById('linkCapa');
+  const l = document.getElementById('linkJogo');
+  const cat = document.getElementById('selectCategoria');
+  const chk = document.getElementById('isPremiumItem');
 
-      const item = normalizeGame({
-        nome,
-        capa: (c.value || '').trim(),
-        link: (l.value || '').trim(),
-        categoria: cat.value,
-        premium: !!(chk && chk.checked)
+  const nome = (n.value || '').trim();
+  const capa = (c.value || '').trim();
+  const link = (l.value || '').trim();
+  let categoria = (cat.value || '').trim();
+
+  if(!nome || !link) return showToast("Nome e link são obrigatórios!");
+
+  // Premium vai como categoria "Premium" (se marcado)
+  if(chk && chk.checked) categoria = "Premium";
+
+  const adminKey = getAdminKey();
+  if(!adminKey) return showToast("Admin Key obrigatória!");
+
+  try{
+    // Se você estiver editando e mudou o LINK, apaga o antigo primeiro
+    const oldLink = editandoNome || null; // aqui vamos guardar o link antigo no edit (veja ajuste abaixo)
+    if(oldLink && oldLink !== link){
+      await fetch(`${API_URL}/api/admin/games/delete`, {
+        method: "POST",
+        headers: { "Content-Type":"application/json", "x-admin-key": adminKey },
+        body: JSON.stringify({ link: oldLink })
       });
+    }
 
-      if(editandoNome){
-        db_jogos = db_jogos.map(j => j.nome === editandoNome ? item : j);
-        editandoNome = null;
-        document.getElementById('addJogoBtn').innerText = "💾 SALVAR CONTEÚDO";
-      }else{
-        db_jogos.push(item);
-      }
-
-      localStorage.setItem(LS_JOGOS, JSON.stringify(db_jogos));
-      n.value = ''; c.value = ''; l.value = '';
-      if(chk) chk.checked = false;
-
-      render();
-      showToast("Alterações salvas!");
+    const r = await fetch(`${API_URL}/api/admin/games`, {
+      method: "POST",
+      headers: { "Content-Type":"application/json", "x-admin-key": adminKey },
+      body: JSON.stringify({
+        title: nome,
+        link,
+        image: capa,
+        category: categoria
+      })
     });
+
+    const data = await r.json().catch(()=> ({}));
+    if(!r.ok || data?.ok !== true){
+      console.log(data);
+      return showToast("Erro ao salvar na API!");
+    }
+
+    showToast("✅ Salvo na API!");
+
+    // limpa modo edição
+    editandoNome = null;
+    document.getElementById('addJogoBtn').innerText = "💾 SALVAR CONTEÚDO";
+
+    n.value = ''; c.value = ''; l.value = '';
+    if(chk) chk.checked = false;
+
+    await syncJogos(); // puxa do Render
+  }catch(e){
+    console.error(e);
+    showToast("Erro ao conectar com API.");
+  }
+});
 
     document.getElementById('exportBackupBtn')?.addEventListener('click', ()=>{
       const blob = new Blob([JSON.stringify({jogos: db_jogos}, null, 2)], {type:'application/json'});
@@ -1580,13 +1622,35 @@
     window.scrollTo({top: 0, behavior: 'smooth'});
   };
 
-  window.delJogo = (nome)=>{
-    if(confirm("Deseja mesmo excluir este conteúdo?")){
-      db_jogos = db_jogos.filter(j => j.nome !== nome);
-      localStorage.setItem(LS_JOGOS, JSON.stringify(db_jogos));
-      render();
+  window.delJogo = async (nome)=>{
+  const j = db_jogos.find(x => x.nome === nome);
+  if(!j) return;
+
+  if(!confirm("Deseja mesmo excluir este conteúdo?")) return;
+
+  const adminKey = (localStorage.getItem("toolflix_admin_key") || "").trim() || (prompt("Digite a ADMIN KEY da API:") || "").trim();
+  if(!adminKey) return showToast("Admin Key obrigatória!");
+  localStorage.setItem("toolflix_admin_key", adminKey);
+
+  try{
+    const r = await fetch(`${API_URL}/api/admin/games/delete`, {
+      method: "POST",
+      headers: { "Content-Type":"application/json", "x-admin-key": adminKey },
+      body: JSON.stringify({ link: j.link })
+    });
+    const data = await r.json().catch(()=> ({}));
+    if(!r.ok || data?.ok !== true){
+      console.log(data);
+      return showToast("Erro ao deletar na API!");
     }
-  };
+
+    showToast("🗑️ Deletado na API!");
+    await syncJogos();
+  }catch(e){
+    console.error(e);
+    showToast("Erro ao conectar com API.");
+  }
+};
 
   function exitAdmin(){
     modoAdmin = false;
