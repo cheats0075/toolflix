@@ -640,6 +640,39 @@ function getToken(){
 
   const XP_RULES = { youtube: 15, download: 10, theme: 15, favorite: 5, premium: 100 };
   const DAILY_KEY = 'toolflix_xp_daily_';
+  async function addXp(amount){
+  amount = Number(amount || 0);
+  if(amount <= 0) return;
+
+  const u = loadUser() || {};
+  const token = getToken();
+
+  // se NÃO estiver logado → mantém do jeito antigo (local)
+  if(!token){
+    u.xp = Number(u.xp || 0) + amount;
+    saveUser(u);
+    updateUserUI?.();
+    return;
+  }
+
+  // se estiver logado → soma no servidor e atualiza local com o total oficial
+  try{
+    const r = await fetch(API_BASE + "/api/add-xp", {
+      method: "POST",
+      headers: {
+        "Content-Type":"application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({ amount })
+    });
+    const j = await r.json();
+    if(j?.ok){
+      u.xp = Number(j.xp || 0);
+      saveUser(u);
+      updateUserUI?.();
+    }
+  }catch{}
+}
 
   function getDaily(){
     try{
@@ -768,24 +801,31 @@ function getToken(){
     showToast(`🎉 UP! Você subiu para o nível ${newLevel}!`);
   }
 
-  function awardXp(amount, reason){
-    const u = loadUser();
-    if(!u || !u.nick) return;
+  async function awardXp(amount, reason){
+  const u = loadUser();
+  if(!u || !u.nick) return;
 
-    const beforeXp = Number(u.xp || 0);
-    const beforeLv = getLevelInfo(beforeXp).level;
+  amount = Number(amount || 0);
+  if(amount <= 0) return;
 
-    u.xp = Number(u.xp || 0) + Number(amount || 0);
-    saveUser(u);
+  const beforeXp = Number(u.xp || 0);
+  const beforeLv = getLevelInfo(beforeXp).level;
 
-    showToast(`+${amount} XP (${reason})`);
-    updateUserUI();
+  // usa a função nova (sincroniza quando logado)
+  await addXp(amount);
 
-    const afterLv = getLevelInfo(u.xp).level;
-    if(afterLv > beforeLv){
-      triggerLevelUpFx(afterLv);
-    }
+  // recarrega o usuário após atualizar (local foi atualizado dentro do addXp)
+  const u2 = loadUser() || u;
+  const afterXp = Number(u2.xp || 0);
+
+  showToast(`+${amount} XP (${reason})`);
+  updateUserUI();
+
+  const afterLv = getLevelInfo(afterXp).level;
+  if(afterLv > beforeLv){
+    triggerLevelUpFx(afterLv);
   }
+}
 
   /* ===============================
      USER MENU / LOGIN
