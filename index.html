@@ -549,8 +549,7 @@
     const categoria = normalizeCategoria(g?.categoria ?? g?.category ?? g?.cat);
     const link = safeStr(g?.link ?? g?.url ?? g?.href ?? "").trim();
     const capa = safeStr(g?.capa ?? g?.img ?? g?.image ?? g?.cover ?? "").trim();
-    const premium = Boolean(g?.premium === true || categoria === "Premium" || g?.isPremium === true);
-
+    const premium = Boolean(g?.premium === true || g?.isPremium === true || categoria === "Premium");
     return { nome, categoria, link, capa, premium };
   }
 
@@ -1543,7 +1542,7 @@ document.getElementById('addJogoBtn')?.addEventListener('click', async ()=>{
   if(!nome || !link) return showToast("Nome e link são obrigatórios!");
 
   // Premium vai como categoria "Premium" (se marcado)
-  if(chk && chk.checked) categoria = "Premium";
+  
 
   const adminKey = getAdminKey();
   if(!adminKey) return showToast("Admin Key obrigatória!");
@@ -1563,11 +1562,12 @@ document.getElementById('addJogoBtn')?.addEventListener('click', async ()=>{
       method: "POST",
       headers: { "Content-Type":"application/json", "x-admin-key": adminKey },
       body: JSON.stringify({
-        title: nome,
-        link,
-        image: capa,
-        category: categoria
-      })
+  title: nome,
+  link,
+  image: capa,
+  category: categoria,
+  premium: !!(chk && chk.checked)
+})
     });
 
     const data = await r.json().catch(()=> ({}));
