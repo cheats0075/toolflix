@@ -1591,6 +1591,28 @@ if(chatBox){
         <button id="addJogoBtn" class="nav-item" style="background:var(--cor-accent); color:#000; border:none; flex: 2; font-size: 16px;">💾 SALVAR CONTEÚDO</button>
         <button id="exportBackupBtn" class="nav-item" style="background:#2ecc71; color:#000; border:none; flex: 1;">📂 BACKUP</button>
       </div>
+	  <!-- ADMIN: CHATS -->
+<button id="adminChatsBtn" type="button" style="margin-top:10px;">📨 Chats</button>
+
+<div id="adminChatsPanel" style="display:none;margin-top:10px;border:1px solid #333;border-radius:10px;overflow:hidden;background:#0f0f0f;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:#000;border-bottom:1px solid #222;">
+    <strong>Chats</strong>
+    <button id="adminChatsClose" type="button" style="background:transparent;border:none;color:#fff;cursor:pointer;">✕</button>
+  </div>
+
+  <div style="display:flex;gap:0;min-height:260px;">
+    <!-- lista -->
+    <div style="width:45%;border-right:1px solid #222;max-height:320px;overflow:auto;">
+      <div id="adminChatsList" style="padding:8px;display:flex;flex-direction:column;gap:6px;"></div>
+    </div>
+
+    <!-- conversa -->
+    <div style="width:55%;display:flex;flex-direction:column;">
+      <div id="adminChatHeader" style="padding:8px;border-bottom:1px solid #222;color:#aaa;">Selecione um chat…</div>
+      <div id="adminChatMsgs" style="padding:10px;max-height:260px;overflow:auto;display:flex;flex-direction:column;gap:6px;color:#fff;"></div>
+    </div>
+  </div>
+</div>
 
       <div style="opacity:.8; font-size:12px; margin-top:8px;">
         Dica: clique em “EDITAR” em um card pra carregar aqui.
@@ -1598,6 +1620,99 @@ if(chatBox){
     `;
 
     admin.dataset.ready = '1';
+	// ===== ADMIN CHATS =====
+async function adminFetch(url){
+  const adminKey =
+    (localStorage.getItem("toolflix_admin_key") || "").trim() ||
+    (prompt("Digite a ADMIN KEY da API:") || "").trim();
+
+  if(!adminKey) throw new Error("ADMIN_KEY_REQUIRED");
+  localStorage.setItem("toolflix_admin_key", adminKey);
+
+  const r = await fetch(url, { headers: { "x-admin-key": adminKey } });
+  const j = await r.json().catch(()=> ({}));
+  if(!r.ok || j?.ok !== true) throw new Error("ADMIN_API_ERROR");
+  return j;
+}
+
+async function loadAdminChats(){
+  const panel = document.getElementById("adminChatsPanel");
+  const list = document.getElementById("adminChatsList");
+  const header = document.getElementById("adminChatHeader");
+  const msgs = document.getElementById("adminChatMsgs");
+  if(!panel || !list || !header || !msgs) return;
+
+  list.innerHTML = "Carregando...";
+  header.textContent = "Selecione um chat…";
+  msgs.innerHTML = "";
+
+  const j = await adminFetch(API_URL + "/api/admin/chats");
+  const chats = j.chats || [];
+
+  if(!chats.length){
+    list.innerHTML = "<div style='color:#aaa;padding:6px;'>Nenhum chat.</div>";
+    return;
+  }
+
+  list.innerHTML = "";
+  chats.slice().reverse().forEach(c=>{
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.style.cssText = "text-align:left;padding:8px;border:1px solid #222;border-radius:8px;background:#111;color:#fff;cursor:pointer;";
+    btn.innerHTML = `<div><strong>${c.nick || "Sem nick"}</strong></div>
+                     <div style="font-size:12px;color:#aaa;">${c.id} • ${c.user_id || ""}</div>`;
+    btn.addEventListener("click", ()=> loadAdminChatMessages(c.id, c.nick));
+    list.appendChild(btn);
+  });
+}
+
+async function loadAdminChatMessages(chatId, nick){
+  const header = document.getElementById("adminChatHeader");
+  const msgs = document.getElementById("adminChatMsgs");
+  if(!header || !msgs) return;
+
+  header.textContent = `Carregando: ${nick || chatId}`;
+  msgs.innerHTML = "";
+
+  const j = await adminFetch(API_URL + `/api/admin/chats/${encodeURIComponent(chatId)}/messages`);
+  const arr = j.messages || [];
+
+  header.textContent = `${nick || "Chat"} • ${chatId}`;
+
+  if(!arr.length){
+    msgs.innerHTML = "<div style='color:#aaa;'>Sem mensagens.</div>";
+    return;
+  }
+
+  arr.slice(-120).forEach(m=>{
+    const div = document.createElement("div");
+    div.textContent = (m.sender === "admin" ? "👑 " : "👤 ") + (m.message || "");
+    msgs.appendChild(div);
+  });
+
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// Botão abre/fecha
+document.getElementById("adminChatsBtn")?.addEventListener("click", async ()=>{
+  const panel = document.getElementById("adminChatsPanel");
+  if(!panel) return;
+
+  const open = panel.style.display !== "block";
+  panel.style.display = open ? "block" : "none";
+  if(open){
+    try{ await loadAdminChats(); }
+    catch(e){
+      if(String(e.message).includes("ADMIN_KEY_REQUIRED")) return;
+      alert("Erro ao carregar chats admin.");
+    }
+  }
+});
+
+document.getElementById("adminChatsClose")?.addEventListener("click", ()=>{
+  const panel = document.getElementById("adminChatsPanel");
+  if(panel) panel.style.display = "none";
+});
 
     const sel = document.getElementById('selectCategoria');
     if(sel){
