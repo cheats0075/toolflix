@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -199,8 +196,7 @@
       line-height: 1.35;
       opacity: .92;
     }
-
-    /* ===== GAME / XP UI ===== */
+	    /* ===== GAME / XP UI ===== */
     .xpBar{
       width: 160px;
       height: 12px;
@@ -418,10 +414,10 @@
         </button>
       </div>
     </div>
-    <!-- ===== LOGIN GAME ===== -->
+	    <!-- ===== LOGIN GAME ===== -->
     <div id="userLoginModal" class="modal-overlay">
       <div class="modal-box">
-        <h2>👤 Entrar no Game</h2>
+        <h2 id="userAuthTitle">👤 Entrar no Game</h2>
         <input type="text" id="userNickInput" class="admin-input"
           placeholder="Escolha um nickname"
           style="width:100%; margin-top:15px;">
@@ -432,6 +428,19 @@
           style="margin-top:15px; width:100%; background:var(--cor-accent); color:#000;">
           Entrar
         </button>
+
+        <!-- ✅ NOVO: Criar conta (sem remover nada) -->
+        <!-- X INICIO CRIAR CONTA (LINK DISCRETO) -->
+<div style="margin-top:12px; font-size:12px; opacity:.88; line-height:1.5;">
+  Não tem conta?
+  <span id="userRegisterSubmit" style="cursor:pointer; font-weight:900; text-decoration:underline; color:gold;">
+    Criar conta
+  </span>
+  <div style="margin-top:8px; opacity:.85;">
+    Ao criar conta, Vc Libera o chat, seu XP/Nível fica salvo e você pode usar em qualquer dispositivo.
+  </div>
+</div>
+<!-- Y FIM CRIAR CONTA (LINK DISCRETO) -->
       </div>
     </div>
 
@@ -492,8 +501,7 @@
       </button>
     </div>
   </div>
-
-  <!-- ===== ADMIN MODAL ===== -->
+    <!-- ===== ADMIN MODAL ===== -->
   <div id="loginModal" class="modal-overlay">
     <div class="modal-box">
       <h2 style="margin-bottom:20px">🔐 Admin</h2>
@@ -590,32 +598,31 @@
   let catAtiva  = 'Todos';
   let sortModo  = 'recentes';
   let filterFav = false;
-
-  /* ===============================
+    /* ===============================
      USER / XP SYSTEM
   ================================= */
 
   const USER_KEY = 'toolflix_user';
   const USER_ID_KEY = 'toolflix_user_id';
   const API_BASE = 'https://toolflix-api.onrender.com';
-const AUTH_KEY = 'toolflix_auth'; // { token, userId, nick }
+  const AUTH_KEY = 'toolflix_auth'; // { token, userId, nick }
 
-function loadAuth(){
-  try { return JSON.parse(localStorage.getItem(AUTH_KEY)); }
-  catch { return null; }
-}
-function saveAuth(a){
-  localStorage.setItem(AUTH_KEY, JSON.stringify(a || null));
-}
-function clearAuth(){
-  localStorage.removeItem(AUTH_KEY);
-}
+  function loadAuth(){
+    try { return JSON.parse(localStorage.getItem(AUTH_KEY)); }
+    catch { return null; }
+  }
+  function saveAuth(a){
+    localStorage.setItem(AUTH_KEY, JSON.stringify(a || null));
+  }
+  function clearAuth(){
+    localStorage.removeItem(AUTH_KEY);
+  }
 
-// retorna token ou string vazia
-function getToken(){
-  const a = loadAuth();
-  return a?.token || '';
-}
+  // retorna token ou string vazia
+  function getToken(){
+    const a = loadAuth();
+    return a?.token || '';
+  }
 
   function getOrCreateUserId(){
     let id = localStorage.getItem(USER_ID_KEY);
@@ -645,38 +652,38 @@ function getToken(){
   const XP_RULES = { youtube: 15, download: 10, theme: 15, favorite: 5, premium: 100 };
   const DAILY_KEY = 'toolflix_xp_daily_';
   async function addXp(amount){
-  amount = Number(amount || 0);
-  if(amount <= 0) return;
+    amount = Number(amount || 0);
+    if(amount <= 0) return;
 
-  const u = loadUser() || {};
-  const token = getToken();
+    const u = loadUser() || {};
+    const token = getToken();
 
-  // se NÃO estiver logado → mantém do jeito antigo (local)
-  if(!token){
-    u.xp = Number(u.xp || 0) + amount;
-    saveUser(u);
-    updateUserUI?.();
-    return;
-  }
-
-  // se estiver logado → soma no servidor e atualiza local com o total oficial
-  try{
-    const r = await fetch(API_BASE + "/api/add-xp", {
-      method: "POST",
-      headers: {
-        "Content-Type":"application/json",
-        "Authorization": "Bearer " + token
-      },
-      body: JSON.stringify({ amount })
-    });
-    const j = await r.json();
-    if(j?.ok){
-      u.xp = Number(j.xp || 0);
+    // se NÃO estiver logado → mantém do jeito antigo (local)
+    if(!token){
+      u.xp = Number(u.xp || 0) + amount;
       saveUser(u);
       updateUserUI?.();
+      return;
     }
-  }catch{}
-}
+
+    // se estiver logado → soma no servidor e atualiza local com o total oficial
+    try{
+      const r = await fetch(API_BASE + "/api/add-xp", {
+        method: "POST",
+        headers: {
+          "Content-Type":"application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({ amount })
+      });
+      const j = await r.json();
+      if(j?.ok){
+        u.xp = Number(j.xp || 0);
+        saveUser(u);
+        updateUserUI?.();
+      }
+    }catch{}
+  }
 
   function getDaily(){
     try{
@@ -721,11 +728,11 @@ function getToken(){
     const nickEl = document.getElementById('userNick');
     const xpFill = document.getElementById('xpFill');
     const xpText = document.getElementById('xpText');
-	const auth = loadAuth();
-const chatBox = document.getElementById("miniChat");
-if(chatBox){
-  chatBox.style.display = auth?.token ? "flex" : "none";
-}
+    const auth = loadAuth();
+    const chatBox = document.getElementById("miniChat");
+    if(chatBox){
+      chatBox.style.display = auth?.token ? "flex" : "none";
+    }
 
     if(!u || !u.nick){
       nickEl.innerText = "Entrar";
@@ -742,11 +749,11 @@ if(chatBox){
     xpText.innerText   = `${u.xp - info.min}/${info.max - info.min} (Nv ${info.level})`;
   }
   const auth = loadAuth();
-const chatBox = document.getElementById("miniChat");
-if(chatBox){
-  chatBox.style.display = auth?.token ? "flex" : "none";
-}
-    /* ===============================
+  const chatBox = document.getElementById("miniChat");
+  if(chatBox){
+    chatBox.style.display = auth?.token ? "flex" : "none";
+  }
+      /* ===============================
      AUDIO
   ================================= */
 
@@ -816,66 +823,105 @@ if(chatBox){
   }
 
   async function awardXp(amount, reason){
-  const u = loadUser();
-  if(!u || !u.nick) return;
+    const u = loadUser();
+    if(!u || !u.nick) return;
 
-  amount = Number(amount || 0);
-  if(amount <= 0) return;
+    amount = Number(amount || 0);
+    if(amount <= 0) return;
 
-  const beforeXp = Number(u.xp || 0);
-  const beforeLv = getLevelInfo(beforeXp).level;
+    const beforeXp = Number(u.xp || 0);
+    const beforeLv = getLevelInfo(beforeXp).level;
 
-  // usa a função nova (sincroniza quando logado)
-  await addXp(amount);
+    // usa a função nova (sincroniza quando logado)
+    await addXp(amount);
 
-  // recarrega o usuário após atualizar (local foi atualizado dentro do addXp)
-  const u2 = loadUser() || u;
-  const afterXp = Number(u2.xp || 0);
+    // recarrega o usuário após atualizar (local foi atualizado dentro do addXp)
+    const u2 = loadUser() || u;
+    const afterXp = Number(u2.xp || 0);
 
-  showToast(`+${amount} XP (${reason})`);
-  updateUserUI();
+    showToast(`+${amount} XP (${reason})`);
+    updateUserUI();
 
-  const afterLv = getLevelInfo(afterXp).level;
-  if(afterLv > beforeLv){
-    triggerLevelUpFx(afterLv);
+    const afterLv = getLevelInfo(afterXp).level;
+    if(afterLv > beforeLv){
+      triggerLevelUpFx(afterLv);
+    }
+  }
+
+ // ===== X INICIO USER MENU / LOGIN (LOGIN + REGISTER MODES) =====
+
+let AUTH_MODE = "login"; // "login" | "register"
+
+function setAuthMode(mode){
+  AUTH_MODE = (mode === "register") ? "register" : "login";
+
+  const title = document.getElementById("userAuthTitle");
+  const btn   = document.getElementById("userLoginSubmit");
+  const hint  = document.getElementById("authHintText");
+  const linkRegister = document.getElementById("userRegisterSubmit");
+  const backLogin = document.getElementById("userBackToLogin");
+
+  if(AUTH_MODE === "register"){
+    if(title) title.innerText = "🆕 Criar conta";
+    if(btn) btn.innerText = "Criar conta";
+    if(hint) hint.innerText = "Já tem conta?";
+    if(linkRegister) linkRegister.style.display = "none";
+    if(backLogin) backLogin.style.display = "inline";
+  } else {
+    if(title) title.innerText = "👤 Entrar no Game";
+    if(btn) btn.innerText = "Entrar";
+    if(hint) hint.innerText = "Não tem conta?";
+    if(linkRegister) linkRegister.style.display = "inline";
+    if(backLogin) backLogin.style.display = "none";
   }
 }
 
-  /* ===============================
-     USER MENU / LOGIN
-  ================================= */
+function openLogin(mode){
+  const m = document.getElementById('userLoginModal');
+  const inp = document.getElementById('userNickInput');
+  if(m) m.style.display = 'flex';
+  setAuthMode(mode || "login");
+  if(inp) inp.focus();
+}
+function closeLogin(){
+  const m = document.getElementById('userLoginModal');
+  if(m) m.style.display = 'none';
+}
+function toggleUserMenu(forceClose=false){
+  const box = document.getElementById('userMenuBox');
+  if(!box) return;
+  if(forceClose){ box.style.display = 'none'; return; }
+  box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+}
 
-  function openLogin(){
-    const m = document.getElementById('userLoginModal');
-    const inp = document.getElementById('userNickInput');
-    if(m) m.style.display = 'flex';
-    if(inp) inp.focus();
-  }
-  function closeLogin(){
-    const m = document.getElementById('userLoginModal');
-    if(m) m.style.display = 'none';
-  }
-  function toggleUserMenu(forceClose=false){
-    const box = document.getElementById('userMenuBox');
-    if(!box) return;
-    if(forceClose){ box.style.display = 'none'; return; }
-    box.style.display = (box.style.display === 'block') ? 'none' : 'block';
-  }
+// Click na área do usuário: sempre abre em LOGIN
+document.getElementById('userArea')?.addEventListener('click', ()=>{
+  const u = loadUser();
+  if(!u || !u.nick) openLogin("login");
+  else toggleUserMenu();
+});
 
-  document.getElementById('userArea')?.addEventListener('click', ()=>{
-    const u = loadUser();
-    if(!u || !u.nick) openLogin();
-    else toggleUserMenu();
-  });
+document.addEventListener('click', (e)=>{
+  const box = document.getElementById('userMenuBox');
+  const area = document.getElementById('userArea');
+  if(!box || !area) return;
+  if(!area.contains(e.target) && !box.contains(e.target)) box.style.display = 'none';
+});
 
-  document.addEventListener('click', (e)=>{
-    const box = document.getElementById('userMenuBox');
-    const area = document.getElementById('userArea');
-    if(!box || !area) return;
-    if(!area.contains(e.target) && !box.contains(e.target)) box.style.display = 'none';
-  });
+// Link: “Criar conta” (troca modo e mantém modal aberto)
+document.getElementById("userRegisterSubmit")?.addEventListener("click", (e)=>{
+  e.preventDefault?.();
+  openLogin("register");
+});
 
-  document.getElementById('userLoginSubmit')?.addEventListener('click', async ()=>{
+// Link: “Voltar para entrar”
+document.getElementById("userBackToLogin")?.addEventListener("click", (e)=>{
+  e.preventDefault?.();
+  openLogin("login");
+});
+
+// Botão principal faz LOGIN ou REGISTER dependendo do modo
+document.getElementById('userLoginSubmit')?.addEventListener('click', async ()=>{
   const nick = (document.getElementById('userNickInput')?.value || '').trim().slice(0,18);
   const pass = (document.getElementById('userPassInput')?.value || '');
 
@@ -883,45 +929,63 @@ if(chatBox){
   if(!pass || pass.length < 6){ showToast("Senha mínima: 6 caracteres."); return; }
 
   try{
-    const r = await fetch(API_BASE + "/api/login", {
+    if(AUTH_MODE === "register"){
+      const r = await fetch(API_BASE + "/api/register", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ nick, password: pass })
+      });
+      const j = await r.json().catch(()=> ({}));
+      if(!r.ok || j?.ok === false){
+        showToast(j?.message || j?.error || "Não foi possível criar a conta.");
+        return;
+      }
+      showToast("✅ Conta criada! Fazendo login...");
+    }
+
+    const r2 = await fetch(API_BASE + "/api/login", {
       method:"POST",
       headers:{ "Content-Type":"application/json" },
       body: JSON.stringify({ nick, password: pass })
     });
+    const j2 = await r2.json().catch(()=> ({}));
 
-    const j = await r.json();
-
-    if(!j?.ok){
+    if(!j2?.ok){
       showToast("Nick ou senha inválidos.");
       return;
     }
 
-    // salva token e dados do usuário
-    saveAuth({ token: j.token, userId: j.user.id, nick: j.user.nick });
-    saveUser({ nick: j.user.nick, xp: Number(j.user.xp || 0) });
+    saveAuth({ token: j2.token, userId: j2.user.id, nick: j2.user.nick });
+    saveUser({ nick: j2.user.nick, xp: Number(j2.user.xp || 0) });
 
     closeLogin();
     toggleUserMenu(true);
     updateUserUI();
-    showToast(`Bem-vindo, ${j.user.nick}!`);
-
+    showToast(`Bem-vindo, ${j2.user.nick}!`);
   }catch(e){
     showToast("Erro ao conectar com servidor.");
   }
 });
 
-  document.getElementById('userNickInput')?.addEventListener('keydown', (e)=>{
-    if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('userLoginSubmit')?.click(); }
-  });
+document.getElementById('userNickInput')?.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    document.getElementById('userLoginSubmit')?.click();
+  }
+});
 
-  document.getElementById('logoutBtn')?.addEventListener('click', ()=>{
-    const old = loadUser();
-    const keepXp = old ? Number(old.xp || 0) : 0;
-    saveUser({ nick: null, xp: keepXp });
-    toggleUserMenu(true);
-    updateUserUI();
-    showToast("Você saiu.");
-  });
+document.getElementById('logoutBtn')?.addEventListener('click', ()=>{
+  const old = loadUser();
+  const keepXp = old ? Number(old.xp || 0) : 0;
+  saveUser({ nick: null, xp: keepXp });
+  clearAuth(); // importante: desloga do servidor também
+  toggleUserMenu(true);
+  updateUserUI();
+  showToast("Você saiu.");
+});
+
+// ===== Y FIM USER MENU / LOGIN (LOGIN + REGISTER MODES) =====
+
     /* ===============================
      GAME PANEL
   ================================= */
@@ -995,8 +1059,7 @@ if(chatBox){
     const m = document.getElementById('gameModal');
     if(m && m.style.display === 'flex') renderGamePanel();
   }, 1000);
-
-  /* ===============================
+    /* ===============================
      CONQUISTAS
   ================================= */
 
@@ -1105,8 +1168,7 @@ if(chatBox){
       </div>
     `;
   }
-
-  function achRender(){
+    function achRender(){
     const list = document.getElementById('achList');
     const plat = document.getElementById('achPlatinum');
     if(!list) return;
@@ -1157,6 +1219,7 @@ if(chatBox){
     if(reason === 'Troca de tema') achInc('themes', 1);
     if(reason === 'Virou Premium') achInc('premium', 1);
   };
+
     /* ===============================
      PREMIUM (Render only)
   ================================= */
@@ -1200,8 +1263,7 @@ if(chatBox){
       premiumMembersCount = Number(localStorage.getItem('toolflix_premium_members') || 0);
     }
   }
-
-  async function syncPremiumStatus(){
+    async function syncPremiumStatus(){
     // userId fixo (não depende do nick)
     const userId = getOrCreateUserId();
 
@@ -1262,6 +1324,7 @@ if(chatBox){
       console.warn("syncJogos fail:", e);
     }
   }
+
     /* ===============================
      RENDER
   ================================= */
@@ -1377,8 +1440,7 @@ if(chatBox){
             ${safeStr(j.nome,'Sem nome')}
           </p>
         </div>
-
-        ${modoAdmin ? `
+		        ${modoAdmin ? `
           <div style="display:flex; gap:5px; margin-top:10px">
             <button onclick="event.stopPropagation(); window.editJogo('${safeStr(j.nome).replace(/'/g,"\\'")}')"
               style="flex:1; background:gold; color:#000; border:none;
@@ -1434,6 +1496,7 @@ if(chatBox){
 
     render();
   };
+
     /* ===============================
      BOTÕES UI
   ================================= */
@@ -1497,8 +1560,7 @@ if(chatBox){
       }
     }
   });
-
-  /* ===============================
+    /* ===============================
      PREMIUM UI (Render)
   ================================= */
 
@@ -1558,6 +1620,7 @@ if(chatBox){
       showToast("Erro ao validar token.");
     }
   });
+
     /* ===============================
      ADMIN (UI simples + editar/deletar)
   ================================= */
@@ -1785,7 +1848,6 @@ function getAdminKey(){
   }
   return k.trim();
 }
-
 document.getElementById('addJogoBtn')?.addEventListener('click', async ()=>{
   const n = document.getElementById('nomeJogo');
   const c = document.getElementById('linkCapa');
@@ -1966,8 +2028,7 @@ document.getElementById('addJogoBtn')?.addEventListener('click', async ()=>{
       if(modoAdmin) exitAdmin();
     }
   });
-
-    /* ===============================
+      /* ===============================
      INIT
   ================================= */
 
