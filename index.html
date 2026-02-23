@@ -387,6 +387,7 @@
   💬 Chat
 </button>
 
+
       <button class="nav-item" id="sortBtn">🔃 Ordem: Recentes</button>
       <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
       <button class="nav-item" id="adminBtn">⚙️ Admin</button>
@@ -538,6 +539,32 @@
   </div>
 
   <script>
+  // ===== NOTIFICAÇÃO CHAT USUÁRIO (SEGURO) =====
+document.addEventListener("DOMContentLoaded", function(){
+
+  const chatBtn = document.getElementById("chatToggleBtn");
+  if(!chatBtn) return;
+
+  let lastSeenCount = 0;
+
+  const chatBadge = document.createElement("span");
+  chatBadge.style.position = "absolute";
+  chatBadge.style.top = "-4px";
+  chatBadge.style.right = "-4px";
+  chatBadge.style.width = "10px";
+  chatBadge.style.height = "10px";
+  chatBadge.style.background = "red";
+  chatBadge.style.borderRadius = "50%";
+  chatBadge.style.display = "none";
+
+  chatBtn.style.position = "relative";
+  chatBtn.appendChild(chatBadge);
+
+  // expõe global pra usar depois
+  window.__chatBadge = chatBadge;
+  window.__lastSeenCount = lastSeenCount;
+
+});
     /* ===============================
      CONFIG / API
   ================================= */
@@ -2111,6 +2138,22 @@ document.getElementById('addJogoBtn')?.addEventListener('click', async ()=>{
       box.scrollTop = box.scrollHeight;
     }catch(e){}
   }
+  // ===== DETECTAR NOVA MENSAGEM DO ADMIN =====
+if (window.__chatBadge) {
+
+  const msgs = document.querySelectorAll("#chatMessages > div");
+  const currentCount = msgs.length;
+
+  if (window.__lastSeenCount === undefined) {
+    window.__lastSeenCount = currentCount;
+  } else {
+    if (currentCount > window.__lastSeenCount) {
+      window.__chatBadge.style.display = "block";
+    }
+    window.__lastSeenCount = currentCount;
+  }
+
+}
 
   async function sendChatMessage(){
     const input = document.getElementById("chatInput");
@@ -2165,6 +2208,9 @@ document.getElementById('addJogoBtn')?.addEventListener('click', async ()=>{
 
   // Botão Chat (ABRIR/FECHAR)
   document.getElementById("chatToggleBtn")?.addEventListener("click", ()=>{
+  if (window.__chatBadge) {
+  window.__chatBadge.style.display = "none";
+}
     const chat = document.getElementById("miniChat");
     if(!chat) return;
 
