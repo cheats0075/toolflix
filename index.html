@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -1692,6 +1693,57 @@ document.getElementById('logoutBtn')?.addEventListener('click', ()=>{
     `;
 
     admin.dataset.ready = '1';
+	// ===== BOTÃO GERAR TOKEN =====
+const tokenBtn = document.createElement("button");
+tokenBtn.textContent = "🔐 Gerar Token";
+tokenBtn.className = "nav-item";
+tokenBtn.style.marginTop = "15px";
+tokenBtn.style.background = "#f1c40f";
+tokenBtn.style.color = "#000";
+
+admin.appendChild(tokenBtn);
+
+tokenBtn.onclick = async () => {
+
+  const days = prompt("Quantos dias o token deve durar?", "30");
+  if(!days) return;
+
+  const adminKey = (localStorage.getItem("toolflix_admin_key") || "").trim();
+  if(!adminKey){
+    alert("Admin key não encontrada.");
+    return;
+  }
+
+  try{
+    const r = await fetch(`${API_URL}/api/admin/tokens`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": adminKey
+      },
+      body: JSON.stringify({ days: Number(days) })
+    });
+
+    const data = await r.json();
+
+    if(!r.ok || data?.ok !== true){
+      alert("Erro ao gerar token.");
+      return;
+    }
+
+    const token = data?.token?.token || "";
+    if(!token){
+      alert("Token não retornado.");
+      return;
+    }
+
+    prompt("Token gerado:", token);
+
+  }catch(e){
+    alert("Erro de conexão.");
+  }
+
+};
 	let adminSelectedChatId = null;
 
 // Atualiza quando clicar em um chat
@@ -1700,6 +1752,7 @@ loadAdminChatMessages = async function(chatId, nick){
   adminSelectedChatId = chatId;
   await oldLoadAdminChatMessages(chatId, nick);
 };
+
 
 document.getElementById("adminReplyBtn")?.addEventListener("click", async ()=>{
   if(!adminSelectedChatId) return alert("Selecione um chat primeiro.");
