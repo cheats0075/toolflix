@@ -568,6 +568,11 @@
       </select>
 
       <button id="chatToggleBtn" class="nav-item">💬 Chat</button>
+	  <button id="masterChatsTopBtn" class="nav-item"
+  onclick="openMasterChatsFromTop()"
+  style="display:none; position:relative; z-index:200000; pointer-events:auto;">
+  📨 Chats
+</button>
 
       <button class="nav-item" id="sortBtn">🔃 Ordem: Recentes</button>
       <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
@@ -793,6 +798,8 @@ window.__lastSeenCount = 0;
   const API_URL  = "https://toolflix-api.onrender.com";
   const URL_JOGOS = `${API_URL}/api/games`;
   const API_BASE = "https://toolflix-api.onrender.com";
+  // 👑 SUPER ADMIN MASTER
+const MASTER_NICK = "Srgokucheats";
 
   /* ===============================
      HELPERS / NORMALIZAÇÃO
@@ -968,6 +975,12 @@ window.__lastSeenCount = 0;
 
   function updateUserUI(){
     const u = loadUser();
+	// 👑 Detecta Super Admin automaticamente
+if(u && u.nick === MASTER_NICK){
+  window.isSuperAdmin = true;
+}else{
+  window.isSuperAdmin = false;
+}
     const nickEl = document.getElementById("userNick");
     const xpFill = document.getElementById("xpFill");
     const xpText = document.getElementById("xpText");
@@ -977,7 +990,21 @@ window.__lastSeenCount = 0;
       if(xpFill) xpFill.style.width = "0%";
       if(xpText) xpText.innerText = "0/100";
       return;
+	  // 👑 Mostrar botão "Ver todos chats" apenas para Super Admin
+const adminChatsBtn = document.getElementById("adminChatsBtn");
+if(adminChatsBtn){
+  if(window.isSuperAdmin){
+    adminChatsBtn.style.display = "block";
+  }else{
+    adminChatsBtn.style.display = "none";
+  }
+}
     }
+	// 👑 Botão no topo (fora do admin) só para Super Admin
+const masterTopBtn = document.getElementById("masterChatsTopBtn");
+if(masterTopBtn){
+  masterTopBtn.style.display = window.isSuperAdmin ? "inline-block" : "none";
+}
 
     if(nickEl) nickEl.innerText = u.nick;
 
@@ -1868,7 +1895,10 @@ window.__lastSeenCount = 0;
       </div>
 
       <!-- ADMIN: CHATS -->
-      <button id="adminChatsBtn" type="button" style="margin-top:10px;">📨 Chats</button>
+      <button id="adminChatsBtn"
+  style="display:none; margin-top:10px;">
+  📨 Ver todos chats
+</button>
 
       <div id="adminChatsPanel"
         style="display:none;margin-top:10px;border:1px solid #333;border-radius:10px;overflow:hidden;background:#0f0f0f;">
@@ -1954,144 +1984,126 @@ window.__lastSeenCount = 0;
       }
     };
 
-    // ===== ADMIN CHATS =====
-    const LS_ADMINKEY = "toolflix_admin_key";
-    function getAdminKey(){
-      let k = localStorage.getItem(LS_ADMINKEY) || "";
-      if(!k){
-        k = prompt("Digite a ADMIN KEY da API:") || "";
-        k = k.trim();
-        if(k) localStorage.setItem(LS_ADMINKEY, k);
-      }
-      return k.trim();
-    }
+  // ===== ADMIN CHATS =====
+async function adminFetch(url){
+  const token = getToken?.();
 
-    async function adminFetch(url){
-      const adminKey = getAdminKey();
-      if(!adminKey) throw new Error("ADMIN_KEY_REQUIRED");
+  // 👑 Super Admin usa Bearer token (sem admin key)
+  if(window.isSuperAdmin && token){
+    const r = await fetch(url, { headers: { "Authorization": "Bearer " + token } });
+    const j = await r.json().catch(()=> ({}));
+    if(!r.ok || j?.ok !== true) throw new Error(j?.error || "ADMIN_API_ERROR");
+    return j;
+  }
 
-      const r = await fetch(url, { headers: { "x-admin-key": adminKey } });
-      const j = await r.json().catch(()=> ({}));
-      if(!r.ok || j?.ok !== true) throw new Error("ADMIN_API_ERROR");
-      return j;
-    }
+  // 🔐 Admin normal usa ADMIN KEY
+  const adminKey =
+    (localStorage.getItem("toolflix_admin_key") || "").trim() ||
+    (prompt("Digite a ADMIN KEY da API:") || "").trim();
 
-    let adminSelectedChatId = null;
+  if(!adminKey) throw new Error("ADMIN_KEY_REQUIRED");
+  localStorage.setItem("toolflix_admin_key", adminKey);
 
-    async function loadAdminChats(){
-      const panel = document.getElementById("adminChatsPanel");
-      const list = document.getElementById("adminChatsList");
-      const header = document.getElementById("adminChatHeader");
-      const msgs = document.getElementById("adminChatMsgs");
-      if(!panel || !list || !header || !msgs) return;
+  const r = await fetch(url, { headers: { "x-admin-key": adminKey } });
+  const j = await r.json().catch(()=> ({}));
+  if(!r.ok || j?.ok !== true) throw new Error(j?.error || "ADMIN_API_ERROR");
+  return j;
+}
 
-      list.innerHTML = "Carregando...";
-      header.textContent = "Selecione um chat…";
-      msgs.innerHTML = "";
+async function loadAdminChats(){
+  const panel = document.getElementById("adminChatsPanel");
+  const list = document.getElementById("adminChatsList");
+  const header = document.getElementById("adminChatHeader");
+  const msgs = document.getElementById("adminChatMsgs");
+  if(!panel || !list || !header || !msgs) return;
 
-      const j = await adminFetch(API_URL + "/api/admin/chats");
-      const chats = j.chats || [];
+  list.innerHTML = "Carregando...";
+  header.textContent = "Selecione um chat…";
+  msgs.innerHTML = "";
 
-      if(!chats.length){
-        list.innerHTML = "<div style='color:#aaa;padding:6px;'>Nenhum chat.</div>";
-        return;
-      }
+  const j = await adminFetch(API_URL + "/api/admin/chats");
+  const chats = Array.isArray(j?.chats) ? j.chats : [];
 
-      list.innerHTML = "";
-      chats.slice().reverse().forEach(c=>{
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.style.cssText = "text-align:left;padding:8px;border:1px solid #222;border-radius:8px;background:#111;color:#fff;cursor:pointer;";
-        btn.innerHTML = `<div><strong>${c.nick || "Sem nick"}</strong></div>
-                         <div style="font-size:12px;color:#aaa;">${c.id} • ${c.user_id || ""}</div>`;
-        btn.addEventListener("click", ()=> loadAdminChatMessages(c.id, c.nick));
-        list.appendChild(btn);
-      });
-    }
+  if(!chats.length){
+    list.innerHTML = "<div style='color:#aaa;padding:6px;'>Nenhum chat.</div>";
+    return;
+  }
 
-    async function loadAdminChatMessages(chatId, nick){
-      adminSelectedChatId = chatId;
+  list.innerHTML = "";
+  chats.slice().reverse().forEach(c=>{
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.style.cssText = "text-align:left;padding:8px;border:1px solid #222;border-radius:8px;background:#111;color:#fff;cursor:pointer;";
+    btn.innerHTML = `<div><strong>${c.nick || "Sem nick"}</strong></div>
+                     <div style="font-size:12px;color:#aaa;">${c.id} • ${c.user_id || ""}</div>`;
+    btn.addEventListener("click", ()=> loadAdminChatMessages(c.id, c.nick));
+    list.appendChild(btn);
+  });
+}
 
-      const header = document.getElementById("adminChatHeader");
-      const msgs = document.getElementById("adminChatMsgs");
-      if(!header || !msgs) return;
+async function loadAdminChatMessages(chatId, nick){
+  const header = document.getElementById("adminChatHeader");
+  const msgs = document.getElementById("adminChatMsgs");
+  if(!header || !msgs) return;
 
-      header.textContent = `Carregando: ${nick || chatId}`;
-      msgs.innerHTML = "";
+  header.textContent = `Carregando: ${nick || chatId}`;
+  msgs.innerHTML = "";
 
-      const j = await adminFetch(API_URL + `/api/admin/chats/${encodeURIComponent(chatId)}/messages`);
-      const arr = j.messages || [];
+  const j = await adminFetch(API_URL + `/api/admin/chats/${encodeURIComponent(chatId)}/messages`);
+  const arr = Array.isArray(j?.messages) ? j.messages : [];
 
-      header.textContent = `${nick || "Chat"} • ${chatId}`;
+  header.textContent = `${nick || "Chat"} • ${chatId}`;
 
-      if(!arr.length){
-        msgs.innerHTML = "<div style='color:#aaa;'>Sem mensagens.</div>";
-        return;
-      }
+  if(!arr.length){
+    msgs.innerHTML = "<div style='color:#aaa;'>Sem mensagens.</div>";
+    return;
+  }
 
-      arr.slice(-120).forEach(m=>{
-        const div = document.createElement("div");
-        div.textContent = (m.sender === "admin" ? "👑 " : "👤 ") + (m.message || "");
-        msgs.appendChild(div);
-      });
+  arr.slice(-120).forEach(m=>{
+    const div = document.createElement("div");
+    div.textContent = (m.sender === "admin" ? "👑 " : "👤 ") + (m.message || "");
+    msgs.appendChild(div);
+  });
 
-      msgs.scrollTop = msgs.scrollHeight;
-    }
+  msgs.scrollTop = msgs.scrollHeight;
+}
 
-    document.getElementById("adminReplyBtn")?.addEventListener("click", async ()=>{
-      if(!adminSelectedChatId) return alert("Selecione um chat primeiro.");
+// Botão abre/fecha (admin)
+document.getElementById("adminChatsBtn")?.addEventListener("click", async ()=>{
+  const panel = document.getElementById("adminChatsPanel");
+  if(!panel) return;
 
-      const input = document.getElementById("adminReplyInput");
-      const msg = (input?.value || "").trim();
-      if(!msg) return;
+  const open = panel.style.display !== "block";
+  panel.style.display = open ? "block" : "none";
+  if(open){
+    try{ await loadAdminChats(); }
+    catch(e){ console.error(e); alert("Erro ao carregar chats."); }
+  }
+});
 
-      const key = getAdminKey();
-      if(!key) return alert("Admin key não encontrada.");
+document.getElementById("adminChatsClose")?.addEventListener("click", ()=>{
+  const panel = document.getElementById("adminChatsPanel");
+  if(panel) panel.style.display = "none";
+});
 
-      try{
-        const r = await fetch(API_URL + `/api/admin/chats/${adminSelectedChatId}/send`, {
-          method: "POST",
-          headers:{
-            "Content-Type":"application/json",
-            "x-admin-key": key
-          },
-          body: JSON.stringify({ message: msg })
-        });
+// 👑 Botão do topo (fora do admin)
+document.getElementById("masterChatsTopBtn")?.addEventListener("click", async ()=>{
+  try{ ensureAdminUI?.(); }catch(e){}
 
-        if(r.ok){
-          input.value = "";
-          await loadAdminChatMessages(adminSelectedChatId);
-        }else{
-          alert("Erro ao enviar resposta.");
-        }
-      }catch(e){
-        alert("Erro de conexão.");
-      }
-    });
+  const admin = document.getElementById("adminSection");
+  if(admin) admin.style.display = "block";
 
-    document.getElementById("adminChatsBtn")?.addEventListener("click", async ()=>{
-      const panel = document.getElementById("adminChatsPanel");
-      if(!panel) return;
+  const panel = document.getElementById("adminChatsPanel");
+  if(!panel) return alert("Painel não encontrado (adminChatsPanel).");
 
-      const open = panel.style.display !== "block";
-      panel.style.display = open ? "block" : "none";
+  const open = panel.style.display !== "block";
+  panel.style.display = open ? "block" : "none";
 
-      if(open){
-        try{ await loadAdminChats(); }
-        catch(e){
-          if(String(e.message).includes("ADMIN_KEY_REQUIRED")) return;
-          alert("Erro ao carregar chats admin.");
-        }
-      }
-    });
-
-    document.getElementById("adminChatsClose")?.addEventListener("click", ()=>{
-      const panel = document.getElementById("adminChatsPanel");
-      if(panel) panel.style.display = "none";
-    });
-
-    // popula categorias no select
-    const sel = document.getElementById("selectCategoria");
+  if(open){
+    try{ await loadAdminChats(); }
+    catch(e){ console.error(e); alert("Erro ao carregar chats."); }
+  }
+});
     if(sel){
       sel.innerHTML = "";
       document.querySelectorAll(".catBtn").forEach(b=>{
@@ -2456,6 +2468,30 @@ if(opts.markSeen){
 
   setInterval(syncJogos, 60 * 1000);
   setInterval(checkPremiumSync, 3 * 60 * 1000);
+  // 👑 Abre o painel de chats pelo botão do topo (Super Admin)
+window.openMasterChatsFromTop = async function(){
+  try{ ensureAdminUI?.(); }catch(e){}
+
+  const admin = document.getElementById("adminSection");
+  if(admin) admin.style.display = "block";
+
+  const panel = document.getElementById("adminChatsPanel");
+  if(!panel){
+    alert("Painel de chats não encontrado. (adminChatsPanel)");
+    return;
+  }
+
+  const open = panel.style.display !== "block";
+  panel.style.display = open ? "block" : "none";
+
+  if(open){
+    try{ await loadAdminChats(); }
+    catch(e){
+      console.log(e);
+      alert("Erro ao carregar chats.");
+    }
+  }
+};
 
 </script>
 
