@@ -569,8 +569,8 @@
 
       <button id="chatToggleBtn" class="nav-item">💬 Chat</button>
 	  <button id="masterChatsTopBtn" class="nav-item"
-  onclick="openMasterChatsFromTop()"
-  style="display:none; position:relative; z-index:200000; pointer-events:auto;">
+  onclick="openMasterChatsTop()"
+  style="display:none;">
   📨 Chats
 </button>
 
@@ -755,6 +755,30 @@
   </div>
 
   <script>
+  // 👑 Função global do botão do topo (MASTER)
+window.openMasterChatsTop = async function(){
+  try{ ensureAdminUI?.(); }catch(e){}
+
+  const admin = document.getElementById("adminSection");
+  if(admin) admin.style.display = "block";
+
+  const panel = document.getElementById("adminChatsPanel");
+  if(!panel) return alert("Painel não encontrado (adminChatsPanel).");
+
+  const open = panel.style.display !== "block";
+  panel.style.display = open ? "block" : "none";
+
+  if(open){
+  try{
+    if(typeof loadAdminChats === "function"){
+      await loadAdminChats();
+    }
+  }catch(e){
+    console.error(e);
+    alert("Erro ao carregar chats.");
+  }
+}
+};
     // ===== NOTIFICAÇÃO CHAT USUÁRIO (BADGE VERMELHO) =====
   document.addEventListener("DOMContentLoaded", function(){
     const chatBtn = document.getElementById("chatToggleBtn");
@@ -2042,6 +2066,7 @@ async function loadAdminChats(){
 }
 
 async function loadAdminChatMessages(chatId, nick){
+window.adminSelectedChatId = chatId; // 👑 salva o chat selecionado
   const header = document.getElementById("adminChatHeader");
   const msgs = document.getElementById("adminChatMsgs");
   if(!header || !msgs) return;
@@ -2395,14 +2420,27 @@ if(opts.markSeen){
     }
 
     try{
-      const r = await fetch(API_URL + "/api/chat/send", {
-        method: "POST",
-        headers: {
-          "Content-Type":"application/json",
-          "Authorization":"Bearer " + token
-        },
-        body: JSON.stringify({ message: msg })
-      });
+      const url = API_URL + `/api/admin/chats/${adminSelectedChatId}/send`;
+
+let headers = { "Content-Type":"application/json" };
+
+// 👑 Super Admin (Srgokucheats) envia com Bearer token
+if(window.isSuperAdmin){
+  const token = getToken?.();
+  if(!token) return alert("Token não encontrado. Faça login de novo.");
+  headers["Authorization"] = "Bearer " + token;
+} else {
+  // 🔐 Admin normal envia com ADMIN KEY
+  const key = localStorage.getItem("toolflix_admin_key") || "";
+  if(!key) return alert("Admin key não encontrada.");
+  headers["x-admin-key"] = key;
+}
+
+const r = await fetch(url, {
+  method: "POST",
+  headers,
+  body: JSON.stringify({ message: msg })
+});
 
       const j = await r.json().catch(()=> ({}));
 
@@ -2434,6 +2472,48 @@ if(opts.markSeen){
 
   // Listener único do botão enviar
   document.getElementById("chatSendBtn")?.addEventListener("click", sendChatMessage);
+// 👑 ADMIN REPLY (Super Admin via token) — funciona mesmo se o botão for criado depois
+document.addEventListener("click", async (ev)=>{
+  const btn = ev.target?.closest?.("#adminReplyBtn");
+  if(!btn) return;
+
+  if(!window.isSuperAdmin) return alert("Apenas Srgokucheats pode responder por aqui.");
+
+  const chatId = window.adminSelectedChatId || null;
+  if(!chatId) return alert("Selecione um chat primeiro.");
+
+  const input = document.getElementById("adminReplyInput");
+  const msg = (input?.value || "").trim();
+  if(!msg) return;
+
+  const token = getToken?.();
+  if(!token) return alert("Sem token. Faça login novamente.");
+
+  try{
+    const r = await fetch(API_URL + `/api/admin/chats/${encodeURIComponent(chatId)}/send`, {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + token
+      },
+      body: JSON.stringify({ message: msg })
+    });
+
+    const j = await r.json().catch(()=> ({}));
+    if(!r.ok || j?.ok !== true){
+      console.log("ADMIN_REPLY_FAIL:", r.status, j);
+      return alert("Erro ao enviar resposta.");
+    }
+
+    input.value = "";
+    if(typeof loadAdminChatMessages === "function"){
+      await loadAdminChatMessages(chatId);
+    }
+  }catch(e){
+    console.error(e);
+    alert("Erro de conexão.");
+  }
+});
 
   // Enter para enviar
   document.getElementById("chatInput")?.addEventListener("keydown", (e)=>{
