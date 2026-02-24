@@ -185,6 +185,18 @@
       position: relative;
       overflow: hidden;
     }
+	    /* ===== CHAT NOTIF (WhatsApp style) ===== */
+    #chatToggleBtn.chat-has-new{
+      border-color: rgba(255,0,0,0.45) !important;
+      box-shadow: 0 0 14px rgba(255,0,0,0.35), 0 0 30px rgba(255,0,0,0.15) !important;
+      animation: chatGlowPulse 1.2s infinite ease-in-out;
+    }
+
+    @keyframes chatGlowPulse{
+      0%   { transform: translateY(0);    box-shadow: 0 0 10px rgba(255,0,0,0.25), 0 0 22px rgba(255,0,0,0.12); }
+      50%  { transform: translateY(-1px); box-shadow: 0 0 18px rgba(255,0,0,0.45), 0 0 34px rgba(255,0,0,0.20); }
+      100% { transform: translateY(0);    box-shadow: 0 0 10px rgba(255,0,0,0.25), 0 0 22px rgba(255,0,0,0.12); }
+    }
 
     @keyframes pulsePremium {
       0% {transform:scale(1)}
@@ -744,17 +756,33 @@
     if(!chatBtn) return;
 
     const chatBadge = document.createElement("span");
-    chatBadge.style.position = "absolute";
-    chatBadge.style.top = "-4px";
-    chatBadge.style.right = "-4px";
-    chatBadge.style.width = "10px";
-    chatBadge.style.height = "10px";
-    chatBadge.style.background = "red";
-    chatBadge.style.borderRadius = "50%";
-    chatBadge.style.display = "none";
+chatBadge.id = "chatBadge";
+chatBadge.style.position = "absolute";
+chatBadge.style.top = "-8px";
+chatBadge.style.right = "-8px";
+chatBadge.style.minWidth = "22px";
+chatBadge.style.height = "22px";
+chatBadge.style.padding = "0 6px";
+chatBadge.style.background = "#ff0000";
+chatBadge.style.color = "#fff";
+chatBadge.style.fontSize = "12px";
+chatBadge.style.fontWeight = "bold";
+chatBadge.style.display = "none";
+chatBadge.style.alignItems = "center";
+chatBadge.style.justifyContent = "center";
+chatBadge.style.borderRadius = "999px";
+chatBadge.style.boxShadow = "0 0 12px rgba(255,0,0,0.7)";
+chatBadge.style.animation = "chatGlowPulse 1.2s infinite ease-in-out";
+chatBadge.style.display = "none";
+chatBadge.style.pointerEvents = "none";
 
-    chatBtn.style.position = "relative";
-    chatBtn.appendChild(chatBadge);
+chatBadge.innerText = "";
+
+chatBtn.style.position = "relative";
+chatBtn.appendChild(chatBadge);
+
+window.__chatBadge = chatBadge;
+window.__lastSeenCount = 0;
 
     window.__chatBadge = chatBadge;
   });
@@ -2298,21 +2326,44 @@
       });
       box.scrollTop = box.scrollHeight;
 
-      // badge logic
-      const currentCount = messages.length;
-      const chatOpen = !!window.__chatIsOpen;
+      // badge logic (WhatsApp style)
+const currentCount = messages.length;
+const chatOpen = !!window.__chatIsOpen;
 
-      // se chat está fechado e chegou msg nova (comparando contagem)
-      if(!chatOpen && currentCount > (window.__chatLastSeenCount || 0)){
-        if(window.__chatBadge) window.__chatBadge.style.display = "block";
-      }
+const unseen = Math.max(0, currentCount - (window.__chatLastSeenCount || 0));
 
-      // se abriu (opts.markSeen) então zera badge e marca visto
-      if(opts.markSeen){
-        window.__chatLastSeenCount = currentCount;
-        localStorage.setItem(window.__chatLastSeenKey, String(currentCount));
-        if(window.__chatBadge) window.__chatBadge.style.display = "none";
-      }
+if(!chatOpen && unseen > 0){
+  // mostra número
+  if(window.__chatBadge){
+    window.__chatBadge.style.display = "flex";
+    window.__chatBadge.innerText = unseen > 9 ? "9+" : String(unseen);
+  }
+  // liga glow no botão
+  const btn = document.getElementById("chatToggleBtn");
+  if(btn) btn.classList.add("chat-has-new");
+} else {
+  // se não tem não-lidas (ou chat aberto), esconde
+  if(window.__chatBadge){
+    window.__chatBadge.style.display = "none";
+    window.__chatBadge.innerText = "";
+  }
+  const btn = document.getElementById("chatToggleBtn");
+  if(btn) btn.classList.remove("chat-has-new");
+}
+
+// se abriu (markSeen) -> marca tudo como visto e apaga badge + glow
+if(opts.markSeen){
+  window.__chatLastSeenCount = currentCount;
+  localStorage.setItem(window.__chatLastSeenKey, String(currentCount));
+
+  if(window.__chatBadge){
+    window.__chatBadge.style.display = "none";
+    window.__chatBadge.innerText = "";
+  }
+
+  const btn = document.getElementById("chatToggleBtn");
+  if(btn) btn.classList.remove("chat-has-new");
+}
 
       return { ok:true, count: currentCount };
     }catch(e){
