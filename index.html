@@ -1749,9 +1749,10 @@ const MASTER_NICK = "Srgokucheats";
     if(badge) badge.style.display = isPremium ? "block" : "none";
 
     const s = getPremiumStats();
+    const totalP = (premiumMembersCount || s.totalPremium || 0);
     const headline = isPremium
-      ? `💎 Você é usuário Premium`
-      : `💎 <b>${premiumMembersCount}</b> usuários Premium ativos`;
+      ? `💎 Você é um dos <b>${totalP}</b> usuários Premium`
+      : `💎 Total de Premiums: <b>${totalP}</b>`;
 
     counter.innerHTML = `
       <div style="font-weight:900; color:gold; margin-bottom:6px;">${headline}</div>
@@ -3127,6 +3128,125 @@ document.addEventListener("DOMContentLoaded", function(){
   100% { transform: scale(1); opacity: 1; }
 }
 </style>
+
+
+<!-- ===== PATCH: Boas-vindas + Contador de visualizações (Render API) ===== -->
+<script>
+(function(){
+  const LAST_VISIT_KEY = "toolflix_last_visit_ts";
+
+  function safeNick(){
+    try{
+      if(typeof loadUser === "function"){
+        const u = loadUser();
+        if(u && u.nick) return u.nick;
+      }
+    }catch(e){}
+    try{
+      const a = JSON.parse(localStorage.getItem("auth")||"{}");
+      if(a && a.nick) return a.nick;
+    }catch(e){}
+    return "";
+  }
+
+  function ensureTopChip(){
+    const userArea = document.getElementById("userArea");
+    if(!userArea) return null;
+    let chip = document.getElementById("welcomeTopMsg");
+    if(!chip){
+      chip = document.createElement("span");
+      chip.id = "welcomeTopMsg";
+      chip.style.cssText = "font-size:12px; opacity:.78; margin-left:8px; white-space:nowrap;";
+      userArea.appendChild(chip);
+    }
+    return chip;
+  }
+
+  function ensureViewsEl(){
+    // tenta colocar na top-nav (perto dos botões)
+    const top = document.querySelector(".top-nav");
+    if(!top) return null;
+    let el = document.getElementById("viewsLive");
+    if(!el){
+      el = document.createElement("div");
+      el.id = "viewsLive";
+      el.className = "nav-item";
+      el.style.cssText = "opacity:.85; font-size:12px; padding:10px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.04);";
+      el.innerHTML = "👀 Carregando...";
+      top.appendChild(el);
+    }
+    return el;
+  }
+
+  async function fetchJsonTry(url, opts){
+    try{
+      const r = await fetch(url, opts);
+      if(!r.ok) throw 0;
+      return await r.json().catch(()=>null);
+    }catch(e){
+      return null;
+    }
+  }
+
+  async function hitAndGetViews(){
+    // tenta alguns endpoints comuns (sem quebrar nada se não existir)
+    const base = (typeof API_URL !== "undefined" ? API_URL : "");
+    const tries = [
+      { url: base + "/api/views/hit", opts: { method:"POST" } },
+      { url: base + "/api/stats/views/hit", opts: { method:"POST" } },
+      { url: base + "/api/visitas/hit", opts: { method:"POST" } },
+      { url: base + "/api/views", opts: { method:"GET" } },
+      { url: base + "/api/stats/views", opts: { method:"GET" } },
+      { url: base + "/api/visitas", opts: { method:"GET" } }
+    ];
+
+    for(const t of tries){
+      const j = await fetchJsonTry(t.url, t.opts);
+      if(j && (j.views != null || j.total != null || j.count != null)){
+        const v = Number(j.views ?? j.total ?? j.count);
+        if(!Number.isNaN(v)) return v;
+      }
+    }
+    return null;
+  }
+
+  async function refreshViews(){
+    const el = ensureViewsEl();
+    if(!el) return;
+    const v = await hitAndGetViews();
+    if(v == null){
+      // não existe endpoint, não mostra nada pra não poluir
+      el.style.display = "none";
+      return;
+    }
+    el.style.display = "";
+    el.innerHTML = `👀 <b>${v}</b> visualizações`;
+  }
+
+  function greet(){
+    const nick = safeNick();
+    if(!nick) return;
+
+    const last = Number(localStorage.getItem(LAST_VISIT_KEY) || "0");
+    localStorage.setItem(LAST_VISIT_KEY, String(Date.now()));
+
+    const chip = ensureTopChip();
+    if(chip) chip.innerHTML = `👋 Bem-vindo, <b>${nick}</b>`;
+
+    // Mensagem de boas-vindas (só se já visitou antes)
+    if(last > 0 && typeof showToast === "function"){
+      showToast(`Bem-vindo de volta, ${nick}!`);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    try{ greet(); }catch(e){}
+    // Atualiza views e depois faz poll leve
+    refreshViews();
+    setInterval(refreshViews, 15000);
+  });
+})();
+</script>
 
 </body>
 </html>
