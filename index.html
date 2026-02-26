@@ -677,6 +677,8 @@
   📨 Chats
 </button>
 
+      <div id="visitorCounter" class="nav-item" style="display:none; cursor:default; user-select:none;">👀 Você é o visitante <span id="visitorCounterNum">0</span></div>
+
       <button class="nav-item" id="sortBtn">🔃 Ordem: Recentes</button>
       <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
       <button class="nav-item" id="adminBtn">⚙️ Admin</button>
@@ -3244,6 +3246,76 @@ document.addEventListener("DOMContentLoaded", function(){
     // Atualiza views e depois faz poll leve
     refreshViews();
     setInterval(refreshViews, 15000);
+  });
+})();
+</script>
+
+
+<!-- ===== PATCH: Contador real de visualizações (visitante #) ===== -->
+<script>
+(function(){
+  function getAuth(){
+    try{ return JSON.parse(localStorage.getItem("auth") || "{}"); }catch(e){ return {}; }
+  }
+
+  async function tryFetch(url, opts){
+    try{
+      const r = await fetch(url, opts);
+      const j = await r.json().catch(()=> ({}));
+      if(!r.ok) return null;
+      return j;
+    }catch(e){
+      return null;
+    }
+  }
+
+  async function incrementVisitor(){
+    // evita contar várias vezes na mesma aba/sessão
+    if(sessionStorage.getItem("tfx_visitor_counted") === "1"){
+      return { count: Number(sessionStorage.getItem("tfx_visitor_number") || "0") || 0 };
+    }
+
+    const endpoints = [
+      { url: API_URL + "/api/visits", method:"POST" },
+      { url: API_URL + "/api/views/increment", method:"POST" },
+      { url: API_URL + "/api/analytics/visit", method:"POST" },
+      { url: API_URL + "/api/visit", method:"POST" }
+    ];
+
+    let data = null;
+    for(const ep of endpoints){
+      data = await tryFetch(ep.url, { method: ep.method, headers: { "Content-Type":"application/json" }, body: JSON.stringify({ page:"toolflix" }) });
+      if(data) break;
+    }
+
+    // suporte a formatos comuns: {count}, {views}, {total}
+    const n = Number(data?.count ?? data?.views ?? data?.total ?? 0) || 0;
+
+    sessionStorage.setItem("tfx_visitor_counted","1");
+    sessionStorage.setItem("tfx_visitor_number", String(n));
+    return { count: n };
+  }
+
+  function renderVisitor(n){
+    const box = document.getElementById("visitorCounter");
+    const num = document.getElementById("visitorCounterNum");
+    if(!box || !num) return;
+
+    // Só mostra se conseguiu número válido
+    if(!n || n <= 0){
+      box.style.display = "none";
+      return;
+    }
+    num.textContent = String(n);
+    box.style.display = "flex";
+    box.style.alignItems = "center";
+    box.style.gap = "6px";
+  }
+
+  document.addEventListener("DOMContentLoaded", async function(){
+    // Não trava o site se API estiver fora
+    const res = await incrementVisitor();
+    renderVisitor(res.count);
   });
 })();
 </script>
