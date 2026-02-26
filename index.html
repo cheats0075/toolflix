@@ -564,6 +564,62 @@
     }
 
   </style>
+
+<style id="masterChatsOverlayStyle">
+/* ===== Painel exclusivo de Chats (Master) ===== */
+#masterChatsOverlay{ position:fixed; inset:0; z-index:99999; display:none; }
+#masterChatsOverlay .mco-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.65); backdrop-filter: blur(6px); }
+#masterChatsOverlay .mco-modal{
+  position:relative;
+  width:min(980px, 94vw);
+  height:min(680px, 86vh);
+  margin:6vh auto 0 auto;
+  background:rgba(20,20,20,.92);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.55);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+#masterChatsOverlay .mco-topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 14px;
+  background:linear-gradient(to right, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+#masterChatsOverlay .mco-title{ font-weight:800; letter-spacing:.2px; }
+#masterChatsOverlay .mco-close{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  border-radius:12px;
+  padding:8px 10px;
+  cursor:pointer;
+}
+#masterChatsOverlay .mco-close:hover{ background:rgba(255,255,255,.10); }
+#masterChatsOverlay .mco-body{ flex:1; padding:12px; overflow:auto; }
+#masterChatsOverlay .mco-hint{
+  padding:10px 14px;
+  font-size:12px;
+  color:rgba(255,255,255,.70);
+  border-top:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.25);
+}
+/* melhora visual do painel existente quando estiver no overlay */
+#masterChatsOverlay #adminChatsPanel{
+  display:block;
+  width:100%;
+  height:100%;
+  background:transparent !important;
+  border:none !important;
+  padding:0 !important;
+}
+#masterChatsOverlay #adminChatsPanel > div{ gap:12px !important; }
+#masterChatsOverlay #adminChatsList button{ transition: transform .06s ease, background .12s ease; }
+#masterChatsOverlay #adminChatsList button:hover{ transform: translateY(-1px); }
+</style>
+
 </head>
 <body class="theme-default">
   <aside class="sidebar">
@@ -804,30 +860,139 @@
   <script>
   // 👑 Função global do botão do topo (MASTER)
 window.openMasterChatsTop = async function(){
+  // Abre um painel exclusivo de Chats (sem abrir o modo Admin)
   try{ if(typeof ensureAdminUI === "function") ensureAdminUI(); }catch(e){ console.error(e); }
 
-  const admin = document.getElementById("adminSection");
-  if(admin) admin.style.display = "block";
-
-  // garante que o painel exista (caso o admin UI ainda não tenha sido montado)
-  const panel = document.getElementById("adminChatsPanel");
+  let panel = document.getElementById("adminChatsPanel");
   if(!panel){
     alert("Painel não encontrado (adminChatsPanel).");
     return;
   }
 
-  // abre sempre (sem toggle confuso)
+  // Cria overlay modal (uma vez)
+  let overlay = document.getElementById("masterChatsOverlay");
+  if(!overlay){
+    overlay = document.createElement("div");
+    overlay.id = "masterChatsOverlay";
+    overlay.innerHTML = `
+      <div class="mco-backdrop"></div>
+      <div class="mco-modal" role="dialog" aria-modal="true">
+        <div class="mco-topbar">
+          <div class="mco-title">📨 Chats (Master)</div>
+          <button class="mco-close" type="button" aria-label="Fechar">✖</button>
+        </div>
+        <div class="mco-body"></div>
+        <div class="mco-hint">Dica: pressione <strong>ESC</strong> para fechar.</div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const closeBtn = overlay.querySelector(".mco-close");
+    const backdrop = overlay.querySelector(".mco-backdrop");
+    const close = ()=> window.closeMasterChatsOverlay && window.closeMasterChatsOverlay();
+    closeBtn.addEventListener("click", close);
+    backdrop.addEventListener("click", close);
+  }
+
+  // Guarda pai original e cria placeholder fixo (pra sempre conseguir voltar)
+  if(!panel.dataset.__origParentId){
+    panel.dataset.__origParentId = panel.parentElement ? (panel.parentElement.id || "__noid__") : "__none__";
+  }
+  if(!panel.dataset.__placeholderId){
+    const ph = document.createElement("div");
+    ph.id = "adminChatsPanelPlaceholder";
+    panel.parentElement && panel.parentElement.insertBefore(ph, panel);
+    panel.dataset.__placeholderId = ph.id;
+  }
+
+  // Move o painel para dentro do modal
+  const body = overlay.querySelector(".mco-body");
+  if(panel && body){
+    body.appendChild(panel);
+  }
+
+  // Mostra overlay e painel
+  overlay.style.display = "block";
   panel.style.display = "block";
 
+  // Fecha com ESC (sempre reatacha handler)
+  if(window.__mcoEscHandler){
+    document.removeEventListener("keydown", window.__mcoEscHandler);
+  }
+  window.__mcoEscHandler = function(e){
+    if(e.key === "Escape") window.closeMasterChatsOverlay && window.closeMasterChatsOverlay();
+  };
+  document.addEventListener("keydown", window.__mcoEscHandler);
+
+  // Ao abrir, limpa a bolinha de notificação (se existir)
+  try{
+    if(typeof window.clearMasterNotification === "function") window.clearMasterNotification();
+    if(window.__masterChatBadge) window.__masterChatBadge.style.display = "none";
+  }catch(e){}
+
+  // Se por algum motivo os elementos internos sumiram, tenta reconstruir 1x
+  const hasParts = !!(document.getElementById("adminChatsList") && document.getElementById("adminChatHeader") && document.getElementById("adminChatMsgs"));
+  if(!hasParts){
+    try{ if(typeof ensureAdminUI === "function") ensureAdminUI(); }catch(e){}
+    panel = document.getElementById("adminChatsPanel");
+    if(panel && body) body.appendChild(panel);
+    panel.style.display = "block";
+  }
+
+  // Carrega lista SEMPRE ao abrir (resolve bug de reabrir vazio)
   try{
     if(typeof window.loadAdminChats === "function"){
-      await window.loadAdminChats();
+      await window.loadAdminChats({ sortRecent:true });
     }else{
       alert("Função loadAdminChats não encontrada.");
     }
   }catch(e){
     console.error(e);
     alert("Erro ao carregar chats.");
+  }
+};
+
+// Fecha overlay e devolve painel ao local original
+window.closeMasterChatsOverlay = function(){
+  const overlay = document.getElementById("masterChatsOverlay");
+  const panel = document.getElementById("adminChatsPanel");
+  if(overlay) overlay.style.display = "none";
+
+  // Remove ESC handler
+  if(window.__mcoEscHandler){
+    document.removeEventListener("keydown", window.__mcoEscHandler);
+    window.__mcoEscHandler = null;
+  }
+
+  // Devolve painel ao local original via placeholder (evita sumir ao reabrir)
+  if(panel){
+    const phId = panel.dataset.__placeholderId;
+    let ph = phId ? document.getElementById(phId) : null;
+
+    // cria placeholder se não existir
+    if(!ph){
+      const newId = "adminChatsPanelPlaceholder";
+      ph = document.getElementById(newId);
+      if(!ph){
+        ph = document.createElement("div");
+        ph.id = newId;
+      }
+      panel.dataset.__placeholderId = newId;
+
+      // tenta colocar placeholder no adminSection (ou pai original)
+      const origId = panel.dataset.__origParentId;
+      let target = null;
+      if(origId && origId !== "__none__" && origId !== "__noid__"){
+        target = document.getElementById(origId);
+      }
+      if(!target) target = document.getElementById("adminSection");
+      if(!target) target = document.body;
+      target.appendChild(ph);
+    }
+
+    // move o painel de volta para o placeholder
+    ph.replaceWith(panel);
+    panel.style.display = "none";
   }
 };
     // ===== NOTIFICAÇÃO CHAT USUÁRIO (BADGE VERMELHO) =====
@@ -2189,7 +2354,7 @@ async function adminFetch(url){
   throw new Error("NOT_AUTHORIZED");
 }
 
-async function loadAdminChats(){
+async function loadAdminChats(opts={}){
   const panel = document.getElementById("adminChatsPanel");
   const list = document.getElementById("adminChatsList");
   const header = document.getElementById("adminChatHeader");
@@ -2209,7 +2374,24 @@ async function loadAdminChats(){
   }
 
   list.innerHTML = "";
-  chats.slice().reverse().forEach(c=>{
+  (function(){
+  const getTs = (c)=>{
+    const v = c.last_ts ?? c.lastTs ?? c.last_at ?? c.lastAt ?? c.updated_at ?? c.updatedAt ?? c.last_message_at ?? c.lastMessageAt ?? c.time ?? c.ts ?? c.created_at ?? c.createdAt;
+    if(!v) return 0;
+    if(typeof v === "number") return v;
+    if(typeof v === "string" && /^\d+$/.test(v)) return Number(v);
+    const d = Date.parse(v);
+    return isNaN(d) ? 0 : d;
+  };
+
+  const sorted = chats.slice();
+  if(opts && opts.sortRecent){
+    sorted.sort((a,b)=> getTs(b) - getTs(a));
+  } else {
+    sorted.reverse();
+  }
+
+  sorted.forEach(c=>{
     const btn = document.createElement("button");
     btn.type = "button";
     btn.style.cssText = "text-align:left;padding:8px;border:1px solid #222;border-radius:8px;background:#111;color:#fff;cursor:pointer;";
@@ -2218,6 +2400,7 @@ async function loadAdminChats(){
     btn.addEventListener("click", ()=> loadAdminChatMessages(c.id, c.nick));
     list.appendChild(btn);
   });
+})();
 }
 
 // garante acesso global
