@@ -1082,36 +1082,34 @@ const MASTER_NICK = "Srgokucheats";
 
   function updateUserUI(){
     const u = loadUser();
-	// 👑 Detecta Super Admin automaticamente
-if(u && u.nick === MASTER_NICK){
-  window.isSuperAdmin = true;
-}else{
-  window.isSuperAdmin = false;
-}
+
+    // 👑 Detecta Super Admin automaticamente (pela conta master)
+    window.isSuperAdmin = !!(u && u.nick === MASTER_NICK);
+
     const nickEl = document.getElementById("userNick");
     const xpFill = document.getElementById("xpFill");
     const xpText = document.getElementById("xpText");
+
+    const masterTopBtn = document.getElementById("masterChatsTopBtn");
+    const adminChatsBtn = document.getElementById("adminChatsBtn");
+    const adminBtn = document.getElementById("adminBtn");
 
     if(!u || !u.nick){
       if(nickEl) nickEl.innerText = "Entrar";
       if(xpFill) xpFill.style.width = "0%";
       if(xpText) xpText.innerText = "0/100";
+
+      // Esconde tudo quando não está logado
+      if(masterTopBtn) masterTopBtn.style.display = "none";
+      if(adminChatsBtn) adminChatsBtn.style.display = "none";
+      if(adminBtn) adminBtn.style.display = "none";
       return;
-	  // 👑 Mostrar botão "Ver todos chats" apenas para Super Admin
-const adminChatsBtn = document.getElementById("adminChatsBtn");
-if(adminChatsBtn){
-  if(window.isSuperAdmin){
-    adminChatsBtn.style.display = "block";
-  }else{
-    adminChatsBtn.style.display = "none";
-  }
-}
     }
-	// 👑 Botão no topo (fora do admin) só para Super Admin
-const masterTopBtn = document.getElementById("masterChatsTopBtn");
-if(masterTopBtn){
-  masterTopBtn.style.display = window.isSuperAdmin ? "inline-block" : "none";
-}
+
+    // 👑 Mostra Chats (topo) + Admin apenas para a conta Master
+    if(masterTopBtn) masterTopBtn.style.display = window.isSuperAdmin ? "inline-block" : "none";
+    if(adminChatsBtn) adminChatsBtn.style.display = window.isSuperAdmin ? "block" : "none";
+    if(adminBtn) adminBtn.style.display = window.isSuperAdmin ? "inline-block" : "none";
 
     if(nickEl) nickEl.innerText = u.nick;
 
@@ -1121,11 +1119,6 @@ if(masterTopBtn){
     if(xpFill) xpFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
     if(xpText) xpText.innerText   = `${u.xp - info.min}/${info.max - info.min} (Nv ${info.level})`;
   }
-
-  /* ===============================
-     AUDIO
-  ================================= */
-  let TF_AUDIO_CTX = null;
 
   function tfInitAudio(){
     try{
@@ -2185,7 +2178,7 @@ if(masterTopBtn){
 async function adminFetch(url){
   const token = getToken?.();
 
-  // 👑 Super Admin usa Bearer token (sem admin key)
+  // 🔐 Apenas conta Master autenticada pode chamar Admin API
   if(window.isSuperAdmin && token){
     const r = await fetch(url, { headers: { "Authorization": "Bearer " + token } });
     const j = await r.json().catch(()=> ({}));
@@ -2193,18 +2186,7 @@ async function adminFetch(url){
     return j;
   }
 
-  // 🔐 Admin normal usa ADMIN KEY
-  const adminKey =
-    (localStorage.getItem("toolflix_admin_key") || "").trim() ||
-    (prompt("Digite a ADMIN KEY da API:") || "").trim();
-
-  if(!adminKey) throw new Error("ADMIN_KEY_REQUIRED");
-  localStorage.setItem("toolflix_admin_key", adminKey);
-
-  const r = await fetch(url, { headers: { "x-admin-key": adminKey } });
-  const j = await r.json().catch(()=> ({}));
-  if(!r.ok || j?.ok !== true) throw new Error(j?.error || "ADMIN_API_ERROR");
-  return j;
+  throw new Error("NOT_AUTHORIZED");
 }
 
 async function loadAdminChats(){
@@ -2468,26 +2450,43 @@ document.getElementById("masterChatsTopBtn")?.addEventListener("click", async ()
   document.getElementById("adminBtn")?.addEventListener("click", (e)=>{
     e.preventDefault();
     e.stopPropagation();
-    document.getElementById("loginModal").style.display = "flex";
-    document.getElementById("loginInput")?.focus();
-  });
 
-  document.getElementById("loginSubmit")?.addEventListener("click", ()=>{
-    const pass = document.getElementById("loginInput")?.value || "";
-    if(pass === "yuri0075"){
-      modoAdmin = true;
-      document.getElementById("loginModal").style.display = "none";
-      const admin = document.getElementById("adminSection");
-      if(admin) admin.style.display = "block";
-      ensureAdminUI();
-      showToast("✅ Modo Admin ativado!");
-      render();
-    }else{
-      showToast("Senha incorreta!");
+    // 🔐 Admin sem senha fixa: somente conta master autenticada (token válido + nick master)
+    const a = loadAuth?.() || null;
+    const isMasterAuth = !!(a && a.token && a.nick === MASTER_NICK);
+
+    if(!isMasterAuth){
+      showToast("Acesso restrito: apenas a conta master.");
+      return;
     }
-  });
 
-  document.getElementById("loginInput")?.addEventListener("keydown", (e)=>{
+    // entra direto (sem modal de senha)
+    modoAdmin = true;
+    const admin = document.getElementById("adminSection");
+    if(admin) admin.style.display = "block";
+    ensureAdminUI();
+    showToast("✅ Modo Admin ativado!");
+    render();
+  });
+document.getElementById("loginSubmit")?.addEventListener("click", ()=>{
+    // 🔐 Sem senha fixa: valida autenticação real (token + nick master)
+    const a = loadAuth?.() || null;
+    const isMasterAuth = !!(a && a.token && a.nick === MASTER_NICK);
+
+    if(!isMasterAuth){
+      showToast("Acesso restrito: apenas a conta master.");
+      return;
+    }
+
+    modoAdmin = true;
+    document.getElementById("loginModal").style.display = "none";
+    const admin = document.getElementById("adminSection");
+    if(admin) admin.style.display = "block";
+    ensureAdminUI();
+    showToast("✅ Modo Admin ativado!");
+    render();
+  });
+document.getElementById("loginInput")?.addEventListener("keydown", (e)=>{
     if(e.key === "Enter"){
       e.preventDefault();
       document.getElementById("loginSubmit")?.click();
@@ -2831,6 +2830,120 @@ document.addEventListener("DOMContentLoaded", function(){
 </button>
   </div>
 </div>
+
+
+<script>
+/* ===== PATCH: Notificação no botão 📨 Chats (Master) ===== */
+(function(){
+  function getMasterBtn(){
+    return document.getElementById("masterChatsTopBtn");
+  }
+
+  function ensureMasterBadge(){
+    const btn = getMasterBtn();
+    if(!btn) return null;
+    let b = btn.querySelector("[data-master-badge='1']");
+    if(b) return b;
+
+    b = document.createElement("span");
+    b.setAttribute("data-master-badge","1");
+    b.style.position = "absolute";
+    b.style.top = "-6px";
+    b.style.right = "-6px";
+    b.style.width = "14px";
+    b.style.height = "14px";
+    b.style.background = "#ff0000";
+    b.style.borderRadius = "50%";
+    b.style.display = "none";
+    b.style.boxShadow = "0 0 10px rgba(255,0,0,0.7)";
+    b.style.animation = "masterPing 1.2s infinite ease-in-out";
+    btn.style.position = "relative";
+    btn.appendChild(b);
+    return b;
+  }
+
+  function panelAberto(){
+    const panel = document.getElementById("adminChatsPanel");
+    return !!(panel && panel.style.display !== "none");
+  }
+
+  function setBadge(on){
+    const b = ensureMasterBadge();
+    if(!b) return;
+    b.style.display = on ? "block" : "none";
+  }
+
+  function signatureFromChats(chats){
+    try{
+      let best = 0;
+      for(const c of (chats||[])){
+        const t =
+          Number(c?.updatedAt || c?.lastAt || c?.lastMessageAt || c?.ts || 0) ||
+          (Array.isArray(c?.messages) && c.messages.length ? Number(c.messages[c.messages.length-1]?.ts || 0) : 0);
+        if(t > best) best = t;
+      }
+      if(best) return "t:" + best;
+      return "n:" + (Array.isArray(chats) ? chats.length : 0);
+    }catch{
+      return "n:0";
+    }
+  }
+
+  async function poll(){
+    try{
+      const a = (typeof loadAuth === "function") ? loadAuth() : null;
+      const isMasterAuth = !!(a && a.token && a.nick === MASTER_NICK);
+      if(!isMasterAuth || !window.isSuperAdmin){
+        setBadge(false);
+        return;
+      }
+
+      // Se o painel estiver aberto, não precisa alertar
+      if(panelAberto()){
+        setBadge(false);
+        localStorage.setItem("master_last_sig", localStorage.getItem("master_last_sig") || "");
+        return;
+      }
+
+      const r = await fetch(API_URL + "/api/admin/chats", { headers: { "Authorization": "Bearer " + a.token }});
+      const j = await r.json().catch(()=> ({}));
+      if(!r.ok || j?.ok !== true) return;
+
+      const sig = signatureFromChats(j?.chats || []);
+      const last = localStorage.getItem("master_last_sig") || "";
+      if(last && sig !== last){
+        setBadge(true);
+      }
+      if(!last){
+        // primeiro load não notifica
+        setBadge(false);
+      }
+      localStorage.setItem("master_last_sig", sig);
+    }catch(e){
+      // silencia
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    ensureMasterBadge();
+    const btn = getMasterBtn();
+    if(btn){
+      btn.addEventListener("click", ()=> setBadge(false));
+    }
+    // Poll leve
+    setInterval(poll, 8000);
+    poll();
+  });
+})();
+</script>
+
+<style>
+@keyframes masterPing {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.25); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 1; }
+}
+</style>
 
 </body>
 </html>
