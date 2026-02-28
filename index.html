@@ -30,7 +30,6 @@
     body.theme-zelda { --cor-accent: #00ff00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/zelda_resultado.webp'); }
     body.theme-spiderman { --cor-accent: #ff4500; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/speiderman_resultado.webp'); }
     body.theme-fortnite { --cor-accent: #1e90ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/fortinite_resultado.webp'); }
-	body.theme-naruto { --cor-accent: #1e90ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/naruto.webp'); }
 
     * { margin:0; padding:0; box-sizing:border-box; }
 
@@ -669,7 +668,6 @@
         <option value="zelda">💎 Zelda🗡️</option>
         <option value="spiderman">💎 Spiderman🕷️</option>
         <option value="fortnite">💎 Fortnite🎮</option>
-		<option value="naruto">💎 Naruto⏳</option>
       </select>
 
       <button id="chatToggleBtn" class="nav-item">💬 Chat</button>
@@ -2381,7 +2379,7 @@ async function loadAdminChats(opts={}){
   list.innerHTML = "";
   (function(){
   const getTs = (c)=>{
-    const v = c.last_ts ?? c.lastTs ?? c.last_at ?? c.lastAt ?? c.updated_at ?? c.updatedAt ?? c.last_message_at ?? c.lastMessageAt ?? c.time ?? c.ts ?? c.created_at ?? c.createdAt;
+    const v = c.last_activity_at ?? c.lastActivityAt ?? c.last_ts ?? c.lastTs ?? c.last_at ?? c.lastAt ?? c.updated_at ?? c.updatedAt ?? c.last_message_at ?? c.lastMessageAt ?? c.time ?? c.ts ?? c.created_at ?? c.createdAt;
     if(!v) return 0;
     if(typeof v === "number") return v;
     if(typeof v === "string" && /^\d+$/.test(v)) return Number(v);
