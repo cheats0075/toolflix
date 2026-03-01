@@ -118,12 +118,20 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       font-weight: 500;
       cursor: pointer;
       border: 1px solid rgba(255,255,255,0.1);
-      text-align: left;
       transition: all 0.3s ease;
       display: flex;
       align-items: center;
       gap: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+
+      /* padroniza o tamanho das "cápsulas" */
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 48px;
+      justify-content: flex-start;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     .catBtn:hover {
