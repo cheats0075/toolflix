@@ -17,7 +17,6 @@
     }
 
     /* --- TEMAS --- */
-    body.theme-default { --cor-accent: #00ffff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/padr%C3%A3o.webp') !important; }
     body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/gow_resultado.webp') !important; }
     body.theme-dbz { --cor-accent: #ff8c00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/dbz_resultado.webp') !important; }
     body.theme-mk { --cor-accent: #ff0000; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/mk_resultado.webp') !important; }
@@ -33,7 +32,6 @@
     body.theme-fortnite { --cor-accent: #1e90ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/fortinite_resultado.webp'); }
 	  body.theme-naruto { --cor-accent: #1e90ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/naruto.webp'); }
 	  body.theme-anime { --cor-accent: #1e90ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/anime.webp'); }anime
-	  body.theme-godhand { --cor-accent: #1e90ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/godhand.webp'); }
 
     * { margin:0; padding:0; box-sizing:border-box; }
 
@@ -641,18 +639,35 @@
 
     <nav id="categoriaBtns" style="overflow-y:auto; padding-right:5px;">
       <button class="catBtn active" data-cat="Todos">📂 Todos</button>
-      <button class="catBtn" data-cat="Jogos PS2">🎮 Jogos PS2</button>
-      <button class="catBtn" data-cat="PS2 com Cheats">🔥 PS2 Cheats</button>
-      <button class="catBtn" data-cat="Jogos PS3">🎮 Jogos PS3</button>
-      <button class="catBtn" data-cat="PS3 com Cheats">🔥 PS3 Cheats</button>
-      <button class="catBtn" data-cat="Jogos PS1">🎮 Jogos PS1</button>
+
+      <button class="catBtn" data-cat="NES">🎮 NES</button>
+      <button class="catBtn" data-cat="SNES">🎮 SNES</button>
+      <button class="catBtn" data-cat="Mega Drive">🎮 Mega Drive</button>
+      <button class="catBtn" data-cat="Master System">🎮 Master System</button>
+      <button class="catBtn" data-cat="Game Boy / GBA">🎮 Game Boy / GBA</button>
+
+      <button class="catBtn" data-cat="Jogos PS1">🕹️ PS1</button>
       <button class="catBtn" data-cat="PS1 com Cheats">🔥 PS1 Cheats</button>
-      <button class="catBtn" data-cat="YouTube">📺 YouTube</button>
+      <button class="catBtn" data-cat="Jogos PS2">🕹️ PS2</button>
+      <button class="catBtn" data-cat="PS2 com Cheats">🔥 PS2 Cheats</button>
+      <button class="catBtn" data-cat="Jogos PS3">🕹️ PS3</button>
+      <button class="catBtn" data-cat="PS3 com Cheats">🔥 PS3 Cheats</button>
+
+      <button class="catBtn" data-cat="Xbox Clássico">💚 Xbox Clássico</button>
+      <button class="catBtn" data-cat="Xbox 360">💚 Xbox 360</button>
+
+      <button class="catBtn" data-cat="N64">🧊 N64</button>
+      <button class="catBtn" data-cat="GameCube">🧊 GameCube</button>
+      <button class="catBtn" data-cat="Nintendo DS">🧊 Nintendo DS</button>
+      <button class="catBtn" data-cat="Wii">🧊 Wii</button>
+
       <button class="catBtn" data-cat="Jogos PC">💻 Jogos PC</button>
+      <button class="catBtn" data-cat="YouTube">📺 YouTube</button>
+      <button class="catBtn" data-cat="Emuladores">🕹️ Emuladores</button>
       <button class="catBtn" data-cat="Fix SteamTools">🛠️ SteamTools</button>
       <button class="catBtn" data-cat="Arquivos">🗄️ Arquivos</button>
-      <button class="catBtn" data-cat="Roms">📀 Roms</button>
-      <button class="catBtn" data-cat="Emuladores">🕹️ Emuladores</button>
+
+      <button class="catBtn" data-cat="Roms">📀 Roms (geral)</button>
     </nav>
   </aside>
 
@@ -673,8 +688,7 @@
         <option value="spiderman">💎 Spiderman🕷️</option>
         <option value="fortnite">💎 Fortnite🎮</option>
 		  <option value="naruto">💎 Naruto⏳</option>
-		  <option value="anime">💎 anime⛩️</option>
-		  <option value="godhand">💎 godhand🤛</option>
+		  <option value="anime">💎 animee⛩️</option>
       </select>
 
       <button id="chatToggleBtn" class="nav-item">💬 Chat</button>
@@ -2223,8 +2237,8 @@ const MASTER_NICK = "Srgokucheats";
           selCat.appendChild(opt);
         }
       });
-      if(!selCat.value) selCat.value = "Jogos PS2";
-    }
+      if(!selCat.value && selCat.options && selCat.options.length){ selCat.value = selCat.options[0].value; }
+}
 
     // ===== Eventos do Admin (corrigido: só após criar a UI) =====
     document.getElementById("exitAdminBtn")?.addEventListener("click", ()=> exitAdmin());
