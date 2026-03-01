@@ -17,7 +17,18 @@
     }
 
     /* --- TEMAS --- */
-    body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/gow_resultado.webp') !important; }
+    
+
+/* ===== TEMA DEFAULT (FUNDO PADRÃO) ===== */
+body.theme-default{
+  background-image:
+    linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)),
+    url('/toolflix/assets/img/temas/padrao.webp');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/gow_resultado.webp') !important; }
     body.theme-dbz { --cor-accent: #ff8c00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/dbz_resultado.webp') !important; }
     body.theme-mk { --cor-accent: #ff0000; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/mk_resultado.webp') !important; }
     body.theme-gta { --cor-accent: #2ecc71; --cor-bg-overlay: rgba(0,0,0,0.12); background-image: url('/toolflix/assets/img/temas/gta_sa_v2.webp') !important; }
