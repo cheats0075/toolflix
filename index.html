@@ -1135,7 +1135,8 @@ const MASTER_NICK = "Srgokucheats";
     const link = safeStr(g?.link ?? g?.url ?? g?.href ?? "").trim();
     const capa = safeStr(g?.capa ?? g?.img ?? g?.image ?? g?.cover ?? "").trim();
     const premium = Boolean(g?.premium === true || g?.isPremium === true || categoria === "Premium");
-    return { nome, categoria, link, capa, premium };
+    const created_at = Number(g?.created_at ?? g?.createdAt ?? g?.added_at ?? g?.addedAt ?? 0) || 0;
+    return { nome, categoria, link, capa, premium, created_at };
   }
 
   /* ===============================
@@ -1914,7 +1915,7 @@ const MASTER_NICK = "Srgokucheats";
 
     if(sortModo === "az") lista.sort((a,b)=> a.nome.localeCompare(b.nome));
     else if(sortModo === "za") lista.sort((a,b)=> b.nome.localeCompare(a.nome));
-    else if(sortModo === "recentes") lista.reverse();
+    else if(sortModo === "recentes") lista.sort((a,b)=> (Number(b.created_at||0) - Number(a.created_at||0)));
 
     lista.forEach(j => {
       const isFav = db_favs.includes(j.nome);
