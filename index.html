@@ -584,7 +584,19 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       white-space: normal;
     }
 
-  </style>
+  
+
+/* FIX: dropdown options visibility (Admin select) */
+select option{
+  background:#141414 !important;
+  color:#ffffff !important;
+}
+select optgroup{
+  background:#141414 !important;
+  color:#ffffff !important;
+}
+
+</style>
 
 <style id="masterChatsOverlayStyle">
 /* ===== Painel exclusivo de Chats (Master) ===== */
@@ -659,8 +671,8 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     <nav id="categoriaBtns" style="overflow-y:auto; padding-right:5px;">
       <button class="catBtn active" data-cat="Todos">📂 Todos</button>
 
-      <button class="catBtn" data-cat="NES">🎮 NES</button>
-      <button class="catBtn" data-cat="SNES">🎮 SNES</button>
+      <button class="catBtn" data-cat="Nintendo">🎮 Nintendo</button>
+      <button class="catBtn" data-cat="Super Nintendo">🎮 Super Nintendo</button>
       <button class="catBtn" data-cat="Mega Drive">🎮 Mega Drive</button>
       <button class="catBtn" data-cat="Master System">🎮 Master System</button>
       <button class="catBtn" data-cat="Game Boy / GBA">🎮 Game Boy / GBA</button>
@@ -675,10 +687,21 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       <button class="catBtn" data-cat="Xbox Clássico">💚 Xbox Clássico</button>
       <button class="catBtn" data-cat="Xbox 360">💚 Xbox 360</button>
 
-      <button class="catBtn" data-cat="N64">🧊 N64</button>
+      <button class="catBtn" data-cat="Nintendo 64">🧊 Nintendo 64</button>
       <button class="catBtn" data-cat="GameCube">🧊 GameCube</button>
       <button class="catBtn" data-cat="Nintendo DS">🧊 Nintendo DS</button>
       <button class="catBtn" data-cat="Wii">🧊 Wii</button>
+
+      
+      <button class="catBtn" data-cat="PSP">🎮 PSP</button>
+      <button class="catBtn" data-cat="NAOMI">🕹️ NAOMI</button>
+      <button class="catBtn" data-cat="SEGA 32X">🎮 SEGA 32X</button>
+      <button class="catBtn" data-cat="ATARI 2600/5200/7800">🎮 ATARI 2600/5200/7800</button>
+      <button class="catBtn" data-cat="SEGA SATURN">🎮 SEGA SATURN</button>
+      <button class="catBtn" data-cat="JAGUAR">🎮 JAGUAR</button>
+      <button class="catBtn" data-cat="DREAMCAST">🎮 DREAMCAST</button>
+      <button class="catBtn" data-cat="ARCADE">🕹️ ARCADE</button>
+      <button class="catBtn" data-cat="Nintendo Switch">🎮 Nintendo Switch</button>
 
       <button class="catBtn" data-cat="Jogos PC">💻 Jogos PC</button>
       <button class="catBtn" data-cat="YouTube">📺 YouTube</button>
@@ -1126,6 +1149,18 @@ const MASTER_NICK = "Srgokucheats";
   function normalizeCategoria(raw){
     const c = safeStr(raw, "").trim();
     if(!c) return "Jogos PS2";
+
+    // Compat: renomes para não quebrar jogos antigos já cadastrados
+    const map = {
+      "NES": "Nintendo",
+      "SNES": "Super Nintendo",
+      "N64": "Nintendo 64",
+      "DREANCAST": "DREAMCAST",   // typo comum
+      "Dreamcast": "DREAMCAST",
+      "dreancast": "DREAMCAST"
+    };
+    if(map[c]) return map[c];
+
     return c;
   }
 
