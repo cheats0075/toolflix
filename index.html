@@ -17,18 +17,7 @@
     }
 
     /* --- TEMAS --- */
-    
-
-/* ===== TEMA DEFAULT (FUNDO PADRÃO) ===== */
-body.theme-default{
-  background-image:
-    linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)),
-    url('/toolflix/assets/img/temas/padrao.webp');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-}
-body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/gow_resultado.webp') !important; }
+    body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/gow_resultado.webp') !important; }
     body.theme-dbz { --cor-accent: #ff8c00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/dbz_resultado.webp') !important; }
     body.theme-mk { --cor-accent: #ff0000; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/mk_resultado.webp') !important; }
     body.theme-gta { --cor-accent: #2ecc71; --cor-bg-overlay: rgba(0,0,0,0.12); background-image: url('/toolflix/assets/img/temas/gta_sa_v2.webp') !important; }
@@ -118,20 +107,12 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       font-weight: 500;
       cursor: pointer;
       border: 1px solid rgba(255,255,255,0.1);
+      text-align: left;
       transition: all 0.3s ease;
       display: flex;
       align-items: center;
       gap: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-
-      /* padroniza o tamanho das "cápsulas" */
-      width: 100%;
-      box-sizing: border-box;
-      min-height: 48px;
-      justify-content: flex-start;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
     }
 
     .catBtn:hover {
@@ -584,182 +565,7 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       white-space: normal;
     }
 
-  
-
-/* FIX: dropdown options visibility (Admin select) */
-select option{
-  background:#141414 !important;
-  color:#ffffff !important;
-}
-select optgroup{
-  background:#141414 !important;
-  color:#ffffff !important;
-}
-
-    /* ===== ONLINE / VISITANTES ===== */
-    #presenceSummary{
-      margin: 12px 0 18px;
-      padding: 12px 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      cursor: pointer;
-      transition: .25s;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.22);
-      user-select: none;
-    }
-    #presenceSummary:hover{
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.07);
-      border-color: rgba(0,255,255,0.20);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.28), 0 0 14px rgba(0,255,255,0.10);
-    }
-    #presenceSummaryTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-      font-weight:800;
-      color:#fff;
-      margin-bottom:4px;
-    }
-    #presenceSummaryTop .dot{
-      color:#4cff7a;
-      text-shadow: 0 0 10px rgba(76,255,122,.55);
-    }
-    #presenceSummarySub{
-      font-size:12px;
-      opacity:.8;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    #presenceOverlay{
-      position: fixed;
-      inset: 0;
-      display: none;
-      z-index: 100002;
-    }
-    #presenceOverlay.open{ display:block; }
-    #presenceOverlay .presence-backdrop{
-      position:absolute;
-      inset:0;
-      background: rgba(0,0,0,.68);
-      backdrop-filter: blur(6px);
-    }
-    #presenceOverlay .presence-modal{
-      position: relative;
-      width: min(560px, 92vw);
-      max-height: 82vh;
-      overflow: hidden;
-      margin: 7vh auto 0;
-      border-radius: 22px;
-      background: linear-gradient(180deg, rgba(20,20,20,.97), rgba(12,12,12,.97));
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 30px 80px rgba(0,0,0,.60), 0 0 30px rgba(0,255,255,.08);
-    }
-    #presenceOverlay .presence-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      padding:16px 18px;
-      border-bottom:1px solid rgba(255,255,255,.08);
-      background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-    }
-    #presenceOverlay .presence-head strong{
-      font-size:18px;
-      letter-spacing:.2px;
-    }
-    #presenceClose{
-      border:none;
-      width:38px;
-      height:38px;
-      border-radius:12px;
-      cursor:pointer;
-      background: rgba(255,255,255,.08);
-      color:#fff;
-      font-size:18px;
-      font-weight:900;
-    }
-    #presenceClose:hover{ background: rgba(255,255,255,.14); }
-    #presenceOverlay .presence-content{
-      padding:16px 18px 18px;
-      max-height: calc(82vh - 72px);
-      overflow:auto;
-    }
-    .presence-section{ margin-bottom:16px; }
-    .presence-section-title{
-      font-size:12px;
-      text-transform: uppercase;
-      letter-spacing: .9px;
-      color: gold;
-      opacity:.95;
-      margin-bottom:10px;
-      font-weight:900;
-    }
-    .presence-list{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .presence-user{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:12px 14px;
-      border-radius:16px;
-      background: rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow: 0 10px 24px rgba(0,0,0,.18);
-    }
-    .presence-user-left{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-    }
-    .presence-bullet{
-      width:10px;
-      height:10px;
-      border-radius:50%;
-      flex:0 0 10px;
-      background:#4cff7a;
-      box-shadow:0 0 10px rgba(76,255,122,.65);
-    }
-    .presence-bullet.guest{
-      background:#c9c9c9;
-      box-shadow:0 0 10px rgba(220,220,220,.35);
-    }
-    .presence-name{
-      font-weight:800;
-      color:#fff;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width: 300px;
-    }
-    .presence-level{
-      flex:0 0 auto;
-      font-size:12px;
-      font-weight:900;
-      color:#111;
-      background: linear-gradient(90deg, #00ffff, #ffd700);
-      border-radius:999px;
-      padding:6px 10px;
-    }
-    .presence-empty{
-      padding:14px;
-      border-radius:16px;
-      background: rgba(255,255,255,.04);
-      border:1px dashed rgba(255,255,255,.10);
-      opacity:.78;
-      font-size:13px;
-    }
-
-</style>
+  </style>
 
 <style id="masterChatsOverlayStyle">
 /* ===== Painel exclusivo de Chats (Master) ===== */
@@ -816,6 +622,185 @@ select optgroup{
 #masterChatsOverlay #adminChatsList button:hover{ transform: translateY(-1px); }
 </style>
 
+
+<style id="presencePanelStyles">
+/* ===== ONLINE / ÚLTIMOS VISTOS ===== */
+#presenceSummary{
+  margin: 12px 0 18px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  cursor: pointer;
+  transition: .25s;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+  user-select: none;
+}
+#presenceSummary:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(0,255,255,0.20);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.28), 0 0 14px rgba(0,255,255,0.10);
+}
+#presenceSummaryTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  font-weight:800;
+  color:#fff;
+  margin-bottom:4px;
+}
+#presenceSummaryTop .dot{
+  color:#4cff7a;
+  text-shadow: 0 0 10px rgba(76,255,122,.55);
+}
+#presenceSummarySub{
+  font-size:12px;
+  opacity:.8;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+#presenceOverlay{
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 100002;
+}
+#presenceOverlay.open{ display:block; }
+#presenceOverlay .presence-backdrop{
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,.68);
+  backdrop-filter: blur(6px);
+}
+#presenceOverlay .presence-modal{
+  position: relative;
+  width: min(560px, 92vw);
+  max-height: 82vh;
+  overflow: hidden;
+  margin: 7vh auto 0;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(20,20,20,.97), rgba(12,12,12,.97));
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 30px 80px rgba(0,0,0,.60), 0 0 30px rgba(0,255,255,.08);
+}
+#presenceOverlay .presence-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:16px 18px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+}
+#presenceOverlay .presence-head strong{
+  font-size:18px;
+  letter-spacing:.2px;
+}
+#presenceClose{
+  border:none;
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  cursor:pointer;
+  background: rgba(255,255,255,.08);
+  color:#fff;
+  font-size:18px;
+  font-weight:900;
+}
+#presenceClose:hover{ background: rgba(255,255,255,.14); }
+#presenceOverlay .presence-content{
+  padding:16px 18px 18px;
+  max-height: calc(82vh - 72px);
+  overflow:auto;
+}
+.presence-section{ margin-bottom:16px; }
+.presence-section-title{
+  font-size:12px;
+  text-transform: uppercase;
+  letter-spacing: .9px;
+  color: gold;
+  opacity:.95;
+  margin-bottom:10px;
+  font-weight:900;
+}
+.presence-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.presence-user{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 14px;
+  border-radius:16px;
+  background: rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+}
+.presence-user-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.presence-bullet{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  flex:0 0 10px;
+  background:#4cff7a;
+  box-shadow:0 0 10px rgba(76,255,122,.65);
+}
+.presence-bullet.guest{
+  background:#c9c9c9;
+  box-shadow:0 0 10px rgba(220,220,220,.35);
+}
+.presence-name-wrap{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+.presence-name{
+  font-weight:800;
+  color:#fff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width: 280px;
+}
+.presence-meta{
+  font-size:12px;
+  opacity:.75;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width: 280px;
+}
+.presence-level{
+  flex:0 0 auto;
+  font-size:12px;
+  font-weight:900;
+  color:#111;
+  background: linear-gradient(90deg, #00ffff, #ffd700);
+  border-radius:999px;
+  padding:6px 10px;
+}
+.presence-empty{
+  padding:14px;
+  border-radius:16px;
+  background: rgba(255,255,255,.04);
+  border:1px dashed rgba(255,255,255,.10);
+  opacity:.78;
+  font-size:13px;
+}
+</style>
+
 </head>
 <body class="theme-default">
   <aside class="sidebar">
@@ -829,8 +814,9 @@ select optgroup{
         <span><span class="dot">🟢</span> <span id="presenceOnlineCount">0</span> online agora</span>
         <span style="opacity:.75; font-size:12px;">Abrir</span>
       </div>
-      <div id="presenceSummarySub">Clique para ver quem está online e os últimos visitantes</div>
+      <div id="presenceSummarySub">Clique para ver quem está online e os últimos vistos</div>
     </div>
+
 
     <div style="margin-bottom:25px">
       <input type="text" id="searchBar" placeholder="🔍 Buscar jogos..."
@@ -841,46 +827,18 @@ select optgroup{
 
     <nav id="categoriaBtns" style="overflow-y:auto; padding-right:5px;">
       <button class="catBtn active" data-cat="Todos">📂 Todos</button>
-
-      <button class="catBtn" data-cat="Nintendo">🎮 Nintendo</button>
-      <button class="catBtn" data-cat="Super Nintendo">🎮 Super Nintendo</button>
-      <button class="catBtn" data-cat="Mega Drive">🎮 Mega Drive</button>
-      <button class="catBtn" data-cat="Master System">🎮 Master System</button>
-      <button class="catBtn" data-cat="Game Boy / GBA">🎮 Game Boy / GBA</button>
-
-      <button class="catBtn" data-cat="Jogos PS1">🕹️ PS1</button>
-      <button class="catBtn" data-cat="PS1 com Cheats">🔥 PS1 Cheats</button>
-      <button class="catBtn" data-cat="Jogos PS2">🕹️ PS2</button>
+      <button class="catBtn" data-cat="Jogos PS2">🎮 Jogos PS2</button>
       <button class="catBtn" data-cat="PS2 com Cheats">🔥 PS2 Cheats</button>
-      <button class="catBtn" data-cat="Jogos PS3">🕹️ PS3</button>
+      <button class="catBtn" data-cat="Jogos PS3">🎮 Jogos PS3</button>
       <button class="catBtn" data-cat="PS3 com Cheats">🔥 PS3 Cheats</button>
-
-      <button class="catBtn" data-cat="Xbox Clássico">💚 Xbox Clássico</button>
-      <button class="catBtn" data-cat="Xbox 360">💚 Xbox 360</button>
-
-      <button class="catBtn" data-cat="Nintendo 64">🧊 Nintendo 64</button>
-      <button class="catBtn" data-cat="GameCube">🧊 GameCube</button>
-      <button class="catBtn" data-cat="Nintendo DS">🧊 Nintendo DS</button>
-      <button class="catBtn" data-cat="Wii">🧊 Wii</button>
-
-      
-      <button class="catBtn" data-cat="PSP">🎮 PSP</button>
-      <button class="catBtn" data-cat="NAOMI">🕹️ NAOMI</button>
-      <button class="catBtn" data-cat="SEGA 32X">🎮 SEGA 32X</button>
-      <button class="catBtn" data-cat="ATARI 2600/5200/7800">🎮 ATARI 2600/5200/7800</button>
-      <button class="catBtn" data-cat="SEGA SATURN">🎮 SEGA SATURN</button>
-      <button class="catBtn" data-cat="JAGUAR">🎮 JAGUAR</button>
-      <button class="catBtn" data-cat="DREAMCAST">🎮 DREAMCAST</button>
-      <button class="catBtn" data-cat="ARCADE">🕹️ ARCADE</button>
-      <button class="catBtn" data-cat="Nintendo Switch">🎮 Nintendo Switch</button>
-
-      <button class="catBtn" data-cat="Jogos PC">💻 Jogos PC</button>
+      <button class="catBtn" data-cat="Jogos PS1">🎮 Jogos PS1</button>
+      <button class="catBtn" data-cat="PS1 com Cheats">🔥 PS1 Cheats</button>
       <button class="catBtn" data-cat="YouTube">📺 YouTube</button>
-      <button class="catBtn" data-cat="Emuladores">🕹️ Emuladores</button>
+      <button class="catBtn" data-cat="Jogos PC">💻 Jogos PC</button>
       <button class="catBtn" data-cat="Fix SteamTools">🛠️ SteamTools</button>
       <button class="catBtn" data-cat="Arquivos">🗄️ Arquivos</button>
-
-      <button class="catBtn" data-cat="Roms">📀 Roms (geral)</button>
+      <button class="catBtn" data-cat="Roms">📀 Roms</button>
+      <button class="catBtn" data-cat="Emuladores">🕹️ Emuladores</button>
     </nav>
   </aside>
 
@@ -1093,7 +1051,7 @@ select optgroup{
     </div>
   </div>
 
-
+  
   <div id="presenceOverlay">
     <div class="presence-backdrop"></div>
     <div class="presence-modal" role="dialog" aria-modal="true" aria-labelledby="presencePanelTitle">
@@ -1107,7 +1065,7 @@ select optgroup{
           <div id="presenceOnlineList" class="presence-list"></div>
         </div>
         <div class="presence-section">
-          <div class="presence-section-title">Últimos visitantes</div>
+          <div class="presence-section-title">Últimos vistos</div>
           <div id="presenceLastList" class="presence-list"></div>
         </div>
       </div>
@@ -1341,18 +1299,6 @@ const MASTER_NICK = "Srgokucheats";
   function normalizeCategoria(raw){
     const c = safeStr(raw, "").trim();
     if(!c) return "Jogos PS2";
-
-    // Compat: renomes para não quebrar jogos antigos já cadastrados
-    const map = {
-      "NES": "Nintendo",
-      "SNES": "Super Nintendo",
-      "N64": "Nintendo 64",
-      "DREANCAST": "DREAMCAST",   // typo comum
-      "Dreamcast": "DREAMCAST",
-      "dreancast": "DREAMCAST"
-    };
-    if(map[c]) return map[c];
-
     return c;
   }
 
@@ -1362,8 +1308,7 @@ const MASTER_NICK = "Srgokucheats";
     const link = safeStr(g?.link ?? g?.url ?? g?.href ?? "").trim();
     const capa = safeStr(g?.capa ?? g?.img ?? g?.image ?? g?.cover ?? "").trim();
     const premium = Boolean(g?.premium === true || g?.isPremium === true || categoria === "Premium");
-    const created_at = Number(g?.created_at ?? g?.createdAt ?? g?.added_at ?? g?.addedAt ?? 0) || 0;
-    return { nome, categoria, link, capa, premium, created_at };
+    return { nome, categoria, link, capa, premium };
   }
 
   /* ===============================
@@ -1494,24 +1439,13 @@ const MASTER_NICK = "Srgokucheats";
     if(totalXp < 100) return {level:1, min:0, max:100};
     if(totalXp < 250) return {level:2, min:100, max:250};
     if(totalXp < 500) return {level:3, min:250, max:500};
-    if(totalXp < 750) return {level:4, min:500, max:750};
-    if(totalXp < 1250) return {level:5, min:750, max:1250};
 
-    // Lv6 em diante: começa em 1250 e vai aumentando o "custo" por nível
-    let level = 6;
-    let min = 1250;
-    let max = 1900; // 1250 + 650 (primeiro salto)
-    while(totalXp >= max){
-      level++;
-      min = max;
-      // cresce o custo por nível (650, 800, 950, 1100, ...)
-      const delta = 650 + (level-7)*150;
-      max = min + delta;
-      if(level > 1000) break;
-    }
+    const extra = totalXp - 500;
+    const level = 4 + Math.floor(extra / 300);
+    const min   = 500 + (level-4)*300;
+    const max   = min + 300;
     return {level, min, max};
   }
-
 
   function showToast(msg){
     const c = document.getElementById("toast-container");
@@ -1563,7 +1497,7 @@ const MASTER_NICK = "Srgokucheats";
     const pct  = ((u.xp - info.min) / (info.max - info.min)) * 100;
 
     if(xpFill) xpFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
-        if(xpText) xpText.innerText   = `${u.xp}/${info.max} (Nv ${info.level})`;
+    if(xpText) xpText.innerText   = `${u.xp - info.min}/${info.max - info.min} (Nv ${info.level})`;
   }
 
   function tfInitAudio(){
@@ -1814,7 +1748,7 @@ const MASTER_NICK = "Srgokucheats";
       <div style="margin-bottom:15px;">
         <div style="display:flex; justify-content:space-between;">
           <div style="font-weight:900; color:gold;">Nível ${info.level}</div>
-          <div>XP: <b>${u.xp}/${info.max}</b></div>
+          <div>XP: <b>${inLevel}/${need}</b></div>
         </div>
         <div class="xpBar" style="width:100%; height:14px; margin-top:8px;">
           <div class="xpFill" style="width:${Math.max(0,Math.min(100,(inLevel/need)*100))}%"></div>
@@ -2153,7 +2087,7 @@ const MASTER_NICK = "Srgokucheats";
 
     if(sortModo === "az") lista.sort((a,b)=> a.nome.localeCompare(b.nome));
     else if(sortModo === "za") lista.sort((a,b)=> b.nome.localeCompare(a.nome));
-    else if(sortModo === "recentes") lista.sort((a,b)=> (Number(b.created_at||0) - Number(a.created_at||0)));
+    else if(sortModo === "recentes") lista.reverse();
 
     lista.forEach(j => {
       const isFav = db_favs.includes(j.nome);
@@ -2495,8 +2429,8 @@ const MASTER_NICK = "Srgokucheats";
           selCat.appendChild(opt);
         }
       });
-      if(!selCat.value && selCat.options && selCat.options.length){ selCat.value = selCat.options[0].value; }
-}
+      if(!selCat.value) selCat.value = "Jogos PS2";
+    }
 
     // ===== Eventos do Admin (corrigido: só após criar a UI) =====
     document.getElementById("exitAdminBtn")?.addEventListener("click", ()=> exitAdmin());
@@ -3600,109 +3534,148 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script>
+<script id="presencePanelScript">
 (function(){
-  function getPresenceAuthHeaders(){
+  function presenceGuestLabel(item, idx){
+    const raw = String(item?.nick || "").trim();
+    const m = raw.match(/(\d+)/);
+    const n = m ? m[1] : String((idx % 99) + 1).padStart(2, "0");
+    return "Usuário " + n;
+  }
+
+  function presenceDisplayName(item, idx){
+    if(item?.is_guest) return presenceGuestLabel(item, idx);
+    const nick = String(item?.nick || "").trim();
+    return nick || presenceGuestLabel(item, idx);
+  }
+
+  function presenceLevelLabel(item){
     try{
-      const a = JSON.parse(localStorage.getItem("toolflix_auth") || "null");
-      const token = a?.token || "";
-      return token ? { "Authorization": "Bearer " + token } : {};
-    }catch(e){
-      return {};
-    }
+      const xp = Number(item?.xp || 0);
+      if(typeof getLevelInfo === "function"){
+        return "Nv " + getLevelInfo(xp).level;
+      }
+    }catch(e){}
+    return "Nv 1";
   }
 
-  function formatPresenceName(item, idx){
-    if(!item) return "Usuário XX";
-    if(item.is_guest){
-      return `Usuário ${String(idx + 1).padStart(2,"0")}`;
-    }
-    return String(item.nick || "Usuário");
+  function formatLastSeen(ts){
+    const n = Number(ts || 0);
+    if(!n) return "visto por último agora há pouco";
+
+    const d = new Date(n);
+    const now = new Date();
+
+    const hh = String(d.getHours()).padStart(2,"0");
+    const mm = String(d.getMinutes()).padStart(2,"0");
+
+    const sameDay =
+      d.getDate() === now.getDate() &&
+      d.getMonth() === now.getMonth() &&
+      d.getFullYear() === now.getFullYear();
+
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    const isYesterday =
+      d.getDate() === yesterday.getDate() &&
+      d.getMonth() === yesterday.getMonth() &&
+      d.getFullYear() === yesterday.getFullYear();
+
+    if(sameDay) return `visto por último às ${hh}:${mm}`;
+    if(isYesterday) return `visto por último ontem às ${hh}:${mm}`;
+
+    const dd = String(d.getDate()).padStart(2,"0");
+    const mo = String(d.getMonth()+1).padStart(2,"0");
+    return `visto por último em ${dd}/${mo} às ${hh}:${mm}`;
   }
 
-  function formatPresenceLevel(item){
-    if(item?.is_guest) return "Visitante";
-    const xp = Number(item?.xp || 0);
-    const info = (typeof getLevelInfo === "function") ? getLevelInfo(xp) : { level: 1 };
-    return `Nv ${info.level}`;
-  }
-
-  function presenceCardHtml(item, idx){
+  function presenceCardHtml(item, idx, mode){
     const guest = !!item?.is_guest;
-    const name = formatPresenceName(item, idx);
-    const level = formatPresenceLevel(item);
+    const name = presenceDisplayName(item, idx);
+    const level = presenceLevelLabel(item);
+    const meta = mode === "last"
+      ? formatLastSeen(item?.last_seen_at)
+      : (guest ? "visitando agora" : "online agora");
+
     return `
       <div class="presence-user">
         <div class="presence-user-left">
           <span class="presence-bullet ${guest ? "guest" : ""}"></span>
-          <div class="presence-name">${name}</div>
+          <div class="presence-name-wrap">
+            <div class="presence-name">${name}</div>
+            <div class="presence-meta">${meta}</div>
+          </div>
         </div>
         <div class="presence-level">${level}</div>
       </div>
     `;
   }
 
-  function renderPresence(data){
-    const onlineCountEl = document.getElementById("presenceOnlineCount");
-    const onlineListEl = document.getElementById("presenceOnlineList");
-    const lastListEl = document.getElementById("presenceLastList");
-    const subEl = document.getElementById("presenceSummarySub");
-
-    if(!onlineCountEl || !onlineListEl || !lastListEl) return;
-
-    const online = Array.isArray(data?.online) ? data.online : [];
-    const last = Array.isArray(data?.last) ? data.last : [];
-
-    onlineCountEl.textContent = String(Number(data?.onlineCount || online.length || 0));
-
-    if(online.length){
-      onlineListEl.innerHTML = online.map((item, idx) => presenceCardHtml(item, idx)).join("");
-      const names = online.slice(0,3).map((item, idx) => formatPresenceName(item, idx)).join(" • ");
-      if(subEl) subEl.textContent = names || "Clique para ver quem está online e os últimos visitantes";
-    }else{
-      onlineListEl.innerHTML = '<div class="presence-empty">Ninguém online no momento.</div>';
-      if(subEl) subEl.textContent = "Clique para ver quem está online e os últimos visitantes";
-    }
-
-    if(last.length){
-      lastListEl.innerHTML = last.map((item, idx) => presenceCardHtml(item, idx)).join("");
-    }else{
-      lastListEl.innerHTML = '<div class="presence-empty">Ainda não há visitantes registrados.</div>';
-    }
-  }
-
-  async function hitPresence(){
+  async function registerPresence(){
     try{
-      await fetch(API_URL + "/api/visitor", {
-        method: "POST",
-        headers: {
-          "Content-Type":"application/json",
-          ...getPresenceAuthHeaders()
-        }
+      const headers = { "Content-Type":"application/json" };
+      if(typeof getToken === "function"){
+        const token = getToken();
+        if(token) headers["Authorization"] = "Bearer " + token;
+      }
+      await fetch(API_BASE + "/api/visitor", {
+        method:"POST",
+        headers,
+        body: JSON.stringify({ page:"toolflix" })
       });
     }catch(e){}
   }
 
   async function refreshPresence(){
+    const onlineCountEl = document.getElementById("presenceOnlineCount");
+    const onlineListEl = document.getElementById("presenceOnlineList");
+    const lastListEl = document.getElementById("presenceLastList");
+    const subEl = document.getElementById("presenceSummarySub");
+    if(!onlineCountEl || !onlineListEl || !lastListEl) return;
+
     try{
-      const r = await fetch(API_URL + "/api/visitors", { headers: getPresenceAuthHeaders() });
-      const j = await r.json().catch(()=> ({}));
-      if(j?.ok) renderPresence(j);
-    }catch(e){}
+      const r = await fetch(API_BASE + "/api/visitors");
+      const j = await r.json();
+
+      const online = Array.isArray(j?.online) ? j.online : [];
+      const last = Array.isArray(j?.lastSeen) ? j.lastSeen : [];
+      const onlineCount = Number(j?.onlineCount || online.length || 0);
+
+      onlineCountEl.textContent = String(onlineCount);
+      subEl.textContent = onlineCount > 0
+        ? "Clique para ver quem está online e os últimos vistos"
+        : "Ninguém online agora. Clique para ver os últimos vistos";
+
+      if(online.length){
+        onlineListEl.innerHTML = online.map((item, idx) => presenceCardHtml(item, idx, "online")).join("");
+      } else {
+        onlineListEl.innerHTML = '<div class="presence-empty">Ninguém online no momento.</div>';
+      }
+
+      if(last.length){
+        lastListEl.innerHTML = last.map((item, idx) => presenceCardHtml(item, idx, "last")).join("");
+      } else {
+        lastListEl.innerHTML = '<div class="presence-empty">Ainda não há últimos vistos para mostrar.</div>';
+      }
+    }catch(e){
+      onlineCountEl.textContent = "0";
+      if(subEl) subEl.textContent = "Não foi possível carregar os jogadores agora";
+      onlineListEl.innerHTML = '<div class="presence-empty">Não foi possível carregar quem está online.</div>';
+      lastListEl.innerHTML = '<div class="presence-empty">Não foi possível carregar os últimos vistos.</div>';
+    }
   }
 
-  function openPresence(){
+  function openPresencePanel(){
     const ov = document.getElementById("presenceOverlay");
     if(!ov) return;
     ov.classList.add("open");
-    document.body.style.overflow = "hidden";
+    refreshPresence();
   }
 
-  function closePresence(){
+  function closePresencePanel(){
     const ov = document.getElementById("presenceOverlay");
     if(!ov) return;
     ov.classList.remove("open");
-    document.body.style.overflow = "";
   }
 
   document.addEventListener("DOMContentLoaded", function(){
@@ -3711,17 +3684,19 @@ document.addEventListener("DOMContentLoaded", function(){
     const overlay = document.getElementById("presenceOverlay");
     const backdrop = overlay?.querySelector(".presence-backdrop");
 
-    summary?.addEventListener("click", openPresence);
-    closeBtn?.addEventListener("click", closePresence);
-    backdrop?.addEventListener("click", closePresence);
+    if(summary) summary.addEventListener("click", openPresencePanel);
+    if(closeBtn) closeBtn.addEventListener("click", closePresencePanel);
+    if(backdrop) backdrop.addEventListener("click", closePresencePanel);
 
     document.addEventListener("keydown", function(e){
-      if(e.key === "Escape") closePresence();
+      if(e.key === "Escape") closePresencePanel();
     });
 
-    hitPresence().finally(refreshPresence);
-    setInterval(hitPresence, 60000);
-    setInterval(refreshPresence, 20000);
+    registerPresence();
+    refreshPresence();
+
+    setInterval(registerPresence, 60000);
+    setInterval(refreshPresence, 30000);
   });
 })();
 </script>
