@@ -17,7 +17,18 @@
     }
 
     /* --- TEMAS --- */
-    body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/gow_resultado.webp') !important; }
+    
+
+/* ===== TEMA DEFAULT (FUNDO PADRÃO) ===== */
+body.theme-default{
+  background-image:
+    linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)),
+    url('/toolflix/assets/img/temas/padrao.webp');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/gow_resultado.webp') !important; }
     body.theme-dbz { --cor-accent: #ff8c00; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/dbz_resultado.webp') !important; }
     body.theme-mk { --cor-accent: #ff0000; background-image: linear-gradient(var(--cor-bg-overlay), var(--cor-bg-overlay)), url('/toolflix/assets/img/temas/mk_resultado.webp') !important; }
     body.theme-gta { --cor-accent: #2ecc71; --cor-bg-overlay: rgba(0,0,0,0.12); background-image: url('/toolflix/assets/img/temas/gta_sa_v2.webp') !important; }
@@ -107,12 +118,20 @@
       font-weight: 500;
       cursor: pointer;
       border: 1px solid rgba(255,255,255,0.1);
-      text-align: left;
       transition: all 0.3s ease;
       display: flex;
       align-items: center;
       gap: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+
+      /* padroniza o tamanho das "cápsulas" */
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 48px;
+      justify-content: flex-start;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     .catBtn:hover {
@@ -565,7 +584,335 @@
       white-space: normal;
     }
 
-  </style>
+  
+
+/* FIX: dropdown options visibility (Admin select) */
+select option{
+  background:#141414 !important;
+  color:#ffffff !important;
+}
+select optgroup{
+  background:#141414 !important;
+  color:#ffffff !important;
+}
+
+    /* ===== ONLINE / VISITANTES ===== */
+    #presenceSummary{
+      margin: 12px 0 18px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: .25s;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+      user-select: none;
+    }
+    #presenceSummary:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(0,255,255,0.20);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.28), 0 0 14px rgba(0,255,255,0.10);
+    }
+    #presenceSummaryTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      font-weight:800;
+      color:#fff;
+      margin-bottom:4px;
+    }
+    #presenceSummaryTop .dot{
+      color:#4cff7a;
+      text-shadow: 0 0 10px rgba(76,255,122,.55);
+    }
+    #presenceSummarySub{
+      font-size:12px;
+      opacity:.8;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    #presenceOverlay{
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 100002;
+    }
+    #presenceOverlay.open{ display:block; }
+    #presenceOverlay .presence-backdrop{
+      position:absolute;
+      inset:0;
+      background: rgba(0,0,0,.68);
+      backdrop-filter: blur(6px);
+    }
+    #presenceOverlay .presence-modal{
+      position: relative;
+      width: min(560px, 92vw);
+      max-height: 82vh;
+      overflow: hidden;
+      margin: 7vh auto 0;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(20,20,20,.97), rgba(12,12,12,.97));
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 30px 80px rgba(0,0,0,.60), 0 0 30px rgba(0,255,255,.08);
+    }
+    #presenceOverlay .presence-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:16px 18px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    }
+    #presenceOverlay .presence-head strong{
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    #presenceClose{
+      border:none;
+      width:38px;
+      height:38px;
+      border-radius:12px;
+      cursor:pointer;
+      background: rgba(255,255,255,.08);
+      color:#fff;
+      font-size:18px;
+      font-weight:900;
+    }
+    #presenceClose:hover{ background: rgba(255,255,255,.14); }
+    #presenceOverlay .presence-content{
+      padding:16px 18px 18px;
+      max-height: calc(82vh - 72px);
+      overflow:auto;
+    }
+    .presence-section{ margin-bottom:16px; }
+    .presence-section-title{
+      font-size:12px;
+      text-transform: uppercase;
+      letter-spacing: .9px;
+      color: gold;
+      opacity:.95;
+      margin-bottom:10px;
+      font-weight:900;
+    }
+    .presence-list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .presence-user{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+    }
+    .presence-user-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .presence-bullet{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      flex:0 0 10px;
+      background:#4cff7a;
+      box-shadow:0 0 10px rgba(76,255,122,.65);
+    }
+    .presence-bullet.guest{
+      background:#c9c9c9;
+      box-shadow:0 0 10px rgba(220,220,220,.35);
+    }
+    .presence-name{
+      font-weight:800;
+      color:#fff;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 300px;
+    }
+    .presence-level{
+      flex:0 0 auto;
+      font-size:12px;
+      font-weight:900;
+      color:#111;
+      background: linear-gradient(90deg, #00ffff, #ffd700);
+      border-radius:999px;
+      padding:6px 10px;
+    }
+    .presence-empty{
+      padding:14px;
+      border-radius:16px;
+      background: rgba(255,255,255,.04);
+      border:1px dashed rgba(255,255,255,.10);
+      opacity:.78;
+      font-size:13px;
+    }
+
+    /* ===== GLOBAL CHAT ===== */
+    #globalChatBtn{
+      position: relative;
+      overflow: hidden;
+    }
+    #globalChatBtn.has-new{
+      border-color: rgba(0,255,255,.35) !important;
+      box-shadow: 0 0 14px rgba(0,255,255,.18), 0 0 28px rgba(0,255,255,.10) !important;
+    }
+    #globalChatOverlay{
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 100003;
+    }
+    #globalChatOverlay.open{ display:block; }
+    #globalChatOverlay .gc-backdrop{
+      position:absolute;
+      inset:0;
+      background: rgba(0,0,0,.70);
+      backdrop-filter: blur(6px);
+    }
+    #globalChatOverlay .gc-modal{
+      position: relative;
+      width: min(760px, 94vw);
+      height: min(700px, 86vh);
+      margin: 6vh auto 0;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(20,20,20,.97), rgba(12,12,12,.97));
+      box-shadow: 0 30px 80px rgba(0,0,0,.60), 0 0 30px rgba(0,255,255,.08);
+      display:flex;
+      flex-direction:column;
+    }
+    #globalChatOverlay .gc-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:16px 18px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    }
+    #globalChatOverlay .gc-head strong{
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    #globalChatClose{
+      border:none;
+      width:38px;
+      height:38px;
+      border-radius:12px;
+      cursor:pointer;
+      background: rgba(255,255,255,.08);
+      color:#fff;
+      font-size:18px;
+      font-weight:900;
+    }
+    #globalChatClose:hover{ background: rgba(255,255,255,.14); }
+    #globalChatMessages{
+      flex:1;
+      overflow:auto;
+      padding:16px 18px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      scroll-behavior:smooth;
+    }
+    .global-chat-row{
+      display:flex;
+      flex-direction:column;
+      max-width: 88%;
+      align-self:flex-start;
+    }
+    .global-chat-name{
+      font-size:11px;
+      opacity:.85;
+      margin:0 10px 4px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .global-chat-bubble{
+      padding:10px 12px;
+      border-radius:16px;
+      border-top-left-radius:8px;
+      line-height:1.35;
+      white-space:pre-wrap;
+      word-break:break-word;
+      box-shadow:0 8px 22px rgba(0,0,0,0.25);
+      border:1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(10px);
+    }
+    .global-chat-meta{
+      margin:4px 10px 0;
+      font-size:11px;
+      opacity:.62;
+    }
+    .global-chat-empty{
+      padding:14px;
+      border-radius:16px;
+      background: rgba(255,255,255,.04);
+      border:1px dashed rgba(255,255,255,.10);
+      opacity:.78;
+      font-size:13px;
+    }
+    #globalChatComposer{
+      border-top:1px solid rgba(255,255,255,.08);
+      padding:14px 16px 16px;
+      background: rgba(0,0,0,.18);
+    }
+    #globalChatForm{
+      display:flex;
+      gap:10px;
+      align-items:flex-end;
+    }
+    #globalChatInput{
+      flex:1;
+      min-height:46px;
+      max-height:120px;
+      resize:none;
+      padding:12px 14px;
+      border-radius:16px;
+      background: rgba(255,255,255,.06);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.10);
+      outline:none;
+      font: inherit;
+    }
+    #globalChatInput:focus{
+      border-color: rgba(0,255,255,.35);
+      box-shadow: 0 0 0 3px rgba(0,255,255,.08);
+    }
+    #globalChatSend{
+      border:none;
+      border-radius:16px;
+      padding:12px 16px;
+      font-weight:900;
+      cursor:pointer;
+      color:#111;
+      background: linear-gradient(90deg, #00ffff, #ffd700);
+      min-width:110px;
+    }
+    #globalChatHint{
+      margin-top:8px;
+      font-size:11px;
+      opacity:.68;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+</style>
 
 <style id="masterChatsOverlayStyle">
 /* ===== Painel exclusivo de Chats (Master) ===== */
@@ -622,185 +969,6 @@
 #masterChatsOverlay #adminChatsList button:hover{ transform: translateY(-1px); }
 </style>
 
-
-<style id="presencePanelStyles">
-/* ===== ONLINE / ÚLTIMOS VISTOS ===== */
-#presenceSummary{
-  margin: 12px 0 18px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.04);
-  cursor: pointer;
-  transition: .25s;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.22);
-  user-select: none;
-}
-#presenceSummary:hover{
-  transform: translateY(-1px);
-  background: rgba(255,255,255,0.07);
-  border-color: rgba(0,255,255,0.20);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.28), 0 0 14px rgba(0,255,255,0.10);
-}
-#presenceSummaryTop{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  font-weight:800;
-  color:#fff;
-  margin-bottom:4px;
-}
-#presenceSummaryTop .dot{
-  color:#4cff7a;
-  text-shadow: 0 0 10px rgba(76,255,122,.55);
-}
-#presenceSummarySub{
-  font-size:12px;
-  opacity:.8;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-#presenceOverlay{
-  position: fixed;
-  inset: 0;
-  display: none;
-  z-index: 100002;
-}
-#presenceOverlay.open{ display:block; }
-#presenceOverlay .presence-backdrop{
-  position:absolute;
-  inset:0;
-  background: rgba(0,0,0,.68);
-  backdrop-filter: blur(6px);
-}
-#presenceOverlay .presence-modal{
-  position: relative;
-  width: min(560px, 92vw);
-  max-height: 82vh;
-  overflow: hidden;
-  margin: 7vh auto 0;
-  border-radius: 22px;
-  background: linear-gradient(180deg, rgba(20,20,20,.97), rgba(12,12,12,.97));
-  border: 1px solid rgba(255,255,255,.10);
-  box-shadow: 0 30px 80px rgba(0,0,0,.60), 0 0 30px rgba(0,255,255,.08);
-}
-#presenceOverlay .presence-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  padding:16px 18px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-}
-#presenceOverlay .presence-head strong{
-  font-size:18px;
-  letter-spacing:.2px;
-}
-#presenceClose{
-  border:none;
-  width:38px;
-  height:38px;
-  border-radius:12px;
-  cursor:pointer;
-  background: rgba(255,255,255,.08);
-  color:#fff;
-  font-size:18px;
-  font-weight:900;
-}
-#presenceClose:hover{ background: rgba(255,255,255,.14); }
-#presenceOverlay .presence-content{
-  padding:16px 18px 18px;
-  max-height: calc(82vh - 72px);
-  overflow:auto;
-}
-.presence-section{ margin-bottom:16px; }
-.presence-section-title{
-  font-size:12px;
-  text-transform: uppercase;
-  letter-spacing: .9px;
-  color: gold;
-  opacity:.95;
-  margin-bottom:10px;
-  font-weight:900;
-}
-.presence-list{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.presence-user{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:12px 14px;
-  border-radius:16px;
-  background: rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow: 0 10px 24px rgba(0,0,0,.18);
-}
-.presence-user-left{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:0;
-}
-.presence-bullet{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  flex:0 0 10px;
-  background:#4cff7a;
-  box-shadow:0 0 10px rgba(76,255,122,.65);
-}
-.presence-bullet.guest{
-  background:#c9c9c9;
-  box-shadow:0 0 10px rgba(220,220,220,.35);
-}
-.presence-name-wrap{
-  display:flex;
-  flex-direction:column;
-  min-width:0;
-}
-.presence-name{
-  font-weight:800;
-  color:#fff;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  max-width: 280px;
-}
-.presence-meta{
-  font-size:12px;
-  opacity:.75;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  max-width: 280px;
-}
-.presence-level{
-  flex:0 0 auto;
-  font-size:12px;
-  font-weight:900;
-  color:#111;
-  background: linear-gradient(90deg, #00ffff, #ffd700);
-  border-radius:999px;
-  padding:6px 10px;
-}
-.presence-empty{
-  padding:14px;
-  border-radius:16px;
-  background: rgba(255,255,255,.04);
-  border:1px dashed rgba(255,255,255,.10);
-  opacity:.78;
-  font-size:13px;
-}
-</style>
-
 </head>
 <body class="theme-default">
   <aside class="sidebar">
@@ -817,7 +985,6 @@
       <div id="presenceSummarySub">Clique para ver quem está online e os últimos vistos</div>
     </div>
 
-
     <div style="margin-bottom:25px">
       <input type="text" id="searchBar" placeholder="🔍 Buscar jogos..."
         style="width:100%; padding:14px; border-radius:50px; border:1px solid #222;
@@ -827,18 +994,46 @@
 
     <nav id="categoriaBtns" style="overflow-y:auto; padding-right:5px;">
       <button class="catBtn active" data-cat="Todos">📂 Todos</button>
-      <button class="catBtn" data-cat="Jogos PS2">🎮 Jogos PS2</button>
-      <button class="catBtn" data-cat="PS2 com Cheats">🔥 PS2 Cheats</button>
-      <button class="catBtn" data-cat="Jogos PS3">🎮 Jogos PS3</button>
-      <button class="catBtn" data-cat="PS3 com Cheats">🔥 PS3 Cheats</button>
-      <button class="catBtn" data-cat="Jogos PS1">🎮 Jogos PS1</button>
+
+      <button class="catBtn" data-cat="Nintendo">🎮 Nintendo</button>
+      <button class="catBtn" data-cat="Super Nintendo">🎮 Super Nintendo</button>
+      <button class="catBtn" data-cat="Mega Drive">🎮 Mega Drive</button>
+      <button class="catBtn" data-cat="Master System">🎮 Master System</button>
+      <button class="catBtn" data-cat="Game Boy / GBA">🎮 Game Boy / GBA</button>
+
+      <button class="catBtn" data-cat="Jogos PS1">🕹️ PS1</button>
       <button class="catBtn" data-cat="PS1 com Cheats">🔥 PS1 Cheats</button>
-      <button class="catBtn" data-cat="YouTube">📺 YouTube</button>
+      <button class="catBtn" data-cat="Jogos PS2">🕹️ PS2</button>
+      <button class="catBtn" data-cat="PS2 com Cheats">🔥 PS2 Cheats</button>
+      <button class="catBtn" data-cat="Jogos PS3">🕹️ PS3</button>
+      <button class="catBtn" data-cat="PS3 com Cheats">🔥 PS3 Cheats</button>
+
+      <button class="catBtn" data-cat="Xbox Clássico">💚 Xbox Clássico</button>
+      <button class="catBtn" data-cat="Xbox 360">💚 Xbox 360</button>
+
+      <button class="catBtn" data-cat="Nintendo 64">🧊 Nintendo 64</button>
+      <button class="catBtn" data-cat="GameCube">🧊 GameCube</button>
+      <button class="catBtn" data-cat="Nintendo DS">🧊 Nintendo DS</button>
+      <button class="catBtn" data-cat="Wii">🧊 Wii</button>
+
+      
+      <button class="catBtn" data-cat="PSP">🎮 PSP</button>
+      <button class="catBtn" data-cat="NAOMI">🕹️ NAOMI</button>
+      <button class="catBtn" data-cat="SEGA 32X">🎮 SEGA 32X</button>
+      <button class="catBtn" data-cat="ATARI 2600/5200/7800">🎮 ATARI 2600/5200/7800</button>
+      <button class="catBtn" data-cat="SEGA SATURN">🎮 SEGA SATURN</button>
+      <button class="catBtn" data-cat="JAGUAR">🎮 JAGUAR</button>
+      <button class="catBtn" data-cat="DREAMCAST">🎮 DREAMCAST</button>
+      <button class="catBtn" data-cat="ARCADE">🕹️ ARCADE</button>
+      <button class="catBtn" data-cat="Nintendo Switch">🎮 Nintendo Switch</button>
+
       <button class="catBtn" data-cat="Jogos PC">💻 Jogos PC</button>
+      <button class="catBtn" data-cat="YouTube">📺 YouTube</button>
+      <button class="catBtn" data-cat="Emuladores">🕹️ Emuladores</button>
       <button class="catBtn" data-cat="Fix SteamTools">🛠️ SteamTools</button>
       <button class="catBtn" data-cat="Arquivos">🗄️ Arquivos</button>
-      <button class="catBtn" data-cat="Roms">📀 Roms</button>
-      <button class="catBtn" data-cat="Emuladores">🕹️ Emuladores</button>
+
+      <button class="catBtn" data-cat="Roms">📀 Roms (geral)</button>
     </nav>
   </aside>
 
@@ -863,6 +1058,7 @@
       </select>
 
       <button id="chatToggleBtn" class="nav-item">💬 Chat</button>
+      <button id="globalChatBtn" class="nav-item">🌐 Global</button>
 	  <button id="masterChatsTopBtn" class="nav-item"
   onclick="openMasterChatsTop()"
   style="display:none;">
@@ -1051,7 +1247,7 @@
     </div>
   </div>
 
-  
+
   <div id="presenceOverlay">
     <div class="presence-backdrop"></div>
     <div class="presence-modal" role="dialog" aria-modal="true" aria-labelledby="presencePanelTitle">
@@ -1067,6 +1263,28 @@
         <div class="presence-section">
           <div class="presence-section-title">Últimos vistos</div>
           <div id="presenceLastList" class="presence-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="globalChatOverlay">
+    <div class="gc-backdrop"></div>
+    <div class="gc-modal" role="dialog" aria-modal="true" aria-labelledby="globalChatTitle">
+      <div class="gc-head">
+        <strong id="globalChatTitle">🌐 Chat Global</strong>
+        <button id="globalChatClose" type="button" aria-label="Fechar">✕</button>
+      </div>
+      <div id="globalChatMessages"></div>
+      <div id="globalChatComposer">
+        <form id="globalChatForm">
+          <textarea id="globalChatInput" maxlength="200" placeholder="Escreva algo para a comunidade..." rows="1"></textarea>
+          <button id="globalChatSend" type="submit">Enviar</button>
+        </form>
+        <div id="globalChatHint">
+          <span>Nick + nível aparecem automaticamente.</span>
+          <span><span id="globalChatCount">0</span>/200</span>
         </div>
       </div>
     </div>
@@ -1299,6 +1517,18 @@ const MASTER_NICK = "Srgokucheats";
   function normalizeCategoria(raw){
     const c = safeStr(raw, "").trim();
     if(!c) return "Jogos PS2";
+
+    // Compat: renomes para não quebrar jogos antigos já cadastrados
+    const map = {
+      "NES": "Nintendo",
+      "SNES": "Super Nintendo",
+      "N64": "Nintendo 64",
+      "DREANCAST": "DREAMCAST",   // typo comum
+      "Dreamcast": "DREAMCAST",
+      "dreancast": "DREAMCAST"
+    };
+    if(map[c]) return map[c];
+
     return c;
   }
 
@@ -1308,7 +1538,8 @@ const MASTER_NICK = "Srgokucheats";
     const link = safeStr(g?.link ?? g?.url ?? g?.href ?? "").trim();
     const capa = safeStr(g?.capa ?? g?.img ?? g?.image ?? g?.cover ?? "").trim();
     const premium = Boolean(g?.premium === true || g?.isPremium === true || categoria === "Premium");
-    return { nome, categoria, link, capa, premium };
+    const created_at = Number(g?.created_at ?? g?.createdAt ?? g?.added_at ?? g?.addedAt ?? 0) || 0;
+    return { nome, categoria, link, capa, premium, created_at };
   }
 
   /* ===============================
@@ -1439,13 +1670,24 @@ const MASTER_NICK = "Srgokucheats";
     if(totalXp < 100) return {level:1, min:0, max:100};
     if(totalXp < 250) return {level:2, min:100, max:250};
     if(totalXp < 500) return {level:3, min:250, max:500};
+    if(totalXp < 750) return {level:4, min:500, max:750};
+    if(totalXp < 1250) return {level:5, min:750, max:1250};
 
-    const extra = totalXp - 500;
-    const level = 4 + Math.floor(extra / 300);
-    const min   = 500 + (level-4)*300;
-    const max   = min + 300;
+    // Lv6 em diante: começa em 1250 e vai aumentando o "custo" por nível
+    let level = 6;
+    let min = 1250;
+    let max = 1900; // 1250 + 650 (primeiro salto)
+    while(totalXp >= max){
+      level++;
+      min = max;
+      // cresce o custo por nível (650, 800, 950, 1100, ...)
+      const delta = 650 + (level-7)*150;
+      max = min + delta;
+      if(level > 1000) break;
+    }
     return {level, min, max};
   }
+
 
   function showToast(msg){
     const c = document.getElementById("toast-container");
@@ -1497,7 +1739,7 @@ const MASTER_NICK = "Srgokucheats";
     const pct  = ((u.xp - info.min) / (info.max - info.min)) * 100;
 
     if(xpFill) xpFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
-    if(xpText) xpText.innerText   = `${u.xp - info.min}/${info.max - info.min} (Nv ${info.level})`;
+        if(xpText) xpText.innerText   = `${u.xp}/${info.max} (Nv ${info.level})`;
   }
 
   function tfInitAudio(){
@@ -1748,7 +1990,7 @@ const MASTER_NICK = "Srgokucheats";
       <div style="margin-bottom:15px;">
         <div style="display:flex; justify-content:space-between;">
           <div style="font-weight:900; color:gold;">Nível ${info.level}</div>
-          <div>XP: <b>${inLevel}/${need}</b></div>
+          <div>XP: <b>${u.xp}/${info.max}</b></div>
         </div>
         <div class="xpBar" style="width:100%; height:14px; margin-top:8px;">
           <div class="xpFill" style="width:${Math.max(0,Math.min(100,(inLevel/need)*100))}%"></div>
@@ -2087,7 +2329,7 @@ const MASTER_NICK = "Srgokucheats";
 
     if(sortModo === "az") lista.sort((a,b)=> a.nome.localeCompare(b.nome));
     else if(sortModo === "za") lista.sort((a,b)=> b.nome.localeCompare(a.nome));
-    else if(sortModo === "recentes") lista.reverse();
+    else if(sortModo === "recentes") lista.sort((a,b)=> (Number(b.created_at||0) - Number(a.created_at||0)));
 
     lista.forEach(j => {
       const isFav = db_favs.includes(j.nome);
@@ -2429,8 +2671,8 @@ const MASTER_NICK = "Srgokucheats";
           selCat.appendChild(opt);
         }
       });
-      if(!selCat.value) selCat.value = "Jogos PS2";
-    }
+      if(!selCat.value && selCat.options && selCat.options.length){ selCat.value = selCat.options[0].value; }
+}
 
     // ===== Eventos do Admin (corrigido: só após criar a UI) =====
     document.getElementById("exitAdminBtn")?.addEventListener("click", ()=> exitAdmin());
@@ -3534,52 +3776,45 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="presencePanelScript">
+<script>
 (function(){
-  function presenceGuestLabel(item, idx){
-    const raw = String(item?.nick || "").trim();
-    const m = raw.match(/(\d+)/);
-    const n = m ? m[1] : String((idx % 99) + 1).padStart(2, "0");
-    return "Usuário " + n;
-  }
-
-  function presenceDisplayName(item, idx){
-    if(item?.is_guest) return presenceGuestLabel(item, idx);
-    const nick = String(item?.nick || "").trim();
-    return nick || presenceGuestLabel(item, idx);
-  }
-
-  function presenceLevelLabel(item){
+  function getPresenceAuthHeaders(){
     try{
-      const xp = Number(item?.xp || 0);
-      if(typeof getLevelInfo === "function"){
-        return "Nv " + getLevelInfo(xp).level;
-      }
-    }catch(e){}
-    return "Nv 1";
+      const a = JSON.parse(localStorage.getItem("toolflix_auth") || "null");
+      const token = a?.token || "";
+      return token ? { "Authorization": "Bearer " + token } : {};
+    }catch(e){
+      return {};
+    }
+  }
+
+  function formatPresenceName(item, idx){
+    if(!item) return "Usuário XX";
+    if(item.is_guest){
+      return `Usuário ${String(idx + 1).padStart(2,"0")}`;
+    }
+    return String(item.nick || "Usuário");
+  }
+
+  function formatPresenceLevel(item){
+    if(item?.is_guest) return "Visitante";
+    const xp = Number(item?.xp || 0);
+    const info = (typeof getLevelInfo === "function") ? getLevelInfo(xp) : { level: 1 };
+    return `Nv ${info.level}`;
   }
 
   function formatLastSeen(ts){
-    const n = Number(ts || 0);
-    if(!n) return "visto por último agora há pouco";
-
-    const d = new Date(n);
+    const t = Number(ts || 0);
+    if(!t) return "visto por último há pouco";
+    const d = new Date(t);
     const now = new Date();
-
     const hh = String(d.getHours()).padStart(2,"0");
     const mm = String(d.getMinutes()).padStart(2,"0");
+    const sameDay = d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
 
-    const sameDay =
-      d.getDate() === now.getDate() &&
-      d.getMonth() === now.getMonth() &&
-      d.getFullYear() === now.getFullYear();
-
-    const yesterday = new Date(now);
-    yesterday.setDate(now.getDate() - 1);
-    const isYesterday =
-      d.getDate() === yesterday.getDate() &&
-      d.getMonth() === yesterday.getMonth() &&
-      d.getFullYear() === yesterday.getFullYear();
+    const y = new Date(now);
+    y.setDate(now.getDate() - 1);
+    const isYesterday = d.getFullYear() === y.getFullYear() && d.getMonth() === y.getMonth() && d.getDate() === y.getDate();
 
     if(sameDay) return `visto por último às ${hh}:${mm}`;
     if(isYesterday) return `visto por último ontem às ${hh}:${mm}`;
@@ -3589,21 +3824,18 @@ document.addEventListener("DOMContentLoaded", function(){
     return `visto por último em ${dd}/${mo} às ${hh}:${mm}`;
   }
 
-  function presenceCardHtml(item, idx, mode){
+  function presenceCardHtml(item, idx, withSeen=false){
     const guest = !!item?.is_guest;
-    const name = presenceDisplayName(item, idx);
-    const level = presenceLevelLabel(item);
-    const meta = mode === "last"
-      ? formatLastSeen(item?.last_seen_at)
-      : (guest ? "visitando agora" : "online agora");
-
+    const name = formatPresenceName(item, idx);
+    const level = formatPresenceLevel(item);
+    const seen = withSeen ? `<div class="global-chat-meta">${formatLastSeen(item?.last_seen_at)}</div>` : "";
     return `
       <div class="presence-user">
         <div class="presence-user-left">
           <span class="presence-bullet ${guest ? "guest" : ""}"></span>
-          <div class="presence-name-wrap">
+          <div>
             <div class="presence-name">${name}</div>
-            <div class="presence-meta">${meta}</div>
+            ${seen}
           </div>
         </div>
         <div class="presence-level">${level}</div>
@@ -3611,71 +3843,67 @@ document.addEventListener("DOMContentLoaded", function(){
     `;
   }
 
-  async function registerPresence(){
+  function renderPresence(data){
+    const onlineCountEl = document.getElementById("presenceOnlineCount");
+    const onlineListEl = document.getElementById("presenceOnlineList");
+    const lastListEl = document.getElementById("presenceLastList");
+    const subEl = document.getElementById("presenceSummarySub");
+
+    if(!onlineCountEl || !onlineListEl || !lastListEl) return;
+
+    const online = Array.isArray(data?.online) ? data.online : [];
+    const last = Array.isArray(data?.lastSeen) ? data.lastSeen : (Array.isArray(data?.last) ? data.last : []);
+
+    onlineCountEl.textContent = String(Number(data?.onlineCount || online.length || 0));
+
+    if(online.length){
+      onlineListEl.innerHTML = online.map((item, idx) => presenceCardHtml(item, idx)).join("");
+      const names = online.slice(0,3).map((item, idx) => formatPresenceName(item, idx)).join(" • ");
+      if(subEl) subEl.textContent = names || "Clique para ver quem está online e os últimos vistos";
+    }else{
+      onlineListEl.innerHTML = '<div class="presence-empty">Ninguém online no momento.</div>';
+      if(subEl) subEl.textContent = "Clique para ver quem está online e os últimos vistos";
+    }
+
+    if(last.length){
+      lastListEl.innerHTML = last.map((item, idx) => presenceCardHtml(item, idx, true)).join("");
+    }else{
+      lastListEl.innerHTML = '<div class="presence-empty">Ainda não há visitantes registrados.</div>';
+    }
+  }
+
+  async function hitPresence(){
     try{
-      const headers = { "Content-Type":"application/json" };
-      if(typeof getToken === "function"){
-        const token = getToken();
-        if(token) headers["Authorization"] = "Bearer " + token;
-      }
-      await fetch(API_BASE + "/api/visitor", {
-        method:"POST",
-        headers,
-        body: JSON.stringify({ page:"toolflix" })
+      await fetch(API_URL + "/api/visitor", {
+        method: "POST",
+        headers: {
+          "Content-Type":"application/json",
+          ...getPresenceAuthHeaders()
+        }
       });
     }catch(e){}
   }
 
   async function refreshPresence(){
-    const onlineCountEl = document.getElementById("presenceOnlineCount");
-    const onlineListEl = document.getElementById("presenceOnlineList");
-    const lastListEl = document.getElementById("presenceLastList");
-    const subEl = document.getElementById("presenceSummarySub");
-    if(!onlineCountEl || !onlineListEl || !lastListEl) return;
-
     try{
-      const r = await fetch(API_BASE + "/api/visitors");
-      const j = await r.json();
-
-      const online = Array.isArray(j?.online) ? j.online : [];
-      const last = Array.isArray(j?.lastSeen) ? j.lastSeen : [];
-      const onlineCount = Number(j?.onlineCount || online.length || 0);
-
-      onlineCountEl.textContent = String(onlineCount);
-      subEl.textContent = onlineCount > 0
-        ? "Clique para ver quem está online e os últimos vistos"
-        : "Ninguém online agora. Clique para ver os últimos vistos";
-
-      if(online.length){
-        onlineListEl.innerHTML = online.map((item, idx) => presenceCardHtml(item, idx, "online")).join("");
-      } else {
-        onlineListEl.innerHTML = '<div class="presence-empty">Ninguém online no momento.</div>';
-      }
-
-      if(last.length){
-        lastListEl.innerHTML = last.map((item, idx) => presenceCardHtml(item, idx, "last")).join("");
-      } else {
-        lastListEl.innerHTML = '<div class="presence-empty">Ainda não há últimos vistos para mostrar.</div>';
-      }
-    }catch(e){
-      onlineCountEl.textContent = "0";
-      if(subEl) subEl.textContent = "Não foi possível carregar os jogadores agora";
-      onlineListEl.innerHTML = '<div class="presence-empty">Não foi possível carregar quem está online.</div>';
-      lastListEl.innerHTML = '<div class="presence-empty">Não foi possível carregar os últimos vistos.</div>';
-    }
+      const r = await fetch(API_URL + "/api/visitors", { headers: getPresenceAuthHeaders() });
+      const j = await r.json().catch(()=> ({}));
+      if(j?.ok) renderPresence(j);
+    }catch(e){}
   }
 
-  function openPresencePanel(){
+  function openPresence(){
     const ov = document.getElementById("presenceOverlay");
     if(!ov) return;
     ov.classList.add("open");
-    refreshPresence();
+    document.body.style.overflow = "hidden";
   }
 
-  function closePresencePanel(){
+  function closePresence(){
     const ov = document.getElementById("presenceOverlay");
     if(!ov) return;
     ov.classList.remove("open");
+    document.body.style.overflow = "";
   }
 
   document.addEventListener("DOMContentLoaded", function(){
@@ -3684,20 +3912,157 @@ document.addEventListener("DOMContentLoaded", function(){
     const overlay = document.getElementById("presenceOverlay");
     const backdrop = overlay?.querySelector(".presence-backdrop");
 
-    if(summary) summary.addEventListener("click", openPresencePanel);
-    if(closeBtn) closeBtn.addEventListener("click", closePresencePanel);
-    if(backdrop) backdrop.addEventListener("click", closePresencePanel);
+    summary?.addEventListener("click", openPresence);
+    closeBtn?.addEventListener("click", closePresence);
+    backdrop?.addEventListener("click", closePresence);
 
     document.addEventListener("keydown", function(e){
-      if(e.key === "Escape") closePresencePanel();
+      if(e.key === "Escape") closePresence();
     });
 
-    registerPresence();
-    refreshPresence();
-
-    setInterval(registerPresence, 60000);
-    setInterval(refreshPresence, 30000);
+    hitPresence().finally(refreshPresence);
+    setInterval(hitPresence, 60000);
+    setInterval(refreshPresence, 20000);
   });
+
+  /* ===== GLOBAL CHAT ===== */
+  function escapeHtml(s){
+    return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  function formatGlobalAuthor(msg){
+    const guest = !!msg?.is_guest;
+    const nick = String(msg?.nick || "Usuário");
+    if(guest) return nick;
+    const level = Number(msg?.level || 1);
+    return `${nick} (Nv ${level})`;
+  }
+
+  function formatGlobalTime(ts){
+    const d = new Date(Number(ts || 0));
+    const hh = String(d.getHours()).padStart(2,"0");
+    const mm = String(d.getMinutes()).padStart(2,"0");
+    return `${hh}:${mm}`;
+  }
+
+  function globalChatRowHtml(msg){
+    return `
+      <div class="global-chat-row">
+        <div class="global-chat-name">${escapeHtml(formatGlobalAuthor(msg))}</div>
+        <div class="global-chat-bubble">${escapeHtml(msg?.message || "")}</div>
+        <div class="global-chat-meta">${formatGlobalTime(msg?.created_at)}</div>
+      </div>
+    `;
+  }
+
+  function renderGlobalChat(data){
+    const box = document.getElementById("globalChatMessages");
+    if(!box) return;
+    const list = Array.isArray(data?.messages) ? data.messages : [];
+    if(!list.length){
+      box.innerHTML = '<div class="global-chat-empty">Ainda não há mensagens no chat global.</div>';
+      return;
+    }
+    box.innerHTML = list.map(globalChatRowHtml).join("");
+    box.scrollTop = box.scrollHeight;
+  }
+
+  async function refreshGlobalChat(scrollToBottom=true){
+    try{
+      const r = await fetch(API_URL + "/api/global-chat/messages");
+      const j = await r.json().catch(()=> ({}));
+      if(j?.ok){
+        const box = document.getElementById("globalChatMessages");
+        const shouldScroll = !box || scrollToBottom || (box.scrollHeight - box.scrollTop - box.clientHeight < 80);
+        renderGlobalChat(j);
+        if(shouldScroll && box) box.scrollTop = box.scrollHeight;
+      }
+    }catch(e){}
+  }
+
+  function openGlobalChat(){
+    const ov = document.getElementById("globalChatOverlay");
+    if(!ov) return;
+    ov.classList.add("open");
+    document.body.style.overflow = "hidden";
+    refreshGlobalChat(true);
+    setTimeout(()=>{
+      const input = document.getElementById("globalChatInput");
+      input?.focus();
+    }, 60);
+  }
+
+  function closeGlobalChat(){
+    const ov = document.getElementById("globalChatOverlay");
+    if(!ov) return;
+    ov.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  async function sendGlobalChatMessage(){
+    const input = document.getElementById("globalChatInput");
+    if(!input) return;
+    const message = String(input.value || "").trim();
+    if(!message) return;
+    try{
+      const auth = getPresenceAuthHeaders();
+      const r = await fetch(API_URL + "/api/global-chat/send", {
+        method: "POST",
+        headers: { "Content-Type":"application/json", ...auth },
+        body: JSON.stringify({ message })
+      });
+      const j = await r.json().catch(()=> ({}));
+      if(r.ok && j?.ok){
+        input.value = "";
+        const count = document.getElementById("globalChatCount");
+        if(count) count.textContent = "0";
+        refreshGlobalChat(true);
+      }else{
+        if(j?.error === "SPAM") showToast("Espere um pouco antes de enviar outra mensagem.");
+        else if(j?.error === "MESSAGE_TOO_LONG") showToast("Mensagem grande demais.");
+        else showToast("Não foi possível enviar a mensagem.");
+      }
+    }catch(e){
+      showToast("Erro ao enviar mensagem.");
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    const btn = document.getElementById("globalChatBtn");
+    const ov = document.getElementById("globalChatOverlay");
+    const close = document.getElementById("globalChatClose");
+    const backdrop = ov?.querySelector(".gc-backdrop");
+    const form = document.getElementById("globalChatForm");
+    const input = document.getElementById("globalChatInput");
+    const count = document.getElementById("globalChatCount");
+
+    btn?.addEventListener("click", openGlobalChat);
+    close?.addEventListener("click", closeGlobalChat);
+    backdrop?.addEventListener("click", closeGlobalChat);
+
+    form?.addEventListener("submit", function(e){
+      e.preventDefault();
+      sendGlobalChatMessage();
+    });
+
+    input?.addEventListener("input", function(){
+      if(count) count.textContent = String((input.value || "").length);
+      input.style.height = "auto";
+      input.style.height = Math.min(input.scrollHeight, 120) + "px";
+    });
+
+    document.addEventListener("keydown", function(e){
+      if(e.key === "Escape") closeGlobalChat();
+      if(e.key === "Enter" && !e.shiftKey && document.getElementById("globalChatOverlay")?.classList.contains("open") && document.activeElement === input){
+        e.preventDefault();
+        sendGlobalChatMessage();
+      }
+    });
+
+    refreshGlobalChat(true);
+    setInterval(()=> refreshGlobalChat(false), 12000);
+  });
+
 })();
 </script>
 
