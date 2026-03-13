@@ -596,6 +596,36 @@ select optgroup{
   color:#ffffff !important;
 }
 
+
+    /* ===== MODO CATÁLOGO (JOGOS / ANIMES) ===== */
+    #catalogModeSwitch{
+      display:flex;
+      gap:10px;
+      margin: 0 0 14px;
+    }
+    .catalog-mode-btn{
+      flex:1;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color:#fff;
+      padding:10px 12px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:800;
+      transition:.25s;
+      box-shadow: 0 8px 20px rgba(0,0,0,.18);
+    }
+    .catalog-mode-btn:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.09);
+    }
+    .catalog-mode-btn.active{
+      color:#111;
+      border-color: transparent;
+      background: linear-gradient(90deg, #00ffff, #ffd700);
+      box-shadow: 0 10px 24px rgba(0,255,255,.20);
+    }
+
     /* ===== ONLINE / VISITANTES ===== */
     #presenceSummary{
       margin: 12px 0 18px;
@@ -976,6 +1006,12 @@ select optgroup{
 
     <div id="premiumBadge">💎 PREMIUM ATIVO</div>
     <div id="premiumCounter"></div>
+
+
+    <div id="catalogModeSwitch">
+      <button id="modeGamesBtn" class="catalog-mode-btn">🎮 Jogos</button>
+      <button id="modeAnimeBtn" class="catalog-mode-btn">🎌 Animes</button>
+    </div>
 
     <div id="presenceSummary" title="Clique para ver quem está online">
       <div id="presenceSummaryTop">
@@ -1565,6 +1601,62 @@ const MASTER_NICK = "Srgokucheats";
       return [];
     }
   })();
+
+  const CATALOG_MODE_KEY = "toolflix_catalog_mode";
+  let catalogMode = localStorage.getItem(CATALOG_MODE_KEY) || "games";
+
+  const animeCatalog = [
+    { nome:"Naruto Shippuden", categoria:"Shounen", link:"https://www.crunchyroll.com/pt-br/series/GYQ4MW246/naruto-shippuden", capa:"https://upload.wikimedia.org/wikipedia/pt/7/7d/Naruto_Shippuden.png", premium:false, created_at: 900000000001 },
+    { nome:"Attack on Titan", categoria:"Ação", link:"https://www.crunchyroll.com/pt-br/series/GR751KNZY/attack-on-titan", capa:"https://upload.wikimedia.org/wikipedia/en/7/70/Attack_on_Titan_S1_DVD.jpg", premium:false, created_at: 900000000002 },
+    { nome:"Demon Slayer", categoria:"Dublado", link:"https://www.crunchyroll.com/pt-br/series/GY5P48XEY/demon-slayer-kimetsu-no-yaiba", capa:"https://upload.wikimedia.org/wikipedia/en/0/09/Demon_Slayer_-_Kimetsu_no_Yaiba%2C_volume_1.jpg", premium:false, created_at: 900000000003 },
+    { nome:"One Piece", categoria:"Shounen", link:"https://www.crunchyroll.com/pt-br/series/GRMG8ZQZR/one-piece", capa:"https://upload.wikimedia.org/wikipedia/en/2/2c/OnePiece72Cover.png", premium:false, created_at: 900000000004 },
+    { nome:"Your Name", categoria:"Filmes", link:"https://pt.wikipedia.org/wiki/Kimi_no_Na_wa.", capa:"https://upload.wikimedia.org/wikipedia/en/0/0b/Your_Name_poster.png", premium:false, created_at: 900000000005 },
+    { nome:"Jujutsu Kaisen", categoria:"Legendado", link:"https://www.crunchyroll.com/pt-br/series/GRDV0019R/jujutsu-kaisen", capa:"https://upload.wikimedia.org/wikipedia/en/4/46/Jujutsu_kaisen.jpg", premium:false, created_at: 900000000006 },
+    { nome:"Sword Art Online", categoria:"Isekai", link:"https://www.crunchyroll.com/pt-br/series/GR49G9VP6/sword-art-online", capa:"https://upload.wikimedia.org/wikipedia/en/8/83/Sword_Art_Online_light_novel_volume_1_cover.jpg", premium:false, created_at: 900000000007 },
+    { nome:"Kaguya-sama", categoria:"Romance", link:"https://www.crunchyroll.com/pt-br/series/GRJ0J828Y/kaguya-sama-love-is-war", capa:"https://upload.wikimedia.org/wikipedia/en/5/5d/Kaguya-sama_wa_Kokurasetai_volume_1_cover.jpg", premium:false, created_at: 900000000008 }
+  ].map(normalizeGame);
+
+  const animeCategories = [
+    { cat:"Todos", label:"📂 Todos" },
+    { cat:"Shounen", label:"🔥 Shounen" },
+    { cat:"Ação", label:"⚔️ Ação" },
+    { cat:"Isekai", label:"🌌 Isekai" },
+    { cat:"Romance", label:"💖 Romance" },
+    { cat:"Dublado", label:"🎙️ Dublado" },
+    { cat:"Legendado", label:"📝 Legendado" },
+    { cat:"Filmes", label:"🎬 Filmes" }
+  ];
+
+  let gameCategoriesMarkup = "";
+
+  function getCatalogSource(){
+    return catalogMode === "anime" ? animeCatalog : db_jogos;
+  }
+
+  function buildAnimeCategoryMarkup(){
+    return animeCategories.map((item, idx)=> `<button class="catBtn ${idx===0 ? "active" : ""}" data-cat="${item.cat}">${item.label}</button>`).join("
+");
+  }
+
+  function applyCatalogModeUI(){
+    const nav = document.getElementById("categoriaBtns");
+    const gamesBtn = document.getElementById("modeGamesBtn");
+    const animeBtn = document.getElementById("modeAnimeBtn");
+    const search = document.getElementById("searchBar");
+    const sectionTitle = document.getElementById("sectionTitle");
+    const globalTitle = document.getElementById("globalChatTitle");
+
+    if(nav && !gameCategoriesMarkup) gameCategoriesMarkup = nav.innerHTML;
+    if(nav){
+      nav.innerHTML = (catalogMode === "anime") ? buildAnimeCategoryMarkup() : gameCategoriesMarkup;
+    }
+    if(search) search.placeholder = catalogMode === "anime" ? "🔍 Buscar animes..." : "🔍 Buscar jogos...";
+    if(sectionTitle) sectionTitle.innerText = catAtiva;
+    if(gamesBtn) gamesBtn.classList.toggle("active", catalogMode === "games");
+    if(animeBtn) animeBtn.classList.toggle("active", catalogMode === "anime");
+    if(globalTitle) globalTitle.innerText = catalogMode === "anime" ? "🎌 Comunidade Anime" : "🎮 Chat ToolFlix";
+    bindCategoryButtons();
+  }
 
   let isPremium = false;
   let modoAdmin = false;
@@ -2297,10 +2389,10 @@ const MASTER_NICK = "Srgokucheats";
     const lg = document.getElementById("logoToolFlix");
     if(isPremium){
       document.body.classList.add("premium-active");
-      if(lg) lg.innerText = "ToolFlix Pro";
+      if(lg) lg.innerText = catalogMode === "anime" ? "ToolFlix Anime Pro" : "ToolFlix Pro";
     } else {
       document.body.classList.remove("premium-active");
-      if(lg) lg.innerText = "ToolFlix";
+      if(lg) lg.innerText = catalogMode === "anime" ? "ToolFlix Anime" : "ToolFlix";
     }
 
     const btnP = document.getElementById("premiumTriggerBtn");
@@ -2312,7 +2404,7 @@ const MASTER_NICK = "Srgokucheats";
 
     grid.innerHTML = "";
 
-    let lista = db_jogos.map(normalizeGame);
+    let lista = getCatalogSource().map(normalizeGame);
 
     if(catAtiva !== "Todos"){
       lista = lista.filter(j => normalizeCategoria(j.categoria) === catAtiva);
@@ -2474,15 +2566,18 @@ const MASTER_NICK = "Srgokucheats";
     render();
   });
 
-  document.querySelectorAll(".catBtn").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      document.querySelectorAll(".catBtn").forEach(b=> b.classList.remove("active"));
-      btn.classList.add("active");
-      catAtiva = btn.dataset.cat;
-      document.getElementById("sectionTitle").innerText = catAtiva;
-      render();
+  function bindCategoryButtons(){
+    document.querySelectorAll(".catBtn").forEach(btn=>{
+      btn.onclick = ()=>{
+        document.querySelectorAll(".catBtn").forEach(b=> b.classList.remove("active"));
+        btn.classList.add("active");
+        catAtiva = btn.dataset.cat;
+        document.getElementById("sectionTitle").innerText = catAtiva;
+        render();
+      };
     });
-  });
+  }
+  bindCategoryButtons();
 
   document.getElementById("searchBar")?.addEventListener("input", render);
 
@@ -3575,6 +3670,31 @@ document.addEventListener("DOMContentLoaded", function(){
     setInterval(poll, 8000);
     poll();
   });
+  /* ===============================
+     MODO JOGOS / ANIMES
+  ================================= */
+  function switchCatalogMode(mode){
+    catalogMode = mode === "anime" ? "anime" : "games";
+    localStorage.setItem(CATALOG_MODE_KEY, catalogMode);
+    location.reload();
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    if(!gameCategoriesMarkup){
+      const nav = document.getElementById("categoriaBtns");
+      if(nav) gameCategoriesMarkup = nav.innerHTML;
+    }
+
+    const gamesBtn = document.getElementById("modeGamesBtn");
+    const animeBtn = document.getElementById("modeAnimeBtn");
+    gamesBtn?.addEventListener("click", ()=> switchCatalogMode("games"));
+    animeBtn?.addEventListener("click", ()=> switchCatalogMode("anime"));
+
+    catAtiva = "Todos";
+    applyCatalogModeUI();
+    render();
+  });
+
 })();
 </script>
 
