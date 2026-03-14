@@ -2678,6 +2678,18 @@ const MASTER_NICK = "Srgokucheats";
         </div>
       </div>
 
+      <div id="premiumManagerWrap" style="margin-top:18px; border:1px solid #333; border-radius:16px; overflow:hidden; background:rgba(0,0,0,.22);">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 16px; background:rgba(255,255,255,.03); border-bottom:1px solid rgba(255,255,255,.08);">
+          <div>
+            <strong style="display:block; color:gold;">👑 Gerenciar Premium</strong>
+            <span style="font-size:12px; opacity:.78;">Lista de usuários premium e remoção manual.</span>
+          </div>
+          <button id="refreshPremiumUsersBtn" class="nav-item" style="padding:10px 14px;">🔄 Atualizar</button>
+        </div>
+        <div id="premiumUsersStatus" style="padding:12px 16px; font-size:12px; opacity:.82; border-bottom:1px solid rgba(255,255,255,.06);">Carregando painel premium…</div>
+        <div id="premiumUsersList" style="display:flex; flex-direction:column; gap:10px; padding:14px 16px;"></div>
+      </div>
+
       <div style="opacity:.8; font-size:12px; margin-top:8px;">
         Dica: clique em “EDITAR” em um card pra carregar aqui.
       </div>
@@ -2822,6 +2834,116 @@ const MASTER_NICK = "Srgokucheats";
         alert("Erro de conexão.");
       }
     };
+
+    async function loadPremiumUsers(){
+      const statusEl = document.getElementById("premiumUsersStatus");
+      const listEl = document.getElementById("premiumUsersList");
+      if(!statusEl || !listEl) return;
+
+      statusEl.textContent = "Carregando usuários premium...";
+      listEl.innerHTML = "";
+
+      try{
+        const j = await adminFetch(API_URL + "/api/admin/premium-users");
+        const users = Array.isArray(j?.users) ? j.users : [];
+
+        statusEl.textContent = users.length
+          ? `Total premium ativo: ${users.length}`
+          : "Nenhum usuário premium ativo no momento.";
+
+        if(!users.length){
+          listEl.innerHTML = '<div style="padding:14px;border:1px dashed rgba(255,255,255,.10);border-radius:14px;opacity:.78;">Nenhum premium ativo no momento.</div>';
+          return;
+        }
+
+        const fmtDate = (v)=>{
+          const n = Number(v || 0);
+          if(!n) return "-";
+          const d = new Date(n);
+          const dd = String(d.getDate()).padStart(2, "0");
+          const mm = String(d.getMonth() + 1).padStart(2, "0");
+          const yy = d.getFullYear();
+          const hh = String(d.getHours()).padStart(2, "0");
+          const mi = String(d.getMinutes()).padStart(2, "0");
+          return `${dd}/${mm}/${yy} ${hh}:${mi}`;
+        };
+        const shortToken = (t)=>{
+          const s = String(t || "").trim();
+          if(!s) return "-";
+          return s.length <= 10 ? s : (s.slice(0, 8) + "..." + s.slice(-4));
+        };
+
+        listEl.innerHTML = "";
+        users.forEach((u)=>{
+          const row = document.createElement("div");
+          row.style.cssText = "display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,.9fr) auto;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);";
+          row.innerHTML = `
+            <div style="min-width:0;">
+              <div style="font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(String(u?.nick || u?.user_id || "Sem nick"))}</div>
+              <div style="font-size:12px;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(String(u?.user_id || ""))}</div>
+            </div>
+            <div>
+              <div style="font-size:12px;opacity:.75;">Expira em</div>
+              <div style="font-weight:800;">${escapeHtml(fmtDate(u?.expires_at || u?.premium_until || u?.expiresAt))}</div>
+            </div>
+            <div>
+              <div style="font-size:12px;opacity:.75;">Token</div>
+              <div style="font-weight:800;">${escapeHtml(shortToken(u?.token_used || u?.token || ""))}</div>
+            </div>
+            <div>
+              <button class="nav-item premium-remove-btn" type="button" data-user-id="${escapeHtml(String(u?.user_id || ""))}" data-user-nick="${escapeHtml(String(u?.nick || "Usuário"))}" style="background:#ff4757;border:none;color:#fff;padding:10px 14px;">Remover</button>
+            </div>
+          `;
+          listEl.appendChild(row);
+        });
+      }catch(e){
+        console.error(e);
+        statusEl.textContent = "Erro ao carregar usuários premium.";
+        listEl.innerHTML = '<div style="padding:14px;border:1px dashed rgba(255,255,255,.10);border-radius:14px;opacity:.78;">Não foi possível carregar a lista premium.</div>';
+      }
+    }
+
+    document.getElementById("refreshPremiumUsersBtn")?.addEventListener("click", ()=> loadPremiumUsers());
+    document.getElementById("premiumUsersList")?.addEventListener("click", async (e)=>{
+      const btn = e.target.closest(".premium-remove-btn");
+      if(!btn) return;
+
+      const userId = String(btn.dataset.userId || "").trim();
+      const nick = String(btn.dataset.userNick || "Usuário").trim();
+      if(!userId) return;
+      if(!confirm(`Remover premium de ${nick}?`)) return;
+
+      btn.disabled = true;
+      const oldText = btn.textContent;
+      btn.textContent = "Removendo...";
+
+      try{
+        const token = getToken?.();
+        const r = await fetch(API_URL + "/api/admin/premium-users/remove", {
+          method: "POST",
+          headers: {
+            "Content-Type":"application/json",
+            "Authorization":"Bearer " + token
+          },
+          body: JSON.stringify({ userId })
+        });
+        const j = await r.json().catch(()=> ({}));
+        if(!r.ok || j?.ok !== true){
+          throw new Error(j?.error || "REMOVE_PREMIUM_FAIL");
+        }
+        showToast(`Premium removido de ${nick}.`);
+        await loadPremiumUsers();
+      }catch(err){
+        console.error(err);
+        btn.disabled = false;
+        btn.textContent = oldText;
+        showToast("Erro ao remover premium.");
+      }
+    });
+
+    loadPremiumUsers();
+
+  window.loadPremiumUsers = loadPremiumUsers;
 
   // ===== ADMIN CHATS =====
 async function adminFetch(url){
@@ -3132,6 +3254,7 @@ document.getElementById("masterChatsTopBtn")?.addEventListener("click", async ()
     const admin = document.getElementById("adminSection");
     if(admin) admin.style.display = "block";
     ensureAdminUI();
+    try{ if(typeof loadPremiumUsers === "function") loadPremiumUsers(); }catch(e){}
     showToast("✅ Modo Admin ativado!");
     render();
   });
@@ -3150,6 +3273,7 @@ document.getElementById("loginSubmit")?.addEventListener("click", ()=>{
     const admin = document.getElementById("adminSection");
     if(admin) admin.style.display = "block";
     ensureAdminUI();
+    try{ if(typeof loadPremiumUsers === "function") loadPremiumUsers(); }catch(e){}
     showToast("✅ Modo Admin ativado!");
     render();
   });
