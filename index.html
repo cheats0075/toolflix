@@ -858,6 +858,32 @@ select optgroup{
       font-size:11px;
       opacity:.62;
     }
+    .global-chat-actions{
+      margin:6px 10px 0;
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .global-chat-delete-btn{
+      border:none;
+      border-radius:10px;
+      padding:6px 10px;
+      font-size:11px;
+      font-weight:900;
+      cursor:pointer;
+      color:#fff;
+      background: linear-gradient(90deg, #8b0000, #c62828);
+      box-shadow: 0 6px 16px rgba(0,0,0,.22);
+    }
+    .global-chat-delete-btn:hover{
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+    .global-chat-bubble.deleted{
+      font-style:italic;
+      opacity:.78;
+      border-style:dashed;
+    }
     .global-chat-empty{
       padding:14px;
       border-radius:16px;
@@ -3945,12 +3971,38 @@ document.addEventListener("DOMContentLoaded", function(){
     return `${hh}:${mm}`;
   }
 
-  function globalChatRowHtml(msg){
+  function isMasterGlobalChatAdmin(){
+    try{
+      const u = (typeof loadUser === "function") ? loadUser() : null;
+      const a = (typeof loadAuth === "function") ? loadAuth() : null;
+      return !!((u && u.nick === MASTER_NICK) || (a && a.nick === MASTER_NICK));
+    }catch(e){
+      return false;
+    }
+  }
+
+  function globalChatDeleteButtonHtml(msg){
+    if(!isMasterGlobalChatAdmin()) return "";
+    if(msg?.deleted) return "";
+    const id = String(msg?.id || "").trim();
+    if(!id) return "";
     return `
-      <div class="global-chat-row">
+      <div class="global-chat-actions">
+        <button class="global-chat-delete-btn" type="button" data-global-delete-id="${escapeHtml(id)}">Apagar</button>
+      </div>
+    `;
+  }
+
+  function globalChatRowHtml(msg){
+    const deleted = !!msg?.deleted;
+    const bubbleText = deleted ? "Mensagem apagada pelo administrador" : String(msg?.message || "");
+    const bubbleClass = deleted ? "global-chat-bubble deleted" : "global-chat-bubble";
+    return `
+      <div class="global-chat-row" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
         <div class="global-chat-name">${escapeHtml(formatGlobalAuthor(msg))}</div>
-        <div class="global-chat-bubble">${escapeHtml(msg?.message || "")}</div>
+        <div class="${bubbleClass}">${escapeHtml(bubbleText)}</div>
         <div class="global-chat-meta">${formatGlobalTime(msg?.created_at)}</div>
+        ${globalChatDeleteButtonHtml(msg)}
       </div>
     `;
   }
@@ -3978,6 +4030,34 @@ document.addEventListener("DOMContentLoaded", function(){
         if(shouldScroll && box) box.scrollTop = box.scrollHeight;
       }
     }catch(e){}
+  }
+
+  async function deleteGlobalChatMessage(messageId){
+    const id = String(messageId || "").trim();
+    if(!id) return;
+    if(!isMasterGlobalChatAdmin()){
+      showToast("Somente o admin pode apagar mensagens.");
+      return;
+    }
+    try{
+      const auth = getPresenceAuthHeaders();
+      const r = await fetch(API_URL + "/api/global-chat/delete", {
+        method: "POST",
+        headers: { "Content-Type":"application/json", ...auth },
+        body: JSON.stringify({ messageId: id })
+      });
+      const j = await r.json().catch(()=> ({}));
+      if(r.ok && j?.ok){
+        refreshGlobalChat(false);
+        showToast("Mensagem apagada.");
+      }else{
+        if(j?.error === "FORBIDDEN") showToast("Somente Srgokucheats pode apagar mensagens.");
+        else if(j?.error === "MESSAGE_NOT_FOUND") showToast("Mensagem não encontrada.");
+        else showToast("Não foi possível apagar a mensagem.");
+      }
+    }catch(e){
+      showToast("Erro ao apagar mensagem.");
+    }
   }
 
   function openGlobalChat(){
@@ -4043,6 +4123,14 @@ document.addEventListener("DOMContentLoaded", function(){
     form?.addEventListener("submit", function(e){
       e.preventDefault();
       sendGlobalChatMessage();
+    });
+
+    document.getElementById("globalChatMessages")?.addEventListener("click", function(e){
+      const btnDelete = e.target.closest("[data-global-delete-id]");
+      if(!btnDelete) return;
+      const id = btnDelete.getAttribute("data-global-delete-id") || "";
+      if(!id) return;
+      deleteGlobalChatMessage(id);
     });
 
     input?.addEventListener("input", function(){
