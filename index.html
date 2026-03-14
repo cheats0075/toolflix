@@ -2852,7 +2852,8 @@ const MASTER_NICK = "Srgokucheats";
           : "Nenhum usuário premium ativo no momento.";
 
         if(!users.length){
-          listEl.innerHTML = '<div style="padding:14px;border:1px dashed rgba(255,255,255,.10);border-radius:14px;opacity:.78;">Nenhum premium ativo no momento.</div>';
+          const extra = escapeHtml(String(j?.error || j?.message || ""));
+          listEl.innerHTML = `<div style="padding:14px;border:1px dashed rgba(255,255,255,.10);border-radius:14px;opacity:.78;">Nenhum premium ativo no momento.${extra ? `<div style="margin-top:8px;font-size:12px;color:#ffb3b3;">${extra}</div>` : ""}</div>`;
           return;
         }
 
@@ -2918,13 +2919,11 @@ const MASTER_NICK = "Srgokucheats";
       btn.textContent = "Removendo...";
 
       try{
-        const token = getToken?.();
+        const authHeaders = await buildAdminHeaders();
+        authHeaders["Content-Type"] = "application/json";
         const r = await fetch(API_URL + "/api/admin/premium-users/remove", {
           method: "POST",
-          headers: {
-            "Content-Type":"application/json",
-            "Authorization":"Bearer " + token
-          },
+          headers: authHeaders,
           body: JSON.stringify({ userId })
         });
         const j = await r.json().catch(()=> ({}));
@@ -2946,18 +2945,30 @@ const MASTER_NICK = "Srgokucheats";
   window.loadPremiumUsers = loadPremiumUsers;
 
   // ===== ADMIN CHATS =====
-async function adminFetch(url){
+async function buildAdminHeaders(){
+  const headers = {};
   const token = getToken?.();
 
-  // 🔐 Apenas conta Master autenticada pode chamar Admin API
   if(window.isSuperAdmin && token){
-    const r = await fetch(url, { headers: { "Authorization": "Bearer " + token } });
-    const j = await r.json().catch(()=> ({}));
-    if(!r.ok || j?.ok !== true) throw new Error(j?.error || "ADMIN_API_ERROR");
-    return j;
+    headers["Authorization"] = "Bearer " + token;
+    return headers;
+  }
+
+  const adminKey = getAdminKey?.();
+  if(adminKey){
+    headers["x-admin-key"] = adminKey;
+    return headers;
   }
 
   throw new Error("NOT_AUTHORIZED");
+}
+
+async function adminFetch(url){
+  const headers = await buildAdminHeaders();
+  const r = await fetch(url, { headers });
+  const j = await r.json().catch(()=> ({}));
+  if(!r.ok || j?.ok !== true) throw new Error(j?.error || "ADMIN_API_ERROR");
+  return j;
 }
 
 async function loadAdminChats(opts={}){
