@@ -2842,6 +2842,9 @@ const MASTER_NICK = "Srgokucheats";
 
       statusEl.textContent = "Carregando usuários premium...";
       listEl.innerHTML = "";
+      listEl.style.display = "flex";
+      listEl.style.flexDirection = "column";
+      listEl.style.gap = "10px";
 
       const fmtDate = (v)=>{
         const n = Number(v || 0);
@@ -2857,18 +2860,19 @@ const MASTER_NICK = "Srgokucheats";
       const shortToken = (t)=>{
         const s = String(t || "").trim();
         if(!s) return "-";
-        return s.length <= 14 ? s : (s.slice(0, 8) + "..." + s.slice(-4));
+        return s.length <= 18 ? s : (s.slice(0, 10) + "..." + s.slice(-4));
       };
 
       try{
         const j = await adminFetch(API_URL + "/api/admin/premium-users?v=" + Date.now());
-        const users = Array.isArray(j?.premiumUsers)
+        const rawUsers = Array.isArray(j?.premiumUsers)
           ? j.premiumUsers
           : (Array.isArray(j?.users) ? j.users : (Array.isArray(j?.rows) ? j.rows : []));
+        const users = rawUsers.filter(Boolean);
         const total = Number(j?.totalPremium || users.length || 0);
 
         statusEl.innerHTML = total
-          ? `Total premium ativo: <b>${total}</b>`
+          ? `Total premium ativo: <b>${total}</b> <span style="opacity:.7">| usuários carregados: ${users.length}</span>`
           : "Nenhum usuário premium ativo no momento.";
 
         if(!users.length){
@@ -2881,33 +2885,34 @@ const MASTER_NICK = "Srgokucheats";
           return;
         }
 
-        listEl.innerHTML = "";
-        users.forEach((u)=>{
-          const userId = String(u?.user_id || u?.userId || "").trim();
-          const nick = String(u?.nick || userId || "Sem nick").trim();
-          const expiresAt = u?.expires_at ?? u?.premium_until ?? u?.expiresAt ?? null;
+        const rowsHtml = users.map((u, idx)=>{
+          const userId = String(u?.user_id ?? u?.userId ?? u?.id ?? "").trim();
+          const nick = String(u?.nick ?? u?.name ?? userId ?? `Usuário ${idx+1}`).trim() || `Usuário ${idx+1}`;
+          const expiresAt = u?.expires_at ?? u?.premium_until ?? u?.expiresAt ?? u?.until ?? null;
           const tokenUsed = u?.token_used ?? u?.token ?? "";
-          const row = document.createElement("div");
-          row.style.cssText = "display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,.9fr) auto;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);";
-          row.innerHTML = `
-            <div style="min-width:0;">
-              <div style="font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(nick)}</div>
-              <div style="font-size:12px;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(userId || "sem user_id")}</div>
-            </div>
-            <div>
-              <div style="font-size:12px;opacity:.75;">Expira em</div>
-              <div style="font-weight:800;">${escapeHtml(fmtDate(expiresAt))}</div>
-            </div>
-            <div>
-              <div style="font-size:12px;opacity:.75;">Token</div>
-              <div style="font-weight:800;">${escapeHtml(shortToken(tokenUsed))}</div>
-            </div>
-            <div>
-              <button class="nav-item premium-remove-btn" type="button" data-user-id="${escapeHtml(userId)}" data-user-nick="${escapeHtml(nick)}" style="background:#ff4757;border:none;color:#fff;padding:10px 14px;">Remover</button>
-            </div>
-          `;
-          listEl.appendChild(row);
-        });
+          const sinceAt = u?.since ?? u?.created_at ?? u?.createdAt ?? null;
+          return `
+            <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);">
+              <div style="min-width:0;">
+                <div style="font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(nick)}</div>
+                <div style="font-size:12px;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(userId || "sem user_id")}</div>
+              </div>
+              <div>
+                <div style="font-size:12px;opacity:.75;">Ativado em</div>
+                <div style="font-weight:800;">${escapeHtml(fmtDate(sinceAt))}</div>
+              </div>
+              <div>
+                <div style="font-size:12px;opacity:.75;">Expira / Token</div>
+                <div style="font-weight:800;">${escapeHtml(fmtDate(expiresAt))}</div>
+                <div style="font-size:11px;opacity:.72;margin-top:2px;">${escapeHtml(shortToken(tokenUsed))}</div>
+              </div>
+              <div>
+                <button class="nav-item premium-remove-btn" type="button" data-user-id="${escapeHtml(userId)}" data-user-nick="${escapeHtml(nick)}" style="background:#ff4757;border:none;color:#fff;padding:10px 14px;">Remover</button>
+              </div>
+            </div>`;
+        }).join("");
+
+        listEl.innerHTML = rowsHtml || `<div style="padding:14px;border:1px dashed rgba(255,255,255,.10);border-radius:14px;opacity:.82;">A API retornou dados, mas a lista ficou vazia após a montagem.</div>`;
       }catch(e){
         console.error(e);
         const msg = escapeHtml(String(e?.message || ""));
