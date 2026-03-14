@@ -1617,6 +1617,11 @@ const MASTER_NICK = "Srgokucheats";
     return a?.token || "";
   }
 
+  function getLoggedUserId(){
+    const a = loadAuth() || {};
+    return String(a.userId || a.id || "").trim();
+  }
+
   function getOrCreateUserId(){
     let id = localStorage.getItem(USER_ID_KEY);
     if(!id){
@@ -2257,10 +2262,9 @@ const MASTER_NICK = "Srgokucheats";
   }
 
   async function syncPremiumStatus(){
-    const userId = getOrCreateUserId();
+    const userId = getLoggedUserId();
 
-    const tokenAtivador = localStorage.getItem("toolflix_token_ativador");
-    if(!tokenAtivador){
+    if(!userId){
       isPremium = false;
       localStorage.setItem("toolflix_premium_atv","false");
       return;
@@ -2272,6 +2276,9 @@ const MASTER_NICK = "Srgokucheats";
       const data = await r.json().catch(()=> ({}));
       isPremium = !!data?.premium;
       localStorage.setItem("toolflix_premium_atv", isPremium ? "true" : "false");
+      if(isPremium && data?.tokenUsed){
+        localStorage.setItem("toolflix_token_ativador", String(data.tokenUsed));
+      }
       if(!isPremium){
         localStorage.removeItem("toolflix_token_ativador");
       }
@@ -2563,7 +2570,11 @@ const MASTER_NICK = "Srgokucheats";
 
     if(!token) return showToast("Digite o TOKEN!");
 
-    const userId = getOrCreateUserId();
+    const userId = getLoggedUserId();
+    if(!userId){
+      showToast("Entre na sua conta antes de ativar o premium.");
+      return;
+    }
 
     try{
       const r = await fetch(`${API_URL}/api/validar-token`, {
@@ -2574,7 +2585,7 @@ const MASTER_NICK = "Srgokucheats";
 
       const data = await r.json().catch(()=> ({}));
 
-      if(r.ok && data?.valid){
+      if(r.ok && (data?.valid || data?.ok === true)){
         localStorage.setItem("toolflix_premium_atv","true");
         localStorage.setItem("toolflix_token_ativador", token);
         isPremium = true;
@@ -2587,16 +2598,17 @@ const MASTER_NICK = "Srgokucheats";
 
         document.getElementById("premiumModal").style.display = "none";
         showToast("💎 PREMIUM ATIVADO!");
-        await refreshPremiumCount();
+        await checkPremiumSync();
         updatePremiumSidebar();
         updateUserUI();
         render();
 
         document.getElementById("premiumWelcomeModal").style.display = "flex";
       } else {
-        const reason = data?.reason || data?.error || "";
+        const reason = String(data?.reason || data?.error || "").trim();
         if(reason === "TOKEN_EXPIRADO") return showToast("Token expirado!");
         if(reason === "TOKEN_JA_USADO") return showToast("Token já foi usado!");
+        if(reason === "USUARIO_NAO_ENCONTRADO" || reason === "CONTA_NAO_ENCONTRADA") return showToast("Faça login na conta antes de ativar o premium.");
         showToast("Token inválido!");
       }
     }catch(e){
