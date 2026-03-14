@@ -2845,7 +2845,9 @@ const MASTER_NICK = "Srgokucheats";
 
       try{
         const j = await adminFetch(API_URL + "/api/admin/premium-users");
-        const users = Array.isArray(j?.users) ? j.users : [];
+        const users = Array.isArray(j?.premiumUsers)
+          ? j.premiumUsers
+          : (Array.isArray(j?.users) ? j.users : []);
 
         statusEl.textContent = users.length
           ? `Total premium ativo: ${users.length}`
@@ -2899,8 +2901,9 @@ const MASTER_NICK = "Srgokucheats";
         });
       }catch(e){
         console.error(e);
+        const msg = escapeHtml(String(e?.message || ""));
         statusEl.textContent = "Erro ao carregar usuários premium.";
-        listEl.innerHTML = '<div style="padding:14px;border:1px dashed rgba(255,255,255,.10);border-radius:14px;opacity:.78;">Não foi possível carregar a lista premium.</div>';
+        listEl.innerHTML = `<div style="padding:14px;border:1px dashed rgba(255,255,255,.10);border-radius:14px;opacity:.78;">Não foi possível carregar a lista premium.${msg ? `<div style="margin-top:8px;font-size:12px;color:#ffb3b3;">${msg}</div>` : ""}</div>`;
       }
     }
 
@@ -2947,17 +2950,31 @@ const MASTER_NICK = "Srgokucheats";
   // ===== ADMIN CHATS =====
 async function buildAdminHeaders(){
   const headers = {};
-  const token = getToken?.();
 
-  if(window.isSuperAdmin && token){
+  let auth = null;
+  try{ auth = JSON.parse(localStorage.getItem(AUTH_KEY) || "null"); }catch{}
+  const token = (auth && auth.token) ? String(auth.token).trim() : String((typeof getToken === "function" ? getToken() : "") || "").trim();
+
+  const u = (typeof loadUser === "function" ? loadUser() : null);
+  const isMasterNow = !!(u && u.nick === MASTER_NICK);
+
+  if(isMasterNow && token){
     headers["Authorization"] = "Bearer " + token;
     return headers;
   }
 
-  const adminKey = getAdminKey?.();
-  if(adminKey){
-    headers["x-admin-key"] = adminKey;
+  const savedAdminKey = String(localStorage.getItem("toolflix_admin_key") || "").trim();
+  if(savedAdminKey){
+    headers["x-admin-key"] = savedAdminKey;
     return headers;
+  }
+
+  if(typeof getAdminKey === "function"){
+    const adminKey = String(getAdminKey() || "").trim();
+    if(adminKey){
+      headers["x-admin-key"] = adminKey;
+      return headers;
+    }
   }
 
   throw new Error("NOT_AUTHORIZED");
