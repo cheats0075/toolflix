@@ -457,6 +457,27 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     }
     #userArea #xpText { color:#fff; font-weight:600; }
     #userArea .xpBar { background:#000; }
+    #userAvatar{
+      box-shadow: 0 0 10px rgba(0,0,0,.35);
+    }
+    .presence-avatar,
+    .global-chat-avatar{
+      width:32px;
+      height:32px;
+      border-radius:50%;
+      object-fit:cover;
+      display:block;
+      flex:0 0 32px;
+      background:#111;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 4px 14px rgba(0,0,0,.28);
+    }
+    .global-chat-head{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin:0 0 4px;
+    }
 
     /* ===== CONQUISTAS ===== */
     .ach-badge {
@@ -837,7 +858,7 @@ select optgroup{
     .global-chat-name{
       font-size:11px;
       opacity:.85;
-      margin:0 10px 4px;
+      margin:0;
       font-weight:800;
       letter-spacing:.2px;
     }
@@ -1098,6 +1119,7 @@ select optgroup{
       <button class="nav-item" id="adminBtn">⚙️ Admin</button>
 	        <!-- ===== ÁREA DO USUÁRIO (GAME) ===== -->
       <div id="userArea" class="nav-item" style="display:flex; align-items:center; gap:10px; position:relative; cursor:pointer;">
+        <img id="userAvatar" src="assets/img/avatars/level-1.webp" alt="Avatar" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid rgba(255,255,255,.14); background:#111; display:block; flex:0 0 34px;">
         <span id="userNick">Entrar</span>
         <div class="xpBar">
           <div class="xpFill" id="xpFill" style="width:0%"></div>
@@ -1637,8 +1659,7 @@ const MASTER_NICK = "Srgokucheats";
   }
 
   function saveUser(u){
-    u = u || {};
-    u.xp = Number(u.xp || 0);
+    u = syncUserComputedFields(u || {});
     localStorage.setItem(USER_KEY, JSON.stringify(u));
   }
 
@@ -1679,6 +1700,8 @@ const MASTER_NICK = "Srgokucheats";
       const j = await r.json().catch(()=> ({}));
       if(j?.ok){
         u.xp = Number(j.xp || 0);
+        if(j.level != null) u.level = Number(j.level || 1);
+        if(j.avatar) u.avatar = String(j.avatar);
         saveUser(u);
         updateUserUI?.();
       }
@@ -1719,6 +1742,25 @@ const MASTER_NICK = "Srgokucheats";
     return {level, min, max};
   }
 
+  function getAvatarLevel(data){
+    const rawLevel = Number(data?.level || 0);
+    const calculated = rawLevel > 0 ? rawLevel : Number(getLevelInfo(data?.xp || 0).level || 1);
+    return Math.max(1, Math.min(15, calculated));
+  }
+
+  function getAvatarSrc(data){
+    return `assets/img/avatars/level-${getAvatarLevel(data)}.webp`;
+  }
+
+  function syncUserComputedFields(u){
+    u = u || {};
+    u.xp = Number(u.xp || 0);
+    const levelInfo = getLevelInfo(u.xp);
+    u.level = Number(u.level || levelInfo.level || 1);
+    u.avatar = String(u.avatar || getAvatarSrc(u));
+    return u;
+  }
+
 
   function showToast(msg){
     const c = document.getElementById("toast-container");
@@ -1742,6 +1784,7 @@ const MASTER_NICK = "Srgokucheats";
     const nickEl = document.getElementById("userNick");
     const xpFill = document.getElementById("xpFill");
     const xpText = document.getElementById("xpText");
+    const avatarEl = document.getElementById("userAvatar");
 
     const masterTopBtn = document.getElementById("masterChatsTopBtn");
     const adminChatsBtn = document.getElementById("adminChatsBtn");
@@ -1751,6 +1794,7 @@ const MASTER_NICK = "Srgokucheats";
       if(nickEl) nickEl.innerText = "Entrar";
       if(xpFill) xpFill.style.width = "0%";
       if(xpText) xpText.innerText = "0/100";
+      if(avatarEl) avatarEl.src = getAvatarSrc({ level: 1 });
 
       // Esconde tudo quando não está logado
       if(masterTopBtn) masterTopBtn.style.display = "none";
@@ -1765,6 +1809,7 @@ const MASTER_NICK = "Srgokucheats";
     if(adminBtn) adminBtn.style.display = window.isSuperAdmin ? "inline-block" : "none";
 
     if(nickEl) nickEl.innerText = u.nick;
+    if(avatarEl) avatarEl.src = getAvatarSrc(u);
 
     const info = getLevelInfo(u.xp);
     const pct  = ((u.xp - info.min) / (info.max - info.min)) * 100;
@@ -1955,7 +2000,7 @@ const MASTER_NICK = "Srgokucheats";
       }
 
       saveAuth({ token: j2.token, userId: j2.user.id, nick: j2.user.nick });
-      saveUser({ nick: j2.user.nick, xp: Number(j2.user.xp || 0) });
+      saveUser({ nick: j2.user.nick, xp: Number(j2.user.xp || 0), level: Number(j2.user.level || 1), avatar: j2.user.avatar || "" });
 
       closeLogin();
       toggleUserMenu(true);
@@ -3973,9 +4018,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
   function formatPresenceLevel(item){
     if(item?.is_guest) return "Visitante";
-    const xp = Number(item?.xp || 0);
-    const info = (typeof getLevelInfo === "function") ? getLevelInfo(xp) : { level: 1 };
-    return `Nv ${info.level}`;
+    const level = Number(item?.level || 0) || Number((typeof getLevelInfo === "function") ? getLevelInfo(item?.xp || 0).level : 1);
+    return `Nv ${level}`;
   }
 
   function formatLastSeen(ts){
@@ -4004,10 +4048,13 @@ document.addEventListener("DOMContentLoaded", function(){
     const name = formatPresenceName(item, idx);
     const level = formatPresenceLevel(item);
     const seen = withSeen ? `<div class="global-chat-meta">${formatLastSeen(item?.last_seen_at)}</div>` : "";
+    const avatar = guest
+      ? `<span class="presence-bullet guest"></span>`
+      : `<img class="presence-avatar" src="${escapeHtml(getAvatarSrc(item))}" alt="Avatar de ${escapeHtml(name)}">`;
     return `
       <div class="presence-user">
         <div class="presence-user-left">
-          <span class="presence-bullet ${guest ? "guest" : ""}"></span>
+          ${avatar}
           <div>
             <div class="presence-name">${name}</div>
             ${seen}
@@ -4146,9 +4193,13 @@ document.addEventListener("DOMContentLoaded", function(){
     const deleted = !!msg?.deleted;
     const bubbleText = deleted ? "Mensagem apagada pelo administrador" : String(msg?.message || "");
     const bubbleClass = deleted ? "global-chat-bubble deleted" : "global-chat-bubble";
+    const author = escapeHtml(formatGlobalAuthor(msg));
+    const avatar = msg?.is_guest
+      ? ""
+      : `<img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${author}">`;
     return `
       <div class="global-chat-row" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
-        <div class="global-chat-name">${escapeHtml(formatGlobalAuthor(msg))}</div>
+        <div class="global-chat-head">${avatar}<div class="global-chat-name">${author}</div></div>
         <div class="${bubbleClass}">${escapeHtml(bubbleText)}</div>
         <div class="global-chat-meta">${formatGlobalTime(msg?.created_at)}</div>
         ${globalChatDeleteButtonHtml(msg)}
