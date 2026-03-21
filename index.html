@@ -885,6 +885,8 @@ select optgroup{
       flex-direction:column;
       max-width: 88%;
       align-self:flex-start;
+      position:relative;
+      padding-top: 2px;
     }
     .global-chat-name{
       font-size:11px;
@@ -911,25 +913,35 @@ select optgroup{
       opacity:.62;
     }
     .global-chat-actions{
-      margin:6px 10px 0;
+      position:absolute;
+      top: 0;
+      left: -6px;
+      margin:0;
       display:flex;
-      gap:8px;
+      gap:0;
       align-items:center;
+      z-index: 4;
     }
     .global-chat-delete-btn{
+      width:26px;
+      height:26px;
       border:none;
-      border-radius:10px;
-      padding:6px 10px;
-      font-size:11px;
+      border-radius:999px;
+      padding:0;
+      font-size:15px;
+      line-height:1;
       font-weight:900;
       cursor:pointer;
       color:#fff;
-      background: linear-gradient(90deg, #8b0000, #c62828);
-      box-shadow: 0 6px 16px rgba(0,0,0,.22);
+      background: linear-gradient(180deg, #d31616, #900);
+      box-shadow: 0 6px 16px rgba(0,0,0,.28);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
     }
     .global-chat-delete-btn:hover{
       filter: brightness(1.08);
-      transform: translateY(-1px);
+      transform: translateY(-1px) scale(1.04);
     }
     .global-chat-bubble.deleted{
       font-style:italic;
@@ -1150,7 +1162,7 @@ select optgroup{
       <button class="nav-item" id="adminBtn">⚙️ Admin</button>
 	        <!-- ===== ÁREA DO USUÁRIO (GAME) ===== -->
       <div id="userArea" class="nav-item" style="display:flex; align-items:center; gap:10px; position:relative; cursor:pointer;">
-        <img id="userAvatar" src="assets/img/avatars/level-1.webp" alt="Avatar" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid rgba(255,255,255,.14); background:#111; display:block; flex:0 0 34px;">
+        <img id="userAvatar" src="/toolflix/assets/img/avatars/level-1.webp" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid rgba(255,255,255,.14); background:#111; display:block; flex:0 0 34px;">
         <span id="userNick">Entrar</span>
         <div class="xpBar">
           <div class="xpFill" id="xpFill" style="width:0%"></div>
@@ -1875,6 +1887,7 @@ const MASTER_NICK = "Srgokucheats";
       if(xpFill) xpFill.style.width = "0%";
       if(xpText) xpText.innerText = "0/100";
       if(avatarEl) avatarEl.src = getAvatarSrc({ level: 1 });
+      try{ if(typeof tfApplyTopFrame === 'function') tfApplyTopFrame({ level: 1, frame_level: 1 }); }catch(e){}
 
       // Esconde tudo quando não está logado
       if(masterTopBtn) masterTopBtn.style.display = "none";
@@ -1890,6 +1903,7 @@ const MASTER_NICK = "Srgokucheats";
 
     if(nickEl) nickEl.innerText = u.nick;
     if(avatarEl) avatarEl.src = getAvatarSrc(u);
+    try{ if(typeof tfApplyTopFrame === 'function') tfApplyTopFrame(u); }catch(e){}
 
     const info = getLevelInfo(u.xp);
     const pct  = ((u.xp - info.min) / (info.max - info.min)) * 100;
@@ -4751,16 +4765,19 @@ document.addEventListener("DOMContentLoaded", function(){
     const deleted = !!msg?.deleted;
     const bubbleText = deleted ? "Mensagem apagada pelo administrador" : String(msg?.message || "");
     const bubbleClass = deleted ? "global-chat-bubble deleted" : "global-chat-bubble";
-    const author = escapeHtml(formatGlobalAuthor(msg));
-    const avatar = msg?.is_guest
-      ? ""
-      : `<img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${author}" onerror="this.onerror=null;this.src='assets/img/avatars/level-1.webp';">`;
+    const author = formatGlobalAuthor(msg);
+    const avatarHtml = (typeof tfGetFrameSrc === "function")
+      ? `<span class="tf-frame-wrap"><img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${escapeHtml(author)}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';"><img class="tf-frame-overlay" src="${escapeHtml(tfGetFrameSrc(msg))}" alt="" onerror="this.style.display='none';"></span>`
+      : `<img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${escapeHtml(author)}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">`;
     return `
       <div class="global-chat-row" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
-        <div class="global-chat-head">${avatar}<div class="global-chat-name">${author}</div></div>
+        ${globalChatDeleteButtonHtml(msg)}
+        <div class="global-chat-head">
+          ${avatarHtml}
+          <div class="global-chat-name">${escapeHtml(author)}</div>
+        </div>
         <div class="${bubbleClass}">${escapeHtml(bubbleText)}</div>
         <div class="global-chat-meta">${formatGlobalTime(msg?.created_at)}</div>
-        ${globalChatDeleteButtonHtml(msg)}
       </div>
     `;
   }
