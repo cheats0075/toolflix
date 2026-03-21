@@ -914,8 +914,8 @@ select optgroup{
     }
     .global-chat-actions{
       position:absolute;
-      top: 6px;
-      right: 6px;
+      top: 2px;
+      right: -10px;
       left: auto;
       margin:0;
       display:flex;
@@ -924,12 +924,12 @@ select optgroup{
       z-index: 4;
     }
     .global-chat-delete-btn{
-      width:26px;
-      height:26px;
+      width:24px;
+      height:24px;
       border:none;
       border-radius:999px;
       padding:0;
-      font-size:15px;
+      font-size:16px;
       line-height:1;
       font-weight:900;
       cursor:pointer;
@@ -4075,6 +4075,10 @@ function tfGetFrameLevel(data){
   return unlocked[0] || 1;
 }
 function tfGetFrameSrc(data){
+  const explicitLevel = Number(data?.frame_level || data?.frameLevel || 0);
+  if(explicitLevel >= 1 && explicitLevel <= TF_MAX_FRAME_LEVEL){
+    return `/toolflix/assets/img/molduras/avatar-${explicitLevel}.png`;
+  }
   const raw = String(data?.frame || data?.frame_path || "").trim();
   if(raw){
     if(/^https?:\/\//i.test(raw) || raw.startsWith("/toolflix/")) return raw;
@@ -4624,7 +4628,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const seen = withSeen ? `<div class="global-chat-meta">${formatLastSeen(item?.last_seen_at)}</div>` : "";
     const avatar = guest
       ? `<span class="presence-bullet guest"></span>`
-      : `<img class="presence-avatar" src="${escapeHtml(getAvatarSrc(item))}" alt="Avatar de ${escapeHtml(name)}">`;
+      : `<span class="tf-frame-wrap"><img class="presence-avatar" src="${escapeHtml(getAvatarSrc(item))}" alt="Avatar de ${escapeHtml(name)}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';"><img class="tf-frame-overlay" src="${escapeHtml(tfGetFrameSrc(item))}" alt="" onerror="this.style.display='none';"></span>`;
     return `
       <div class="presence-user">
         <div class="presence-user-left">
