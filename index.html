@@ -1813,20 +1813,17 @@ const MASTER_NICK = "Srgokucheats";
     return Array.from({ length:max }, (_, i)=> i + 1);
   }
 
-  function normalizeAvatarSrc(raw, fallbackLevel){
-    const level = Math.max(1, Math.min(15, Number(fallbackLevel || 1)));
-    const fallback = `assets/img/avatars/level-${level}.webp`;
-    const v = String(raw || "").trim();
-    if(!v) return fallback;
-    if(/^https?:\/\//i.test(v) || v.startsWith("/") || v.startsWith("assets/")) return v;
-    if(/^level-\d+\.webp$/i.test(v)) return `assets/img/avatars/${v}`;
-    return fallback;
-  }
-
   function getAvatarSrc(data){
-    const level = getAvatarLevel(data);
-    const raw = data?.avatar || data?.avatar_url || data?.avatarUrl || data?.avatar_src || data?.avatarSrc || "";
-    return normalizeAvatarSrc(raw, level);
+    const raw = String(data?.avatar || data?.avatar_path || "").trim();
+    if(raw){
+      if(/^https?:\/\//i.test(raw) || raw.startsWith("/") || raw.startsWith("assets/")) return raw;
+      if(/^level-\d+\.webp$/i.test(raw)) return `assets/img/avatars/${raw}`;
+    }
+    const explicitLevel = Number(data?.avatar_level || data?.avatarLevel || 0);
+    if(explicitLevel >= 1 && explicitLevel <= 15){
+      return `assets/img/avatars/level-${explicitLevel}.webp`;
+    }
+    return `assets/img/avatars/level-${getAvatarLevel(data)}.webp`;
   }
 
   function syncUserComputedFields(u){
@@ -4395,7 +4392,7 @@ document.addEventListener("DOMContentLoaded", function(){
     if(!id) return "";
     return `
       <div class="global-chat-actions">
-        <button class="global-chat-delete-btn" type="button" data-global-delete-id="${escapeHtml(id)}">Apagar</button>
+        <button class="global-chat-delete-btn" type="button" data-global-delete-id="${escapeHtml(id)}" title="Apagar mensagem" aria-label="Apagar mensagem">✕</button>
       </div>
     `;
   }
@@ -4407,7 +4404,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const author = escapeHtml(formatGlobalAuthor(msg));
     const avatar = msg?.is_guest
       ? ""
-      : `<img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${author}" onerror="this.onerror=null;this.src='assets/img/avatars/level-${Math.max(1, Math.min(15, Number(msg?.level || 1)))}.webp';">`;
+      : `<img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${author}" onerror="this.onerror=null;this.src='assets/img/avatars/level-1.webp';">`;
     return `
       <div class="global-chat-row" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
         <div class="global-chat-head">${avatar}<div class="global-chat-name">${author}</div></div>
@@ -4462,7 +4459,7 @@ document.addEventListener("DOMContentLoaded", function(){
         refreshGlobalChat(false);
         showToast("Mensagem apagada.");
       }else{
-        if(j?.error === "FORBIDDEN") showToast("Somente Srgokucheats pode apagar mensagens.");
+        if(j?.error === "FORBIDDEN" || j?.error === "MASTER_ONLY") showToast("Somente Srgokucheats pode apagar mensagens.");
         else if(j?.error === "MESSAGE_NOT_FOUND") showToast("Mensagem não encontrada.");
         else showToast("Não foi possível apagar a mensagem.");
       }
