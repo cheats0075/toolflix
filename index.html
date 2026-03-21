@@ -914,8 +914,9 @@ select optgroup{
     }
     .global-chat-actions{
       position:absolute;
-      top: 0;
-      left: -6px;
+      top: 6px;
+      right: 6px;
+      left: auto;
       margin:0;
       display:flex;
       gap:0;
@@ -4076,7 +4077,8 @@ function tfGetFrameLevel(data){
 function tfGetFrameSrc(data){
   const raw = String(data?.frame || data?.frame_path || "").trim();
   if(raw){
-    if(/^https?:\/\//i.test(raw) || raw.startsWith("/toolflix/") || raw.startsWith("/assets/")) return raw;
+    if(/^https?:\/\//i.test(raw) || raw.startsWith("/toolflix/")) return raw;
+    if(raw.startsWith("/assets/")) return `/toolflix${raw}`;
     if(raw.startsWith("assets/")) return "/toolflix/" + raw.replace(/^\/+/, "");
     if(/^avatar-\d+\.(png|webp)$/i.test(raw)) return `/toolflix/assets/img/molduras/${raw}`;
   }
@@ -4347,7 +4349,7 @@ globalChatRowHtml = function(msg){
   const author = escapeHtml(formatGlobalAuthor(msg));
   const avatar = msg?.is_guest
     ? ""
-    : `<span class="tf-frame-wrap"><img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${author}" onerror="this.onerror=null;this.src='assets/img/avatars/level-1.webp';"><img class="tf-frame-overlay" src="${escapeHtml(tfGetFrameSrc(msg))}" alt="" onerror="this.style.display='none';"></span>`;
+    : `<span class="tf-frame-wrap"><img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${author}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';"><img class="tf-frame-overlay" src="${escapeHtml(tfGetFrameSrc(msg))}" alt="" onerror="this.style.display='none';"></span>`;
   return `
     <div class="global-chat-row" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
       <div class="global-chat-head">
