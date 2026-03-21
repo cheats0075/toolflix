@@ -530,6 +530,37 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     }
     .suporte-container.ativo .suporte-painel { display:block; }
 
+
+    .avatar-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));
+      gap:12px;
+      margin-top:14px;
+    }
+    .avatar-card{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      text-align:center;
+    }
+    .avatar-card.locked{ opacity:.68; }
+    .avatar-card img{
+      width:72px; height:72px; border-radius:50%; object-fit:cover;
+      display:block; margin:0 auto 10px;
+      border:2px solid rgba(255,255,255,.14); background:#111;
+    }
+    .avatar-card button{
+      margin-top:8px; width:100%; border:none; border-radius:999px;
+      padding:8px 10px; font-weight:700; cursor:pointer;
+      background:var(--cor-accent); color:#000;
+    }
+    .avatar-card button[disabled]{
+      cursor:not-allowed; opacity:.6;
+      background:rgba(255,255,255,.12); color:#fff;
+    }
+    .avatar-mini-status{ display:inline-block; margin-top:6px; font-size:12px; opacity:.9; }
+
     /* Scroll bonito conquistas */
     #achList::-webkit-scrollbar { width: 8px; }
     #achList::-webkit-scrollbar-thumb { background: linear-gradient(180deg, gold, orange); border-radius: 999px; }
@@ -1129,6 +1160,7 @@ select optgroup{
         <div id="userMenuBox" class="userMenuBox" style="display:none;">
           <button class="userMenuItem" id="openGameBtn">🎮 Game</button>
           <button class="userMenuItem" id="openAchBtn">🏆 Conquistas</button>
+          <button class="userMenuItem" id="openAvatarBtn">🖼️ Avatares</button>
           <button class="userMenuItem" id="logoutBtn">🚪 Sair</button>
         </div>
       </div>
@@ -1194,6 +1226,17 @@ select optgroup{
              style="max-height:60vh; overflow-y:auto; padding-right:8px;"></div>
         <div id="achPlatinum"
              style="margin-top:15px; font-weight:900; color:gold;"></div>
+      </div>
+    </div>
+
+    <div id="avatarModal" class="modal-overlay">
+      <div class="modal-box" style="width:760px; max-width:94vw; text-align:left;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <h2 style="color:var(--cor-accent);">🖼️ Coleção de Avatares</h2>
+          <button id="closeAvatarBtn" class="nav-item" style="padding:8px 12px;">✖</button>
+        </div>
+        <div id="avatarPreviewHead" style="opacity:.9; font-size:13px;">Carregando...</div>
+        <div id="avatarContent" style="margin-top:10px; max-height:62vh; overflow:auto;"></div>
       </div>
     </div>
 
@@ -1701,6 +1744,7 @@ const MASTER_NICK = "Srgokucheats";
       if(j?.ok){
         u.xp = Number(j.xp || 0);
         if(j.level != null) u.level = Number(j.level || 1);
+        if(j.user?.avatar_selected_level != null) u.avatarSelectedLevel = Number(j.user.avatar_selected_level || 0);
         if(j.avatar) u.avatar = String(j.avatar);
         saveUser(u);
         updateUserUI?.();
@@ -1742,10 +1786,31 @@ const MASTER_NICK = "Srgokucheats";
     return {level, min, max};
   }
 
-  function getAvatarLevel(data){
+  function getCurrentLevel(data){
     const rawLevel = Number(data?.level || 0);
     const calculated = rawLevel > 0 ? rawLevel : Number(getLevelInfo(data?.xp || 0).level || 1);
-    return Math.max(1, Math.min(15, calculated));
+    return Math.max(1, calculated);
+  }
+
+  function getAvatarUnlockLevel(data){
+    return Math.max(1, Math.min(15, getCurrentLevel(data)));
+  }
+
+  function getSelectedAvatarLevel(data){
+    const lv = Number(data?.avatarSelectedLevel || data?.avatar_selected_level || data?.avatarLevelSelected || 0);
+    return (lv >= 1 && lv <= 15) ? lv : 0;
+  }
+
+  function getAvatarLevel(data){
+    const unlockedMax = getAvatarUnlockLevel(data);
+    const selected = getSelectedAvatarLevel(data);
+    if(selected >= 1 && selected <= unlockedMax) return selected;
+    return unlockedMax;
+  }
+
+  function getUnlockedAvatarLevels(data){
+    const max = getAvatarUnlockLevel(data);
+    return Array.from({ length:max }, (_, i)=> i + 1);
   }
 
   function getAvatarSrc(data){
@@ -1757,6 +1822,12 @@ const MASTER_NICK = "Srgokucheats";
     u.xp = Number(u.xp || 0);
     const levelInfo = getLevelInfo(u.xp);
     u.level = Number(u.level || levelInfo.level || 1);
+
+    const selected = getSelectedAvatarLevel(u);
+    const unlockedMax = getAvatarUnlockLevel(u);
+    u.avatarSelectedLevel = (selected >= 1 && selected <= unlockedMax) ? selected : 0;
+    u.avatar_selected_level = u.avatarSelectedLevel || null;
+
     u.avatar = String(u.avatar || getAvatarSrc(u));
     return u;
   }
@@ -1902,6 +1973,10 @@ const MASTER_NICK = "Srgokucheats";
     const afterLv = getLevelInfo(afterXp).level;
     if(afterLv > beforeLv){
       triggerLevelUpFx(afterLv);
+      const unlockedMax = Math.min(15, afterLv);
+      if(unlockedMax > Math.min(15, beforeLv)){
+        showToast(`🖼️ Novo avatar liberado: nível ${unlockedMax}!`);
+      }
     }
   }
 
@@ -2000,7 +2075,13 @@ const MASTER_NICK = "Srgokucheats";
       }
 
       saveAuth({ token: j2.token, userId: j2.user.id, nick: j2.user.nick });
-      saveUser({ nick: j2.user.nick, xp: Number(j2.user.xp || 0), level: Number(j2.user.level || 1), avatar: j2.user.avatar || "" });
+      saveUser({
+        nick: j2.user.nick,
+        xp: Number(j2.user.xp || 0),
+        level: Number(j2.user.level || 1),
+        avatar: j2.user.avatar || "",
+        avatarSelectedLevel: Number(j2.user.avatar_selected_level || j2.user.avatar_level || 0)
+      });
 
       closeLogin();
       toggleUserMenu(true);
@@ -2251,6 +2332,124 @@ const MASTER_NICK = "Srgokucheats";
 
   document.getElementById("closeAchBtn")?.addEventListener("click", ()=>{
     document.getElementById("achModal").style.display = "none";
+  });
+
+  function renderAvatarModal(){
+    const wrap = document.getElementById("avatarContent");
+    const head = document.getElementById("avatarPreviewHead");
+    const u = syncUserComputedFields(loadUser() || {});
+    if(!wrap || !head) return;
+
+    if(!u || !u.nick){
+      head.innerHTML = "Faça login para visualizar e equipar seus avatares.";
+      wrap.innerHTML = `<div style="opacity:.9">Entre na sua conta para usar a coleção de avatares.</div>`;
+      return;
+    }
+
+    const currentLevel = getCurrentLevel(u);
+    const equippedLevel = getAvatarLevel(u);
+    const unlockedMax = getAvatarUnlockLevel(u);
+    head.innerHTML = `Seu nível atual: <b>Nv ${currentLevel}</b> · Avatar equipado: <b>Nv ${equippedLevel}</b>`;
+
+    wrap.innerHTML = `<div class="avatar-grid">${
+      Array.from({ length:15 }, (_, idx)=>{
+        const level = idx + 1;
+        const unlocked = level <= unlockedMax;
+        const equipped = level === equippedLevel;
+        return `
+          <div class="avatar-card ${unlocked ? "" : "locked"}">
+            <img src="assets/img/avatars/level-${level}.webp" alt="Avatar nível ${level}">
+            <div style="font-weight:700;">Avatar Nv ${level}</div>
+            <div class="avatar-mini-status">${unlocked ? "✅ Desbloqueado" : `🔒 Libera no nível ${level}`}</div>
+            <button type="button" data-avatar-level="${level}" ${unlocked ? "" : "disabled"}>
+              ${equipped ? "Equipado" : (unlocked ? "Usar avatar" : "Bloqueado")}
+            </button>
+          </div>
+        `;
+      }).join("")
+    }</div>`;
+
+    wrap.querySelectorAll("button[data-avatar-level]").forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        const level = Number(btn.getAttribute("data-avatar-level") || 0);
+        if(!level) return;
+        await selectAvatarLevel(level);
+      });
+    });
+  }
+
+  function openAvatarModal(){
+    renderAvatarModal();
+    const m = document.getElementById("avatarModal");
+    if(m) m.style.display = "flex";
+    toggleUserMenu(true);
+  }
+
+  function closeAvatarModal(){
+    const m = document.getElementById("avatarModal");
+    if(m) m.style.display = "none";
+  }
+
+  async function selectAvatarLevel(level){
+    level = Number(level || 0);
+    const u = syncUserComputedFields(loadUser() || {});
+    if(!u || !u.nick){
+      showToast("Faça login para equipar avatar.");
+      return;
+    }
+    if(level < 1 || level > 15){
+      showToast("Avatar inválido.");
+      return;
+    }
+    if(level > getAvatarUnlockLevel(u)){
+      showToast(`Esse avatar libera no nível ${level}.`);
+      return;
+    }
+
+    const token = getToken();
+    if(token){
+      try{
+        const r = await fetch(API_BASE + "/api/avatar/select", {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+            "Authorization":"Bearer " + token
+          },
+          body: JSON.stringify({ level })
+        });
+        const j = await r.json().catch(()=> ({}));
+        if(!r.ok || !j?.ok){
+          showToast(j?.error === "AVATAR_LOCKED" ? `Esse avatar libera no nível ${j.need_level || level}.` : "Não foi possível trocar o avatar.");
+          return;
+        }
+        saveUser({
+          ...(loadUser() || {}),
+          xp: Number(j.user?.xp || u.xp || 0),
+          level: Number(j.user?.level || u.level || 1),
+          nick: j.user?.nick || u.nick || "",
+          avatar: j.user?.avatar || "",
+          avatarSelectedLevel: Number(j.user?.avatar_selected_level || j.user?.avatar_level || level)
+        });
+      }catch(e){
+        showToast("Erro ao salvar avatar.");
+        return;
+      }
+    } else {
+      u.avatarSelectedLevel = level;
+      u.avatar_selected_level = level;
+      u.avatar = `assets/img/avatars/level-${level}.webp`;
+      saveUser(u);
+    }
+
+    updateUserUI();
+    renderAvatarModal();
+    showToast(`🖼️ Avatar nível ${level} equipado!`);
+  }
+
+  document.getElementById("openAvatarBtn")?.addEventListener("click", openAvatarModal);
+  document.getElementById("closeAvatarBtn")?.addEventListener("click", closeAvatarModal);
+  document.getElementById("avatarModal")?.addEventListener("click", (e)=>{
+    if(e.target?.id === "avatarModal") closeAvatarModal();
   });
 
   const _awardXpOriginal = awardXp;
