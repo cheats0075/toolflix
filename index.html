@@ -1150,7 +1150,7 @@ select optgroup{
       <button class="nav-item" id="adminBtn">⚙️ Admin</button>
 	        <!-- ===== ÁREA DO USUÁRIO (GAME) ===== -->
       <div id="userArea" class="nav-item" style="display:flex; align-items:center; gap:10px; position:relative; cursor:pointer;">
-        <img id="userAvatar" src="assets/img/avatars/level-1.webp" alt="Avatar" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid rgba(255,255,255,.14); background:#111; display:block; flex:0 0 34px;">
+        <img id="userAvatar" src="/toolflix/assets/img/avatars/level-1.webp" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid rgba(255,255,255,.14); background:#111; display:block; flex:0 0 34px;">
         <span id="userNick">Entrar</span>
         <div class="xpBar">
           <div class="xpFill" id="xpFill" style="width:0%"></div>
@@ -1813,17 +1813,30 @@ const MASTER_NICK = "Srgokucheats";
     return Array.from({ length:max }, (_, i)=> i + 1);
   }
 
+  function avatarBasePath(){
+    return "/toolflix/assets/img/avatars/";
+  }
+
+  function avatarFilePath(level){
+    const lv = Math.max(1, Math.min(15, Number(level || 1) || 1));
+    return `${avatarBasePath()}level-${lv}.webp`;
+  }
+
   function getAvatarSrc(data){
     const raw = String(data?.avatar || data?.avatar_path || "").trim();
     if(raw){
-      if(/^https?:\/\//i.test(raw) || raw.startsWith("/") || raw.startsWith("assets/")) return raw;
-      if(/^level-\d+\.webp$/i.test(raw)) return `assets/img/avatars/${raw}`;
+      if(/^https?:\/\//i.test(raw)) return raw;
+      if(raw.startsWith(avatarBasePath())) return raw;
+      if(raw.startsWith("/toolflix/assets/")) return raw;
+      if(raw.startsWith("/assets/")) return `/toolflix${raw}`;
+      if(raw.startsWith("assets/")) return `/toolflix/${raw}`;
+      if(/^level-\d+\.webp$/i.test(raw)) return `${avatarBasePath()}${raw}`;
     }
     const explicitLevel = Number(data?.avatar_level || data?.avatarLevel || 0);
     if(explicitLevel >= 1 && explicitLevel <= 15){
-      return `assets/img/avatars/level-${explicitLevel}.webp`;
+      return avatarFilePath(explicitLevel);
     }
-    return `assets/img/avatars/level-${getAvatarLevel(data)}.webp`;
+    return avatarFilePath(getAvatarLevel(data));
   }
 
   function syncUserComputedFields(u){
@@ -2367,7 +2380,7 @@ const MASTER_NICK = "Srgokucheats";
         const equipped = level === equippedLevel;
         return `
           <div class="avatar-card ${unlocked ? "" : "locked"}">
-            <img src="assets/img/avatars/level-${level}.webp" alt="Avatar nível ${level}">
+            <img src="/toolflix/assets/img/avatars/level-${level}.webp" alt="Avatar nível ${level}">
             <div style="font-weight:700;">Avatar Nv ${level}</div>
             <div class="avatar-mini-status">${unlocked ? "✅ Desbloqueado" : `🔒 Libera no nível ${level}`}</div>
             <button type="button" data-avatar-level="${level}" ${unlocked ? "" : "disabled"}>
@@ -2446,7 +2459,7 @@ const MASTER_NICK = "Srgokucheats";
     } else {
       u.avatarSelectedLevel = level;
       u.avatar_selected_level = level;
-      u.avatar = `assets/img/avatars/level-${level}.webp`;
+      u.avatar = avatarFilePath(level);
       saveUser(u);
     }
 
@@ -4404,7 +4417,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const author = escapeHtml(formatGlobalAuthor(msg));
     const avatar = msg?.is_guest
       ? ""
-      : `<img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${author}" onerror="this.onerror=null;this.src='assets/img/avatars/level-1.webp';">`;
+      : `<img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${author}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">`;
     return `
       <div class="global-chat-row" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
         <div class="global-chat-head">${avatar}<div class="global-chat-name">${author}</div></div>
