@@ -914,9 +914,8 @@ select optgroup{
     }
     .global-chat-actions{
       position:absolute;
-      top: 2px;
-      right: -10px;
-      left: auto;
+      top: 0;
+      left: -6px;
       margin:0;
       display:flex;
       gap:0;
@@ -924,12 +923,12 @@ select optgroup{
       z-index: 4;
     }
     .global-chat-delete-btn{
-      width:24px;
-      height:24px;
+      width:26px;
+      height:26px;
       border:none;
       border-radius:999px;
       padding:0;
-      font-size:16px;
+      font-size:15px;
       line-height:1;
       font-weight:900;
       cursor:pointer;
@@ -4075,14 +4074,9 @@ function tfGetFrameLevel(data){
   return unlocked[0] || 1;
 }
 function tfGetFrameSrc(data){
-  const explicitLevel = Number(data?.frame_level || data?.frameLevel || 0);
-  if(explicitLevel >= 1 && explicitLevel <= TF_MAX_FRAME_LEVEL){
-    return `/toolflix/assets/img/molduras/avatar-${explicitLevel}.png`;
-  }
   const raw = String(data?.frame || data?.frame_path || "").trim();
   if(raw){
-    if(/^https?:\/\//i.test(raw) || raw.startsWith("/toolflix/")) return raw;
-    if(raw.startsWith("/assets/")) return `/toolflix${raw}`;
+    if(/^https?:\/\//i.test(raw) || raw.startsWith("/toolflix/") || raw.startsWith("/assets/")) return raw;
     if(raw.startsWith("assets/")) return "/toolflix/" + raw.replace(/^\/+/, "");
     if(/^avatar-\d+\.(png|webp)$/i.test(raw)) return `/toolflix/assets/img/molduras/${raw}`;
   }
@@ -4353,7 +4347,7 @@ globalChatRowHtml = function(msg){
   const author = escapeHtml(formatGlobalAuthor(msg));
   const avatar = msg?.is_guest
     ? ""
-    : `<span class="tf-frame-wrap"><img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${author}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';"><img class="tf-frame-overlay" src="${escapeHtml(tfGetFrameSrc(msg))}" alt="" onerror="this.style.display='none';"></span>`;
+    : `<span class="tf-frame-wrap"><img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${author}" onerror="this.onerror=null;this.src='assets/img/avatars/level-1.webp';"><img class="tf-frame-overlay" src="${escapeHtml(tfGetFrameSrc(msg))}" alt="" onerror="this.style.display='none';"></span>`;
   return `
     <div class="global-chat-row" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
       <div class="global-chat-head">
@@ -4628,7 +4622,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const seen = withSeen ? `<div class="global-chat-meta">${formatLastSeen(item?.last_seen_at)}</div>` : "";
     const avatar = guest
       ? `<span class="presence-bullet guest"></span>`
-      : `<span class="tf-frame-wrap"><img class="presence-avatar" src="${escapeHtml(getAvatarSrc(item))}" alt="Avatar de ${escapeHtml(name)}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';"><img class="tf-frame-overlay" src="${escapeHtml(tfGetFrameSrc(item))}" alt="" onerror="this.style.display='none';"></span>`;
+      : `<img class="presence-avatar" src="${escapeHtml(getAvatarSrc(item))}" alt="Avatar de ${escapeHtml(name)}">`;
     return `
       <div class="presence-user">
         <div class="presence-user-left">
