@@ -530,37 +530,6 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     }
     .suporte-container.ativo .suporte-painel { display:block; }
 
-
-    .avatar-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));
-      gap:12px;
-      margin-top:14px;
-    }
-    .avatar-card{
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:16px;
-      padding:12px;
-      text-align:center;
-    }
-    .avatar-card.locked{ opacity:.68; }
-    .avatar-card img{
-      width:72px; height:72px; border-radius:50%; object-fit:cover;
-      display:block; margin:0 auto 10px;
-      border:2px solid rgba(255,255,255,.14); background:#111;
-    }
-    .avatar-card button{
-      margin-top:8px; width:100%; border:none; border-radius:999px;
-      padding:8px 10px; font-weight:700; cursor:pointer;
-      background:var(--cor-accent); color:#000;
-    }
-    .avatar-card button[disabled]{
-      cursor:not-allowed; opacity:.6;
-      background:rgba(255,255,255,.12); color:#fff;
-    }
-    .avatar-mini-status{ display:inline-block; margin-top:6px; font-size:12px; opacity:.9; }
-
     /* Scroll bonito conquistas */
     #achList::-webkit-scrollbar { width: 8px; }
     #achList::-webkit-scrollbar-thumb { background: linear-gradient(180deg, gold, orange); border-radius: 999px; }
@@ -885,8 +854,6 @@ select optgroup{
       flex-direction:column;
       max-width: 88%;
       align-self:flex-start;
-      position:relative;
-      padding-top: 2px;
     }
     .global-chat-name{
       font-size:11px;
@@ -913,35 +880,25 @@ select optgroup{
       opacity:.62;
     }
     .global-chat-actions{
-      position:absolute;
-      top: 0;
-      left: -6px;
-      margin:0;
+      margin:6px 10px 0;
       display:flex;
-      gap:0;
+      gap:8px;
       align-items:center;
-      z-index: 4;
     }
     .global-chat-delete-btn{
-      width:26px;
-      height:26px;
       border:none;
-      border-radius:999px;
-      padding:0;
-      font-size:15px;
-      line-height:1;
+      border-radius:10px;
+      padding:6px 10px;
+      font-size:11px;
       font-weight:900;
       cursor:pointer;
       color:#fff;
-      background: linear-gradient(180deg, #d31616, #900);
-      box-shadow: 0 6px 16px rgba(0,0,0,.28);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
+      background: linear-gradient(90deg, #8b0000, #c62828);
+      box-shadow: 0 6px 16px rgba(0,0,0,.22);
     }
     .global-chat-delete-btn:hover{
       filter: brightness(1.08);
-      transform: translateY(-1px) scale(1.04);
+      transform: translateY(-1px);
     }
     .global-chat-bubble.deleted{
       font-style:italic;
@@ -1162,7 +1119,7 @@ select optgroup{
       <button class="nav-item" id="adminBtn">⚙️ Admin</button>
 	        <!-- ===== ÁREA DO USUÁRIO (GAME) ===== -->
       <div id="userArea" class="nav-item" style="display:flex; align-items:center; gap:10px; position:relative; cursor:pointer;">
-        <img id="userAvatar" src="/toolflix/assets/img/avatars/level-1.webp" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid rgba(255,255,255,.14); background:#111; display:block; flex:0 0 34px;">
+        <img id="userAvatar" src="assets/img/avatars/level-1.webp" alt="Avatar" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid rgba(255,255,255,.14); background:#111; display:block; flex:0 0 34px;">
         <span id="userNick">Entrar</span>
         <div class="xpBar">
           <div class="xpFill" id="xpFill" style="width:0%"></div>
@@ -1172,7 +1129,6 @@ select optgroup{
         <div id="userMenuBox" class="userMenuBox" style="display:none;">
           <button class="userMenuItem" id="openGameBtn">🎮 Game</button>
           <button class="userMenuItem" id="openAchBtn">🏆 Conquistas</button>
-          <button class="userMenuItem" id="openAvatarBtn">🖼️ Avatares</button>
           <button class="userMenuItem" id="logoutBtn">🚪 Sair</button>
         </div>
       </div>
@@ -1238,17 +1194,6 @@ select optgroup{
              style="max-height:60vh; overflow-y:auto; padding-right:8px;"></div>
         <div id="achPlatinum"
              style="margin-top:15px; font-weight:900; color:gold;"></div>
-      </div>
-    </div>
-
-    <div id="avatarModal" class="modal-overlay">
-      <div class="modal-box" style="width:760px; max-width:94vw; text-align:left;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <h2 style="color:var(--cor-accent);">🖼️ Coleção de Avatares</h2>
-          <button id="closeAvatarBtn" class="nav-item" style="padding:8px 12px;">✖</button>
-        </div>
-        <div id="avatarPreviewHead" style="opacity:.9; font-size:13px;">Carregando...</div>
-        <div id="avatarContent" style="margin-top:10px; max-height:62vh; overflow:auto;"></div>
       </div>
     </div>
 
@@ -1756,7 +1701,6 @@ const MASTER_NICK = "Srgokucheats";
       if(j?.ok){
         u.xp = Number(j.xp || 0);
         if(j.level != null) u.level = Number(j.level || 1);
-        if(j.user?.avatar_selected_level != null) u.avatarSelectedLevel = Number(j.user.avatar_selected_level || 0);
         if(j.avatar) u.avatar = String(j.avatar);
         saveUser(u);
         updateUserUI?.();
@@ -1798,43 +1742,13 @@ const MASTER_NICK = "Srgokucheats";
     return {level, min, max};
   }
 
-  function getCurrentLevel(data){
+  function getAvatarLevel(data){
     const rawLevel = Number(data?.level || 0);
     const calculated = rawLevel > 0 ? rawLevel : Number(getLevelInfo(data?.xp || 0).level || 1);
-    return Math.max(1, calculated);
-  }
-
-  function getAvatarUnlockLevel(data){
-    return Math.max(1, Math.min(15, getCurrentLevel(data)));
-  }
-
-  function getSelectedAvatarLevel(data){
-    const lv = Number(data?.avatarSelectedLevel || data?.avatar_selected_level || data?.avatarLevelSelected || 0);
-    return (lv >= 1 && lv <= 15) ? lv : 0;
-  }
-
-  function getAvatarLevel(data){
-    const unlockedMax = getAvatarUnlockLevel(data);
-    const selected = getSelectedAvatarLevel(data);
-    if(selected >= 1 && selected <= unlockedMax) return selected;
-    return unlockedMax;
-  }
-
-  function getUnlockedAvatarLevels(data){
-    const max = getAvatarUnlockLevel(data);
-    return Array.from({ length:max }, (_, i)=> i + 1);
+    return Math.max(1, Math.min(15, calculated));
   }
 
   function getAvatarSrc(data){
-    const raw = String(data?.avatar || data?.avatar_path || "").trim();
-    if(raw){
-      if(/^https?:\/\//i.test(raw) || raw.startsWith("/") || raw.startsWith("assets/")) return raw;
-      if(/^level-\d+\.webp$/i.test(raw)) return `assets/img/avatars/${raw}`;
-    }
-    const explicitLevel = Number(data?.avatar_level || data?.avatarLevel || 0);
-    if(explicitLevel >= 1 && explicitLevel <= 15){
-      return `assets/img/avatars/level-${explicitLevel}.webp`;
-    }
     return `assets/img/avatars/level-${getAvatarLevel(data)}.webp`;
   }
 
@@ -1843,12 +1757,6 @@ const MASTER_NICK = "Srgokucheats";
     u.xp = Number(u.xp || 0);
     const levelInfo = getLevelInfo(u.xp);
     u.level = Number(u.level || levelInfo.level || 1);
-
-    const selected = getSelectedAvatarLevel(u);
-    const unlockedMax = getAvatarUnlockLevel(u);
-    u.avatarSelectedLevel = (selected >= 1 && selected <= unlockedMax) ? selected : 0;
-    u.avatar_selected_level = u.avatarSelectedLevel || null;
-
     u.avatar = String(u.avatar || getAvatarSrc(u));
     return u;
   }
@@ -1887,7 +1795,6 @@ const MASTER_NICK = "Srgokucheats";
       if(xpFill) xpFill.style.width = "0%";
       if(xpText) xpText.innerText = "0/100";
       if(avatarEl) avatarEl.src = getAvatarSrc({ level: 1 });
-      try{ if(typeof tfApplyTopFrame === 'function') tfApplyTopFrame({ level: 1, frame_level: 1 }); }catch(e){}
 
       // Esconde tudo quando não está logado
       if(masterTopBtn) masterTopBtn.style.display = "none";
@@ -1903,7 +1810,6 @@ const MASTER_NICK = "Srgokucheats";
 
     if(nickEl) nickEl.innerText = u.nick;
     if(avatarEl) avatarEl.src = getAvatarSrc(u);
-    try{ if(typeof tfApplyTopFrame === 'function') tfApplyTopFrame(u); }catch(e){}
 
     const info = getLevelInfo(u.xp);
     const pct  = ((u.xp - info.min) / (info.max - info.min)) * 100;
@@ -1996,10 +1902,6 @@ const MASTER_NICK = "Srgokucheats";
     const afterLv = getLevelInfo(afterXp).level;
     if(afterLv > beforeLv){
       triggerLevelUpFx(afterLv);
-      const unlockedMax = Math.min(15, afterLv);
-      if(unlockedMax > Math.min(15, beforeLv)){
-        showToast(`🖼️ Novo avatar liberado: nível ${unlockedMax}!`);
-      }
     }
   }
 
@@ -2098,13 +2000,7 @@ const MASTER_NICK = "Srgokucheats";
       }
 
       saveAuth({ token: j2.token, userId: j2.user.id, nick: j2.user.nick });
-      saveUser({
-        nick: j2.user.nick,
-        xp: Number(j2.user.xp || 0),
-        level: Number(j2.user.level || 1),
-        avatar: j2.user.avatar || "",
-        avatarSelectedLevel: Number(j2.user.avatar_selected_level || j2.user.avatar_level || 0)
-      });
+      saveUser({ nick: j2.user.nick, xp: Number(j2.user.xp || 0), level: Number(j2.user.level || 1), avatar: j2.user.avatar || "" });
 
       closeLogin();
       toggleUserMenu(true);
@@ -2355,124 +2251,6 @@ const MASTER_NICK = "Srgokucheats";
 
   document.getElementById("closeAchBtn")?.addEventListener("click", ()=>{
     document.getElementById("achModal").style.display = "none";
-  });
-
-  function renderAvatarModal(){
-    const wrap = document.getElementById("avatarContent");
-    const head = document.getElementById("avatarPreviewHead");
-    const u = syncUserComputedFields(loadUser() || {});
-    if(!wrap || !head) return;
-
-    if(!u || !u.nick){
-      head.innerHTML = "Faça login para visualizar e equipar seus avatares.";
-      wrap.innerHTML = `<div style="opacity:.9">Entre na sua conta para usar a coleção de avatares.</div>`;
-      return;
-    }
-
-    const currentLevel = getCurrentLevel(u);
-    const equippedLevel = getAvatarLevel(u);
-    const unlockedMax = getAvatarUnlockLevel(u);
-    head.innerHTML = `Seu nível atual: <b>Nv ${currentLevel}</b> · Avatar equipado: <b>Nv ${equippedLevel}</b>`;
-
-    wrap.innerHTML = `<div class="avatar-grid">${
-      Array.from({ length:15 }, (_, idx)=>{
-        const level = idx + 1;
-        const unlocked = level <= unlockedMax;
-        const equipped = level === equippedLevel;
-        return `
-          <div class="avatar-card ${unlocked ? "" : "locked"}">
-            <img src="assets/img/avatars/level-${level}.webp" alt="Avatar nível ${level}">
-            <div style="font-weight:700;">Avatar Nv ${level}</div>
-            <div class="avatar-mini-status">${unlocked ? "✅ Desbloqueado" : `🔒 Libera no nível ${level}`}</div>
-            <button type="button" data-avatar-level="${level}" ${unlocked ? "" : "disabled"}>
-              ${equipped ? "Equipado" : (unlocked ? "Usar avatar" : "Bloqueado")}
-            </button>
-          </div>
-        `;
-      }).join("")
-    }</div>`;
-
-    wrap.querySelectorAll("button[data-avatar-level]").forEach(btn=>{
-      btn.addEventListener("click", async ()=>{
-        const level = Number(btn.getAttribute("data-avatar-level") || 0);
-        if(!level) return;
-        await selectAvatarLevel(level);
-      });
-    });
-  }
-
-  function openAvatarModal(){
-    renderAvatarModal();
-    const m = document.getElementById("avatarModal");
-    if(m) m.style.display = "flex";
-    toggleUserMenu(true);
-  }
-
-  function closeAvatarModal(){
-    const m = document.getElementById("avatarModal");
-    if(m) m.style.display = "none";
-  }
-
-  async function selectAvatarLevel(level){
-    level = Number(level || 0);
-    const u = syncUserComputedFields(loadUser() || {});
-    if(!u || !u.nick){
-      showToast("Faça login para equipar avatar.");
-      return;
-    }
-    if(level < 1 || level > 15){
-      showToast("Avatar inválido.");
-      return;
-    }
-    if(level > getAvatarUnlockLevel(u)){
-      showToast(`Esse avatar libera no nível ${level}.`);
-      return;
-    }
-
-    const token = getToken();
-    if(token){
-      try{
-        const r = await fetch(API_BASE + "/api/avatar/select", {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json",
-            "Authorization":"Bearer " + token
-          },
-          body: JSON.stringify({ level })
-        });
-        const j = await r.json().catch(()=> ({}));
-        if(!r.ok || !j?.ok){
-          showToast(j?.error === "AVATAR_LOCKED" ? `Esse avatar libera no nível ${j.need_level || level}.` : "Não foi possível trocar o avatar.");
-          return;
-        }
-        saveUser({
-          ...(loadUser() || {}),
-          xp: Number(j.user?.xp || u.xp || 0),
-          level: Number(j.user?.level || u.level || 1),
-          nick: j.user?.nick || u.nick || "",
-          avatar: j.user?.avatar || "",
-          avatarSelectedLevel: Number(j.user?.avatar_selected_level || j.user?.avatar_level || level)
-        });
-      }catch(e){
-        showToast("Erro ao salvar avatar.");
-        return;
-      }
-    } else {
-      u.avatarSelectedLevel = level;
-      u.avatar_selected_level = level;
-      u.avatar = `assets/img/avatars/level-${level}.webp`;
-      saveUser(u);
-    }
-
-    updateUserUI();
-    renderAvatarModal();
-    showToast(`🖼️ Avatar nível ${level} equipado!`);
-  }
-
-  document.getElementById("openAvatarBtn")?.addEventListener("click", openAvatarModal);
-  document.getElementById("closeAvatarBtn")?.addEventListener("click", closeAvatarModal);
-  document.getElementById("avatarModal")?.addEventListener("click", (e)=>{
-    if(e.target?.id === "avatarModal") closeAvatarModal();
   });
 
   const _awardXpOriginal = awardXp;
@@ -4017,356 +3795,6 @@ document.addEventListener("DOMContentLoaded", function(){
     setInterval(poll, 8000);
     poll();
   });
-
-/* ===== PATCH MOLDURAS ===== */
-const TF_FRAME_USER_KEY = "toolflix_user";
-const TF_FRAME_AUTH_KEY = "toolflix_auth";
-const TF_ACH_UNLOCK_KEY = "toolflix_ach_unlock";
-const TF_MAX_FRAME_LEVEL = 30;
-
-function tfLoadUserRaw(){
-  try{ return JSON.parse(localStorage.getItem(TF_FRAME_USER_KEY) || "{}") || {}; }catch(e){ return {}; }
-}
-function tfSaveUserRaw(u){
-  try{ localStorage.setItem(TF_FRAME_USER_KEY, JSON.stringify(u || {})); }catch(e){}
-}
-function tfLoadAuthRaw(){
-  try{ return JSON.parse(localStorage.getItem(TF_FRAME_AUTH_KEY) || "null"); }catch(e){ return null; }
-}
-function tfGetTokenRaw(){
-  const a = tfLoadAuthRaw();
-  return a?.token || "";
-}
-function tfLoadAchUnlock(){
-  try{ return JSON.parse(localStorage.getItem(TF_ACH_UNLOCK_KEY) || "{}") || {}; }catch(e){ return {}; }
-}
-function tfSanitizeFrameLevels(list){
-  const arr = Array.isArray(list) ? list : [];
-  return Array.from(new Set(arr.map(v => Number(v || 0)).filter(v => Number.isFinite(v) && v >= 1 && v <= TF_MAX_FRAME_LEVEL))).sort((a,b)=> a-b);
-}
-function tfGetFrameAchievementEntries(){
-  const entries = [];
-  if(Array.isArray(typeof ACH_LIST !== "undefined" ? ACH_LIST : [])){
-    ACH_LIST.forEach((ach, idx)=>{
-      entries.push({ frameLevel: idx + 1, id: ach.id, title: ach.title, type: ach.type, need: ach.need });
-    });
-  }
-  entries.push({ frameLevel: entries.length + 1, id: "platinum_toolflix", title: "🏆 Platina ToolFlix", type: "platinum", need: 1 });
-  return entries.slice(0, TF_MAX_FRAME_LEVEL);
-}
-function tfGetUnlockedFrameLevels(data){
-  const unlock = tfLoadAchUnlock();
-  const local = [1];
-  tfGetFrameAchievementEntries().forEach(entry=>{
-    if(unlock[entry.id]) local.push(entry.frameLevel);
-  });
-  const remote = Array.isArray(data?.unlocked_frame_levels) ? data.unlocked_frame_levels : [];
-  return tfSanitizeFrameLevels([1, ...local, ...remote]);
-}
-function tfGetSelectedFrameLevel(data){
-  const lv = Number(data?.frameSelectedLevel || data?.frame_selected_level || data?.frame_level || 0);
-  return (lv >= 1 && lv <= TF_MAX_FRAME_LEVEL) ? lv : 0;
-}
-function tfGetFrameLevel(data){
-  const unlocked = tfGetUnlockedFrameLevels(data);
-  const selected = tfGetSelectedFrameLevel(data);
-  if(selected && unlocked.includes(selected)) return selected;
-  return unlocked[0] || 1;
-}
-function tfGetFrameSrc(data){
-  const raw = String(data?.frame || data?.frame_path || "").trim();
-  if(raw){
-    if(/^https?:\/\//i.test(raw) || raw.startsWith("/toolflix/") || raw.startsWith("/assets/")) return raw;
-    if(raw.startsWith("assets/")) return "/toolflix/" + raw.replace(/^\/+/, "");
-    if(/^avatar-\d+\.(png|webp)$/i.test(raw)) return `/toolflix/assets/img/molduras/${raw}`;
-  }
-  const level = tfGetFrameLevel(data);
-  return `/toolflix/assets/img/molduras/avatar-${level}.png`;
-}
-function tfSyncUserFrames(u){
-  u = u || {};
-  u.unlocked_frame_levels = tfGetUnlockedFrameLevels(u);
-  const selected = tfGetSelectedFrameLevel(u);
-  u.frameSelectedLevel = u.unlocked_frame_levels.includes(selected) ? selected : (u.unlocked_frame_levels[0] || 1);
-  u.frame_selected_level = u.frameSelectedLevel || 1;
-  u.frame_level = tfGetFrameLevel(u);
-  u.frame = tfGetFrameSrc(u);
-  return u;
-}
-function tfEnsureFrameCss(){
-  if(document.getElementById("tf-frame-style")) return;
-  const st = document.createElement("style");
-  st.id = "tf-frame-style";
-  st.textContent = `
-    #userAvatarWrapTf{ width:44px; height:44px; position:relative; display:inline-flex; align-items:center; justify-content:center; flex:0 0 44px; }
-    #userFrameTf{ width:44px; height:44px; object-fit:contain; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:2; pointer-events:none; display:none; }
-    #userAvatar{ width:34px !important; height:34px !important; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:1; }
-    .tf-frame-wrap{ width:40px; height:40px; position:relative; display:inline-flex; align-items:center; justify-content:center; flex:0 0 40px; }
-    .tf-frame-wrap > img:first-child{ width:32px !important; height:32px !important; border-radius:50%; object-fit:cover; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:1; }
-    .tf-frame-wrap .tf-frame-overlay{ width:40px; height:40px; object-fit:contain; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:2; pointer-events:none; }
-    #frameModalTf .frame-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px; margin-top:14px; }
-    #frameModalTf .frame-card{ background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:12px; text-align:center; }
-    #frameModalTf .frame-card.locked{ opacity:.68; }
-    #frameModalTf .frame-preview{ width:90px; height:90px; margin:0 auto 10px; position:relative; display:flex; align-items:center; justify-content:center; }
-    #frameModalTf .frame-preview .avatar-base{ width:58px; height:58px; border-radius:50%; object-fit:cover; display:block; background:#111; border:2px solid rgba(255,255,255,.14); position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:1; }
-    #frameModalTf .frame-preview .avatar-frame{ width:90px; height:90px; object-fit:contain; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:2; pointer-events:none; }
-    #frameModalTf .frame-card button{ margin-top:8px; width:100%; border:none; border-radius:999px; padding:8px 10px; font-weight:700; cursor:pointer; background:var(--cor-accent); color:#000; }
-    #frameModalTf .frame-card button[disabled]{ cursor:not-allowed; opacity:.6; background:rgba(255,255,255,.12); color:#fff; }
-  `;
-  document.head.appendChild(st);
-}
-function tfEnsureTopFrameDom(){
-  tfEnsureFrameCss();
-  const area = document.getElementById("userArea");
-  const avatar = document.getElementById("userAvatar");
-  if(!area || !avatar) return null;
-  let wrap = document.getElementById("userAvatarWrapTf");
-  let frame = document.getElementById("userFrameTf");
-  if(!wrap){
-    wrap = document.createElement("span");
-    wrap.id = "userAvatarWrapTf";
-    avatar.parentNode.insertBefore(wrap, avatar);
-    wrap.appendChild(avatar);
-  }
-  if(!frame){
-    frame = document.createElement("img");
-    frame.id = "userFrameTf";
-    frame.alt = "";
-    frame.onerror = function(){ this.style.display="none"; };
-    wrap.appendChild(frame);
-  }
-  return frame;
-}
-function tfApplyTopFrame(){
-  const user = tfSyncUserFrames(tfLoadUserRaw());
-  const frame = tfEnsureTopFrameDom();
-  if(!frame) return;
-  frame.src = tfGetFrameSrc(user);
-  frame.style.display = "block";
-}
-async function tfSyncFramesWithAchievements(){
-  const user = tfSyncUserFrames(tfLoadUserRaw());
-  if(!user?.nick) return user;
-  const unlockedLevels = tfGetUnlockedFrameLevels(user);
-  const token = tfGetTokenRaw();
-  if(token){
-    try{
-      const r = await fetch(API_BASE + "/api/frames/sync", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json", "Authorization":"Bearer " + token },
-        body: JSON.stringify({ unlockedLevels })
-      });
-      const j = await r.json().catch(()=> ({}));
-      if(r.ok && j?.ok){
-        const merged = tfSyncUserFrames({
-          ...(tfLoadUserRaw() || {}),
-          unlocked_frame_levels: j.unlocked_frame_levels || unlockedLevels,
-          frame: j.user?.frame || j.frame || user.frame || "",
-          frameSelectedLevel: Number(j.user?.frame_selected_level || j.frame_level || user.frameSelectedLevel || user.frame_selected_level || 1)
-        });
-        tfSaveUserRaw(merged);
-        try{ updateUserUI(); }catch(e){}
-        tfApplyTopFrame();
-        return merged;
-      }
-    }catch(e){}
-  }
-  tfSaveUserRaw(user);
-  try{ updateUserUI(); }catch(e){}
-  tfApplyTopFrame();
-  return user;
-}
-function tfEnsureFrameMenuAndModal(){
-  tfEnsureFrameCss();
-  const menu = document.getElementById("userMenuBox");
-  if(menu && !document.getElementById("openFrameBtnTf")){
-    const btn = document.createElement("button");
-    btn.className = "userMenuItem";
-    btn.id = "openFrameBtnTf";
-    btn.textContent = "✨ Molduras";
-    btn.addEventListener("click", tfOpenFrameModal);
-    const logoutBtn = document.getElementById("logoutBtn");
-    menu.insertBefore(btn, logoutBtn || null);
-  }
-  if(!document.getElementById("frameModalTf")){
-    const div = document.createElement("div");
-    div.id = "frameModalTf";
-    div.className = "modal-overlay";
-    div.innerHTML = `
-      <div class="modal-box" style="width:820px; max-width:94vw; text-align:left;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <h2 style="color:gold;">✨ Coleção de Molduras</h2>
-          <button id="closeFrameBtnTf" class="nav-item" style="padding:8px 12px;">✖</button>
-        </div>
-        <div id="framePreviewHeadTf" style="opacity:.9; font-size:13px;">Carregando...</div>
-        <div id="frameContentTf" style="margin-top:10px; max-height:62vh; overflow:auto;"></div>
-      </div>
-    `;
-    document.body.appendChild(div);
-    div.querySelector("#closeFrameBtnTf")?.addEventListener("click", tfCloseFrameModal);
-    div.addEventListener("click", (e)=>{ if(e.target?.id === "frameModalTf") tfCloseFrameModal(); });
-  }
-}
-function tfRenderFrameModal(){
-  const head = document.getElementById("framePreviewHeadTf");
-  const wrap = document.getElementById("frameContentTf");
-  if(!head || !wrap) return;
-  const user = tfSyncUserFrames(tfLoadUserRaw());
-  if(!user?.nick){
-    head.textContent = "Faça login para ver suas molduras.";
-    wrap.innerHTML = '<div style="opacity:.9">Entre na sua conta para desbloquear e equipar molduras.</div>';
-    return;
-  }
-  const unlocked = tfGetUnlockedFrameLevels(user);
-  const equipped = tfGetFrameLevel(user);
-  const entries = tfGetFrameAchievementEntries();
-  const levelInfo = (typeof getLevelInfo === "function") ? getLevelInfo(user.xp || 0) : { level: user.level || 1 };
-  head.innerHTML = `Seu nível atual: <b>Nv ${levelInfo.level}</b> · Moldura equipada: <b>Nv ${equipped}</b>`;
-  const avatarSrc = (typeof getAvatarSrc === "function") ? getAvatarSrc(user) : `assets/img/avatars/level-1.webp`;
-  wrap.innerHTML = `<div class="frame-grid">${
-    Array.from({ length: TF_MAX_FRAME_LEVEL }, (_, idx)=>{
-      const level = idx + 1;
-      const isUnlocked = unlocked.includes(level);
-      const isEquipped = level === equipped;
-      const req = entries.find(entry => entry.frameLevel === level);
-      const reqText = req ? (req.id === "platinum_toolflix" ? "🏆 Libera com a Platina ToolFlix" : `🔓 ${req.title}`) : "⏳ Em breve";
-      return `
-        <div class="frame-card ${isUnlocked ? "" : "locked"}">
-          <div class="frame-preview">
-            <img class="avatar-base" src="${avatarSrc}" alt="Avatar atual">
-            <img class="avatar-frame" src="/toolflix/assets/img/molduras/avatar-${level}.png" alt="Moldura ${level}" onerror="this.onerror=null;this.style.opacity='.15';">
-          </div>
-          <div style="font-weight:700;">Moldura Nv ${level}</div>
-          <div class="avatar-mini-status">${isUnlocked ? "✅ Desbloqueada" : reqText}</div>
-          <button type="button" data-frame-level="${level}" ${isUnlocked ? "" : "disabled"}>${isEquipped ? "Equipada" : (isUnlocked ? "Usar moldura" : "Bloqueada")}</button>
-        </div>`;
-    }).join("")
-  }</div>`;
-  wrap.querySelectorAll("button[data-frame-level]").forEach(btn=>{
-    btn.addEventListener("click", async ()=>{
-      const level = Number(btn.getAttribute("data-frame-level") || 0);
-      if(!level) return;
-      await tfSelectFrameLevel(level);
-    });
-  });
-}
-function tfOpenFrameModal(){
-  tfEnsureFrameMenuAndModal();
-  tfSyncFramesWithAchievements().finally(()=>{
-    tfRenderFrameModal();
-    const m = document.getElementById("frameModalTf");
-    if(m) m.style.display = "flex";
-    const menu = document.getElementById("userMenuBox");
-    if(menu) menu.style.display = "none";
-  });
-}
-function tfCloseFrameModal(){
-  const m = document.getElementById("frameModalTf");
-  if(m) m.style.display = "none";
-}
-async function tfSelectFrameLevel(level){
-  const user = tfSyncUserFrames(tfLoadUserRaw());
-  const unlocked = tfGetUnlockedFrameLevels(user);
-  if(!user?.nick){ showToast("Faça login para equipar moldura."); return; }
-  if(!unlocked.includes(level)){ showToast("Essa moldura ainda está bloqueada."); return; }
-  const token = tfGetTokenRaw();
-  if(token){
-    try{
-      const r = await fetch(API_BASE + "/api/frames/select", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json", "Authorization":"Bearer " + token },
-        body: JSON.stringify({ level })
-      });
-      const j = await r.json().catch(()=> ({}));
-      if(!r.ok || !j?.ok){ showToast("Não foi possível trocar a moldura."); return; }
-      tfSaveUserRaw(tfSyncUserFrames({
-        ...(tfLoadUserRaw() || {}),
-        frame: j.user?.frame || j.frame || "",
-        frameSelectedLevel: Number(j.user?.frame_selected_level || j.frame_level || level),
-        unlocked_frame_levels: j.user?.unlocked_frame_levels || unlocked
-      }));
-    }catch(e){
-      showToast("Erro ao salvar moldura.");
-      return;
-    }
-  }else{
-    tfSaveUserRaw(tfSyncUserFrames({ ...(tfLoadUserRaw() || {}), frameSelectedLevel: level, frame_selected_level: level, unlocked_frame_levels: unlocked }));
-  }
-  try{ updateUserUI(); }catch(e){}
-  tfApplyTopFrame();
-  tfRenderFrameModal();
-  showToast(`✨ Moldura ${level} equipada!`);
-}
-
-const _tfUpdateUserUIOriginal = updateUserUI;
-updateUserUI = function(){
-  const r = _tfUpdateUserUIOriginal.apply(this, arguments);
-  setTimeout(()=>{
-    tfEnsureFrameMenuAndModal();
-    tfApplyTopFrame();
-  }, 0);
-  return r;
-};
-
-const _tfAchUnlockCheckOriginal = achUnlockCheck;
-achUnlockCheck = function(){
-  const before = tfGetUnlockedFrameLevels(tfLoadUserRaw());
-  const r = _tfAchUnlockCheckOriginal.apply(this, arguments);
-  const after = tfGetUnlockedFrameLevels(tfLoadUserRaw());
-  if(after.length > before.length){
-    const newest = after[after.length - 1];
-    showToast(`✨ Nova moldura liberada: ${newest}!`);
-  }
-  tfSyncFramesWithAchievements();
-  return r;
-};
-
-presenceCardHtml = function(item, idx, withSeen=false){
-  const name = escapeHtml(String(item?.nick || (item?.is_guest ? `Visitante ${idx+1}` : `Jogador ${idx+1}`)));
-  const level = item?.is_guest ? "Visitante" : `Nv ${Number(item?.level || 1)}`;
-  const avatar = item?.is_guest
-    ? `<span class="presence-bullet guest"></span>`
-    : `<span class="tf-frame-wrap"><img class="presence-avatar" src="${escapeHtml(getAvatarSrc(item))}" alt="Avatar de ${name}"><img class="tf-frame-overlay" src="${escapeHtml(tfGetFrameSrc(item))}" alt="" onerror="this.style.display='none';"></span>`;
-  const seen = withSeen ? `<div style="font-size:11px; opacity:.65; margin-top:2px;">visto há ${Math.max(0, Math.round((Date.now() - Number(item?.last_seen_at || 0))/1000))}s</div>` : "";
-  return `
-    <div class="presence-user">
-      <div class="presence-user-left">
-        ${avatar}
-        <div>
-          <div class="presence-name">${name}</div>
-          ${seen}
-        </div>
-      </div>
-      <div class="presence-level">${level}</div>
-    </div>`;
-};
-
-globalChatRowHtml = function(msg){
-  const deleted = !!msg?.deleted;
-  const bubbleClass = deleted ? "global-chat-bubble deleted" : "global-chat-bubble";
-  const author = escapeHtml(formatGlobalAuthor(msg));
-  const avatar = msg?.is_guest
-    ? ""
-    : `<span class="tf-frame-wrap"><img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${author}" onerror="this.onerror=null;this.src='assets/img/avatars/level-1.webp';"><img class="tf-frame-overlay" src="${escapeHtml(tfGetFrameSrc(msg))}" alt="" onerror="this.style.display='none';"></span>`;
-  return `
-    <div class="global-chat-row" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
-      <div class="global-chat-head">
-        ${avatar}
-        <div class="global-chat-name">${author}</div>
-      </div>
-      <div class="${bubbleClass}">${deleted ? "Mensagem apagada pelo administrador." : escapeHtml(String(msg?.message || ""))}</div>
-      <div class="global-chat-meta">${escapeHtml(formatGlobalMeta(msg))}</div>
-      ${globalChatDeleteButtonHtml(msg)}
-    </div>`;
-};
-
-document.addEventListener("DOMContentLoaded", function(){
-  tfEnsureFrameMenuAndModal();
-  tfApplyTopFrame();
-  tfSyncFramesWithAchievements();
-});
-/* ===== /PATCH MOLDURAS ===== */
-
 })();
 </script>
 
@@ -4756,7 +4184,7 @@ document.addEventListener("DOMContentLoaded", function(){
     if(!id) return "";
     return `
       <div class="global-chat-actions">
-        <button class="global-chat-delete-btn" type="button" data-global-delete-id="${escapeHtml(id)}" title="Apagar mensagem" aria-label="Apagar mensagem">✕</button>
+        <button class="global-chat-delete-btn" type="button" data-global-delete-id="${escapeHtml(id)}">Apagar</button>
       </div>
     `;
   }
@@ -4765,19 +4193,16 @@ document.addEventListener("DOMContentLoaded", function(){
     const deleted = !!msg?.deleted;
     const bubbleText = deleted ? "Mensagem apagada pelo administrador" : String(msg?.message || "");
     const bubbleClass = deleted ? "global-chat-bubble deleted" : "global-chat-bubble";
-    const author = formatGlobalAuthor(msg);
-    const avatarHtml = (typeof tfGetFrameSrc === "function")
-      ? `<span class="tf-frame-wrap"><img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${escapeHtml(author)}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';"><img class="tf-frame-overlay" src="${escapeHtml(tfGetFrameSrc(msg))}" alt="" onerror="this.style.display='none';"></span>`
-      : `<img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${escapeHtml(author)}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">`;
+    const author = escapeHtml(formatGlobalAuthor(msg));
+    const avatar = msg?.is_guest
+      ? ""
+      : `<img class="global-chat-avatar" src="${escapeHtml(getAvatarSrc(msg))}" alt="Avatar de ${author}">`;
     return `
       <div class="global-chat-row" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
-        ${globalChatDeleteButtonHtml(msg)}
-        <div class="global-chat-head">
-          ${avatarHtml}
-          <div class="global-chat-name">${escapeHtml(author)}</div>
-        </div>
+        <div class="global-chat-head">${avatar}<div class="global-chat-name">${author}</div></div>
         <div class="${bubbleClass}">${escapeHtml(bubbleText)}</div>
         <div class="global-chat-meta">${formatGlobalTime(msg?.created_at)}</div>
+        ${globalChatDeleteButtonHtml(msg)}
       </div>
     `;
   }
@@ -4826,7 +4251,7 @@ document.addEventListener("DOMContentLoaded", function(){
         refreshGlobalChat(false);
         showToast("Mensagem apagada.");
       }else{
-        if(j?.error === "FORBIDDEN" || j?.error === "MASTER_ONLY") showToast("Somente Srgokucheats pode apagar mensagens.");
+        if(j?.error === "FORBIDDEN") showToast("Somente Srgokucheats pode apagar mensagens.");
         else if(j?.error === "MESSAGE_NOT_FOUND") showToast("Mensagem não encontrada.");
         else showToast("Não foi possível apagar a mensagem.");
       }
