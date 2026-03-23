@@ -851,64 +851,89 @@ select optgroup{
     .global-chat-row{
       display:flex;
       flex-direction:column;
-      max-width: 88%;
+      gap:8px;
+      max-width: min(88%, 680px);
       align-self:flex-start;
+      position:relative;
+      padding:12px;
+      border-radius:20px;
+      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: 0 10px 28px rgba(0,0,0,.22);
+    }
+    .global-chat-row.own{
+      align-self:flex-end;
+      background: linear-gradient(180deg, rgba(0,255,255,.08), rgba(255,255,255,.03));
+      border-color: rgba(0,255,255,.18);
     }
     .global-chat-head{
       display:flex;
       align-items:center;
       gap:10px;
-      margin:0 10px 4px;
+      margin:0;
+      padding-right:42px;
     }
     .global-chat-avatar{
-      width:36px;
-      height:36px;
+      width:40px;
+      height:40px;
       border-radius:50%;
       object-fit:cover;
-      border:1px solid rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.14);
       background:rgba(255,255,255,.05);
-      box-shadow:0 6px 16px rgba(0,0,0,.22);
-      flex:0 0 36px;
+      box-shadow:0 8px 18px rgba(0,0,0,.24);
+      flex:0 0 40px;
     }
     .global-chat-name{
-      font-size:11px;
-      opacity:.85;
+      font-size:12px;
+      opacity:.92;
       margin:0;
       font-weight:800;
       letter-spacing:.2px;
     }
     .global-chat-bubble{
-      padding:10px 12px;
-      border-radius:16px;
-      border-top-left-radius:8px;
-      line-height:1.35;
+      margin-left:50px;
+      padding:12px 14px;
+      border-radius:18px;
+      border-top-left-radius:10px;
+      line-height:1.45;
       white-space:pre-wrap;
       word-break:break-word;
-      box-shadow:0 8px 22px rgba(0,0,0,0.25);
+      box-shadow:0 8px 20px rgba(0,0,0,0.16);
       border:1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.075);
+      backdrop-filter: blur(12px);
+    }
+    .global-chat-row.own .global-chat-bubble{
+      background: rgba(0,255,255,.10);
+      border-color: rgba(0,255,255,.18);
+      border-top-left-radius:18px;
+      border-top-right-radius:10px;
     }
     .global-chat-meta{
-      margin:4px 10px 0;
+      margin:0 0 0 50px;
       font-size:11px;
       opacity:.62;
     }
     .global-chat-actions{
-      margin:6px 10px 0;
+      position:absolute;
+      top:10px;
+      right:10px;
       display:flex;
       gap:8px;
       align-items:center;
     }
     .global-chat-delete-btn{
       border:none;
-      border-radius:10px;
-      padding:6px 10px;
-      font-size:11px;
+      width:28px;
+      height:28px;
+      border-radius:999px;
+      padding:0;
+      font-size:18px;
+      line-height:1;
       font-weight:900;
       cursor:pointer;
       color:#fff;
-      background: linear-gradient(90deg, #8b0000, #c62828);
+      background: linear-gradient(180deg, #d61f1f, #9f1010);
       box-shadow: 0 6px 16px rgba(0,0,0,.22);
     }
     .global-chat-delete-btn:hover{
@@ -917,8 +942,9 @@ select optgroup{
     }
     .global-chat-bubble.deleted{
       font-style:italic;
-      opacity:.78;
+      opacity:.82;
       border-style:dashed;
+      background: rgba(255,255,255,.05);
     }
     .global-chat-empty{
       padding:14px;
@@ -4220,18 +4246,31 @@ document.addEventListener("DOMContentLoaded", function(){
     if(!id) return "";
     return `
       <div class="global-chat-actions">
-        <button class="global-chat-delete-btn" type="button" data-global-delete-id="${escapeHtml(id)}">Apagar</button>
+        <button class="global-chat-delete-btn" type="button" aria-label="Apagar mensagem" title="Apagar mensagem" data-global-delete-id="${escapeHtml(id)}">×</button>
       </div>
     `;
   }
 
+  function isOwnGlobalChatMessage(msg){
+    try{
+      const auth = (typeof loadAuth === "function") ? loadAuth() : null;
+      const user = (typeof loadUser === "function") ? loadUser() : null;
+      const me = String(auth?.nick || user?.nick || "").trim().toLowerCase();
+      const nick = String(msg?.nick || "").trim().toLowerCase();
+      return !!me && !!nick && me === nick;
+    }catch(e){
+      return false;
+    }
+  }
+
   function globalChatRowHtml(msg){
     const deleted = !!msg?.deleted;
+    const own = isOwnGlobalChatMessage(msg);
     const bubbleText = deleted ? "Mensagem apagada pelo administrador" : String(msg?.message || "");
     const bubbleClass = deleted ? "global-chat-bubble deleted" : "global-chat-bubble";
     const avatar = getAvatarSrc(msg);
     return `
-      <div class="global-chat-row" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
+      <div class="global-chat-row ${own ? "own" : ""}" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
         <div class="global-chat-head">
           <img class="global-chat-avatar" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
           <div class="global-chat-name">${escapeHtml(formatGlobalAuthor(msg))}</div>
