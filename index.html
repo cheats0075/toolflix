@@ -1805,6 +1805,14 @@ const MASTER_NICK = "Srgokucheats";
     return clampAvatarLevel(info.level);
   }
 
+
+  function getAvatarClass(level){
+    level = Number(level || 1);
+    if(level >= 7) return "avatar-glow-high";
+    if(level >= 4) return "avatar-glow-mid";
+    return "avatar-glow-low";
+  }
+
   function getAvatarSrc(item){
     const raw = String(item?.avatar || "").trim();
     if(raw){
@@ -1825,7 +1833,7 @@ const MASTER_NICK = "Srgokucheats";
     if(!img){
       img = document.createElement("img");
       img.id = "userAvatar";
-      img.className = "user-avatar";
+      img.className = "user-avatar avatar-glow-low";
       img.alt = "Avatar";
       userArea.insertBefore(img, userArea.firstChild);
     }
@@ -1856,7 +1864,7 @@ const MASTER_NICK = "Srgokucheats";
       if(nickEl) nickEl.innerText = "Entrar";
       if(xpFill) xpFill.style.width = "0%";
       if(xpText) xpText.innerText = "0/100";
-      if(userAvatarEl) userAvatarEl.src = `/toolflix/assets/img/avatars/level-1.webp`;
+      if(userAvatarEl){ userAvatarEl.src = `/toolflix/assets/img/avatars/level-1.webp`; userAvatarEl.className = "user-avatar avatar-glow-low"; }
 
       // Esconde tudo quando não está logado
       if(masterTopBtn) masterTopBtn.style.display = "none";
@@ -1874,6 +1882,7 @@ const MASTER_NICK = "Srgokucheats";
     if(userAvatarEl) userAvatarEl.src = getAvatarSrc(u);
 
     const info = getLevelInfo(u.xp);
+    if(userAvatarEl) userAvatarEl.className = `user-avatar ${getAvatarClass(info.level)}`;
     const pct  = ((u.xp - info.min) / (info.max - info.min)) * 100;
 
     if(xpFill) xpFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
@@ -4115,7 +4124,7 @@ document.addEventListener("DOMContentLoaded", function(){
     return `
       <div class="presence-user">
         <div class="presence-user-left">
-          <img class="presence-avatar" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
+          <img class="presence-avatar ${getAvatarClass(item?.level)}" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
           <span class="presence-bullet ${guest ? "guest" : ""}"></span>
           <div>
             <div class="presence-name">${name}</div>
@@ -4272,7 +4281,7 @@ document.addEventListener("DOMContentLoaded", function(){
     return `
       <div class="global-chat-row ${own ? "own" : ""}" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
         <div class="global-chat-head">
-          <img class="global-chat-avatar" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
+          <img class="global-chat-avatar ${getAvatarClass(msg?.level)}" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
           <div class="global-chat-name">${escapeHtml(formatGlobalAuthor(msg))}</div>
         </div>
         <div class="${bubbleClass}">${escapeHtml(bubbleText)}</div>
