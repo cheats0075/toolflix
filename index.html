@@ -2036,7 +2036,7 @@ const MASTER_NICK = "Srgokucheats";
   });
 
   document.getElementById("userLoginSubmit")?.addEventListener("click", async ()=>{
-    const nick = (document.getElementById("userNickInput")?.value || "").trim().slice(0,18);
+    const nick = (document.getElementById("userNickInput")?.value || "").trim();
     const pass = (document.getElementById("userPassInput")?.value || "");
 
     if(!nick){ showToast("Digite um nickname!"); return; }
