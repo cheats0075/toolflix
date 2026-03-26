@@ -487,6 +487,72 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       transition: width .25s ease;
     }
 
+
+    /* ===== PERFIL DO JOGADOR ===== */
+    #profileModal .modal-box{
+      width:min(520px, 94vw);
+      text-align:left;
+      background: linear-gradient(180deg, rgba(18,18,18,.98), rgba(10,10,10,.98));
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: 0 24px 60px rgba(0,0,0,.55), 0 0 22px rgba(0,255,255,.08);
+    }
+    .profile-head{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-bottom:14px;
+    }
+    .profile-avatar{
+      width:82px;
+      height:82px;
+      border-radius:50%;
+      object-fit:cover;
+      border:2px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      box-shadow:0 10px 26px rgba(0,0,0,.28);
+      flex:0 0 82px;
+    }
+    .profile-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:900;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      margin-right:6px;
+      margin-top:6px;
+    }
+    .profile-grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:10px;
+      margin-top:16px;
+    }
+    .profile-stat{
+      padding:12px;
+      border-radius:16px;
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .profile-stat-label{
+      font-size:12px;
+      opacity:.72;
+      margin-bottom:4px;
+    }
+    .profile-stat-value{
+      font-size:20px;
+      font-weight:900;
+    }
+    .profile-meta{
+      margin-top:14px;
+      font-size:12px;
+      opacity:.78;
+      line-height:1.7;
+    }
+
     /* SUPORTE */
     .suporte-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; }
     .suporte-btn {
@@ -1001,158 +1067,22 @@ select optgroup{
     }
 
 
-    /* PERFIL PÚBLICO */
-    .global-chat-avatar.profile-clickable,
-    .global-chat-name.profile-clickable{
+    #profileModal{
+      z-index: 100100 !important;
+    }
+    #profileModal .modal-box{
+      position: relative;
+      z-index: 100101;
+    }
+    .global-chat-avatar,
+    .global-chat-name{
       cursor:pointer;
     }
-    .global-chat-name.profile-clickable:hover{
-      color:#ffe066;
-      text-decoration:underline;
-    }
-    #publicProfileOverlay{
-      position:fixed;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      background:rgba(0,0,0,.82);
-      backdrop-filter: blur(10px);
-      z-index:100010;
-      padding:20px;
-    }
-    #publicProfileOverlay.open{ display:flex; }
-    .public-profile-card{
-      width:min(680px, 96vw);
-      max-height:90vh;
-      overflow:auto;
-      background:linear-gradient(180deg, rgba(12,12,16,.98), rgba(18,18,22,.98));
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:26px;
-      box-shadow:0 24px 70px rgba(0,0,0,.55);
-      position:relative;
-      padding:26px;
-      color:#fff;
-    }
-    .public-profile-close{
-      position:absolute;
-      top:18px;
-      right:18px;
-      width:42px;
-      height:42px;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.1);
-      background:rgba(255,255,255,.06);
-      color:#fff;
-      font-size:24px;
-      cursor:pointer;
-    }
-    .public-profile-title{
-      font-size:18px;
-      font-weight:900;
-      color:#ffd400;
-      margin-bottom:22px;
-    }
-    .public-profile-top{
-      display:flex;
-      gap:18px;
-      align-items:center;
-      margin-bottom:18px;
-    }
-    .public-profile-avatar{
-      width:78px;
-      height:78px;
-      border-radius:50%;
-      object-fit:cover;
-      border:2px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.04);
-      flex:0 0 78px;
-    }
-    .public-profile-name{
-      font-size:22px;
-      font-weight:900;
-      line-height:1.15;
-    }
-    .public-profile-sub{
-      font-size:14px;
-      opacity:.85;
-      margin-top:4px;
-    }
-    .public-profile-badges{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:12px;
-    }
-    .public-profile-badge{
-      padding:8px 14px;
-      border-radius:999px;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.08);
-      font-size:13px;
-      font-weight:800;
-    }
-    .public-profile-progress-title{
-      margin:18px 0 10px;
-      font-size:16px;
-      font-weight:900;
-      color:#ffd400;
-    }
-    .public-profile-progress{
-      height:16px;
-      border-radius:999px;
-      overflow:hidden;
-      background:rgba(255,255,255,.07);
-      border:1px solid rgba(255,255,255,.08);
-    }
-    .public-profile-progress > span{
-      display:block;
-      height:100%;
-      width:0%;
-      background:linear-gradient(90deg,#ffd400,#ff9f1a);
-      border-radius:999px;
-    }
-    .public-profile-progress-text{
-      margin-top:8px;
-      font-size:14px;
-      opacity:.9;
-    }
-    .public-profile-grid{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0, 1fr));
-      gap:14px;
-      margin-top:16px;
-    }
-    .public-profile-stat{
-      background:rgba(255,255,255,.045);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:16px;
-    }
-    .public-profile-stat-label{
-      font-size:14px;
-      opacity:.82;
-      margin-bottom:8px;
-    }
-    .public-profile-stat-value{
-      font-size:18px;
-      font-weight:900;
-    }
-    .public-profile-meta{
-      margin-top:18px;
-      font-size:14px;
-      line-height:1.9;
-      opacity:.95;
-    }
-    .public-profile-loading,
-    .public-profile-error{
-      text-align:center;
-      padding:24px;
-      font-size:15px;
-    }
-    @media (max-width: 700px){
-      .public-profile-grid{ grid-template-columns:1fr; }
-      .public-profile-card{ padding:18px; }
+    .global-chat-avatar:hover,
+    .global-chat-name:hover{
+      filter: brightness(1.08);
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
 
 </style>
@@ -1322,6 +1252,7 @@ select optgroup{
         <span id="xpText">0/100</span>
 
         <div id="userMenuBox" class="userMenuBox" style="display:none;">
+          <button class="userMenuItem" id="openProfileBtn">👤 Perfil</button>
           <button class="userMenuItem" id="openGameBtn">🎮 Game</button>
           <button class="userMenuItem" id="openAchBtn">🏆 Conquistas</button>
           <button class="userMenuItem" id="logoutBtn">🚪 Sair</button>
@@ -1375,6 +1306,17 @@ select optgroup{
         <div id="gameContent" style="margin-top:15px;"></div>
         <button id="closeGameBtn" class="nav-item"
           style="margin-top:15px; width:100%;">Fechar</button>
+      </div>
+    </div>
+
+    <!-- ===== MODAL PERFIL ===== -->
+    <div id="profileModal" class="modal-overlay">
+      <div class="modal-box">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px;">
+          <h2 style="color:gold;">👤 Perfil do jogador</h2>
+          <button id="closeProfileBtn" class="nav-item" style="padding:8px 12px;">✖</button>
+        </div>
+        <div id="profileContent"></div>
       </div>
     </div>
 
@@ -1672,108 +1614,6 @@ window.closeMasterChatsOverlay = function(){
   }
 };
     // ===== NOTIFICAÇÃO CHAT USUÁRIO (BADGE VERMELHO) =====
-
-  function formatProfileDate(ts){
-    const n = Number(ts || 0);
-    if(!n) return "—";
-    try{ return new Date(n).toLocaleString("pt-BR"); }catch(e){ return "—"; }
-  }
-
-  function profileLevelMaxXp(level){
-    const lv = Math.max(1, Number(level || 1));
-    if(lv <= 1) return 100;
-    if(lv === 2) return 250;
-    if(lv === 3) return 500;
-    if(lv === 4) return 750;
-    if(lv === 5) return 1250;
-    let curLevel = 6;
-    let max = 1900;
-    while(curLevel < lv){
-      curLevel++;
-      const delta = 650 + (curLevel - 7) * 150;
-      max += delta;
-      if(curLevel > 1000) break;
-    }
-    return max;
-  }
-
-  function renderPublicProfile(data){
-    const box = document.getElementById("publicProfileContent");
-    if(!box) return;
-    const p = data?.profile || {};
-    const progressMax = Math.max(1, profileLevelMaxXp(p.level));
-    const progressPct = Math.max(0, Math.min(100, Math.round((Number(p.xp || 0) / progressMax) * 100)));
-    const avatar = escapeHtml(String(p.avatar || "/toolflix/assets/img/avatars/level-1.webp"));
-    const nick = escapeHtml(String(p.nick || "Jogador"));
-    box.innerHTML = `
-      <div id="publicProfileTitle" class="public-profile-title">👤 Perfil do jogador</div>
-      <div class="public-profile-top">
-        <img class="public-profile-avatar ${getAvatarClass(p.level)}" src="${avatar}" alt="${nick}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
-        <div>
-          <div class="public-profile-name">${nick}</div>
-          <div class="public-profile-sub">Nível ${Number(p.level || 1)} • ${Number(p.xp || 0)} XP</div>
-          <div class="public-profile-badges">
-            ${p.isMaster ? '<span class="public-profile-badge">👑 Master</span>' : ''}
-            ${p.premium ? '<span class="public-profile-badge">💎 Premium</span>' : ''}
-            ${!p.isMaster && !p.premium ? '<span class="public-profile-badge">🎮 Jogador</span>' : ''}
-          </div>
-        </div>
-      </div>
-      <div class="public-profile-progress-title">Progresso do nível</div>
-      <div class="public-profile-progress"><span style="width:${progressPct}%"></span></div>
-      <div class="public-profile-progress-text">${Number(p.xp || 0)}/${progressMax} XP</div>
-      <div class="public-profile-grid">
-        <div class="public-profile-stat"><div class="public-profile-stat-label">Downloads</div><div class="public-profile-stat-value">${Number(p.downloads || 0)}</div></div>
-        <div class="public-profile-stat"><div class="public-profile-stat-label">Conquistas</div><div class="public-profile-stat-value">${Number(p.achievements || 0)}</div></div>
-        <div class="public-profile-stat"><div class="public-profile-stat-label">Favoritos</div><div class="public-profile-stat-value">${Number(p.favorites || 0)}</div></div>
-        <div class="public-profile-stat"><div class="public-profile-stat-label">Temas trocados</div><div class="public-profile-stat-value">${Number(p.themeChanges || 0)}</div></div>
-      </div>
-      <div class="public-profile-meta">
-        📺 YouTube / recompensas: ${Number(p.youtubeRewards || 0)}<br>
-        📅 Conta criada em: ${formatProfileDate(p.createdAt)}<br>
-        ⏱️ Último login: ${formatProfileDate(p.lastLoginAt)}
-      </div>
-    `;
-  }
-
-  function openPublicProfileLoading(){
-    const ov = document.getElementById("publicProfileOverlay");
-    const box = document.getElementById("publicProfileContent");
-    if(box) box.innerHTML = '<div class="public-profile-loading">Carregando perfil...</div>';
-    if(ov){
-      ov.classList.add("open");
-      ov.setAttribute("aria-hidden","false");
-    }
-  }
-
-  function closePublicProfile(){
-    const ov = document.getElementById("publicProfileOverlay");
-    if(ov){
-      ov.classList.remove("open");
-      ov.setAttribute("aria-hidden","true");
-    }
-  }
-
-  async function openPublicProfileByNick(nick){
-    const cleanNick = String(nick || "").trim();
-    if(!cleanNick) return;
-    openPublicProfileLoading();
-    try{
-      const r = await fetch(API_URL + "/api/profile/" + encodeURIComponent(cleanNick));
-      const j = await r.json().catch(()=> ({}));
-      if(r.ok && j?.ok && j?.profile){
-        renderPublicProfile(j);
-      }else{
-        const box = document.getElementById("publicProfileContent");
-        if(box) box.innerHTML = '<div class="public-profile-error">Não foi possível carregar o perfil.</div>';
-      }
-    }catch(e){
-      const box = document.getElementById("publicProfileContent");
-      if(box) box.innerHTML = '<div class="public-profile-error">Erro ao carregar perfil.</div>';
-    }
-  }
-
-
   document.addEventListener("DOMContentLoaded", function(){
     const chatBtn = document.getElementById("chatToggleBtn");
     if(!chatBtn) return;
@@ -1939,6 +1779,179 @@ const MASTER_NICK = "Srgokucheats";
   function getLoggedUserId(){
     const a = loadAuth() || {};
     return String(a.userId || a.id || "").trim();
+  }
+
+  let profileCache = null;
+
+  function fmtDateTime(ts){
+    const n = Number(ts || 0);
+    if(!n) return "—";
+    try{
+      return new Date(n).toLocaleString("pt-BR");
+    }catch(e){
+      return "—";
+    }
+  }
+
+  async function fetchProfileMe(force=false){
+    const token = getToken();
+    if(!token) return null;
+    if(profileCache && !force) return profileCache;
+
+    try{
+      const r = await fetch(API_BASE + "/api/profile/me?v=" + Date.now(), {
+        headers: { "Authorization":"Bearer " + token }
+      });
+      const j = await r.json().catch(()=> ({}));
+      if(!r.ok || !j?.ok || !j?.profile) return null;
+      profileCache = j.profile;
+
+      const old = loadUser() || {};
+      saveUser({
+        ...old,
+        nick: j.profile.nick,
+        xp: Number(j.profile.xp || 0),
+        avatar: j.profile.avatar,
+        premium: !!j.profile.premium
+      });
+      updateUserUI?.();
+      return profileCache;
+    }catch(e){
+      return null;
+    }
+  }
+
+
+  async function fetchProfileByNick(nick){
+    const cleanNick = String(nick || "").trim();
+    if(!cleanNick) return null;
+    try{
+      const r = await fetch(API_BASE + "/api/profile/" + encodeURIComponent(cleanNick) + "?v=" + Date.now());
+      const j = await r.json().catch(()=> ({}));
+      if(!r.ok || !j?.ok || !j?.profile) return null;
+      return j.profile;
+    }catch(e){
+      return null;
+    }
+  }
+
+  async function openPublicProfileModalByNick(nick){
+    const modal = document.getElementById("profileModal");
+    const box = document.getElementById("profileContent");
+    const cleanNick = String(nick || "").trim();
+    if(box) box.innerHTML = `<div style="opacity:.82;">Carregando perfil...</div>`;
+    if(modal) modal.style.display = "flex";
+    const profile = await fetchProfileByNick(cleanNick);
+    if(!profile){
+      renderProfileCard(null);
+      if(box){
+        box.innerHTML = `<div style="opacity:.82;">Erro ao carregar perfil.</div>`;
+      }
+      return;
+    }
+    renderProfileCard(profile);
+  }
+
+  async function syncProfileAction(type, amount=1){
+    const token = getToken();
+    if(!token) return null;
+    try{
+      const r = await fetch(API_BASE + "/api/profile/action", {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "Authorization":"Bearer " + token
+        },
+        body: JSON.stringify({ type, amount })
+      });
+      const j = await r.json().catch(()=> ({}));
+      if(j?.ok && j?.profile){
+        profileCache = j.profile;
+        const old = loadUser() || {};
+        saveUser({
+          ...old,
+          nick: j.profile.nick,
+          xp: Number(j.profile.xp || 0),
+          avatar: j.profile.avatar,
+          premium: !!j.profile.premium
+        });
+        updateUserUI?.();
+        return j.profile;
+      }
+    }catch(e){}
+    return null;
+  }
+
+  function renderProfileCard(profile){
+    const box = document.getElementById("profileContent");
+    if(!box) return;
+    if(!profile){
+      box.innerHTML = `<div style="opacity:.82;">Perfil não encontrado.</div>`;
+      return;
+    }
+
+    const premiumText = profile.premium ? "💎 Premium" : "Conta padrão";
+    const adminText = profile.nick === MASTER_NICK ? "👑 Master" : "🎮 Jogador";
+    const stats = profile.stats || {};
+    const ach = profile.achievements || {};
+    const info = getLevelInfo(Number(profile.xp || 0));
+    const pct = Math.max(0, Math.min(100, ((Number(profile.xp || 0) - info.min) / Math.max(1, (info.max - info.min))) * 100));
+
+    box.innerHTML = `
+      <div class="profile-head">
+        <img class="profile-avatar ${getAvatarClass(profile.level)}" src="${getAvatarSrc(profile)}" alt="Avatar">
+        <div style="min-width:0;">
+          <div style="font-size:24px; font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${safeStr(profile.nick || "Jogador")}</div>
+          <div style="opacity:.82; margin-top:4px;">Nível ${Number(profile.level || 1)} • ${Number(profile.xp || 0)} XP</div>
+          <div style="margin-top:8px;">
+            <span class="profile-chip">${adminText}</span>
+            <span class="profile-chip">${premiumText}</span>
+            ${ach.platinum ? '<span class="profile-chip">🏆 Platina</span>' : ""}
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:8px; font-weight:900; color:gold;">Progresso do nível</div>
+      <div class="xpBar" style="width:100%; height:14px;">
+        <div class="xpFill" style="width:${pct}%"></div>
+      </div>
+      <div style="margin-top:6px; font-size:12px; opacity:.78;">${Number(profile.xp || 0)}/${info.max} XP</div>
+
+      <div class="profile-grid">
+        <div class="profile-stat">
+          <div class="profile-stat-label">Downloads</div>
+          <div class="profile-stat-value">${Number(stats.downloads || 0)}</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Conquistas</div>
+          <div class="profile-stat-value">${Number(ach.unlockedCount || 0)}/${Number(ach.totalCount || 0)}</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Favoritos</div>
+          <div class="profile-stat-value">${Number(stats.favorites || 0)}</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Temas trocados</div>
+          <div class="profile-stat-value">${Number(stats.themes || 0)}</div>
+        </div>
+      </div>
+
+      <div class="profile-meta">
+        <div>📺 YouTube / recompensas: <b>${Number(stats.youtube || 0)}</b></div>
+        <div>🗓️ Conta criada em: <b>${fmtDateTime(profile.createdAt)}</b></div>
+        <div>⏱️ Último login: <b>${fmtDateTime(profile.lastLoginAt)}</b></div>
+      </div>
+    `;
+  }
+
+  async function openProfileModal(force=false){
+    const modal = document.getElementById("profileModal");
+    const box = document.getElementById("profileContent");
+    if(box) box.innerHTML = `<div style="opacity:.82;">Carregando perfil...</div>`;
+    if(modal) modal.style.display = "flex";
+
+    const profile = await fetchProfileMe(force);
+    renderProfileCard(profile);
   }
 
   function getOrCreateUserId(){
@@ -2135,8 +2148,8 @@ const MASTER_NICK = "Srgokucheats";
     if(adminChatsBtn) adminChatsBtn.style.display = window.isSuperAdmin ? "block" : "none";
     if(adminBtn) adminBtn.style.display = window.isSuperAdmin ? "inline-block" : "none";
 
-    if(nickEl) nickEl.innerText = u.nick;
-    if(userAvatarEl) userAvatarEl.src = getAvatarSrc(u);
+    if(nickEl){ nickEl.innerText = u.nick; nickEl.title = "Abrir perfil"; }
+    if(userAvatarEl){ userAvatarEl.src = getAvatarSrc(u); userAvatarEl.title = "Abrir perfil"; userAvatarEl.style.cursor = "pointer"; }
 
     const info = getLevelInfo(u.xp);
     if(userAvatarEl) userAvatarEl.className = `user-avatar ${getAvatarClass(info.level)}`;
@@ -2329,6 +2342,8 @@ const MASTER_NICK = "Srgokucheats";
 
       saveAuth({ token: j2.token, userId: j2.user.id, nick: j2.user.nick });
       saveUser({ nick: j2.user.nick, xp: Number(j2.user.xp || 0) });
+      profileCache = null;
+      await fetchProfileMe(true);
 
       closeLogin();
       toggleUserMenu(true);
@@ -2351,6 +2366,7 @@ const MASTER_NICK = "Srgokucheats";
     const keepXp = old ? Number(old.xp || 0) : 0;
     saveUser({ nick: null, xp: keepXp });
     clearAuth();
+    profileCache = null;
     toggleUserMenu(true);
     updateUserUI();
     showToast("Você saiu.");
@@ -2571,6 +2587,32 @@ const MASTER_NICK = "Srgokucheats";
     }
   }
 
+  document.getElementById("openProfileBtn")?.addEventListener("click", async ()=>{
+    toggleUserMenu(true);
+    await openProfileModal(true);
+  });
+
+  document.getElementById("closeProfileBtn")?.addEventListener("click", ()=>{
+    document.getElementById("profileModal").style.display = "none";
+  });
+
+  document.getElementById("userNick")?.addEventListener("click", async (e)=>{
+    const u = loadUser();
+    if(!u || !u.nick) return;
+    e.stopPropagation();
+    await openProfileModal(true);
+  });
+
+  document.addEventListener("click", async (e)=>{
+    const avatar = document.getElementById("userAvatar");
+    if(avatar && avatar.contains(e.target)){
+      const u = loadUser();
+      if(!u || !u.nick) return;
+      e.stopPropagation();
+      await openProfileModal(true);
+    }
+  });
+
   document.getElementById("openAchBtn")?.addEventListener("click", ()=>{
     toggleUserMenu(true);
     achRender();
@@ -2582,12 +2624,12 @@ const MASTER_NICK = "Srgokucheats";
   });
 
   const _awardXpOriginal = awardXp;
-  awardXp = function(amount, reason){
-    _awardXpOriginal(amount, reason);
-    if(reason === "YouTube")       achInc("youtube", 1);
-    if(reason === "Download")      achInc("downloads", 1);
-    if(reason === "Favorito")      achInc("favorites", 1);
-    if(reason === "Troca de tema") achInc("themes", 1);
+  awardXp = async function(amount, reason){
+    await _awardXpOriginal(amount, reason);
+    if(reason === "YouTube"){ achInc("youtube", 1); syncProfileAction("youtube", 1); }
+    if(reason === "Download"){ achInc("downloads", 1); syncProfileAction("download", 1); }
+    if(reason === "Favorito"){ achInc("favorites", 1); syncProfileAction("favorite", 1); }
+    if(reason === "Troca de tema"){ achInc("themes", 1); syncProfileAction("theme", 1); }
     if(reason === "Virou Premium") achInc("premium", 1);
   };
     /* ===============================
@@ -2654,6 +2696,11 @@ const MASTER_NICK = "Srgokucheats";
       }
       if(!isPremium){
         localStorage.removeItem("toolflix_token_ativador");
+      }
+      const p = await fetchProfileMe(true);
+      if(p){
+        const u = loadUser() || {};
+        saveUser({ ...u, nick: p.nick, xp: Number(p.xp || 0), avatar: p.avatar, premium: !!p.premium });
       }
     }catch{
       isPremium = localStorage.getItem("toolflix_premium_atv") === "true";
@@ -3706,7 +3753,6 @@ document.getElementById("loginInput")?.addEventListener("keydown", (e)=>{
         chat.style.display = "none";
         window.__chatIsOpen = false;
       }
-      closePublicProfile?.();
     }
   });
 
@@ -3932,6 +3978,7 @@ document.addEventListener("click", async (ev)=>{
   updatePremiumSidebar();
   render();
 
+  if(getToken()) fetchProfileMe(true);
   checkPremiumSync();
   syncJogos();
 
@@ -4536,13 +4583,11 @@ document.addEventListener("DOMContentLoaded", function(){
     const bubbleText = deleted ? "Mensagem apagada pelo administrador" : String(msg?.message || "");
     const bubbleClass = deleted ? "global-chat-bubble deleted" : "global-chat-bubble";
     const avatar = getAvatarSrc(msg);
-    const profileNick = String(msg?.nick || "").trim();
-    const profileAttr = profileNick ? ` data-profile-nick="${escapeHtml(profileNick)}"` : "";
     return `
       <div class="global-chat-row ${own ? "own" : ""}" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
         <div class="global-chat-head">
-          <img class="global-chat-avatar profile-clickable ${getAvatarClass(msg?.level)}" src="${escapeHtml(avatar)}" alt="Avatar" ${profileAttr} onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
-          <div class="global-chat-name profile-clickable" ${profileAttr}>${escapeHtml(formatGlobalAuthor(msg))}</div>
+          <img class="global-chat-avatar ${getAvatarClass(msg?.level)}" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
+          <div class="global-chat-name" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}">${escapeHtml(formatGlobalAuthor(msg))}</div>
         </div>
         <div class="${bubbleClass}">${escapeHtml(bubbleText)}</div>
         <div class="global-chat-meta">${formatGlobalTime(msg?.created_at)}</div>
@@ -4670,24 +4715,19 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
     document.getElementById("globalChatMessages")?.addEventListener("click", function(e){
+      const profileTarget = e.target.closest("[data-profile-nick]");
+      if(profileTarget){
+        const nick = profileTarget.getAttribute("data-profile-nick") || "";
+        if(nick){
+          openPublicProfileModalByNick(nick);
+          return;
+        }
+      }
       const btnDelete = e.target.closest("[data-global-delete-id]");
-      if(btnDelete){
-        const id = btnDelete.getAttribute("data-global-delete-id") || "";
-        if(!id) return;
-        deleteGlobalChatMessage(id);
-        return;
-      }
-
-      const profileEl = e.target.closest("[data-profile-nick]");
-      if(profileEl){
-        const nick = profileEl.getAttribute("data-profile-nick") || "";
-        if(nick) openPublicProfileByNick(nick);
-      }
-    });
-
-    document.getElementById("publicProfileClose")?.addEventListener("click", closePublicProfile);
-    document.getElementById("publicProfileOverlay")?.addEventListener("click", function(e){
-      if(e.target?.id === "publicProfileOverlay") closePublicProfile();
+      if(!btnDelete) return;
+      const id = btnDelete.getAttribute("data-global-delete-id") || "";
+      if(!id) return;
+      deleteGlobalChatMessage(id);
     });
 
     input?.addEventListener("input", function(){
@@ -4710,14 +4750,6 @@ document.addEventListener("DOMContentLoaded", function(){
 
 })();
 </script>
-
-
-<div id="publicProfileOverlay" aria-hidden="true">
-  <div class="public-profile-card" role="dialog" aria-modal="true" aria-labelledby="publicProfileTitle">
-    <button id="publicProfileClose" class="public-profile-close" type="button" aria-label="Fechar">×</button>
-    <div id="publicProfileContent" class="public-profile-loading">Carregando perfil...</div>
-  </div>
-</div>
 
 </body>
 </html>
