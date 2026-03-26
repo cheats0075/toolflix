@@ -546,6 +546,32 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       font-size:20px;
       font-weight:900;
     }
+
+    .password-panel{
+      margin-top:18px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+    }
+    .password-panel h3{
+      margin:0 0 10px;
+      color:gold;
+      font-size:16px;
+    }
+    .password-panel .admin-input{ width:100%; margin-top:8px; }
+    .password-panel .nav-item{ width:100%; margin-top:10px; background:var(--cor-accent); color:#000; }
+    .temp-pass-alert{
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:14px;
+      background: rgba(255,215,0,.10);
+      border:1px solid rgba(255,215,0,.30);
+      color:#ffe27a;
+      font-size:12px;
+      font-weight:700;
+    }
+
     .profile-meta{
       margin-top:14px;
       font-size:12px;
@@ -1292,6 +1318,21 @@ select optgroup{
                 style="cursor:pointer; font-weight:900; text-decoration:underline; color:gold;">
             Criar conta
           </span>
+          <div id="forgotPasswordWrap" style="display:none; margin-top:12px; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,.10); background:rgba(255,255,255,.04);">
+            <div style="font-weight:900; color:gold; margin-bottom:8px;">Esqueceu a senha?</div>
+            <div style="opacity:.9; margin-bottom:8px;">Preencha seu nick. O pedido vai para o chat do administrador.</div>
+            <input type="text" id="forgotNickInput" class="admin-input"
+              placeholder="Seu nick"
+              style="width:100%; margin-top:6px;">
+            <button id="forgotSendBtn" class="nav-item"
+              style="margin-top:10px; width:100%; background:gold; color:#000; font-weight:900;">
+              Enviar pedido
+            </button>
+          </div>
+          <button id="forgotPasswordBtn" class="nav-item"
+            style="display:none; margin-top:10px; width:100%; background:rgba(255,255,255,.08); color:#fff; border:1px solid rgba(255,255,255,.10);">
+            🔐 Esqueceu a senha?
+          </button>
           <div style="margin-top:8px; opacity:.85;">
             Ao criar conta, você libera o chat e seu XP/Nível fica salvo na sua conta.
           </div>
@@ -1782,6 +1823,24 @@ const MASTER_NICK = "Srgokucheats";
   }
 
   let profileCache = null;
+  let loginFailCount = 0;
+
+  function setLoginFailCount(n){
+    loginFailCount = Math.max(0, Number(n || 0));
+    const forgotBtn = document.getElementById("forgotPasswordBtn");
+    const forgotWrap = document.getElementById("forgotPasswordWrap");
+    if(forgotBtn) forgotBtn.style.display = (loginFailCount >= 3 && AUTH_MODE === "login") ? "block" : "none";
+    if(forgotWrap && loginFailCount < 3) forgotWrap.style.display = "none";
+  }
+
+  function toggleForgotPasswordBox(force){
+    const wrap = document.getElementById("forgotPasswordWrap");
+    if(!wrap) return;
+    if(force === true) wrap.style.display = "block";
+    else if(force === false) wrap.style.display = "none";
+    else wrap.style.display = (wrap.style.display === "block") ? "none" : "block";
+  }
+
 
   function fmtDateTime(ts){
     const n = Number(ts || 0);
@@ -1812,7 +1871,8 @@ const MASTER_NICK = "Srgokucheats";
         nick: j.profile.nick,
         xp: Number(j.profile.xp || 0),
         avatar: j.profile.avatar,
-        premium: !!j.profile.premium
+        premium: !!j.profile.premium,
+        password_temp: !!j.profile.passwordTemp
       });
       updateUserUI?.();
       return profileCache;
@@ -1896,6 +1956,19 @@ const MASTER_NICK = "Srgokucheats";
     const ach = profile.achievements || {};
     const info = getLevelInfo(Number(profile.xp || 0));
     const pct = Math.max(0, Math.min(100, ((Number(profile.xp || 0) - info.min) / Math.max(1, (info.max - info.min))) * 100));
+    const auth = loadAuth() || {};
+    const isOwnProfile = !!auth?.nick && String(auth.nick).trim().toLowerCase() === String(profile.nick || "").trim().toLowerCase();
+    const tempAlert = profile.passwordTemp ? `<div class="temp-pass-alert">🔐 Você entrou com uma senha temporária. Troque agora no seu perfil.</div>` : "";
+    const changePasswordHtml = isOwnProfile ? `
+      <div class="password-panel">
+        <h3>🔑 Trocar senha</h3>
+        <div style="font-size:12px; opacity:.82; margin-bottom:8px;">Use essa área para trocar sua senha. Se você entrou com senha temporária, troque agora.</div>
+        <input type="password" id="currentPasswordInput" class="admin-input" placeholder="Senha atual">
+        <input type="password" id="newPasswordInput" class="admin-input" placeholder="Nova senha (mín. 6 caracteres)">
+        <input type="password" id="confirmPasswordInput" class="admin-input" placeholder="Confirmar nova senha">
+        <button id="changePasswordBtn" class="nav-item">Salvar nova senha</button>
+      </div>
+    ` : "";
 
     box.innerHTML = `
       <div class="profile-head">
@@ -1910,6 +1983,8 @@ const MASTER_NICK = "Srgokucheats";
           </div>
         </div>
       </div>
+
+      ${tempAlert}
 
       <div style="margin-bottom:8px; font-weight:900; color:gold;">Progresso do nível</div>
       <div class="xpBar" style="width:100%; height:14px;">
@@ -1941,7 +2016,13 @@ const MASTER_NICK = "Srgokucheats";
         <div>🗓️ Conta criada em: <b>${fmtDateTime(profile.createdAt)}</b></div>
         <div>⏱️ Último login: <b>${fmtDateTime(profile.lastLoginAt)}</b></div>
       </div>
+
+      ${changePasswordHtml}
     `;
+
+    if(isOwnProfile){
+      document.getElementById("changePasswordBtn")?.addEventListener("click", changeOwnPassword);
+    }
   }
 
   async function openProfileModal(force=false){
@@ -1952,6 +2033,40 @@ const MASTER_NICK = "Srgokucheats";
 
     const profile = await fetchProfileMe(force);
     renderProfileCard(profile);
+  }
+
+  async function changeOwnPassword(){
+    const currentPassword = (document.getElementById("currentPasswordInput")?.value || "");
+    const newPassword = (document.getElementById("newPasswordInput")?.value || "");
+    const confirmPassword = (document.getElementById("confirmPasswordInput")?.value || "");
+    const token = getToken();
+    if(!token) return showToast("Faça login novamente.");
+    if(!currentPassword) return showToast("Digite sua senha atual.");
+    if(!newPassword || newPassword.length < 6) return showToast("Nova senha mínima: 6 caracteres.");
+    if(newPassword !== confirmPassword) return showToast("A confirmação da nova senha não confere.");
+    try{
+      const r = await fetch(API_BASE + "/api/change-password", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json", "Authorization":"Bearer " + token },
+        body: JSON.stringify({ currentPassword, newPassword })
+      });
+      const j = await r.json().catch(()=> ({}));
+      if(!r.ok || !j?.ok){
+        showToast(j?.error === "CURRENT_PASSWORD_INVALID" ? "Senha atual incorreta." : (j?.error || "Não foi possível trocar a senha."));
+        return;
+      }
+      const old = loadUser() || {};
+      saveUser({ ...old, password_temp:false });
+      profileCache = null;
+      await fetchProfileMe(true);
+      showToast("✅ Senha alterada com sucesso.");
+      document.getElementById("currentPasswordInput").value = "";
+      document.getElementById("newPasswordInput").value = "";
+      document.getElementById("confirmPasswordInput").value = "";
+      await openProfileModal(true);
+    }catch(e){
+      showToast("Erro ao trocar a senha.");
+    }
   }
 
   function getOrCreateUserId(){
@@ -2265,6 +2380,7 @@ const MASTER_NICK = "Srgokucheats";
       if(btn) btn.innerText = "Entrar";
       if(linkRegister) linkRegister.style.display = "inline";
     }
+    setLoginFailCount(loginFailCount);
   }
 
   function openLogin(mode){
@@ -2272,12 +2388,15 @@ const MASTER_NICK = "Srgokucheats";
     const inp = document.getElementById("userNickInput");
     if(m) m.style.display = "flex";
     setAuthMode(mode || "login");
+    setLoginFailCount(mode === "login" ? loginFailCount : 0);
+    toggleForgotPasswordBox(false);
     if(inp) inp.focus();
   }
 
   function closeLogin(){
     const m = document.getElementById("userLoginModal");
     if(m) m.style.display = "none";
+    toggleForgotPasswordBox(false);
   }
 
   function toggleUserMenu(forceClose=false){
@@ -2306,7 +2425,7 @@ const MASTER_NICK = "Srgokucheats";
   });
 
   document.getElementById("userLoginSubmit")?.addEventListener("click", async ()=>{
-    const nick = (document.getElementById("userNickInput")?.value || "").trim().slice(0,18);
+    const nick = (document.getElementById("userNickInput")?.value || "").trim();
     const pass = (document.getElementById("userPassInput")?.value || "");
 
     if(!nick){ showToast("Digite um nickname!"); return; }
@@ -2336,19 +2455,25 @@ const MASTER_NICK = "Srgokucheats";
 
       const j2 = await r2.json().catch(()=> ({}));
       if(!j2?.ok){
-        showToast("Nick ou senha inválidos.");
+        loginFailCount += 1;
+        setLoginFailCount(loginFailCount);
+        showToast(loginFailCount >= 3 ? "Nick ou senha inválidos. Agora você já pode usar 'Esqueceu a senha?'." : "Nick ou senha inválidos.");
         return;
       }
 
+      setLoginFailCount(0);
       saveAuth({ token: j2.token, userId: j2.user.id, nick: j2.user.nick });
-      saveUser({ nick: j2.user.nick, xp: Number(j2.user.xp || 0) });
+      saveUser({ nick: j2.user.nick, xp: Number(j2.user.xp || 0), password_temp: !!j2.user.password_temp });
       profileCache = null;
       await fetchProfileMe(true);
 
       closeLogin();
       toggleUserMenu(true);
       updateUserUI();
-      showToast(`Bem-vindo, ${j2.user.nick}!`);
+      showToast(j2.user.password_temp ? `Bem-vindo, ${j2.user.nick}. Troque sua senha no perfil.` : `Bem-vindo, ${j2.user.nick}!`);
+      if(j2.user.password_temp){
+        setTimeout(()=> openProfileModal(true), 250);
+      }
     }catch(e){
       showToast("Erro ao conectar com servidor.");
     }
@@ -2358,6 +2483,37 @@ const MASTER_NICK = "Srgokucheats";
     if(e.key === "Enter"){
       e.preventDefault();
       document.getElementById("userLoginSubmit")?.click();
+    }
+  });
+
+  document.getElementById("forgotPasswordBtn")?.addEventListener("click", ()=>{
+    toggleForgotPasswordBox();
+    const nickInput = document.getElementById("forgotNickInput");
+    const loginNick = (document.getElementById("userNickInput")?.value || "").trim();
+    if(nickInput && loginNick && !nickInput.value) nickInput.value = loginNick;
+    if(nickInput) nickInput.focus();
+  });
+
+  document.getElementById("forgotSendBtn")?.addEventListener("click", async ()=>{
+    const nick = (document.getElementById("forgotNickInput")?.value || document.getElementById("userNickInput")?.value || "").trim();
+    if(!nick) return showToast("Preencha seu nick.");
+    try{
+      const r = await fetch(API_BASE + "/api/forgot-password-request", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ nick })
+      });
+      const j = await r.json().catch(()=> ({}));
+      if(!r.ok || !j?.ok){
+        showToast(j?.error === "NOT_FOUND" ? "Nick não encontrado." : (j?.error || "Não foi possível enviar o pedido."));
+        return;
+      }
+      showToast("Pedido enviado para o administrador.");
+      toggleForgotPasswordBox(false);
+      const forgotNickInput = document.getElementById("forgotNickInput");
+      if(forgotNickInput) forgotNickInput.value = nick;
+    }catch(e){
+      showToast("Erro ao enviar pedido.");
     }
   });
 
