@@ -1002,54 +1002,157 @@ select optgroup{
 
 
     /* PERFIL PÚBLICO */
+    .global-chat-avatar.profile-clickable,
+    .global-chat-name.profile-clickable{
+      cursor:pointer;
+    }
+    .global-chat-name.profile-clickable:hover{
+      color:#ffe066;
+      text-decoration:underline;
+    }
     #publicProfileOverlay{
-      position:fixed; inset:0; background:rgba(0,0,0,.68); display:none; align-items:center; justify-content:center; z-index:100000;
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(0,0,0,.82);
+      backdrop-filter: blur(10px);
+      z-index:100010;
       padding:20px;
     }
     #publicProfileOverlay.open{ display:flex; }
-    .pp-card{
-      width:min(640px, 96vw); max-height:92vh; overflow:auto;
-      background:rgba(8,8,8,.96); border:1px solid rgba(255,255,255,.08); border-radius:28px;
-      box-shadow:0 30px 80px rgba(0,0,0,.55); padding:24px;
+    .public-profile-card{
+      width:min(680px, 96vw);
+      max-height:90vh;
+      overflow:auto;
+      background:linear-gradient(180deg, rgba(12,12,16,.98), rgba(18,18,22,.98));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:26px;
+      box-shadow:0 24px 70px rgba(0,0,0,.55);
+      position:relative;
+      padding:26px;
+      color:#fff;
     }
-    .pp-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-    .pp-title{ font-size:21px; font-weight:900; color:#ffd400; display:flex; gap:10px; align-items:center; }
-    .pp-close{
-      width:42px; height:42px; border-radius:50%; border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.06); color:#fff; cursor:pointer; font-size:22px;
+    .public-profile-close{
+      position:absolute;
+      top:18px;
+      right:18px;
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      font-size:24px;
+      cursor:pointer;
     }
-    .pp-main{ display:flex; gap:18px; align-items:center; margin-bottom:18px; }
-    .pp-avatar{
-      width:82px; height:82px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,.08);
-      background:#111;
+    .public-profile-title{
+      font-size:18px;
+      font-weight:900;
+      color:#ffd400;
+      margin-bottom:22px;
     }
-    .pp-name{ font-size:24px; font-weight:900; }
-    .pp-sub{ font-size:14px; opacity:.9; margin-top:4px; }
-    .pp-badges{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
-    .pp-badge{
-      padding:7px 14px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.08);
-      font-weight:800; font-size:13px;
+    .public-profile-top{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      margin-bottom:18px;
     }
-    .pp-badge.master{ background:rgba(255,140,0,.16); color:#ffd7a1; }
-    .pp-badge.premium{ background:rgba(0,170,255,.14); color:#9adfff; }
-    .pp-section-title{ color:#ffd400; font-weight:900; font-size:16px; margin:18px 0 10px; }
-    .pp-progress-wrap{ background:rgba(255,255,255,.06); border-radius:999px; height:16px; overflow:hidden; border:1px solid rgba(255,255,255,.06); }
-    .pp-progress-bar{ height:100%; width:0%; background:linear-gradient(90deg,#444,#888); transition:width .25s ease; }
-    .pp-progress-text{ margin-top:8px; font-size:14px; opacity:.92; }
-    .pp-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:16px; }
-    .pp-stat{
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:16px;
+    .public-profile-avatar{
+      width:78px;
+      height:78px;
+      border-radius:50%;
+      object-fit:cover;
+      border:2px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      flex:0 0 78px;
     }
-    .pp-stat-label{ font-size:14px; opacity:.82; margin-bottom:8px; }
-    .pp-stat-value{ font-size:18px; font-weight:900; }
-    .pp-meta{ margin-top:18px; font-size:14px; line-height:1.8; opacity:.9; }
-    .nick-clickable{ cursor:pointer; text-decoration:none; }
-    .nick-clickable:hover{ filter:brightness(1.1); text-decoration:underline; }
-    @media (max-width:640px){
-      .pp-main{ align-items:flex-start; }
-      .pp-grid{ grid-template-columns:1fr; }
-      .pp-name{ font-size:20px; }
+    .public-profile-name{
+      font-size:22px;
+      font-weight:900;
+      line-height:1.15;
+    }
+    .public-profile-sub{
+      font-size:14px;
+      opacity:.85;
+      margin-top:4px;
+    }
+    .public-profile-badges{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .public-profile-badge{
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      font-size:13px;
+      font-weight:800;
+    }
+    .public-profile-progress-title{
+      margin:18px 0 10px;
+      font-size:16px;
+      font-weight:900;
+      color:#ffd400;
+    }
+    .public-profile-progress{
+      height:16px;
+      border-radius:999px;
+      overflow:hidden;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .public-profile-progress > span{
+      display:block;
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#ffd400,#ff9f1a);
+      border-radius:999px;
+    }
+    .public-profile-progress-text{
+      margin-top:8px;
+      font-size:14px;
+      opacity:.9;
+    }
+    .public-profile-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:14px;
+      margin-top:16px;
+    }
+    .public-profile-stat{
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:16px;
+    }
+    .public-profile-stat-label{
+      font-size:14px;
+      opacity:.82;
+      margin-bottom:8px;
+    }
+    .public-profile-stat-value{
+      font-size:18px;
+      font-weight:900;
+    }
+    .public-profile-meta{
+      margin-top:18px;
+      font-size:14px;
+      line-height:1.9;
+      opacity:.95;
+    }
+    .public-profile-loading,
+    .public-profile-error{
+      text-align:center;
+      padding:24px;
+      font-size:15px;
+    }
+    @media (max-width: 700px){
+      .public-profile-grid{ grid-template-columns:1fr; }
+      .public-profile-card{ padding:18px; }
     }
 
 </style>
@@ -1107,58 +1210,6 @@ select optgroup{
 #masterChatsOverlay #adminChatsPanel > div{ gap:12px !important; }
 #masterChatsOverlay #adminChatsList button{ transition: transform .06s ease, background .12s ease; }
 #masterChatsOverlay #adminChatsList button:hover{ transform: translateY(-1px); }
-
-    /* PERFIL PÚBLICO */
-    #publicProfileOverlay{
-      position:fixed; inset:0; background:rgba(0,0,0,.68); display:none; align-items:center; justify-content:center; z-index:100000;
-      padding:20px;
-    }
-    #publicProfileOverlay.open{ display:flex; }
-    .pp-card{
-      width:min(640px, 96vw); max-height:92vh; overflow:auto;
-      background:rgba(8,8,8,.96); border:1px solid rgba(255,255,255,.08); border-radius:28px;
-      box-shadow:0 30px 80px rgba(0,0,0,.55); padding:24px;
-    }
-    .pp-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-    .pp-title{ font-size:21px; font-weight:900; color:#ffd400; display:flex; gap:10px; align-items:center; }
-    .pp-close{
-      width:42px; height:42px; border-radius:50%; border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.06); color:#fff; cursor:pointer; font-size:22px;
-    }
-    .pp-main{ display:flex; gap:18px; align-items:center; margin-bottom:18px; }
-    .pp-avatar{
-      width:82px; height:82px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,.08);
-      background:#111;
-    }
-    .pp-name{ font-size:24px; font-weight:900; }
-    .pp-sub{ font-size:14px; opacity:.9; margin-top:4px; }
-    .pp-badges{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
-    .pp-badge{
-      padding:7px 14px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.08);
-      font-weight:800; font-size:13px;
-    }
-    .pp-badge.master{ background:rgba(255,140,0,.16); color:#ffd7a1; }
-    .pp-badge.premium{ background:rgba(0,170,255,.14); color:#9adfff; }
-    .pp-section-title{ color:#ffd400; font-weight:900; font-size:16px; margin:18px 0 10px; }
-    .pp-progress-wrap{ background:rgba(255,255,255,.06); border-radius:999px; height:16px; overflow:hidden; border:1px solid rgba(255,255,255,.06); }
-    .pp-progress-bar{ height:100%; width:0%; background:linear-gradient(90deg,#444,#888); transition:width .25s ease; }
-    .pp-progress-text{ margin-top:8px; font-size:14px; opacity:.92; }
-    .pp-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:16px; }
-    .pp-stat{
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:16px;
-    }
-    .pp-stat-label{ font-size:14px; opacity:.82; margin-bottom:8px; }
-    .pp-stat-value{ font-size:18px; font-weight:900; }
-    .pp-meta{ margin-top:18px; font-size:14px; line-height:1.8; opacity:.9; }
-    .nick-clickable{ cursor:pointer; text-decoration:none; }
-    .nick-clickable:hover{ filter:brightness(1.1); text-decoration:underline; }
-    @media (max-width:640px){
-      .pp-main{ align-items:flex-start; }
-      .pp-grid{ grid-template-columns:1fr; }
-      .pp-name{ font-size:20px; }
-    }
-
 </style>
 
 </head>
@@ -1264,7 +1315,7 @@ select optgroup{
       <button class="nav-item" id="adminBtn">⚙️ Admin</button>
 	        <!-- ===== ÁREA DO USUÁRIO (GAME) ===== -->
       <div id="userArea" class="nav-item" style="display:flex; align-items:center; gap:10px; position:relative; cursor:pointer;">
-        <span id="userNick" class="nick-clickable">Entrar</span>
+        <span id="userNick">Entrar</span>
         <div class="xpBar">
           <div class="xpFill" id="xpFill" style="width:0%"></div>
         </div>
@@ -1482,20 +1533,7 @@ select optgroup{
     </div>
   </div>
 
-  
-  <div id="publicProfileOverlay">
-    <div class="pp-card" role="dialog" aria-modal="true" aria-labelledby="publicProfileTitle">
-      <div class="pp-head">
-        <div class="pp-title" id="publicProfileTitle">🧑 Perfil do jogador</div>
-        <button class="pp-close" id="publicProfileClose" type="button">×</button>
-      </div>
-      <div id="publicProfileBody">
-        <div style="padding:18px;opacity:.82;">Carregando perfil...</div>
-      </div>
-    </div>
-  </div>
-
-<script>
+  <script>
   // 👑 Função global do botão do topo (MASTER)
 window.openMasterChatsTop = async function(){
   // Abre um painel exclusivo de Chats (sem abrir o modo Admin)
@@ -1635,75 +1673,104 @@ window.closeMasterChatsOverlay = function(){
 };
     // ===== NOTIFICAÇÃO CHAT USUÁRIO (BADGE VERMELHO) =====
 
-  function formatProfileDate(v){
-    const n = Number(v || 0);
+  function formatProfileDate(ts){
+    const n = Number(ts || 0);
     if(!n) return "—";
-    const d = new Date(n);
-    if(Number.isNaN(d.getTime())) return "—";
-    const dd = String(d.getDate()).padStart(2,"0");
-    const mm = String(d.getMonth()+1).padStart(2,"0");
-    const yy = d.getFullYear();
-    const hh = String(d.getHours()).padStart(2,"0");
-    const mi = String(d.getMinutes()).padStart(2,"0");
-    return `${dd}/${mm}/${yy}, ${hh}:${mi}`;
+    try{ return new Date(n).toLocaleString("pt-BR"); }catch(e){ return "—"; }
   }
 
-  function profileCardHtml(p){
-    const avatar = `/toolflix/assets/img/avatars/${escapeHtml(String(p?.avatar || "level-1.webp"))}`;
-    const badges = [
-      p?.master ? '<span class="pp-badge master">👑 Master</span>' : '',
-      p?.premium ? '<span class="pp-badge premium">💎 Premium</span>' : ''
-    ].join('');
-    return `
-      <div class="pp-main">
-        <img class="pp-avatar ${getAvatarClass(p?.level)}" src="${avatar}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
-        <div style="flex:1;min-width:0;">
-          <div class="pp-name">${escapeHtml(String(p?.nick || "Usuário"))}</div>
-          <div class="pp-sub">Nível ${Number(p?.level || 1)} • ${Number(p?.xp || 0)} XP</div>
-          <div class="pp-badges">${badges}</div>
+  function profileLevelMaxXp(level){
+    const lv = Math.max(1, Number(level || 1));
+    if(lv <= 1) return 100;
+    if(lv === 2) return 250;
+    if(lv === 3) return 500;
+    if(lv === 4) return 750;
+    if(lv === 5) return 1250;
+    let curLevel = 6;
+    let max = 1900;
+    while(curLevel < lv){
+      curLevel++;
+      const delta = 650 + (curLevel - 7) * 150;
+      max += delta;
+      if(curLevel > 1000) break;
+    }
+    return max;
+  }
+
+  function renderPublicProfile(data){
+    const box = document.getElementById("publicProfileContent");
+    if(!box) return;
+    const p = data?.profile || {};
+    const progressMax = Math.max(1, profileLevelMaxXp(p.level));
+    const progressPct = Math.max(0, Math.min(100, Math.round((Number(p.xp || 0) / progressMax) * 100)));
+    const avatar = escapeHtml(String(p.avatar || "/toolflix/assets/img/avatars/level-1.webp"));
+    const nick = escapeHtml(String(p.nick || "Jogador"));
+    box.innerHTML = `
+      <div id="publicProfileTitle" class="public-profile-title">👤 Perfil do jogador</div>
+      <div class="public-profile-top">
+        <img class="public-profile-avatar ${getAvatarClass(p.level)}" src="${avatar}" alt="${nick}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
+        <div>
+          <div class="public-profile-name">${nick}</div>
+          <div class="public-profile-sub">Nível ${Number(p.level || 1)} • ${Number(p.xp || 0)} XP</div>
+          <div class="public-profile-badges">
+            ${p.isMaster ? '<span class="public-profile-badge">👑 Master</span>' : ''}
+            ${p.premium ? '<span class="public-profile-badge">💎 Premium</span>' : ''}
+            ${!p.isMaster && !p.premium ? '<span class="public-profile-badge">🎮 Jogador</span>' : ''}
+          </div>
         </div>
       </div>
-      <div class="pp-section-title">Progresso do nível</div>
-      <div class="pp-progress-wrap"><div class="pp-progress-bar" style="width:${Math.max(0,Math.min(100, Number(p?.progress_pct || 0)))}%"></div></div>
-      <div class="pp-progress-text">${Number(p?.xp || 0)}/${Number(p?.next_xp || 100)} XP</div>
-      <div class="pp-grid">
-        <div class="pp-stat"><div class="pp-stat-label">Downloads</div><div class="pp-stat-value">${Number(p?.downloads || 0)}</div></div>
-        <div class="pp-stat"><div class="pp-stat-label">Conquistas</div><div class="pp-stat-value">${Number(p?.conquistas || 0)}/${Number(p?.conquistas_total || 26)}</div></div>
-        <div class="pp-stat"><div class="pp-stat-label">Favoritos</div><div class="pp-stat-value">${Number(p?.favoritos || 0)}</div></div>
-        <div class="pp-stat"><div class="pp-stat-label">Temas trocados</div><div class="pp-stat-value">${Number(p?.temas || 0)}</div></div>
+      <div class="public-profile-progress-title">Progresso do nível</div>
+      <div class="public-profile-progress"><span style="width:${progressPct}%"></span></div>
+      <div class="public-profile-progress-text">${Number(p.xp || 0)}/${progressMax} XP</div>
+      <div class="public-profile-grid">
+        <div class="public-profile-stat"><div class="public-profile-stat-label">Downloads</div><div class="public-profile-stat-value">${Number(p.downloads || 0)}</div></div>
+        <div class="public-profile-stat"><div class="public-profile-stat-label">Conquistas</div><div class="public-profile-stat-value">${Number(p.achievements || 0)}</div></div>
+        <div class="public-profile-stat"><div class="public-profile-stat-label">Favoritos</div><div class="public-profile-stat-value">${Number(p.favorites || 0)}</div></div>
+        <div class="public-profile-stat"><div class="public-profile-stat-label">Temas trocados</div><div class="public-profile-stat-value">${Number(p.themeChanges || 0)}</div></div>
       </div>
-      <div class="pp-meta">
-        📺 YouTube / recompensas: ${Number(p?.youtube || 0)}<br>
-        📅 Conta criada em: ${escapeHtml(formatProfileDate(p?.created_at))}<br>
-        ⏱️ Último login: ${escapeHtml(formatProfileDate(p?.last_login_at))}
+      <div class="public-profile-meta">
+        📺 YouTube / recompensas: ${Number(p.youtubeRewards || 0)}<br>
+        📅 Conta criada em: ${formatProfileDate(p.createdAt)}<br>
+        ⏱️ Último login: ${formatProfileDate(p.lastLoginAt)}
       </div>
     `;
+  }
+
+  function openPublicProfileLoading(){
+    const ov = document.getElementById("publicProfileOverlay");
+    const box = document.getElementById("publicProfileContent");
+    if(box) box.innerHTML = '<div class="public-profile-loading">Carregando perfil...</div>';
+    if(ov){
+      ov.classList.add("open");
+      ov.setAttribute("aria-hidden","false");
+    }
+  }
+
+  function closePublicProfile(){
+    const ov = document.getElementById("publicProfileOverlay");
+    if(ov){
+      ov.classList.remove("open");
+      ov.setAttribute("aria-hidden","true");
+    }
   }
 
   async function openPublicProfileByNick(nick){
     const cleanNick = String(nick || "").trim();
     if(!cleanNick) return;
-    const overlay = document.getElementById("publicProfileOverlay");
-    const body = document.getElementById("publicProfileBody");
-    if(!overlay || !body) return;
-    overlay.classList.add("open");
-    body.innerHTML = '<div style="padding:18px;opacity:.82;">Carregando perfil...</div>';
+    openPublicProfileLoading();
     try{
       const r = await fetch(API_URL + "/api/profile/" + encodeURIComponent(cleanNick));
       const j = await r.json().catch(()=> ({}));
-      if(!r.ok || !j?.ok || !j?.profile){
-        body.innerHTML = '<div style="padding:18px;opacity:.82;">Perfil não encontrado.</div>';
-        return;
+      if(r.ok && j?.ok && j?.profile){
+        renderPublicProfile(j);
+      }else{
+        const box = document.getElementById("publicProfileContent");
+        if(box) box.innerHTML = '<div class="public-profile-error">Não foi possível carregar o perfil.</div>';
       }
-      body.innerHTML = profileCardHtml(j.profile);
     }catch(e){
-      body.innerHTML = '<div style="padding:18px;opacity:.82;">Erro ao carregar perfil.</div>';
+      const box = document.getElementById("publicProfileContent");
+      if(box) box.innerHTML = '<div class="public-profile-error">Erro ao carregar perfil.</div>';
     }
-  }
-
-  function closePublicProfile(){
-    const overlay = document.getElementById("publicProfileOverlay");
-    if(overlay) overlay.classList.remove("open");
   }
 
 
@@ -3370,9 +3437,8 @@ window.adminSelectedChatId = chatId; // 👑 salva o chat selecionado
     wrap.className = "tf-chat-msg " + (isAdmin ? "tf-chat-right" : "tf-chat-left");
 
     const name = document.createElement("div");
-    name.className = "tf-chat-name nick-clickable";
+    name.className = "tf-chat-name";
     name.textContent = isAdmin ? "Goku" : (nick || "Usuário");
-    name.dataset.profileNick = isAdmin ? MASTER_NICK : (nick || "Usuário");
 
     const bubble = document.createElement("div");
     bubble.className = "tf-chat-bubble";
@@ -3640,6 +3706,7 @@ document.getElementById("loginInput")?.addEventListener("keydown", (e)=>{
         chat.style.display = "none";
         window.__chatIsOpen = false;
       }
+      closePublicProfile?.();
     }
   });
 
@@ -3683,9 +3750,8 @@ document.getElementById("loginInput")?.addEventListener("keydown", (e)=>{
         wrap.className = "tf-chat-msg " + (isAdmin ? "tf-chat-right" : "tf-chat-left");
 
         const name = document.createElement("div");
-        name.className = "tf-chat-name nick-clickable";
+        name.className = "tf-chat-name";
         name.textContent = isAdmin ? "Goku" : myNick;
-        name.dataset.profileNick = isAdmin ? MASTER_NICK : myNick;
 
         const bubble = document.createElement("div");
         bubble.className = "tf-chat-bubble";
@@ -4067,58 +4133,6 @@ document.addEventListener("DOMContentLoaded", function(){
   50% { transform: scale(1.25); opacity: 0.6; }
   100% { transform: scale(1); opacity: 1; }
 }
-
-    /* PERFIL PÚBLICO */
-    #publicProfileOverlay{
-      position:fixed; inset:0; background:rgba(0,0,0,.68); display:none; align-items:center; justify-content:center; z-index:100000;
-      padding:20px;
-    }
-    #publicProfileOverlay.open{ display:flex; }
-    .pp-card{
-      width:min(640px, 96vw); max-height:92vh; overflow:auto;
-      background:rgba(8,8,8,.96); border:1px solid rgba(255,255,255,.08); border-radius:28px;
-      box-shadow:0 30px 80px rgba(0,0,0,.55); padding:24px;
-    }
-    .pp-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-    .pp-title{ font-size:21px; font-weight:900; color:#ffd400; display:flex; gap:10px; align-items:center; }
-    .pp-close{
-      width:42px; height:42px; border-radius:50%; border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.06); color:#fff; cursor:pointer; font-size:22px;
-    }
-    .pp-main{ display:flex; gap:18px; align-items:center; margin-bottom:18px; }
-    .pp-avatar{
-      width:82px; height:82px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,.08);
-      background:#111;
-    }
-    .pp-name{ font-size:24px; font-weight:900; }
-    .pp-sub{ font-size:14px; opacity:.9; margin-top:4px; }
-    .pp-badges{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
-    .pp-badge{
-      padding:7px 14px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.08);
-      font-weight:800; font-size:13px;
-    }
-    .pp-badge.master{ background:rgba(255,140,0,.16); color:#ffd7a1; }
-    .pp-badge.premium{ background:rgba(0,170,255,.14); color:#9adfff; }
-    .pp-section-title{ color:#ffd400; font-weight:900; font-size:16px; margin:18px 0 10px; }
-    .pp-progress-wrap{ background:rgba(255,255,255,.06); border-radius:999px; height:16px; overflow:hidden; border:1px solid rgba(255,255,255,.06); }
-    .pp-progress-bar{ height:100%; width:0%; background:linear-gradient(90deg,#444,#888); transition:width .25s ease; }
-    .pp-progress-text{ margin-top:8px; font-size:14px; opacity:.92; }
-    .pp-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:16px; }
-    .pp-stat{
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:16px;
-    }
-    .pp-stat-label{ font-size:14px; opacity:.82; margin-bottom:8px; }
-    .pp-stat-value{ font-size:18px; font-weight:900; }
-    .pp-meta{ margin-top:18px; font-size:14px; line-height:1.8; opacity:.9; }
-    .nick-clickable{ cursor:pointer; text-decoration:none; }
-    .nick-clickable:hover{ filter:brightness(1.1); text-decoration:underline; }
-    @media (max-width:640px){
-      .pp-main{ align-items:flex-start; }
-      .pp-grid{ grid-template-columns:1fr; }
-      .pp-name{ font-size:20px; }
-    }
-
 </style>
 
 
@@ -4522,11 +4536,13 @@ document.addEventListener("DOMContentLoaded", function(){
     const bubbleText = deleted ? "Mensagem apagada pelo administrador" : String(msg?.message || "");
     const bubbleClass = deleted ? "global-chat-bubble deleted" : "global-chat-bubble";
     const avatar = getAvatarSrc(msg);
+    const profileNick = String(msg?.nick || "").trim();
+    const profileAttr = profileNick ? ` data-profile-nick="${escapeHtml(profileNick)}"` : "";
     return `
       <div class="global-chat-row ${own ? "own" : ""}" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
         <div class="global-chat-head">
-          <img class="global-chat-avatar ${getAvatarClass(msg?.level)}" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
-          <div class="global-chat-name nick-clickable" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}">${escapeHtml(formatGlobalAuthor(msg))}</div>
+          <img class="global-chat-avatar profile-clickable ${getAvatarClass(msg?.level)}" src="${escapeHtml(avatar)}" alt="Avatar" ${profileAttr} onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
+          <div class="global-chat-name profile-clickable" ${profileAttr}>${escapeHtml(formatGlobalAuthor(msg))}</div>
         </div>
         <div class="${bubbleClass}">${escapeHtml(bubbleText)}</div>
         <div class="global-chat-meta">${formatGlobalTime(msg?.created_at)}</div>
@@ -4593,13 +4609,6 @@ document.addEventListener("DOMContentLoaded", function(){
     if(!ov) return;
     ov.classList.add("open");
     document.body.style.overflow = "hidden";
-    document.body.addEventListener("click", function(e){
-      const el = e.target.closest("[data-profile-nick]");
-      if(!el) return;
-      const nick = el.getAttribute("data-profile-nick") || "";
-      if(nick) openPublicProfileByNick(nick);
-    });
-
     refreshGlobalChat(true);
     setTimeout(()=>{
       const input = document.getElementById("globalChatInput");
@@ -4652,9 +4661,6 @@ document.addEventListener("DOMContentLoaded", function(){
     const count = document.getElementById("globalChatCount");
 
     btn?.addEventListener("click", openGlobalChat);
-    document.getElementById("publicProfileClose")?.addEventListener("click", closePublicProfile);
-    document.getElementById("publicProfileOverlay")?.addEventListener("click", function(e){ if(e.target.id === "publicProfileOverlay") closePublicProfile(); });
-    document.getElementById("userNick")?.addEventListener("click", function(){ const u = loadUser?.() || {}; if(u?.nick) openPublicProfileByNick(u.nick); });
     close?.addEventListener("click", closeGlobalChat);
     backdrop?.addEventListener("click", closeGlobalChat);
 
@@ -4664,17 +4670,24 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
     document.getElementById("globalChatMessages")?.addEventListener("click", function(e){
+      const btnDelete = e.target.closest("[data-global-delete-id]");
+      if(btnDelete){
+        const id = btnDelete.getAttribute("data-global-delete-id") || "";
+        if(!id) return;
+        deleteGlobalChatMessage(id);
+        return;
+      }
+
       const profileEl = e.target.closest("[data-profile-nick]");
       if(profileEl){
         const nick = profileEl.getAttribute("data-profile-nick") || "";
         if(nick) openPublicProfileByNick(nick);
-        return;
       }
-      const btnDelete = e.target.closest("[data-global-delete-id]");
-      if(!btnDelete) return;
-      const id = btnDelete.getAttribute("data-global-delete-id") || "";
-      if(!id) return;
-      deleteGlobalChatMessage(id);
+    });
+
+    document.getElementById("publicProfileClose")?.addEventListener("click", closePublicProfile);
+    document.getElementById("publicProfileOverlay")?.addEventListener("click", function(e){
+      if(e.target?.id === "publicProfileOverlay") closePublicProfile();
     });
 
     input?.addEventListener("input", function(){
@@ -4697,6 +4710,14 @@ document.addEventListener("DOMContentLoaded", function(){
 
 })();
 </script>
+
+
+<div id="publicProfileOverlay" aria-hidden="true">
+  <div class="public-profile-card" role="dialog" aria-modal="true" aria-labelledby="publicProfileTitle">
+    <button id="publicProfileClose" class="public-profile-close" type="button" aria-label="Fechar">×</button>
+    <div id="publicProfileContent" class="public-profile-loading">Carregando perfil...</div>
+  </div>
+</div>
 
 </body>
 </html>
