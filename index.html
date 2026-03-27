@@ -1415,6 +1415,15 @@ select optgroup{
               Enviar pedido
             </button>
           </div>
+          <div id="recoveryChatWrap" style="display:none; margin-top:12px; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,.10); background:rgba(255,255,255,.04);">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px;">
+              <div style="font-weight:900; color:#7cf3ff;">💬 Recuperação de senha</div>
+              <button type="button" id="closeRecoveryChatBtn" class="nav-item" style="padding:6px 10px; min-width:auto;">✖</button>
+            </div>
+            <div id="recoveryChatNickLine" style="opacity:.9; margin-bottom:8px;"></div>
+            <div id="recoveryChatBox" style="max-height:220px; overflow:auto; padding:8px; border-radius:12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.06);"></div>
+            <div id="recoveryChatStatus" style="margin-top:8px; font-size:12px; opacity:.92;">⏳ Aguardando resposta do administrador...</div>
+          </div>
           <button id="forgotPasswordBtn" class="nav-item"
             style="display:none; margin-top:10px; width:100%; background:rgba(255,255,255,.08); color:#fff; border:1px solid rgba(255,255,255,.10);">
             🔐 Esqueceu a senha?
