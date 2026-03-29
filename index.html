@@ -2654,7 +2654,10 @@ const MASTER_NICK = "Srgokucheats";
       if(TF_AUDIO_CTX.state === "suspended") TF_AUDIO_CTX.resume();
     }catch(e){}
   }
-  window.addEventListener("pointerdown", tfInitAudio, { once:true });
+  window.addEventListener("pointerdown", ()=>{
+    tfInitAudio();
+    initTrophyAudio();
+  }, { once:true });
 
   function playTone(freq, dur=0.09, vol=0.28, type="triangle"){
     try{
@@ -2679,7 +2682,34 @@ const MASTER_NICK = "Srgokucheats";
     }catch(e){}
   }
 
+  const TROPHY_SOUND_URL = "/toolflix/assets/sounds/trophy.mp3";
+  let trophyAudioBase = null;
+
+  function initTrophyAudio(){
+    try{
+      if(!trophyAudioBase){
+        trophyAudioBase = new Audio(TROPHY_SOUND_URL);
+        trophyAudioBase.preload = "auto";
+        trophyAudioBase.volume = 0.95;
+      }
+      return trophyAudioBase;
+    }catch(_){
+      return null;
+    }
+  }
+
   function playTrophySound(){
+    try{
+      const base = initTrophyAudio();
+      if(base){
+        const a = base.cloneNode(true);
+        a.volume = 0.95;
+        a.currentTime = 0;
+        const p = a.play();
+        if(p && typeof p.catch === "function") p.catch(()=>{});
+        return;
+      }
+    }catch(_){}
     playTone(659,  0.07, 0.16, "triangle");
     setTimeout(()=> playTone(880,  0.08, 0.18, "triangle"), 70);
     setTimeout(()=> playTone(1046, 0.10, 0.20, "triangle"), 145);
