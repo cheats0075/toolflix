@@ -336,6 +336,118 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       border:1px solid #333;
     }
 
+
+    /* ===== TROPHY POPUP (PlayStation style) ===== */
+    #trophy-notify-root{
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(560px, calc(100vw - 28px));
+      z-index: 100050;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      pointer-events:none;
+    }
+    .trophy-pop{
+      position: relative;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      padding:16px 18px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(circle at top left, rgba(255,215,0,.16), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(0,255,255,.10), transparent 35%),
+        linear-gradient(180deg, rgba(19,19,24,.97), rgba(9,10,14,.97));
+      box-shadow: 0 24px 60px rgba(0,0,0,.50), 0 0 28px rgba(255,215,0,.12);
+      backdrop-filter: blur(14px);
+      animation: trophyEnter .42s cubic-bezier(.2,.9,.2,1);
+      pointer-events:auto;
+    }
+    .trophy-pop::before{
+      content:"";
+      position:absolute;
+      inset:0 0 auto 0;
+      height:3px;
+      background: linear-gradient(90deg, rgba(255,215,0,.0), rgba(255,215,0,.95), rgba(0,255,255,.85), rgba(255,215,0,.0));
+    }
+    .trophy-pop.hide{
+      animation: trophyExit .34s ease forwards;
+    }
+    .trophy-pop-icon{
+      width:58px;
+      height:58px;
+      border-radius:18px;
+      flex:0 0 58px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:30px;
+      background: linear-gradient(180deg, rgba(255,215,0,.22), rgba(255,140,0,.12));
+      border:1px solid rgba(255,215,0,.24);
+      box-shadow: 0 0 20px rgba(255,215,0,.16);
+    }
+    .trophy-pop-body{
+      flex:1;
+      min-width:0;
+    }
+    .trophy-pop-kicker{
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:1.1px;
+      color:#ffe27a;
+      text-transform:uppercase;
+      opacity:.95;
+      margin-bottom:4px;
+    }
+    .trophy-pop-title{
+      font-size:20px;
+      font-weight:900;
+      color:#fff;
+      line-height:1.15;
+      text-shadow:0 0 12px rgba(255,255,255,.06);
+    }
+    .trophy-pop-desc{
+      font-size:13px;
+      opacity:.86;
+      margin-top:4px;
+      line-height:1.35;
+    }
+    .trophy-pop-bar{
+      position:absolute;
+      left:12px;
+      right:12px;
+      bottom:10px;
+      height:4px;
+      border-radius:999px;
+      overflow:hidden;
+      background: rgba(255,255,255,.08);
+    }
+    .trophy-pop-bar > div{
+      height:100%;
+      width:100%;
+      transform-origin:left center;
+      background: linear-gradient(90deg, #ffd700, #ffb700, #00ffff);
+      animation: trophyBar linear forwards;
+    }
+
+    @keyframes trophyEnter{
+      from{ opacity:0; transform: translateY(-16px) scale(.96); }
+      to{ opacity:1; transform: translateY(0) scale(1); }
+    }
+    @keyframes trophyExit{
+      from{ opacity:1; transform: translateY(0) scale(1); }
+      to{ opacity:0; transform: translateY(-12px) scale(.97); }
+    }
+    @keyframes trophyBar{
+      from{ transform:scaleX(1); }
+      to{ transform:scaleX(0); }
+    }
+
     /* TOAST */
     #toast-container {
       position: fixed;
@@ -1481,6 +1593,7 @@ select optgroup{
   </main>
 
   <div id="toast-container"></div>
+  <div id="trophy-notify-root"></div>
     <!-- ===== PREMIUM MODAL ===== -->
   <div id="premiumModal" class="modal-overlay">
     <div class="modal-box">
@@ -2376,6 +2489,69 @@ const MASTER_NICK = "Srgokucheats";
     }, 3500);
   }
 
+  const TF_TROPHY_QUEUE = [];
+  let TF_TROPHY_ACTIVE = false;
+
+  function parseAchievementTitle(raw){
+    const txt = String(raw || "").trim();
+    return txt
+      .replace(/^🏆\s*/,'')
+      .replace(/^Conquista desbloqueada:\s*/i,'')
+      .replace(/^PLATINA TOOLFLIX desbloqueada!?/i,'PLATINA TOOLFLIX')
+      .trim();
+  }
+
+  function showTrophyPopup(title, desc = "Nova conquista liberada", icon = "🏆", ms = 5400){
+    const root = document.getElementById("trophy-notify-root");
+    if(!root) return;
+
+    TF_TROPHY_QUEUE.push({ title, desc, icon, ms });
+    if(TF_TROPHY_ACTIVE) return;
+
+    const run = ()=>{
+      const next = TF_TROPHY_QUEUE.shift();
+      if(!next){
+        TF_TROPHY_ACTIVE = false;
+        return;
+      }
+      TF_TROPHY_ACTIVE = true;
+
+      const card = document.createElement("div");
+      card.className = "trophy-pop";
+      card.innerHTML = `
+        <div class="trophy-pop-icon">${next.icon}</div>
+        <div class="trophy-pop-body">
+          <div class="trophy-pop-kicker">Conquista desbloqueada</div>
+          <div class="trophy-pop-title">${next.title}</div>
+          <div class="trophy-pop-desc">${next.desc}</div>
+        </div>
+        <div class="trophy-pop-bar"><div style="animation-duration:${Math.max(1800, Number(next.ms)||5400)}ms"></div></div>
+      `;
+      root.appendChild(card);
+
+      const totalMs = Math.max(1800, Number(next.ms) || 5400);
+      setTimeout(()=>{
+        card.classList.add("hide");
+        setTimeout(()=>{
+          card.remove();
+          run();
+        }, 340);
+      }, totalMs);
+    };
+
+    run();
+  }
+
+  function announceAchievement(rawTitle, isPlatinum = false){
+    const title = parseAchievementTitle(rawTitle);
+    const desc = isPlatinum
+      ? "Você conquistou a platina do ToolFlix. Isso é lendário."
+      : "Seu progresso foi reconhecido. Continue jogando para liberar mais.";
+    showTrophyPopup(title || "Nova conquista", desc, isPlatinum ? "👑" : "🏆", isPlatinum ? 6800 : 5600);
+    showToast(isPlatinum ? "🏆 PLATINA TOOLFLIX desbloqueada!" : `🏆 Conquista desbloqueada: ${title}`);
+  }
+
+
   function clampAvatarLevel(level){
     const n = Number(level || 1) || 1;
     return Math.max(1, Math.min(15, n));
@@ -2504,9 +2680,10 @@ const MASTER_NICK = "Srgokucheats";
   }
 
   function playTrophySound(){
-    playTone(784,  0.08, 0.18, "triangle");
-    setTimeout(()=> playTone(988,  0.08, 0.18, "triangle"), 90);
-    setTimeout(()=> playTone(1175, 0.10, 0.22, "triangle"), 180);
+    playTone(659,  0.07, 0.16, "triangle");
+    setTimeout(()=> playTone(880,  0.08, 0.18, "triangle"), 70);
+    setTimeout(()=> playTone(1046, 0.10, 0.20, "triangle"), 145);
+    setTimeout(()=> playTone(1318, 0.12, 0.24, "triangle"), 235);
   }
 
   function playLevelUpSound(){
@@ -2875,7 +3052,7 @@ const MASTER_NICK = "Srgokucheats";
       if(!unlock[a.id] && cur >= a.need){
         unlock[a.id] = true;
         changed = true;
-        showToast(`🏆 Conquista desbloqueada: ${a.title}`);
+        announceAchievement(a.title, false);
         playTrophySound();
       }
     }
@@ -2884,7 +3061,7 @@ const MASTER_NICK = "Srgokucheats";
     if(allOk && !unlock["platinum_toolflix"]){
       unlock["platinum_toolflix"] = true;
       changed = true;
-      showToast("🏆 PLATINA TOOLFLIX desbloqueada!");
+      announceAchievement("PLATINA TOOLFLIX", true);
       playTrophySound();
     }
 
