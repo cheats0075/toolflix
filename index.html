@@ -1111,7 +1111,50 @@ select optgroup{
       text-underline-offset: 2px;
     }
 
-</style>
+
+    #recoveryChatWrap{
+      display:none;
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(0,255,255,.18);
+      background:rgba(0,255,255,.05);
+    }
+    #recoveryChatBox{
+      margin-top:10px;
+      max-height:190px;
+      overflow:auto;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      padding-right:4px;
+    }
+    .recovery-msg{
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:12px;
+      line-height:1.45;
+      max-width:92%;
+      word-break:break-word;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .recovery-msg.user{
+      align-self:flex-end;
+      background:rgba(255,215,0,.10);
+      color:#ffe8a3;
+    }
+    .recovery-msg.admin{
+      align-self:flex-start;
+      background:rgba(255,255,255,.06);
+      color:#fff;
+    }
+    #recoveryChatStatus{
+      margin-top:8px;
+      font-size:11px;
+      opacity:.78;
+    }
+
+  </style>
 
 <style id="masterChatsOverlayStyle">
 /* ===== Painel exclusivo de Chats (Master) ===== */
@@ -1166,7 +1209,50 @@ select optgroup{
 #masterChatsOverlay #adminChatsPanel > div{ gap:12px !important; }
 #masterChatsOverlay #adminChatsList button{ transition: transform .06s ease, background .12s ease; }
 #masterChatsOverlay #adminChatsList button:hover{ transform: translateY(-1px); }
-</style>
+
+    #recoveryChatWrap{
+      display:none;
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(0,255,255,.18);
+      background:rgba(0,255,255,.05);
+    }
+    #recoveryChatBox{
+      margin-top:10px;
+      max-height:190px;
+      overflow:auto;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      padding-right:4px;
+    }
+    .recovery-msg{
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:12px;
+      line-height:1.45;
+      max-width:92%;
+      word-break:break-word;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .recovery-msg.user{
+      align-self:flex-end;
+      background:rgba(255,215,0,.10);
+      color:#ffe8a3;
+    }
+    .recovery-msg.admin{
+      align-self:flex-start;
+      background:rgba(255,255,255,.06);
+      color:#fff;
+    }
+    #recoveryChatStatus{
+      margin-top:8px;
+      font-size:11px;
+      opacity:.78;
+    }
+
+  </style>
 
 </head>
 <body class="theme-default">
@@ -1328,6 +1414,15 @@ select optgroup{
               style="margin-top:10px; width:100%; background:gold; color:#000; font-weight:900;">
               Enviar pedido
             </button>
+          </div>
+          <div id="recoveryChatWrap" style="display:none; margin-top:12px; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,.10); background:rgba(255,255,255,.04);">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px;">
+              <div style="font-weight:900; color:#7cf3ff;">💬 Recuperação de senha</div>
+              <button type="button" id="closeRecoveryChatBtn" class="nav-item" style="padding:6px 10px; min-width:auto;">✖</button>
+            </div>
+            <div id="recoveryChatNickLine" style="opacity:.9; margin-bottom:8px;"></div>
+            <div id="recoveryChatBox" style="max-height:220px; overflow:auto; padding:8px; border-radius:12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.06);"></div>
+            <div id="recoveryChatStatus" style="margin-top:8px; font-size:12px; opacity:.92;">⏳ Aguardando resposta do administrador...</div>
           </div>
           <button id="forgotPasswordBtn" class="nav-item"
             style="display:none; margin-top:10px; width:100%; background:rgba(255,255,255,.08); color:#fff; border:1px solid rgba(255,255,255,.10);">
@@ -1833,6 +1928,94 @@ const MASTER_NICK = "Srgokucheats";
     if(forgotWrap && loginFailCount < 3) forgotWrap.style.display = "none";
   }
 
+
+  let recoveryChatPoll = null;
+  let recoveryActiveNick = "";
+
+  function stopRecoveryChatPolling(){
+    if(recoveryChatPoll){
+      clearInterval(recoveryChatPoll);
+      recoveryChatPoll = null;
+    }
+  }
+
+  function setRecoveryChatVisible(show){
+    const wrap = document.getElementById("recoveryChatWrap");
+    if(wrap) wrap.style.display = show ? "block" : "none";
+  }
+
+  function renderRecoveryChat(messages=[], passwordTemp=false, nick=""){
+    const nickLine = document.getElementById("recoveryChatNickLine");
+    const box = document.getElementById("recoveryChatBox");
+    const status = document.getElementById("recoveryChatStatus");
+    if(nickLine) nickLine.innerHTML = nick ? `Nick: <b>${safeStr(nick)}</b>` : "";
+    if(!box) return;
+    box.innerHTML = "";
+
+    if(!messages || !messages.length){
+      const empty = document.createElement("div");
+      empty.className = "recovery-msg admin";
+      empty.textContent = "Pedido enviado. Aguarde a resposta do administrador.";
+      box.appendChild(empty);
+    }else{
+      messages.forEach((m)=>{
+        const div = document.createElement("div");
+        div.className = "recovery-msg " + ((m.sender === "admin") ? "admin" : "user");
+        div.textContent = String(m.message || "");
+        box.appendChild(div);
+      });
+    }
+
+    if(status){
+      status.innerHTML = passwordTemp
+        ? "✅ Sua senha temporária já foi gerada. Tente entrar e depois vá em Perfil → Trocar senha."
+        : "⏳ Aguardando resposta do administrador...";
+    }
+    box.scrollTop = box.scrollHeight;
+    setRecoveryChatVisible(true);
+  }
+
+  async function fetchRecoveryChat(nick, silent=false){
+    const cleanNick = String(nick || "").trim();
+    if(!cleanNick) return null;
+    try{
+      const r = await fetch(API_BASE + "/api/recovery-chat/" + encodeURIComponent(cleanNick) + "?v=" + Date.now());
+      const j = await r.json().catch(()=> ({}));
+      if(!r.ok || !j?.ok) return null;
+      recoveryActiveNick = j.nick || cleanNick;
+      localStorage.setItem("toolflix_recovery_nick", recoveryActiveNick);
+      renderRecoveryChat(j.messages || [], !!j.passwordTemp, recoveryActiveNick);
+      return j;
+    }catch(e){
+      if(!silent){
+        const status = document.getElementById("recoveryChatStatus");
+        if(status) status.textContent = "Erro ao carregar a recuperação.";
+      }
+      return null;
+    }
+  }
+
+  function startRecoveryChatPolling(nick){
+    const cleanNick = String(nick || "").trim();
+    if(!cleanNick) return;
+    stopRecoveryChatPolling();
+    fetchRecoveryChat(cleanNick);
+    recoveryChatPoll = setInterval(()=> fetchRecoveryChat(cleanNick, true), 5000);
+  }
+
+  function tryAutoOpenRecoveryByNick(){
+    const nick = (document.getElementById("userNickInput")?.value || localStorage.getItem("toolflix_recovery_nick") || "").trim();
+    if(!nick) return;
+    fetchRecoveryChat(nick, true).then((j)=>{
+      if(!j) return;
+      const hasMessages = Array.isArray(j.messages) && j.messages.length > 0;
+      if(hasMessages || j.passwordTemp){
+        setLoginFailCount(Math.max(loginFailCount, 3));
+        startRecoveryChatPolling(j.nick || nick);
+      }
+    });
+  }
+
   function toggleForgotPasswordBox(force){
     const wrap = document.getElementById("forgotPasswordWrap");
     if(!wrap) return;
@@ -1961,9 +2144,9 @@ const MASTER_NICK = "Srgokucheats";
     const tempAlert = profile.passwordTemp ? `<div class="temp-pass-alert">🔐 Você entrou com uma senha temporária. Troque agora no seu perfil.</div>` : "";
     const changePasswordHtml = isOwnProfile ? `
       <div class="password-panel">
-        <button id="togglePasswordPanelBtn" class="nav-item" style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+        <button id="togglePasswordPanelBtn" class="nav-item" style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px; ${profile.passwordTemp ? 'background:rgba(255,215,0,.14); border-color:rgba(255,215,0,.30); color:#ffe27a;' : ''}">
           <span>🔑 Mudar senha</span>
-          <span id="togglePasswordPanelIcon">${profile.passwordTemp ? "⚠️" : "▾"}</span>
+          <span id="togglePasswordPanelIcon">${profile.passwordTemp ? "▴" : "▾"}</span>
         </button>
         <div id="passwordPanelFields" style="display:${profile.passwordTemp ? "block" : "none"}; margin-top:10px;">
           <div style="font-size:12px; opacity:.82; margin-bottom:8px;">Use essa área para trocar sua senha.${profile.passwordTemp ? " Você entrou com senha temporária, então troque agora." : ""}</div>
@@ -2027,6 +2210,14 @@ const MASTER_NICK = "Srgokucheats";
 
     if(isOwnProfile){
       document.getElementById("changePasswordBtn")?.addEventListener("click", changeOwnPassword);
+      document.getElementById("togglePasswordPanelBtn")?.addEventListener("click", ()=>{
+        const fields = document.getElementById("passwordPanelFields");
+        const icon = document.getElementById("togglePasswordPanelIcon");
+        if(!fields) return;
+        const isHidden = getComputedStyle(fields).display === "none";
+        fields.style.display = isHidden ? "block" : "none";
+        if(icon) icon.textContent = isHidden ? "▴" : "▾";
+      });
     }
   }
 
@@ -2395,6 +2586,7 @@ const MASTER_NICK = "Srgokucheats";
     setAuthMode(mode || "login");
     setLoginFailCount(mode === "login" ? loginFailCount : 0);
     toggleForgotPasswordBox(false);
+    tryAutoOpenRecoveryByNick();
     if(inp) inp.focus();
   }
 
@@ -2402,6 +2594,7 @@ const MASTER_NICK = "Srgokucheats";
     const m = document.getElementById("userLoginModal");
     if(m) m.style.display = "none";
     toggleForgotPasswordBox(false);
+    stopRecoveryChatPolling();
   }
 
   function toggleUserMenu(forceClose=false){
@@ -2472,6 +2665,7 @@ const MASTER_NICK = "Srgokucheats";
       profileCache = null;
       await fetchProfileMe(true);
 
+      localStorage.removeItem("toolflix_recovery_nick");
       closeLogin();
       toggleUserMenu(true);
       updateUserUI();
@@ -2488,6 +2682,20 @@ const MASTER_NICK = "Srgokucheats";
     if(e.key === "Enter"){
       e.preventDefault();
       document.getElementById("userLoginSubmit")?.click();
+    }
+  });
+
+
+  document.getElementById("userNickInput")?.addEventListener("input", ()=>{
+    const nick = (document.getElementById("userNickInput")?.value || "").trim();
+    if(!nick){
+      setRecoveryChatVisible(false);
+      stopRecoveryChatPolling();
+      return;
+    }
+    const saved = (localStorage.getItem("toolflix_recovery_nick") || "").trim().toLowerCase();
+    if(saved && saved === nick.toLowerCase()){
+      startRecoveryChatPolling(nick);
     }
   });
 
@@ -2514,9 +2722,13 @@ const MASTER_NICK = "Srgokucheats";
         return;
       }
       showToast("Pedido enviado para o administrador.");
-      toggleForgotPasswordBox(false);
       const forgotNickInput = document.getElementById("forgotNickInput");
       if(forgotNickInput) forgotNickInput.value = nick;
+      const userNickInput = document.getElementById("userNickInput");
+      if(userNickInput) userNickInput.value = nick;
+      localStorage.setItem("toolflix_recovery_nick", nick);
+      toggleForgotPasswordBox(false);
+      startRecoveryChatPolling(nick);
     }catch(e){
       showToast("Erro ao enviar pedido.");
     }
@@ -4182,20 +4394,6 @@ document.addEventListener("DOMContentLoaded", function(){
   });
 });
 
-
-document.addEventListener("click", function(e){
-  const btn = e.target.closest("#togglePasswordPanelBtn");
-  if(!btn) return;
-
-  const fields = document.getElementById("passwordPanelFields");
-  const icon = document.getElementById("togglePasswordPanelIcon");
-  if(!fields) return;
-
-  const isHidden = getComputedStyle(fields).display === "none";
-  fields.style.display = isHidden ? "block" : "none";
-  if(icon) icon.textContent = isHidden ? "▴" : "▾";
-});
-
 </script>
 
 <!-- MINI CHAT -->
@@ -4355,7 +4553,50 @@ document.addEventListener("click", function(e){
   50% { transform: scale(1.25); opacity: 0.6; }
   100% { transform: scale(1); opacity: 1; }
 }
-</style>
+
+    #recoveryChatWrap{
+      display:none;
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(0,255,255,.18);
+      background:rgba(0,255,255,.05);
+    }
+    #recoveryChatBox{
+      margin-top:10px;
+      max-height:190px;
+      overflow:auto;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      padding-right:4px;
+    }
+    .recovery-msg{
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:12px;
+      line-height:1.45;
+      max-width:92%;
+      word-break:break-word;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .recovery-msg.user{
+      align-self:flex-end;
+      background:rgba(255,215,0,.10);
+      color:#ffe8a3;
+    }
+    .recovery-msg.admin{
+      align-self:flex-start;
+      background:rgba(255,255,255,.06);
+      color:#fff;
+    }
+    #recoveryChatStatus{
+      margin-top:8px;
+      font-size:11px;
+      opacity:.78;
+    }
+
+  </style>
 
 
 <!-- ===== PATCH: Boas-vindas + Contador de visualizações (Render API) ===== -->
