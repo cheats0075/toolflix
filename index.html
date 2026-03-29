@@ -4182,6 +4182,20 @@ document.addEventListener("DOMContentLoaded", function(){
   });
 });
 
+
+document.addEventListener("click", function(e){
+  const btn = e.target.closest("#togglePasswordPanelBtn");
+  if(!btn) return;
+
+  const fields = document.getElementById("passwordPanelFields");
+  const icon = document.getElementById("togglePasswordPanelIcon");
+  if(!fields) return;
+
+  const isHidden = getComputedStyle(fields).display === "none";
+  fields.style.display = isHidden ? "block" : "none";
+  if(icon) icon.textContent = isHidden ? "▴" : "▾";
+});
+
 </script>
 
 <!-- MINI CHAT -->
