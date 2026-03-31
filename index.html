@@ -361,28 +361,25 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       position:absolute;
       inset:0 0 auto 0;
       height:3px;
-      background:linear-gradient(90deg, rgba(255,215,0,0), rgba(255,215,0,.95), rgba(0,255,255,.85), rgba(255,215,0,0));
+      background: linear-gradient(90deg, rgba(255,215,0,0), rgba(255,215,0,.95), rgba(0,255,255,.85), rgba(255,215,0,0));
     }
     .guest-trial-left{ min-width:0; }
     .guest-trial-title{ font-size:18px; font-weight:900; color:#fff; margin-bottom:4px; }
-    .guest-trial-sub{ font-size:13px; opacity:.92; line-height:1.45; }
+    .guest-trial-sub{ font-size:13px; opacity:.9; line-height:1.45; }
     .guest-trial-time{
-      display:inline-flex; align-items:center; gap:8px; margin-top:10px;
-      padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10); font-size:12px; font-weight:900; color:#ffe27a;
+      display:inline-flex; align-items:center; gap:8px; margin-top:10px; padding:8px 12px;
+      border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.10);
+      font-size:12px; font-weight:900; color:#ffe27a;
     }
-    .guest-trial-actions{
-      display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; flex:0 0 auto;
-    }
+    .guest-trial-actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; flex:0 0 auto; }
     .guest-trial-btn{
-      border:none; border-radius:999px; padding:12px 16px; font-size:13px;
-      font-weight:900; cursor:pointer; transition:.22s; box-shadow:0 8px 20px rgba(0,0,0,.22);
+      border:none; border-radius:999px; padding:12px 16px; font-size:13px; font-weight:900; cursor:pointer;
+      transition:.22s; box-shadow:0 8px 20px rgba(0,0,0,.22);
     }
     .guest-trial-btn:hover{ transform:translateY(-1px) scale(1.02); }
-    .guest-trial-btn.primary{ background:linear-gradient(135deg,#ffd700,#ffb700); color:#111; }
-    .guest-trial-btn.secondary{
-      background:rgba(255,255,255,.07); color:#fff; border:1px solid rgba(255,255,255,.10);
-    }
+    .guest-trial-btn.primary{ background:linear-gradient(135deg, #ffd700, #ffb700); color:#111; }
+    .guest-trial-btn.secondary{ background:rgba(255,255,255,.07); color:#fff; border:1px solid rgba(255,255,255,.10); }
+
     .guest-expired-overlay{
       position:fixed; inset:0; display:none; align-items:center; justify-content:center;
       z-index:100060; background:rgba(0,0,0,.80); backdrop-filter:blur(10px);
@@ -400,8 +397,18 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     .guest-expired-title{ font-size:28px; font-weight:900; margin-bottom:10px; color:#fff; }
     .guest-expired-text{ font-size:14px; line-height:1.55; opacity:.92; margin-bottom:18px; }
     .guest-expired-actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
-    .guest-expired-note{ margin-top:14px; font-size:12px; opacity:.82; }
-    @media (max-width:860px){
+    .guest-expired-note{ margin-top:14px; font-size:12px; opacity:.8; }
+    .premium-chat-hint{
+      display:none; margin-top:14px; padding:12px 14px; border-radius:16px;
+      border:1px solid rgba(255,215,0,.20); background:rgba(255,215,0,.08); color:#ffe27a;
+      font-size:12px; line-height:1.45;
+    }
+    .premium-chat-hint button{
+      margin-top:10px; width:100%;
+      border:none; border-radius:999px; padding:11px 14px; font-weight:900; cursor:pointer;
+      background:linear-gradient(135deg, #ffd700, #ffb700); color:#111;
+    }
+    @media (max-width: 860px){
       .guest-trial-banner{ flex-direction:column; align-items:flex-start; }
       .guest-trial-actions{ width:100%; justify-content:flex-start; }
     }
@@ -555,72 +562,6 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       border-radius:999px;
       background: linear-gradient(90deg, #00ffff, #ffd700);
       transition: width .25s ease;
-    }
-
-
-    /* ===== PERFIL DO JOGADOR ===== */
-    #profileModal .modal-box{
-      width:min(520px, 94vw);
-      text-align:left;
-      background: linear-gradient(180deg, rgba(18,18,18,.98), rgba(10,10,10,.98));
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow: 0 24px 60px rgba(0,0,0,.55), 0 0 22px rgba(0,255,255,.08);
-    }
-    .profile-head{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      margin-bottom:14px;
-    }
-    .profile-avatar{
-      width:82px;
-      height:82px;
-      border-radius:50%;
-      object-fit:cover;
-      border:2px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);
-      box-shadow:0 10px 26px rgba(0,0,0,.28);
-      flex:0 0 82px;
-    }
-    .profile-chip{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:900;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.08);
-      margin-right:6px;
-      margin-top:6px;
-    }
-    .profile-grid{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap:10px;
-      margin-top:16px;
-    }
-    .profile-stat{
-      padding:12px;
-      border-radius:16px;
-      background: rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-    }
-    .profile-stat-label{
-      font-size:12px;
-      opacity:.72;
-      margin-bottom:4px;
-    }
-    .profile-stat-value{
-      font-size:20px;
-      font-weight:900;
-    }
-    .profile-meta{
-      margin-top:14px;
-      font-size:12px;
-      opacity:.78;
-      line-height:1.7;
     }
 
     /* SUPORTE */
@@ -1136,25 +1077,6 @@ select optgroup{
       gap:10px;
     }
 
-
-    #profileModal{
-      z-index: 100100 !important;
-    }
-    #profileModal .modal-box{
-      position: relative;
-      z-index: 100101;
-    }
-    .global-chat-avatar,
-    .global-chat-name{
-      cursor:pointer;
-    }
-    .global-chat-avatar:hover,
-    .global-chat-name:hover{
-      filter: brightness(1.08);
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
 </style>
 
 <style id="masterChatsOverlayStyle">
@@ -1322,7 +1244,6 @@ select optgroup{
         <span id="xpText">0/100</span>
 
         <div id="userMenuBox" class="userMenuBox" style="display:none;">
-          <button class="userMenuItem" id="openProfileBtn">👤 Perfil</button>
           <button class="userMenuItem" id="openGameBtn">🎮 Game</button>
           <button class="userMenuItem" id="openAchBtn">🏆 Conquistas</button>
           <button class="userMenuItem" id="logoutBtn">🚪 Sair</button>
@@ -1332,9 +1253,17 @@ select optgroup{
       <div style="display:flex; flex-direction:column; gap:8px;">
         <button class="nav-item" id="premiumTriggerBtn">💎 ATIVAR PREMIUM</button>
         <button class="nav-item" id="solicitarTokenBtn"
+          onclick="window.open('https://www.youtube.com/watch?v=FbHaSemn5NI','_blank')"
           style="background:#f1c40f; color:#000; font-size:11px;">
           🎁 GANHAR TOKEN
         </button>
+      
+        <div id="premiumChatHint" class="premium-chat-hint">
+          💬 Sua conta foi criada, mas o conteúdo premium ainda está bloqueado.<br>
+          Abra o chat e peça <b>acesso premium grátis</b>.
+          <button id="premiumChatHintBtn" type="button">💬 Abrir chat agora</button>
+        </div>
+
       </div>
     </div>
 	    <!-- ===== LOGIN GAME ===== -->
@@ -1375,17 +1304,6 @@ select optgroup{
         <div id="gameContent" style="margin-top:15px;"></div>
         <button id="closeGameBtn" class="nav-item"
           style="margin-top:15px; width:100%;">Fechar</button>
-      </div>
-    </div>
-
-    <!-- ===== MODAL PERFIL ===== -->
-    <div id="profileModal" class="modal-overlay">
-      <div class="modal-box">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px;">
-          <h2 style="color:gold;">👤 Perfil do jogador</h2>
-          <button id="closeProfileBtn" class="nav-item" style="padding:8px 12px;">✖</button>
-        </div>
-        <div id="profileContent"></div>
       </div>
     </div>
 
@@ -1439,23 +1357,11 @@ select optgroup{
         <button id="guestExpiredCreateBtn" class="guest-trial-btn primary">👤 Criar conta</button>
         <button id="guestExpiredChatBtn" class="guest-trial-btn secondary">💬 Abrir chat</button>
       </div>
-      <div class="guest-expired-note">Dica: peça <b>acesso premium grátis</b> no chat.</div>
+      <div class="guest-expired-note">Dica: peça <b>token grátis</b> no chat depois de criar sua conta.</div>
     </div>
   </div>
 
-  <div id="freePremiumCtaModal" class="guest-expired-overlay">
-    <div class="guest-expired-box">
-      <div class="guest-expired-title">🎁 Conta criada com sucesso</div>
-      <div class="guest-expired-text">
-        Agora <b>abra o chat</b> e peça seu <b>acesso premium grátis</b> para desbloquear os conteúdos.
-      </div>
-      <div class="guest-expired-actions">
-        <button id="freePremiumChatBtn" class="guest-trial-btn primary">💬 Pedir acesso grátis</button>
-        <button id="freePremiumCloseBtn" class="guest-trial-btn secondary">Depois eu vejo</button>
-      </div>
-      <div class="guest-expired-note">Mensagem pronta: <b>Quero acesso premium grátis</b></div>
-    </div>
-  </div>
+  <div id="trophy-notify-root"></div>
 
 
   <div id="toast-container"></div>
@@ -1891,7 +1797,6 @@ const MASTER_NICK = "Srgokucheats";
   function getGuestTrialRemainingMs(){
     if(hasLoggedAccount()) return 0;
     if(localStorage.getItem(GUEST_TRIAL_DONE_KEY) === "1") return 0;
-
     let start = Number(localStorage.getItem(GUEST_TRIAL_START_KEY) || 0);
     if(!start){
       start = Date.now();
@@ -1911,22 +1816,44 @@ const MASTER_NICK = "Srgokucheats";
   }
 
   function formatGuestMs(ms){
-    const sec = Math.max(0, Math.floor(ms / 1000));
-    const mm = String(Math.floor(sec / 60)).padStart(2, "0");
-    const ss = String(sec % 60).padStart(2, "0");
+    const totalSec = Math.max(0, Math.floor(ms / 1000));
+    const mm = String(Math.floor(totalSec / 60)).padStart(2, "0");
+    const ss = String(totalSec % 60).padStart(2, "0");
     return `${mm}:${ss}`;
+  }
+
+  function openGuestChatCta(){
+    const guestModal = document.getElementById("guestExpiredModal");
+    if(guestModal) guestModal.style.display = "none";
+    const chatBtn = document.getElementById("chatToggleBtn");
+    if(chatBtn) chatBtn.click();
+    setTimeout(()=>{
+      const input = document.getElementById("chatInput");
+      if(input && !String(input.value || "").trim()){
+        input.value = "Quero acesso grátis";
+        input.dispatchEvent(new Event("input", { bubbles:true }));
+      }
+    }, 250);
+  }
+
+  function openGuestCreateCta(){
+    const guestModal = document.getElementById("guestExpiredModal");
+    if(guestModal) guestModal.style.display = "none";
+    openLogin?.("register");
+  }
+
+  function showGuestExpiredModal(){
+    const modal = document.getElementById("guestExpiredModal");
+    if(modal) modal.style.display = "flex";
   }
 
   function updateGuestTrialUI(){
     const banner = document.getElementById("guestTrialBanner");
     const time = document.getElementById("guestTrialTime");
     const tokenBtn = document.getElementById("solicitarTokenBtn");
-    const premiumBtn = document.getElementById("premiumTriggerBtn");
 
     if(hasLoggedAccount()){
       if(banner) banner.style.display = "none";
-      if(tokenBtn && !isPremium) tokenBtn.textContent = "🎁 PEDIR ACESSO GRÁTIS";
-      if(premiumBtn && !isPremium) premiumBtn.textContent = "💎 ATIVAR PREMIUM";
       return;
     }
 
@@ -1937,47 +1864,10 @@ const MASTER_NICK = "Srgokucheats";
       if(banner) banner.style.display = "flex";
       if(time) time.textContent = "⏳ Tempo grátis: " + formatGuestMs(left);
       if(tokenBtn) tokenBtn.textContent = "🎁 PEDIR ACESSO GRÁTIS";
-      if(premiumBtn) premiumBtn.textContent = "🎁 APROVEITE GRÁTIS";
     }else{
       if(banner) banner.style.display = "none";
       if(tokenBtn) tokenBtn.textContent = "🎁 PEDIR ACESSO GRÁTIS";
-      if(premiumBtn) premiumBtn.textContent = "💎 ATIVAR PREMIUM";
     }
-  }
-
-  function showGuestExpiredModal(){
-    const m = document.getElementById("guestExpiredModal");
-    if(m) m.style.display = "flex";
-  }
-
-  function showFreePremiumCta(){
-    const m = document.getElementById("freePremiumCtaModal");
-    if(m) m.style.display = "flex";
-  }
-
-  function hideFreePremiumCta(){
-    const m = document.getElementById("freePremiumCtaModal");
-    if(m) m.style.display = "none";
-  }
-
-  function openGuestCreateCta(){
-    const m = document.getElementById("guestExpiredModal");
-    if(m) m.style.display = "none";
-    openLogin?.("register");
-  }
-
-  function openChatWithText(msg){
-    document.getElementById("guestExpiredModal")?.style && (document.getElementById("guestExpiredModal").style.display = "none");
-    hideFreePremiumCta();
-    const btn = document.getElementById("chatToggleBtn");
-    if(btn) btn.click();
-    setTimeout(()=>{
-      const input = document.getElementById("chatInput");
-      if(input){
-        input.value = msg || "Quero acesso grátis";
-        input.dispatchEvent(new Event("input", { bubbles:true }));
-      }
-    }, 260);
   }
 
   setInterval(updateGuestTrialUI, 1000);
@@ -2004,179 +1894,6 @@ const MASTER_NICK = "Srgokucheats";
   function getLoggedUserId(){
     const a = loadAuth() || {};
     return String(a.userId || a.id || "").trim();
-  }
-
-  let profileCache = null;
-
-  function fmtDateTime(ts){
-    const n = Number(ts || 0);
-    if(!n) return "—";
-    try{
-      return new Date(n).toLocaleString("pt-BR");
-    }catch(e){
-      return "—";
-    }
-  }
-
-  async function fetchProfileMe(force=false){
-    const token = getToken();
-    if(!token) return null;
-    if(profileCache && !force) return profileCache;
-
-    try{
-      const r = await fetch(API_BASE + "/api/profile/me?v=" + Date.now(), {
-        headers: { "Authorization":"Bearer " + token }
-      });
-      const j = await r.json().catch(()=> ({}));
-      if(!r.ok || !j?.ok || !j?.profile) return null;
-      profileCache = j.profile;
-
-      const old = loadUser() || {};
-      saveUser({
-        ...old,
-        nick: j.profile.nick,
-        xp: Number(j.profile.xp || 0),
-        avatar: j.profile.avatar,
-        premium: !!j.profile.premium
-      });
-      updateUserUI?.();
-      return profileCache;
-    }catch(e){
-      return null;
-    }
-  }
-
-
-  async function fetchProfileByNick(nick){
-    const cleanNick = String(nick || "").trim();
-    if(!cleanNick) return null;
-    try{
-      const r = await fetch(API_BASE + "/api/profile/" + encodeURIComponent(cleanNick) + "?v=" + Date.now());
-      const j = await r.json().catch(()=> ({}));
-      if(!r.ok || !j?.ok || !j?.profile) return null;
-      return j.profile;
-    }catch(e){
-      return null;
-    }
-  }
-
-  async function openPublicProfileModalByNick(nick){
-    const modal = document.getElementById("profileModal");
-    const box = document.getElementById("profileContent");
-    const cleanNick = String(nick || "").trim();
-    if(box) box.innerHTML = `<div style="opacity:.82;">Carregando perfil...</div>`;
-    if(modal) modal.style.display = "flex";
-    const profile = await fetchProfileByNick(cleanNick);
-    if(!profile){
-      renderProfileCard(null);
-      if(box){
-        box.innerHTML = `<div style="opacity:.82;">Erro ao carregar perfil.</div>`;
-      }
-      return;
-    }
-    renderProfileCard(profile);
-  }
-
-  async function syncProfileAction(type, amount=1){
-    const token = getToken();
-    if(!token) return null;
-    try{
-      const r = await fetch(API_BASE + "/api/profile/action", {
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json",
-          "Authorization":"Bearer " + token
-        },
-        body: JSON.stringify({ type, amount })
-      });
-      const j = await r.json().catch(()=> ({}));
-      if(j?.ok && j?.profile){
-        profileCache = j.profile;
-        const old = loadUser() || {};
-        saveUser({
-          ...old,
-          nick: j.profile.nick,
-          xp: Number(j.profile.xp || 0),
-          avatar: j.profile.avatar,
-          premium: !!j.profile.premium
-        });
-        updateUserUI?.();
-        return j.profile;
-      }
-    }catch(e){}
-    return null;
-  }
-
-  function renderProfileCard(profile){
-    const box = document.getElementById("profileContent");
-    if(!box) return;
-    if(!profile){
-      box.innerHTML = `<div style="opacity:.82;">Perfil não encontrado.</div>`;
-      return;
-    }
-
-    const premiumText = profile.premium ? "💎 Premium" : "Conta padrão";
-    const adminText = profile.nick === MASTER_NICK ? "👑 Master" : "🎮 Jogador";
-    const stats = profile.stats || {};
-    const ach = profile.achievements || {};
-    const info = getLevelInfo(Number(profile.xp || 0));
-    const pct = Math.max(0, Math.min(100, ((Number(profile.xp || 0) - info.min) / Math.max(1, (info.max - info.min))) * 100));
-
-    box.innerHTML = `
-      <div class="profile-head">
-        <img class="profile-avatar ${getAvatarClass(profile.level)}" src="${getAvatarSrc(profile)}" alt="Avatar">
-        <div style="min-width:0;">
-          <div style="font-size:24px; font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${safeStr(profile.nick || "Jogador")}</div>
-          <div style="opacity:.82; margin-top:4px;">Nível ${Number(profile.level || 1)} • ${Number(profile.xp || 0)} XP</div>
-          <div style="margin-top:8px;">
-            <span class="profile-chip">${adminText}</span>
-            <span class="profile-chip">${premiumText}</span>
-            ${ach.platinum ? '<span class="profile-chip">🏆 Platina</span>' : ""}
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-bottom:8px; font-weight:900; color:gold;">Progresso do nível</div>
-      <div class="xpBar" style="width:100%; height:14px;">
-        <div class="xpFill" style="width:${pct}%"></div>
-      </div>
-      <div style="margin-top:6px; font-size:12px; opacity:.78;">${Number(profile.xp || 0)}/${info.max} XP</div>
-
-      <div class="profile-grid">
-        <div class="profile-stat">
-          <div class="profile-stat-label">Downloads</div>
-          <div class="profile-stat-value">${Number(stats.downloads || 0)}</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Conquistas</div>
-          <div class="profile-stat-value">${Number(ach.unlockedCount || 0)}/${Number(ach.totalCount || 0)}</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Favoritos</div>
-          <div class="profile-stat-value">${Number(stats.favorites || 0)}</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Temas trocados</div>
-          <div class="profile-stat-value">${Number(stats.themes || 0)}</div>
-        </div>
-      </div>
-
-      <div class="profile-meta">
-        <div>📺 YouTube / recompensas: <b>${Number(stats.youtube || 0)}</b></div>
-        <div>🗓️ Conta criada em: <b>${fmtDateTime(profile.createdAt)}</b></div>
-        <div>⏱️ Último login: <b>${fmtDateTime(profile.lastLoginAt)}</b></div>
-      </div>
-    `;
-  }
-
-  async function openProfileModal(force=false){
-    const modal = document.getElementById("profileModal");
-    const box = document.getElementById("profileContent");
-    if(box) box.innerHTML = `<div style="opacity:.82;">Carregando perfil...</div>`;
-    if(modal) modal.style.display = "flex";
-
-    const profile = await fetchProfileMe(force);
-    renderProfileCard(profile);
   }
 
   function getOrCreateUserId(){
@@ -2290,6 +2007,71 @@ const MASTER_NICK = "Srgokucheats";
     }, 3500);
   }
 
+  const TF_TROPHY_QUEUE = [];
+  let TF_TROPHY_ACTIVE = false;
+
+  function parseAchievementTitle(raw){
+    const txt = String(raw || "").trim();
+    return txt
+      .replace(/^🏆\s*/,'')
+      .replace(/^Conquista desbloqueada:\s*/i,'')
+      .replace(/^PLATINA TOOLFLIX desbloqueada!?/i,'PLATINA TOOLFLIX')
+      .trim();
+  }
+
+  function showTrophyPopup(title, desc = "Nova conquista liberada", icon = "🏆", ms = 4200){
+    const root = document.getElementById("trophy-notify-root");
+    if(!root) return;
+
+    TF_TROPHY_QUEUE.push({ title, desc, icon, ms });
+    if(TF_TROPHY_ACTIVE) return;
+
+    const run = ()=>{
+      const next = TF_TROPHY_QUEUE.shift();
+      if(!next){
+        TF_TROPHY_ACTIVE = false;
+        return;
+      }
+      TF_TROPHY_ACTIVE = true;
+
+      const card = document.createElement("div");
+      card.className = "trophy-pop";
+      card.innerHTML = `
+        <div class="trophy-pop-icon">${next.icon}</div>
+        <div class="trophy-pop-body">
+          <div class="trophy-pop-kicker">Conquista desbloqueada</div>
+          <div class="trophy-pop-title">${next.title}</div>
+          <div class="trophy-pop-desc">${next.desc}</div>
+        </div>
+        <div class="trophy-pop-bar"><div style="animation-duration:${Math.max(1800, Number(next.ms)||4200)}ms"></div></div>
+      `;
+      root.appendChild(card);
+
+      const totalMs = Math.max(1800, Number(next.ms) || 4200);
+      setTimeout(()=>{
+        card.classList.add("hide");
+        setTimeout(()=>{
+          card.remove();
+          run();
+        }, 340);
+      }, totalMs);
+    };
+
+    run();
+  }
+
+  function announceAchievement(rawTitle, isPlatinum = false){
+    const title = parseAchievementTitle(rawTitle);
+    const desc = isPlatinum
+      ? "Você conquistou a platina do ToolFlix. Isso é lendário."
+      : "Seu progresso foi reconhecido. Continue jogando para liberar mais.";
+    playTrophySound();
+    setTimeout(()=>{
+      showTrophyPopup(title || "Nova conquista", desc, isPlatinum ? "👑" : "🏆", isPlatinum ? 5200 : 4200);
+    }, 400);
+    showToast(isPlatinum ? "🏆 PLATINA TOOLFLIX desbloqueada!" : `🏆 Conquista desbloqueada: ${title}`);
+  }
+
   function clampAvatarLevel(level){
     const n = Number(level || 1) || 1;
     return Math.max(1, Math.min(15, n));
@@ -2373,8 +2155,8 @@ const MASTER_NICK = "Srgokucheats";
     if(adminChatsBtn) adminChatsBtn.style.display = window.isSuperAdmin ? "block" : "none";
     if(adminBtn) adminBtn.style.display = window.isSuperAdmin ? "inline-block" : "none";
 
-    if(nickEl){ nickEl.innerText = u.nick; nickEl.title = "Abrir perfil"; }
-    if(userAvatarEl){ userAvatarEl.src = getAvatarSrc(u); userAvatarEl.title = "Abrir perfil"; userAvatarEl.style.cursor = "pointer"; }
+    if(nickEl) nickEl.innerText = u.nick;
+    if(userAvatarEl) userAvatarEl.src = getAvatarSrc(u);
 
     const info = getLevelInfo(u.xp);
     if(userAvatarEl) userAvatarEl.className = `user-avatar ${getAvatarClass(info.level)}`;
@@ -2392,7 +2174,10 @@ const MASTER_NICK = "Srgokucheats";
       if(TF_AUDIO_CTX.state === "suspended") TF_AUDIO_CTX.resume();
     }catch(e){}
   }
-  window.addEventListener("pointerdown", tfInitAudio, { once:true });
+  window.addEventListener("pointerdown", ()=>{
+    tfInitAudio();
+    initTrophyAudio();
+  }, { once:true });
 
   function playTone(freq, dur=0.09, vol=0.28, type="triangle"){
     try{
@@ -2417,7 +2202,34 @@ const MASTER_NICK = "Srgokucheats";
     }catch(e){}
   }
 
+  const TROPHY_SOUND_URL = "/toolflix/assets/sounds/trophy.mp3";
+  let trophyAudioBase = null;
+
+  function initTrophyAudio(){
+    try{
+      if(!trophyAudioBase){
+        trophyAudioBase = new Audio(TROPHY_SOUND_URL);
+        trophyAudioBase.preload = "auto";
+        trophyAudioBase.volume = 0.95;
+      }
+      return trophyAudioBase;
+    }catch(_){
+      return null;
+    }
+  }
+
   function playTrophySound(){
+    try{
+      const base = initTrophyAudio();
+      if(base){
+        const a = base.cloneNode(true);
+        a.volume = 0.95;
+        a.currentTime = 0;
+        const p = a.play();
+        if(p && typeof p.catch === "function") p.catch(()=>{});
+        return;
+      }
+    }catch(_){}
     playTone(784,  0.08, 0.18, "triangle");
     setTimeout(()=> playTone(988,  0.08, 0.18, "triangle"), 90);
     setTimeout(()=> playTone(1175, 0.10, 0.22, "triangle"), 180);
@@ -2512,26 +2324,6 @@ const MASTER_NICK = "Srgokucheats";
     box.style.display = (box.style.display === "block") ? "none" : "block";
   }
 
-  document.getElementById("guestTrialCreateBtn")?.addEventListener("click", ()=> openGuestCreateCta());
-  document.getElementById("guestTrialChatBtn")?.addEventListener("click", ()=> openChatWithText("Quero acesso grátis"));
-  document.getElementById("guestExpiredCreateBtn")?.addEventListener("click", ()=> openGuestCreateCta());
-  document.getElementById("guestExpiredChatBtn")?.addEventListener("click", ()=> openChatWithText("Quero acesso grátis"));
-  document.getElementById("freePremiumChatBtn")?.addEventListener("click", ()=> openChatWithText("Quero acesso premium grátis"));
-  document.getElementById("freePremiumCloseBtn")?.addEventListener("click", ()=> hideFreePremiumCta());
-
-  document.getElementById("guestExpiredModal")?.addEventListener("click", (e)=>{
-    if(e.target?.id === "guestExpiredModal") e.currentTarget.style.display = "none";
-  });
-  document.getElementById("freePremiumCtaModal")?.addEventListener("click", (e)=>{
-    if(e.target?.id === "freePremiumCtaModal") e.currentTarget.style.display = "none";
-  });
-
-  document.getElementById("solicitarTokenBtn")?.addEventListener("click", (e)=>{
-    e.preventDefault?.();
-    e.stopPropagation?.();
-    openChatWithText(hasLoggedAccount() ? "Quero acesso premium grátis" : "Quero acesso grátis");
-  });
-
   document.getElementById("userArea")?.addEventListener("click", ()=>{
     const u = loadUser();
     if(!u || !u.nick) openLogin("login");
@@ -2587,13 +2379,20 @@ const MASTER_NICK = "Srgokucheats";
 
       saveAuth({ token: j2.token, userId: j2.user.id, nick: j2.user.nick });
       saveUser({ nick: j2.user.nick, xp: Number(j2.user.xp || 0) });
-      profileCache = null;
-      await fetchProfileMe(true);
 
       closeLogin();
       toggleUserMenu(true);
       updateUserUI();
       showToast(`Bem-vindo, ${j2.user.nick}!`);
+
+      const me = await fetchProfileMe(true);
+      const premiumHint = document.getElementById("premiumChatHint");
+      if(premiumHint){
+        premiumHint.style.display = (!me?.premium && !isPremium) ? "block" : "none";
+      }
+      if(AUTH_MODE === "register" && !me?.premium){
+        showToast("💬 Abra o chat e peça acesso premium grátis.");
+      }
     }catch(e){
       showToast("Erro ao conectar com servidor.");
     }
@@ -2611,7 +2410,6 @@ const MASTER_NICK = "Srgokucheats";
     const keepXp = old ? Number(old.xp || 0) : 0;
     saveUser({ nick: null, xp: keepXp });
     clearAuth();
-    profileCache = null;
     toggleUserMenu(true);
     updateUserUI();
     showToast("Você saiu.");
@@ -2747,8 +2545,7 @@ const MASTER_NICK = "Srgokucheats";
       if(!unlock[a.id] && cur >= a.need){
         unlock[a.id] = true;
         changed = true;
-        showToast(`🏆 Conquista desbloqueada: ${a.title}`);
-        playTrophySound();
+        announceAchievement(a.title, false);
       }
     }
 
@@ -2756,8 +2553,7 @@ const MASTER_NICK = "Srgokucheats";
     if(allOk && !unlock["platinum_toolflix"]){
       unlock["platinum_toolflix"] = true;
       changed = true;
-      showToast("🏆 PLATINA TOOLFLIX desbloqueada!");
-      playTrophySound();
+      announceAchievement("PLATINA TOOLFLIX", true);
     }
 
     if(changed) achSaveUnlock(unlock);
@@ -2832,32 +2628,6 @@ const MASTER_NICK = "Srgokucheats";
     }
   }
 
-  document.getElementById("openProfileBtn")?.addEventListener("click", async ()=>{
-    toggleUserMenu(true);
-    await openProfileModal(true);
-  });
-
-  document.getElementById("closeProfileBtn")?.addEventListener("click", ()=>{
-    document.getElementById("profileModal").style.display = "none";
-  });
-
-  document.getElementById("userNick")?.addEventListener("click", async (e)=>{
-    const u = loadUser();
-    if(!u || !u.nick) return;
-    e.stopPropagation();
-    await openProfileModal(true);
-  });
-
-  document.addEventListener("click", async (e)=>{
-    const avatar = document.getElementById("userAvatar");
-    if(avatar && avatar.contains(e.target)){
-      const u = loadUser();
-      if(!u || !u.nick) return;
-      e.stopPropagation();
-      await openProfileModal(true);
-    }
-  });
-
   document.getElementById("openAchBtn")?.addEventListener("click", ()=>{
     toggleUserMenu(true);
     achRender();
@@ -2869,12 +2639,12 @@ const MASTER_NICK = "Srgokucheats";
   });
 
   const _awardXpOriginal = awardXp;
-  awardXp = async function(amount, reason){
-    await _awardXpOriginal(amount, reason);
-    if(reason === "YouTube"){ achInc("youtube", 1); syncProfileAction("youtube", 1); }
-    if(reason === "Download"){ achInc("downloads", 1); syncProfileAction("download", 1); }
-    if(reason === "Favorito"){ achInc("favorites", 1); syncProfileAction("favorite", 1); }
-    if(reason === "Troca de tema"){ achInc("themes", 1); syncProfileAction("theme", 1); }
+  awardXp = function(amount, reason){
+    _awardXpOriginal(amount, reason);
+    if(reason === "YouTube")       achInc("youtube", 1);
+    if(reason === "Download")      achInc("downloads", 1);
+    if(reason === "Favorito")      achInc("favorites", 1);
+    if(reason === "Troca de tema") achInc("themes", 1);
     if(reason === "Virou Premium") achInc("premium", 1);
   };
     /* ===============================
@@ -2941,11 +2711,6 @@ const MASTER_NICK = "Srgokucheats";
       }
       if(!isPremium){
         localStorage.removeItem("toolflix_token_ativador");
-      }
-      const p = await fetchProfileMe(true);
-      if(p){
-        const u = loadUser() || {};
-        saveUser({ ...u, nick: p.nick, xp: Number(p.xp || 0), avatar: p.avatar, premium: !!p.premium });
       }
     }catch{
       isPremium = localStorage.getItem("toolflix_premium_atv") === "true";
@@ -3046,7 +2811,7 @@ const MASTER_NICK = "Srgokucheats";
             showGuestExpiredModal();
             showToast("🎁 Crie sua conta e peça acesso grátis no chat.");
           }else{
-            showToast("🔒 Conteúdo Premium! Abra o chat e peça acesso grátis.");
+            showToast("🔒 Conteúdo Premium!");
           }
           return;
         }
@@ -4231,7 +3996,6 @@ document.addEventListener("click", async (ev)=>{
   updatePremiumSidebar();
   render();
 
-  if(getToken()) fetchProfileMe(true);
   checkPremiumSync();
   syncJogos();
 
@@ -4839,8 +4603,8 @@ document.addEventListener("DOMContentLoaded", function(){
     return `
       <div class="global-chat-row ${own ? "own" : ""}" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
         <div class="global-chat-head">
-          <img class="global-chat-avatar ${getAvatarClass(msg?.level)}" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
-          <div class="global-chat-name" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}">${escapeHtml(formatGlobalAuthor(msg))}</div>
+          <img class="global-chat-avatar ${getAvatarClass(msg?.level)}" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
+          <div class="global-chat-name">${escapeHtml(formatGlobalAuthor(msg))}</div>
         </div>
         <div class="${bubbleClass}">${escapeHtml(bubbleText)}</div>
         <div class="global-chat-meta">${formatGlobalTime(msg?.created_at)}</div>
@@ -4968,14 +4732,6 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
     document.getElementById("globalChatMessages")?.addEventListener("click", function(e){
-      const profileTarget = e.target.closest("[data-profile-nick]");
-      if(profileTarget){
-        const nick = profileTarget.getAttribute("data-profile-nick") || "";
-        if(nick){
-          openPublicProfileModalByNick(nick);
-          return;
-        }
-      }
       const btnDelete = e.target.closest("[data-global-delete-id]");
       if(!btnDelete) return;
       const id = btnDelete.getAttribute("data-global-delete-id") || "";
