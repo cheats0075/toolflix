@@ -337,115 +337,133 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     }
 
 
-    /* ===== TROPHY POPUP (PlayStation style) ===== */
-    #trophy-notify-root{
-      position: fixed;
-      top: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(560px, calc(100vw - 28px));
-      z-index: 100050;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      pointer-events:none;
-    }
-    .trophy-pop{
-      position: relative;
-      overflow:hidden;
-      display:flex;
+    /* ===== VISITANTE GRÁTIS / CONVERSÃO ===== */
+    .guest-trial-banner{
+      display:none;
       align-items:center;
+      justify-content:space-between;
       gap:14px;
-      padding:16px 18px;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.12);
+      margin: -8px 0 22px;
+      padding: 16px 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.10);
       background:
-        radial-gradient(circle at top left, rgba(255,215,0,.16), transparent 32%),
-        radial-gradient(circle at bottom right, rgba(0,255,255,.10), transparent 35%),
-        linear-gradient(180deg, rgba(19,19,24,.97), rgba(9,10,14,.97));
-      box-shadow: 0 24px 60px rgba(0,0,0,.50), 0 0 28px rgba(255,215,0,.12);
+        radial-gradient(circle at top left, rgba(255,215,0,.16), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(0,255,255,.12), transparent 32%),
+        linear-gradient(180deg, rgba(19,19,24,.96), rgba(9,10,14,.96));
+      box-shadow: 0 20px 50px rgba(0,0,0,.35), 0 0 24px rgba(255,215,0,.08);
       backdrop-filter: blur(14px);
-      animation: trophyEnter .42s cubic-bezier(.2,.9,.2,1);
-      pointer-events:auto;
+      position: relative;
+      overflow: hidden;
     }
-    .trophy-pop::before{
+    .guest-trial-banner::before{
       content:"";
       position:absolute;
       inset:0 0 auto 0;
       height:3px;
-      background: linear-gradient(90deg, rgba(255,215,0,.0), rgba(255,215,0,.95), rgba(0,255,255,.85), rgba(255,215,0,.0));
+      background: linear-gradient(90deg, rgba(255,215,0,0), rgba(255,215,0,.95), rgba(0,255,255,.85), rgba(255,215,0,0));
     }
-    .trophy-pop.hide{
-      animation: trophyExit .34s ease forwards;
-    }
-    .trophy-pop-icon{
-      width:58px;
-      height:58px;
-      border-radius:18px;
-      flex:0 0 58px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:30px;
-      background: linear-gradient(180deg, rgba(255,215,0,.22), rgba(255,140,0,.12));
-      border:1px solid rgba(255,215,0,.24);
-      box-shadow: 0 0 20px rgba(255,215,0,.16);
-    }
-    .trophy-pop-body{
-      flex:1;
-      min-width:0;
-    }
-    .trophy-pop-kicker{
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:1.1px;
-      color:#ffe27a;
-      text-transform:uppercase;
-      opacity:.95;
-      margin-bottom:4px;
-    }
-    .trophy-pop-title{
-      font-size:20px;
+    .guest-trial-left{ min-width:0; }
+    .guest-trial-title{
+      font-size:18px;
       font-weight:900;
       color:#fff;
-      line-height:1.15;
-      text-shadow:0 0 12px rgba(255,255,255,.06);
+      margin-bottom:4px;
     }
-    .trophy-pop-desc{
+    .guest-trial-sub{
       font-size:13px;
-      opacity:.86;
-      margin-top:4px;
-      line-height:1.35;
+      opacity:.9;
+      line-height:1.45;
     }
-    .trophy-pop-bar{
-      position:absolute;
-      left:12px;
-      right:12px;
-      bottom:10px;
-      height:4px;
+    .guest-trial-time{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin-top:10px;
+      padding:8px 12px;
       border-radius:999px;
-      overflow:hidden;
-      background: rgba(255,255,255,.08);
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      font-size:12px;
+      font-weight:900;
+      color:#ffe27a;
     }
-    .trophy-pop-bar > div{
-      height:100%;
-      width:100%;
-      transform-origin:left center;
-      background: linear-gradient(90deg, #ffd700, #ffb700, #00ffff);
-      animation: trophyBar linear forwards;
+    .guest-trial-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      flex:0 0 auto;
     }
-
-    @keyframes trophyEnter{
-      from{ opacity:0; transform: translateY(-16px) scale(.96); }
-      to{ opacity:1; transform: translateY(0) scale(1); }
+    .guest-trial-btn{
+      border:none;
+      border-radius:999px;
+      padding:12px 16px;
+      font-size:13px;
+      font-weight:900;
+      cursor:pointer;
+      transition:.22s;
+      box-shadow: 0 8px 20px rgba(0,0,0,.22);
     }
-    @keyframes trophyExit{
-      from{ opacity:1; transform: translateY(0) scale(1); }
-      to{ opacity:0; transform: translateY(-12px) scale(.97); }
+    .guest-trial-btn:hover{ transform: translateY(-1px) scale(1.02); }
+    .guest-trial-btn.primary{
+      background: linear-gradient(135deg, #ffd700, #ffb700);
+      color:#111;
     }
-    @keyframes trophyBar{
-      from{ transform:scaleX(1); }
-      to{ transform:scaleX(0); }
+    .guest-trial-btn.secondary{
+      background: rgba(255,255,255,.07);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .guest-expired-overlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:100060;
+      background: rgba(0,0,0,.80);
+      backdrop-filter: blur(10px);
+    }
+    .guest-expired-box{
+      width:min(470px, calc(100vw - 26px));
+      border-radius:28px;
+      padding:28px 24px 22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(circle at top left, rgba(255,215,0,.16), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(0,255,255,.10), transparent 32%),
+        linear-gradient(180deg, rgba(18,18,22,.98), rgba(9,10,13,.98));
+      box-shadow: 0 24px 70px rgba(0,0,0,.55), 0 0 26px rgba(255,215,0,.08);
+      text-align:center;
+      position:relative;
+    }
+    .guest-expired-title{
+      font-size:28px;
+      font-weight:900;
+      margin-bottom:10px;
+      color:#fff;
+    }
+    .guest-expired-text{
+      font-size:14px;
+      line-height:1.55;
+      opacity:.92;
+      margin-bottom:18px;
+    }
+    .guest-expired-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+    .guest-expired-note{
+      margin-top:14px;
+      font-size:12px;
+      opacity:.8;
+    }
+    @media (max-width: 860px){
+      .guest-trial-banner{ flex-direction:column; align-items:flex-start; }
+      .guest-trial-actions{ width:100%; justify-content:flex-start; }
     }
 
     /* TOAST */
@@ -1223,50 +1241,7 @@ select optgroup{
       text-underline-offset: 2px;
     }
 
-
-    #recoveryChatWrap{
-      display:none;
-      margin-top:12px;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid rgba(0,255,255,.18);
-      background:rgba(0,255,255,.05);
-    }
-    #recoveryChatBox{
-      margin-top:10px;
-      max-height:190px;
-      overflow:auto;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      padding-right:4px;
-    }
-    .recovery-msg{
-      padding:10px 12px;
-      border-radius:12px;
-      font-size:12px;
-      line-height:1.45;
-      max-width:92%;
-      word-break:break-word;
-      border:1px solid rgba(255,255,255,.08);
-    }
-    .recovery-msg.user{
-      align-self:flex-end;
-      background:rgba(255,215,0,.10);
-      color:#ffe8a3;
-    }
-    .recovery-msg.admin{
-      align-self:flex-start;
-      background:rgba(255,255,255,.06);
-      color:#fff;
-    }
-    #recoveryChatStatus{
-      margin-top:8px;
-      font-size:11px;
-      opacity:.78;
-    }
-
-  </style>
+</style>
 
 <style id="masterChatsOverlayStyle">
 /* ===== Painel exclusivo de Chats (Master) ===== */
@@ -1321,50 +1296,7 @@ select optgroup{
 #masterChatsOverlay #adminChatsPanel > div{ gap:12px !important; }
 #masterChatsOverlay #adminChatsList button{ transition: transform .06s ease, background .12s ease; }
 #masterChatsOverlay #adminChatsList button:hover{ transform: translateY(-1px); }
-
-    #recoveryChatWrap{
-      display:none;
-      margin-top:12px;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid rgba(0,255,255,.18);
-      background:rgba(0,255,255,.05);
-    }
-    #recoveryChatBox{
-      margin-top:10px;
-      max-height:190px;
-      overflow:auto;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      padding-right:4px;
-    }
-    .recovery-msg{
-      padding:10px 12px;
-      border-radius:12px;
-      font-size:12px;
-      line-height:1.45;
-      max-width:92%;
-      word-break:break-word;
-      border:1px solid rgba(255,255,255,.08);
-    }
-    .recovery-msg.user{
-      align-self:flex-end;
-      background:rgba(255,215,0,.10);
-      color:#ffe8a3;
-    }
-    .recovery-msg.admin{
-      align-self:flex-start;
-      background:rgba(255,255,255,.06);
-      color:#fff;
-    }
-    #recoveryChatStatus{
-      margin-top:8px;
-      font-size:11px;
-      opacity:.78;
-    }
-
-  </style>
+</style>
 
 </head>
 <body class="theme-default">
@@ -1527,15 +1459,6 @@ select optgroup{
               Enviar pedido
             </button>
           </div>
-          <div id="recoveryChatWrap" style="display:none; margin-top:12px; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,.10); background:rgba(255,255,255,.04);">
-            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px;">
-              <div style="font-weight:900; color:#7cf3ff;">💬 Recuperação de senha</div>
-              <button type="button" id="closeRecoveryChatBtn" class="nav-item" style="padding:6px 10px; min-width:auto;">✖</button>
-            </div>
-            <div id="recoveryChatNickLine" style="opacity:.9; margin-bottom:8px;"></div>
-            <div id="recoveryChatBox" style="max-height:220px; overflow:auto; padding:8px; border-radius:12px; background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.06);"></div>
-            <div id="recoveryChatStatus" style="margin-top:8px; font-size:12px; opacity:.92;">⏳ Aguardando resposta do administrador...</div>
-          </div>
           <button id="forgotPasswordBtn" class="nav-item"
             style="display:none; margin-top:10px; width:100%; background:rgba(255,255,255,.08); color:#fff; border:1px solid rgba(255,255,255,.10);">
             🔐 Esqueceu a senha?
@@ -1582,7 +1505,22 @@ select optgroup{
       </div>
     </div>
 
-    <section id="adminSection"></section>
+    
+    <section id="guestTrialBanner" class="guest-trial-banner">
+      <div class="guest-trial-left">
+        <div class="guest-trial-title">🎁 Aproveite grátis por alguns minutos</div>
+        <div class="guest-trial-sub">
+          Explore o catálogo agora. Depois, <b>crie uma conta</b> e <b>solicite acesso grátis no chat</b> para continuar.
+        </div>
+        <div class="guest-trial-time" id="guestTrialTime">⏳ Tempo grátis: 10:00</div>
+      </div>
+      <div class="guest-trial-actions">
+        <button id="guestTrialCreateBtn" class="guest-trial-btn primary">👤 Criar conta</button>
+        <button id="guestTrialChatBtn" class="guest-trial-btn secondary">💬 Pedir acesso no chat</button>
+      </div>
+    </section>
+
+<section id="adminSection"></section>
 
     <h2 id="sectionTitle"
         style="margin-bottom:30px; font-size:28px;">
@@ -1592,8 +1530,23 @@ select optgroup{
     <section id="catalogo"></section>
   </main>
 
+
+  <div id="guestExpiredModal" class="guest-expired-overlay">
+    <div class="guest-expired-box">
+      <div class="guest-expired-title">🔒 Seu acesso grátis terminou</div>
+      <div class="guest-expired-text">
+        Curtiu o catálogo? Agora <b>crie sua conta</b> e <b>solicite acesso grátis no chat</b> para continuar baixando.
+      </div>
+      <div class="guest-expired-actions">
+        <button id="guestExpiredCreateBtn" class="guest-trial-btn primary">👤 Criar conta</button>
+        <button id="guestExpiredChatBtn" class="guest-trial-btn secondary">💬 Abrir chat</button>
+      </div>
+      <div class="guest-expired-note">Dica: peça <b>token grátis</b> no chat depois de criar sua conta.</div>
+    </div>
+  </div>
+
+
   <div id="toast-container"></div>
-  <div id="trophy-notify-root"></div>
     <!-- ===== PREMIUM MODAL ===== -->
   <div id="premiumModal" class="modal-overlay">
     <div class="modal-box">
@@ -2000,11 +1953,115 @@ const MASTER_NICK = "Srgokucheats";
     }
   })();
 
+
   let isPremium = false;
   let modoAdmin = false;
   let catAtiva  = "Todos";
   let sortModo  = "recentes";
   let filterFav = false;
+
+  const GUEST_TRIAL_MINUTES = 10;
+  const GUEST_TRIAL_START_KEY = "toolflix_guest_trial_start";
+  const GUEST_TRIAL_DONE_KEY  = "toolflix_guest_trial_done";
+
+  function hasLoggedAccount(){
+    const u = loadUser?.() || {};
+    return !!(u.nick || getLoggedUserId?.());
+  }
+
+  function ensureGuestTrialStarted(){
+    if(hasLoggedAccount()) return;
+    if(localStorage.getItem(GUEST_TRIAL_DONE_KEY) === "1") return;
+    if(!localStorage.getItem(GUEST_TRIAL_START_KEY)){
+      localStorage.setItem(GUEST_TRIAL_START_KEY, String(Date.now()));
+    }
+  }
+
+  function getGuestTrialRemainingMs(){
+    if(hasLoggedAccount()) return 0;
+    if(localStorage.getItem(GUEST_TRIAL_DONE_KEY) === "1") return 0;
+
+    let start = Number(localStorage.getItem(GUEST_TRIAL_START_KEY) || 0);
+    if(!start){
+      start = Date.now();
+      localStorage.setItem(GUEST_TRIAL_START_KEY, String(start));
+    }
+
+    const total = GUEST_TRIAL_MINUTES * 60 * 1000;
+    const left = Math.max(0, total - (Date.now() - start));
+    if(left <= 0){
+      localStorage.setItem(GUEST_TRIAL_DONE_KEY, "1");
+      return 0;
+    }
+    return left;
+  }
+
+  function hasGuestTrialAccess(){
+    return !hasLoggedAccount() && getGuestTrialRemainingMs() > 0;
+  }
+
+  function formatGuestMs(ms){
+    const totalSec = Math.max(0, Math.floor(ms / 1000));
+    const mm = String(Math.floor(totalSec / 60)).padStart(2, "0");
+    const ss = String(totalSec % 60).padStart(2, "0");
+    return `${mm}:${ss}`;
+  }
+
+  function openGuestChatCta(){
+    document.getElementById("guestExpiredModal")?.style && (document.getElementById("guestExpiredModal").style.display = "none");
+    const chatBtn = document.getElementById("chatToggleBtn");
+    if(chatBtn) chatBtn.click();
+    setTimeout(()=>{
+      const input = document.getElementById("chatInput");
+      if(input && !String(input.value || "").trim()){
+        input.value = "Quero acesso grátis";
+        input.dispatchEvent(new Event("input", { bubbles:true }));
+      }
+    }, 250);
+  }
+
+  function openGuestCreateCta(){
+    document.getElementById("guestExpiredModal")?.style && (document.getElementById("guestExpiredModal").style.display = "none");
+    openLogin?.("register");
+  }
+
+  function showGuestExpiredModal(){
+    const modal = document.getElementById("guestExpiredModal");
+    if(modal) modal.style.display = "flex";
+  }
+
+  function updateGuestTrialUI(){
+    const banner = document.getElementById("guestTrialBanner");
+    const time = document.getElementById("guestTrialTime");
+    const premiumBtn = document.getElementById("premiumTriggerBtn");
+    const tokenBtn = document.getElementById("solicitarTokenBtn");
+
+    if(hasLoggedAccount()){
+      if(banner) banner.style.display = "none";
+      return;
+    }
+
+    ensureGuestTrialStarted();
+    const left = getGuestTrialRemainingMs();
+
+    if(left > 0){
+      if(banner) banner.style.display = "flex";
+      if(time) time.textContent = "⏳ Tempo grátis: " + formatGuestMs(left);
+      if(premiumBtn){
+        premiumBtn.textContent = "💎 ATIVAR PREMIUM";
+      }
+      if(tokenBtn){
+        tokenBtn.textContent = "🎁 PEDIR ACESSO GRÁTIS";
+      }
+    }else{
+      if(banner) banner.style.display = "none";
+      if(tokenBtn){
+        tokenBtn.textContent = "🎁 PEDIR ACESSO GRÁTIS";
+      }
+    }
+  }
+
+  setInterval(updateGuestTrialUI, 1000);
 
   /* ===============================
      USER / XP SYSTEM
@@ -2039,94 +2096,6 @@ const MASTER_NICK = "Srgokucheats";
     const forgotWrap = document.getElementById("forgotPasswordWrap");
     if(forgotBtn) forgotBtn.style.display = (loginFailCount >= 3 && AUTH_MODE === "login") ? "block" : "none";
     if(forgotWrap && loginFailCount < 3) forgotWrap.style.display = "none";
-  }
-
-
-  let recoveryChatPoll = null;
-  let recoveryActiveNick = "";
-
-  function stopRecoveryChatPolling(){
-    if(recoveryChatPoll){
-      clearInterval(recoveryChatPoll);
-      recoveryChatPoll = null;
-    }
-  }
-
-  function setRecoveryChatVisible(show){
-    const wrap = document.getElementById("recoveryChatWrap");
-    if(wrap) wrap.style.display = show ? "block" : "none";
-  }
-
-  function renderRecoveryChat(messages=[], passwordTemp=false, nick=""){
-    const nickLine = document.getElementById("recoveryChatNickLine");
-    const box = document.getElementById("recoveryChatBox");
-    const status = document.getElementById("recoveryChatStatus");
-    if(nickLine) nickLine.innerHTML = nick ? `Nick: <b>${safeStr(nick)}</b>` : "";
-    if(!box) return;
-    box.innerHTML = "";
-
-    if(!messages || !messages.length){
-      const empty = document.createElement("div");
-      empty.className = "recovery-msg admin";
-      empty.textContent = "Pedido enviado. Aguarde a resposta do administrador.";
-      box.appendChild(empty);
-    }else{
-      messages.forEach((m)=>{
-        const div = document.createElement("div");
-        div.className = "recovery-msg " + ((m.sender === "admin") ? "admin" : "user");
-        div.textContent = String(m.message || "");
-        box.appendChild(div);
-      });
-    }
-
-    if(status){
-      status.innerHTML = passwordTemp
-        ? "✅ Sua senha temporária já foi gerada. Tente entrar e depois vá em Perfil → Trocar senha."
-        : "⏳ Aguardando resposta do administrador...";
-    }
-    box.scrollTop = box.scrollHeight;
-    setRecoveryChatVisible(true);
-  }
-
-  async function fetchRecoveryChat(nick, silent=false){
-    const cleanNick = String(nick || "").trim();
-    if(!cleanNick) return null;
-    try{
-      const r = await fetch(API_BASE + "/api/recovery-chat/" + encodeURIComponent(cleanNick) + "?v=" + Date.now());
-      const j = await r.json().catch(()=> ({}));
-      if(!r.ok || !j?.ok) return null;
-      recoveryActiveNick = j.nick || cleanNick;
-      localStorage.setItem("toolflix_recovery_nick", recoveryActiveNick);
-      renderRecoveryChat(j.messages || [], !!j.passwordTemp, recoveryActiveNick);
-      return j;
-    }catch(e){
-      if(!silent){
-        const status = document.getElementById("recoveryChatStatus");
-        if(status) status.textContent = "Erro ao carregar a recuperação.";
-      }
-      return null;
-    }
-  }
-
-  function startRecoveryChatPolling(nick){
-    const cleanNick = String(nick || "").trim();
-    if(!cleanNick) return;
-    stopRecoveryChatPolling();
-    fetchRecoveryChat(cleanNick);
-    recoveryChatPoll = setInterval(()=> fetchRecoveryChat(cleanNick, true), 5000);
-  }
-
-  function tryAutoOpenRecoveryByNick(){
-    const nick = (document.getElementById("userNickInput")?.value || localStorage.getItem("toolflix_recovery_nick") || "").trim();
-    if(!nick) return;
-    fetchRecoveryChat(nick, true).then((j)=>{
-      if(!j) return;
-      const hasMessages = Array.isArray(j.messages) && j.messages.length > 0;
-      if(hasMessages || j.passwordTemp){
-        setLoginFailCount(Math.max(loginFailCount, 3));
-        startRecoveryChatPolling(j.nick || nick);
-      }
-    });
   }
 
   function toggleForgotPasswordBox(force){
@@ -2257,17 +2226,12 @@ const MASTER_NICK = "Srgokucheats";
     const tempAlert = profile.passwordTemp ? `<div class="temp-pass-alert">🔐 Você entrou com uma senha temporária. Troque agora no seu perfil.</div>` : "";
     const changePasswordHtml = isOwnProfile ? `
       <div class="password-panel">
-        <button id="togglePasswordPanelBtn" class="nav-item" style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px; ${profile.passwordTemp ? 'background:rgba(255,215,0,.14); border-color:rgba(255,215,0,.30); color:#ffe27a;' : ''}">
-          <span>🔑 Mudar senha</span>
-          <span id="togglePasswordPanelIcon">${profile.passwordTemp ? "▴" : "▾"}</span>
-        </button>
-        <div id="passwordPanelFields" style="display:${profile.passwordTemp ? "block" : "none"}; margin-top:10px;">
-          <div style="font-size:12px; opacity:.82; margin-bottom:8px;">Use essa área para trocar sua senha.${profile.passwordTemp ? " Você entrou com senha temporária, então troque agora." : ""}</div>
-          <input type="password" id="currentPasswordInput" class="admin-input" placeholder="Senha atual">
-          <input type="password" id="newPasswordInput" class="admin-input" placeholder="Nova senha (mín. 6 caracteres)">
-          <input type="password" id="confirmPasswordInput" class="admin-input" placeholder="Confirmar nova senha">
-          <button id="changePasswordBtn" class="nav-item">Salvar nova senha</button>
-        </div>
+        <h3>🔑 Trocar senha</h3>
+        <div style="font-size:12px; opacity:.82; margin-bottom:8px;">Use essa área para trocar sua senha. Se você entrou com senha temporária, troque agora.</div>
+        <input type="password" id="currentPasswordInput" class="admin-input" placeholder="Senha atual">
+        <input type="password" id="newPasswordInput" class="admin-input" placeholder="Nova senha (mín. 6 caracteres)">
+        <input type="password" id="confirmPasswordInput" class="admin-input" placeholder="Confirmar nova senha">
+        <button id="changePasswordBtn" class="nav-item">Salvar nova senha</button>
       </div>
     ` : "";
 
@@ -2323,14 +2287,6 @@ const MASTER_NICK = "Srgokucheats";
 
     if(isOwnProfile){
       document.getElementById("changePasswordBtn")?.addEventListener("click", changeOwnPassword);
-      document.getElementById("togglePasswordPanelBtn")?.addEventListener("click", ()=>{
-        const fields = document.getElementById("passwordPanelFields");
-        const icon = document.getElementById("togglePasswordPanelIcon");
-        if(!fields) return;
-        const isHidden = getComputedStyle(fields).display === "none";
-        fields.style.display = isHidden ? "block" : "none";
-        if(icon) icon.textContent = isHidden ? "▴" : "▾";
-      });
     }
   }
 
@@ -2489,69 +2445,6 @@ const MASTER_NICK = "Srgokucheats";
     }, 3500);
   }
 
-  const TF_TROPHY_QUEUE = [];
-  let TF_TROPHY_ACTIVE = false;
-
-  function parseAchievementTitle(raw){
-    const txt = String(raw || "").trim();
-    return txt
-      .replace(/^🏆\s*/,'')
-      .replace(/^Conquista desbloqueada:\s*/i,'')
-      .replace(/^PLATINA TOOLFLIX desbloqueada!?/i,'PLATINA TOOLFLIX')
-      .trim();
-  }
-
-  function showTrophyPopup(title, desc = "Nova conquista liberada", icon = "🏆", ms = 5400){
-    const root = document.getElementById("trophy-notify-root");
-    if(!root) return;
-
-    TF_TROPHY_QUEUE.push({ title, desc, icon, ms });
-    if(TF_TROPHY_ACTIVE) return;
-
-    const run = ()=>{
-      const next = TF_TROPHY_QUEUE.shift();
-      if(!next){
-        TF_TROPHY_ACTIVE = false;
-        return;
-      }
-      TF_TROPHY_ACTIVE = true;
-
-      const card = document.createElement("div");
-      card.className = "trophy-pop";
-      card.innerHTML = `
-        <div class="trophy-pop-icon">${next.icon}</div>
-        <div class="trophy-pop-body">
-          <div class="trophy-pop-kicker">Conquista desbloqueada</div>
-          <div class="trophy-pop-title">${next.title}</div>
-          <div class="trophy-pop-desc">${next.desc}</div>
-        </div>
-        <div class="trophy-pop-bar"><div style="animation-duration:${Math.max(1800, Number(next.ms)||5400)}ms"></div></div>
-      `;
-      root.appendChild(card);
-
-      const totalMs = Math.max(1800, Number(next.ms) || 5400);
-      setTimeout(()=>{
-        card.classList.add("hide");
-        setTimeout(()=>{
-          card.remove();
-          run();
-        }, 340);
-      }, totalMs);
-    };
-
-    run();
-  }
-
-  function announceAchievement(rawTitle, isPlatinum = false){
-    const title = parseAchievementTitle(rawTitle);
-    const desc = isPlatinum
-      ? "Você conquistou a platina do ToolFlix. Isso é lendário."
-      : "Seu progresso foi reconhecido. Continue jogando para liberar mais.";
-    showTrophyPopup(title || "Nova conquista", desc, isPlatinum ? "👑" : "🏆", isPlatinum ? 6800 : 5600);
-    showToast(isPlatinum ? "🏆 PLATINA TOOLFLIX desbloqueada!" : `🏆 Conquista desbloqueada: ${title}`);
-  }
-
-
   function clampAvatarLevel(level){
     const n = Number(level || 1) || 1;
     return Math.max(1, Math.min(15, n));
@@ -2654,10 +2547,7 @@ const MASTER_NICK = "Srgokucheats";
       if(TF_AUDIO_CTX.state === "suspended") TF_AUDIO_CTX.resume();
     }catch(e){}
   }
-  window.addEventListener("pointerdown", ()=>{
-    tfInitAudio();
-    initTrophyAudio();
-  }, { once:true });
+  window.addEventListener("pointerdown", tfInitAudio, { once:true });
 
   function playTone(freq, dur=0.09, vol=0.28, type="triangle"){
     try{
@@ -2682,38 +2572,10 @@ const MASTER_NICK = "Srgokucheats";
     }catch(e){}
   }
 
-  const TROPHY_SOUND_URL = "/toolflix/assets/sounds/trophy.mp3";
-  let trophyAudioBase = null;
-
-  function initTrophyAudio(){
-    try{
-      if(!trophyAudioBase){
-        trophyAudioBase = new Audio(TROPHY_SOUND_URL);
-        trophyAudioBase.preload = "auto";
-        trophyAudioBase.volume = 0.95;
-      }
-      return trophyAudioBase;
-    }catch(_){
-      return null;
-    }
-  }
-
   function playTrophySound(){
-    try{
-      const base = initTrophyAudio();
-      if(base){
-        const a = base.cloneNode(true);
-        a.volume = 0.95;
-        a.currentTime = 0;
-        const p = a.play();
-        if(p && typeof p.catch === "function") p.catch(()=>{});
-        return;
-      }
-    }catch(_){}
-    playTone(659,  0.07, 0.16, "triangle");
-    setTimeout(()=> playTone(880,  0.08, 0.18, "triangle"), 70);
-    setTimeout(()=> playTone(1046, 0.10, 0.20, "triangle"), 145);
-    setTimeout(()=> playTone(1318, 0.12, 0.24, "triangle"), 235);
+    playTone(784,  0.08, 0.18, "triangle");
+    setTimeout(()=> playTone(988,  0.08, 0.18, "triangle"), 90);
+    setTimeout(()=> playTone(1175, 0.10, 0.22, "triangle"), 180);
   }
 
   function playLevelUpSound(){
@@ -2793,7 +2655,6 @@ const MASTER_NICK = "Srgokucheats";
     setAuthMode(mode || "login");
     setLoginFailCount(mode === "login" ? loginFailCount : 0);
     toggleForgotPasswordBox(false);
-    tryAutoOpenRecoveryByNick();
     if(inp) inp.focus();
   }
 
@@ -2801,7 +2662,6 @@ const MASTER_NICK = "Srgokucheats";
     const m = document.getElementById("userLoginModal");
     if(m) m.style.display = "none";
     toggleForgotPasswordBox(false);
-    stopRecoveryChatPolling();
   }
 
   function toggleUserMenu(forceClose=false){
@@ -2810,6 +2670,14 @@ const MASTER_NICK = "Srgokucheats";
     if(forceClose){ box.style.display = "none"; return; }
     box.style.display = (box.style.display === "block") ? "none" : "block";
   }
+
+  document.getElementById("guestTrialCreateBtn")?.addEventListener("click", ()=> openGuestCreateCta());
+  document.getElementById("guestTrialChatBtn")?.addEventListener("click", ()=> openGuestChatCta());
+  document.getElementById("guestExpiredCreateBtn")?.addEventListener("click", ()=> openGuestCreateCta());
+  document.getElementById("guestExpiredChatBtn")?.addEventListener("click", ()=> openGuestChatCta());
+  document.getElementById("guestExpiredModal")?.addEventListener("click", (e)=>{
+    if(e.target?.id === "guestExpiredModal") e.currentTarget.style.display = "none";
+  });
 
   document.getElementById("userArea")?.addEventListener("click", ()=>{
     const u = loadUser();
@@ -2872,7 +2740,6 @@ const MASTER_NICK = "Srgokucheats";
       profileCache = null;
       await fetchProfileMe(true);
 
-      localStorage.removeItem("toolflix_recovery_nick");
       closeLogin();
       toggleUserMenu(true);
       updateUserUI();
@@ -2889,20 +2756,6 @@ const MASTER_NICK = "Srgokucheats";
     if(e.key === "Enter"){
       e.preventDefault();
       document.getElementById("userLoginSubmit")?.click();
-    }
-  });
-
-
-  document.getElementById("userNickInput")?.addEventListener("input", ()=>{
-    const nick = (document.getElementById("userNickInput")?.value || "").trim();
-    if(!nick){
-      setRecoveryChatVisible(false);
-      stopRecoveryChatPolling();
-      return;
-    }
-    const saved = (localStorage.getItem("toolflix_recovery_nick") || "").trim().toLowerCase();
-    if(saved && saved === nick.toLowerCase()){
-      startRecoveryChatPolling(nick);
     }
   });
 
@@ -2929,13 +2782,9 @@ const MASTER_NICK = "Srgokucheats";
         return;
       }
       showToast("Pedido enviado para o administrador.");
+      toggleForgotPasswordBox(false);
       const forgotNickInput = document.getElementById("forgotNickInput");
       if(forgotNickInput) forgotNickInput.value = nick;
-      const userNickInput = document.getElementById("userNickInput");
-      if(userNickInput) userNickInput.value = nick;
-      localStorage.setItem("toolflix_recovery_nick", nick);
-      toggleForgotPasswordBox(false);
-      startRecoveryChatPolling(nick);
     }catch(e){
       showToast("Erro ao enviar pedido.");
     }
@@ -3082,7 +2931,7 @@ const MASTER_NICK = "Srgokucheats";
       if(!unlock[a.id] && cur >= a.need){
         unlock[a.id] = true;
         changed = true;
-        announceAchievement(a.title, false);
+        showToast(`🏆 Conquista desbloqueada: ${a.title}`);
         playTrophySound();
       }
     }
@@ -3091,7 +2940,7 @@ const MASTER_NICK = "Srgokucheats";
     if(allOk && !unlock["platinum_toolflix"]){
       unlock["platinum_toolflix"] = true;
       changed = true;
-      announceAchievement("PLATINA TOOLFLIX", true);
+      showToast("🏆 PLATINA TOOLFLIX desbloqueada!");
       playTrophySound();
     }
 
@@ -3290,7 +3139,9 @@ const MASTER_NICK = "Srgokucheats";
   async function checkPremiumSync(){
     await Promise.all([refreshPremiumCount(), syncPremiumStatus()]);
     updatePremiumSidebar();
-    render();
+    ensureGuestTrialStarted();
+  updateGuestTrialUI();
+  render();
   }
 
   /* ===============================
@@ -3342,6 +3193,7 @@ const MASTER_NICK = "Srgokucheats";
       btnP.style.display = isPremium ? "none" : "block";
       btnS.style.display = isPremium ? "none" : "block";
     }
+    updateGuestTrialUI();
 
     grid.innerHTML = "";
 
@@ -3367,14 +3219,19 @@ const MASTER_NICK = "Srgokucheats";
     lista.forEach(j => {
       const isFav = db_favs.includes(j.nome);
       const isP = j.premium === true;
-      const lock = isP && !isPremium && !modoAdmin;
+      const lock = isP && !isPremium && !modoAdmin && !hasGuestTrialAccess();
 
       const card = document.createElement("div");
       card.className = `jogo ${isP ? "jogo-premium" : ""} ${lock ? "premium-locked" : ""}`;
 
       card.onclick = ()=>{
         if(lock){
-          showToast("🔒 Conteúdo Premium!");
+          if(!hasLoggedAccount()){
+            showGuestExpiredModal();
+            showToast("🎁 Crie sua conta e peça acesso grátis no chat.");
+          }else{
+            showToast("🔒 Conteúdo Premium!");
+          }
           return;
         }
 
@@ -4760,50 +4617,7 @@ document.addEventListener("DOMContentLoaded", function(){
   50% { transform: scale(1.25); opacity: 0.6; }
   100% { transform: scale(1); opacity: 1; }
 }
-
-    #recoveryChatWrap{
-      display:none;
-      margin-top:12px;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid rgba(0,255,255,.18);
-      background:rgba(0,255,255,.05);
-    }
-    #recoveryChatBox{
-      margin-top:10px;
-      max-height:190px;
-      overflow:auto;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      padding-right:4px;
-    }
-    .recovery-msg{
-      padding:10px 12px;
-      border-radius:12px;
-      font-size:12px;
-      line-height:1.45;
-      max-width:92%;
-      word-break:break-word;
-      border:1px solid rgba(255,255,255,.08);
-    }
-    .recovery-msg.user{
-      align-self:flex-end;
-      background:rgba(255,215,0,.10);
-      color:#ffe8a3;
-    }
-    .recovery-msg.admin{
-      align-self:flex-start;
-      background:rgba(255,255,255,.06);
-      color:#fff;
-    }
-    #recoveryChatStatus{
-      margin-top:8px;
-      font-size:11px;
-      opacity:.78;
-    }
-
-  </style>
+</style>
 
 
 <!-- ===== PATCH: Boas-vindas + Contador de visualizações (Render API) ===== -->
