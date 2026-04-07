@@ -337,172 +337,59 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     }
 
 
-    .game-details-modal-box {
-      width: min(900px, 94vw);
-      max-height: 88vh;
-      overflow: hidden;
-      padding: 0;
-      border-radius: 26px;
-      border: 1px solid rgba(0,255,255,0.35);
-      background: linear-gradient(180deg, rgba(8,12,20,0.98), rgba(5,7,12,0.98));
-      box-shadow: 0 20px 60px rgba(0,0,0,0.65), 0 0 25px rgba(0,255,255,0.08);
-    }
-
-    .game-details-inner {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 26px;
-      padding: 24px;
-      align-items: start;
-    }
-
-    .game-details-cover {
-      position: relative;
-      background: rgba(255,255,255,0.03);
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .game-details-cover img {
-      width: 100%;
-      display: block;
-      aspect-ratio: 1 / 1.25;
-      object-fit: cover;
-      background: rgba(255,255,255,0.04);
-    }
-
-    .game-trailer-badge {
-      position: absolute;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
-      background: linear-gradient(90deg, rgba(255,58,58,0.92), rgba(255,0,0,0.88));
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 12px 14px;
+    .game-details-tagline {
+      font-size: 11px;
       font-weight: 900;
-      letter-spacing: .4px;
-      cursor: pointer;
+      letter-spacing: 1.2px;
+      color: #66ccff;
       text-transform: uppercase;
     }
 
-    .game-details-right {
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+    .game-trailer-head {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
     }
 
-    .game-details-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .game-details-title {
-      font-size: 34px;
-      font-weight: 900;
-      line-height: 1.1;
-      color: #fff;
-    }
-
-    .game-details-close {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      border: none;
-      background: #ff1f1f;
-      color: #fff;
-      font-size: 20px;
-      font-weight: 900;
-      cursor: pointer;
-      flex: 0 0 auto;
-    }
-
-    .game-details-divider {
-      height: 1px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(0,255,255,0.28), rgba(255,255,255,0.02));
-    }
-
-    .game-details-description {
-      font-size: 15px;
-      line-height: 1.65;
-      color: rgba(255,255,255,0.88);
-      max-height: 170px;
-      overflow-y: auto;
-      padding-right: 8px;
-      white-space: pre-wrap;
-    }
-
-    .game-details-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      font-size: 16px;
+    .game-trailer-title {
+      font-size: 13px;
+      font-weight: 800;
       color: rgba(255,255,255,0.92);
+      letter-spacing: .4px;
+      text-transform: uppercase;
     }
 
-    .game-details-download {
-      margin-top: 4px;
-      width: 100%;
+    .game-trailer-sound-btn {
       border: none;
-      border-radius: 14px;
-      padding: 16px 18px;
-      font-size: 18px;
+      border-radius: 12px;
+      padding: 10px 14px;
       font-weight: 900;
       cursor: pointer;
-      background: linear-gradient(90deg, #2cc84d, #25a542);
-      color: #fff;
-      box-shadow: 0 10px 25px rgba(44,200,77,0.22);
+      background: linear-gradient(90deg, #00d2ff, #00a0ff);
+      color: #001018;
+      box-shadow: 0 10px 25px rgba(0,210,255,0.18);
     }
 
-    .game-details-note {
-      font-size: 12px;
-      color: rgba(255,255,255,0.7);
-    }
-
-    .game-trailer-frame-wrap {
-      display: none;
+    .game-trailer-empty {
       border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: #000;
+      border: 1px dashed rgba(255,255,255,0.12);
+      padding: 18px;
+      text-align: center;
+      color: rgba(255,255,255,0.68);
+      background: rgba(255,255,255,0.02);
     }
 
-    .game-trailer-frame-wrap.active {
-      display: block;
+    .game-details-download.download-attention {
+      animation: downloadPulse 1.15s infinite ease-in-out;
+      box-shadow: 0 0 0 0 rgba(44,200,77,0.45);
     }
 
-    .game-trailer-frame {
-      width: 100%;
-      height: 260px;
-      border: 0;
-      display: block;
-      background: #000;
-    }
-
-    .admin-textarea {
-      min-height: 110px;
-      resize: vertical;
-      font-family: inherit;
-    }
-
-    @media (max-width: 760px) {
-      .game-details-inner {
-        grid-template-columns: 1fr;
-      }
-      .game-details-cover img {
-        aspect-ratio: 1 / 1;
-      }
-      .game-details-title {
-        font-size: 26px;
-      }
-      .game-trailer-frame {
-        height: 220px;
-      }
+    @keyframes downloadPulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(44,200,77,0.45); }
+      50% { transform: scale(1.03); box-shadow: 0 0 0 12px rgba(44,200,77,0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(44,200,77,0); }
     }
 
 
@@ -1983,7 +1870,7 @@ select optgroup{
       <div class="game-details-inner">
         <div class="game-details-cover">
           <img id="gameDetailsImage" src="" alt="Capa do jogo">
-          <button id="gameDetailsTrailerBtn" class="game-trailer-badge" type="button">TRAILER</button>
+          <div id="gameDetailsTagline" class="game-details-tagline" style="position:absolute;left:12px;top:12px;">TRAILER TOOLFLIX</div>
         </div>
 
         <div class="game-details-right">
@@ -1996,9 +1883,15 @@ select optgroup{
 
           <div class="game-details-description" id="gameDetailsDescription"></div>
 
+          <div class="game-trailer-head">
+            <div class="game-trailer-title">Trailer</div>
+            <button id="gameTrailerSoundBtn" class="game-trailer-sound-btn" type="button" style="display:none;">🔊 Ativar som</button>
+          </div>
+
           <div class="game-trailer-frame-wrap" id="gameTrailerWrap">
             <iframe id="gameTrailerFrame" class="game-trailer-frame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
           </div>
+          <div id="gameTrailerEmpty" class="game-trailer-empty">Trailer indisponível para este conteúdo.</div>
 
           <div class="game-details-divider"></div>
 
@@ -2008,11 +1901,12 @@ select optgroup{
           </div>
 
           <button id="gameDetailsDownloadBtn" class="game-details-download" type="button">Baixar agora</button>
-          <div class="game-details-note">Clique no trailer para assistir sem sair do site.</div>
+          <div class="game-details-note">O trailer abre automático sem som. Toque em <b>Ativar som</b> para engajar mais.</div>
         </div>
       </div>
     </div>
   </div>
+
 
   <div id="toast-container"></div>
   <div id="trophy-notify-root"></div>
@@ -3888,7 +3782,12 @@ const MASTER_NICK = "Srgokucheats";
     render();
   }
 
-  function getYouTubeEmbedUrl(url){
+  const TOOLFLIX_MODAL_AUTOPLAY_MS = 5000;
+  let toolflixDownloadPulseTimer = null;
+  let toolflixCurrentTrailer = "";
+  let toolflixTrailerSoundOn = false;
+
+  function getYouTubeEmbedUrl(url, { autoplay = false, muted = true } = {}){
     const raw = safeStr(url, "").trim();
     if(!raw) return "";
 
@@ -3907,9 +3806,26 @@ const MASTER_NICK = "Srgokucheats";
       }
 
       if(!videoId) return raw;
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+      const params = new URLSearchParams({
+        autoplay: autoplay ? "1" : "0",
+        rel: "0",
+        playsinline: "1",
+        modestbranding: "1",
+        enablejsapi: "1",
+        mute: muted ? "1" : "0"
+      });
+      return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
     }catch{
       return raw;
+    }
+  }
+
+  function resetGameDownloadHighlight(){
+    const btn = document.getElementById("gameDetailsDownloadBtn");
+    if(btn) btn.classList.remove("download-attention");
+    if(toolflixDownloadPulseTimer){
+      clearTimeout(toolflixDownloadPulseTimer);
+      toolflixDownloadPulseTimer = null;
     }
   }
 
@@ -3917,12 +3833,64 @@ const MASTER_NICK = "Srgokucheats";
     const modal = document.getElementById("gameDetailsModal");
     const frame = document.getElementById("gameTrailerFrame");
     const wrap = document.getElementById("gameTrailerWrap");
+    const empty = document.getElementById("gameTrailerEmpty");
+    resetGameDownloadHighlight();
+    toolflixCurrentTrailer = "";
+    toolflixTrailerSoundOn = false;
     if(frame) frame.src = "";
     if(wrap) wrap.classList.remove("active");
+    if(empty) empty.style.display = "block";
+    const soundBtn = document.getElementById("gameTrailerSoundBtn");
+    if(soundBtn){
+      soundBtn.style.display = "none";
+      soundBtn.textContent = "🔊 Ativar som";
+    }
     if(modal) modal.style.display = "none";
     window.__toolflixCurrentGame = null;
   }
   window.closeGameDetailsModal = closeGameDetailsModal;
+
+  function handleGameDownload(j){
+    const link = safeStr(j?.link, "").trim();
+    if(!link){
+      showToast("Link inválido.");
+      return;
+    }
+
+    window.open(link, "_blank");
+
+    const u = loadUser();
+    if(!u || !u.nick) return;
+
+    if(j.categoria === "YouTube"){
+      const left = ytCooldownLeft();
+      if(left <= 0){
+        localStorage.setItem(LAST_YT_KEY, Date.now());
+        awardXp(XP_RULES.youtube, "YouTube");
+      }else{
+        showToast("⏳ Aguarde 5 minutos para ganhar XP novamente.");
+      }
+      return;
+    }
+
+    const d = getDaily();
+    if(d.downloads < 3){
+      d.downloads++;
+      setDaily(d);
+      awardXp(XP_RULES.download, "Download");
+    } else {
+      showToast("⚠️ Limite diário de downloads atingido.");
+    }
+  }
+
+  function setTrailerSound(enabled){
+    toolflixTrailerSoundOn = !!enabled;
+    const frame = document.getElementById("gameTrailerFrame");
+    const soundBtn = document.getElementById("gameTrailerSoundBtn");
+    if(!toolflixCurrentTrailer || !frame || !soundBtn) return;
+    frame.src = getYouTubeEmbedUrl(toolflixCurrentTrailer, { autoplay: true, muted: !toolflixTrailerSoundOn });
+    soundBtn.textContent = toolflixTrailerSoundOn ? "🔇 Mutar trailer" : "🔊 Ativar som";
+  }
 
   function openGameDetails(j){
     window.__toolflixCurrentGame = j || null;
@@ -3933,15 +3901,20 @@ const MASTER_NICK = "Srgokucheats";
     const desc = document.getElementById("gameDetailsDescription");
     const cat = document.getElementById("gameDetailsCategory");
     const premium = document.getElementById("gameDetailsPremium");
-    const trailerBtn = document.getElementById("gameDetailsTrailerBtn");
     const frame = document.getElementById("gameTrailerFrame");
     const wrap = document.getElementById("gameTrailerWrap");
+    const empty = document.getElementById("gameTrailerEmpty");
+    const soundBtn = document.getElementById("gameTrailerSoundBtn");
     const downloadBtn = document.getElementById("gameDetailsDownloadBtn");
+    const tagline = document.getElementById("gameDetailsTagline");
 
     if(!modal || !title || !desc || !downloadBtn) return;
 
+    resetGameDownloadHighlight();
+
     const capaFinal = j?.capa || "https://via.placeholder.com/512x512.png?text=ToolFlix";
-    const hasTrailer = !!safeStr(j?.trailer, "").trim();
+    toolflixCurrentTrailer = safeStr(j?.trailer, "").trim();
+    toolflixTrailerSoundOn = false;
 
     if(image){
       image.src = capaFinal;
@@ -3951,55 +3924,29 @@ const MASTER_NICK = "Srgokucheats";
     desc.textContent = safeStr(j?.descricao, "Descrição indisponível no momento.");
     if(cat) cat.textContent = normalizeCategoria(j?.categoria || "Conteúdo");
     if(premium) premium.textContent = j?.premium ? "💎 Premium" : "";
+    if(tagline) tagline.textContent = toolflixCurrentTrailer ? "TRAILER TOOLFLIX" : "SEM TRAILER";
 
     if(frame) frame.src = "";
     if(wrap) wrap.classList.remove("active");
+    if(empty) empty.style.display = toolflixCurrentTrailer ? "none" : "block";
 
-    if(trailerBtn){
-      trailerBtn.style.display = hasTrailer ? "block" : "none";
-      trailerBtn.onclick = ()=>{
-        const embed = getYouTubeEmbedUrl(j?.trailer || "");
-        if(!embed){
-          showToast("Trailer indisponível.");
-          return;
-        }
-        if(frame) frame.src = embed;
-        if(wrap) wrap.classList.add("active");
-      };
+    if(toolflixCurrentTrailer && frame && wrap){
+      frame.src = getYouTubeEmbedUrl(toolflixCurrentTrailer, { autoplay: true, muted: true });
+      wrap.classList.add("active");
     }
 
-    downloadBtn.onclick = ()=>{
-      const link = safeStr(j?.link, "").trim();
-      if(!link){
-        showToast("Link inválido.");
-        return;
-      }
+    if(soundBtn){
+      soundBtn.style.display = toolflixCurrentTrailer ? "inline-flex" : "none";
+      soundBtn.textContent = "🔊 Ativar som";
+      soundBtn.onclick = ()=> setTrailerSound(!toolflixTrailerSoundOn);
+    }
 
-      window.open(link, "_blank");
+    downloadBtn.onclick = ()=> handleGameDownload(j);
 
-      const u = loadUser();
-      if(!u || !u.nick) return;
-
-      if(j.categoria === "YouTube"){
-        const left = ytCooldownLeft();
-        if(left <= 0){
-          localStorage.setItem(LAST_YT_KEY, Date.now());
-          awardXp(XP_RULES.youtube, "YouTube");
-        }else{
-          showToast("⏳ Aguarde 5 minutos para ganhar XP novamente.");
-        }
-        return;
-      }
-
-      const d = getDaily();
-      if(d.downloads < 3){
-        d.downloads++;
-        setDaily(d);
-        awardXp(XP_RULES.download, "Download");
-      } else {
-        showToast("⚠️ Limite diário de downloads atingido.");
-      }
-    };
+    toolflixDownloadPulseTimer = setTimeout(()=>{
+      const btn = document.getElementById("gameDetailsDownloadBtn");
+      if(btn) btn.classList.add("download-attention");
+    }, TOOLFLIX_MODAL_AUTOPLAY_MS);
 
     modal.style.display = "flex";
   }
@@ -4204,6 +4151,10 @@ const MASTER_NICK = "Srgokucheats";
   });
 
   document.getElementById("searchBar")?.addEventListener("input", render);
+
+  document.addEventListener("keydown", (e)=>{
+    if(e.key === "Escape") closeGameDetailsModal();
+  });
 
   /* ===============================
      TEMA (premium + XP)
@@ -4420,11 +4371,15 @@ const MASTER_NICK = "Srgokucheats";
       const c = document.getElementById("linkCapa");
       const l = document.getElementById("linkJogo");
       const cat = document.getElementById("selectCategoria");
+      const trailerInput = document.getElementById("trailerJogo");
+      const descInput = document.getElementById("descricaoJogo");
       const chk = document.getElementById("isPremiumItem");
 
       const nome = (n?.value || "").trim();
       const capa = (c?.value || "").trim();
       const link = (l?.value || "").trim();
+      const trailer = (trailerInput?.value || "").trim();
+      const descricao = (descInput?.value || "").trim();
       const categoria = (cat?.value || "").trim();
 
       if(!nome || !link) return showToast("Nome e link são obrigatórios!");
@@ -4471,6 +4426,8 @@ const MASTER_NICK = "Srgokucheats";
         if(n) n.value = "";
         if(c) c.value = "";
         if(l) l.value = "";
+        if(trailerInput) trailerInput.value = "";
+        if(descInput) descInput.value = "";
         if(chk) chk.checked = false;
 
         await syncJogos();
@@ -4960,11 +4917,6 @@ document.getElementById("masterChatsTopBtn")?.addEventListener("click", async ()
     showToast("Modo Admin desativado.");
     render();
   }
-
-
-  document.addEventListener("keydown", (e)=>{
-    if(e.key === "Escape") closeGameDetailsModal();
-  });
 
   document.getElementById("adminBtn")?.addEventListener("click", (e)=>{
     e.preventDefault();
