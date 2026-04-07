@@ -337,6 +337,175 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     }
 
 
+    .game-details-modal-box {
+      width: min(900px, 94vw);
+      max-height: 88vh;
+      overflow: hidden;
+      padding: 0;
+      border-radius: 26px;
+      border: 1px solid rgba(0,255,255,0.35);
+      background: linear-gradient(180deg, rgba(8,12,20,0.98), rgba(5,7,12,0.98));
+      box-shadow: 0 20px 60px rgba(0,0,0,0.65), 0 0 25px rgba(0,255,255,0.08);
+    }
+
+    .game-details-inner {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 26px;
+      padding: 24px;
+      align-items: start;
+    }
+
+    .game-details-cover {
+      position: relative;
+      background: rgba(255,255,255,0.03);
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .game-details-cover img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 1 / 1.25;
+      object-fit: cover;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .game-trailer-badge {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      background: linear-gradient(90deg, rgba(255,58,58,0.92), rgba(255,0,0,0.88));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-weight: 900;
+      letter-spacing: .4px;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    .game-details-right {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .game-details-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .game-details-title {
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1.1;
+      color: #fff;
+    }
+
+    .game-details-close {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: none;
+      background: #ff1f1f;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .game-details-divider {
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(0,255,255,0.28), rgba(255,255,255,0.02));
+    }
+
+    .game-details-description {
+      font-size: 15px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.88);
+      max-height: 170px;
+      overflow-y: auto;
+      padding-right: 8px;
+      white-space: pre-wrap;
+    }
+
+    .game-details-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      font-size: 16px;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .game-details-download {
+      margin-top: 4px;
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      background: linear-gradient(90deg, #2cc84d, #25a542);
+      color: #fff;
+      box-shadow: 0 10px 25px rgba(44,200,77,0.22);
+    }
+
+    .game-details-note {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .game-trailer-frame-wrap {
+      display: none;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #000;
+    }
+
+    .game-trailer-frame-wrap.active {
+      display: block;
+    }
+
+    .game-trailer-frame {
+      width: 100%;
+      height: 260px;
+      border: 0;
+      display: block;
+      background: #000;
+    }
+
+    .admin-textarea {
+      min-height: 110px;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    @media (max-width: 760px) {
+      .game-details-inner {
+        grid-template-columns: 1fr;
+      }
+      .game-details-cover img {
+        aspect-ratio: 1 / 1;
+      }
+      .game-details-title {
+        font-size: 26px;
+      }
+      .game-trailer-frame {
+        height: 220px;
+      }
+    }
+
+
     /* ===== TROPHY POPUP (PlayStation style) ===== */
     #trophy-notify-root{
       position: fixed;
@@ -1809,6 +1978,42 @@ select optgroup{
     <section id="catalogo"></section>
   </main>
 
+  <div id="gameDetailsModal" class="modal-overlay" onclick="closeGameDetailsModal(event)">
+    <div class="modal-box game-details-modal-box" onclick="event.stopPropagation()">
+      <div class="game-details-inner">
+        <div class="game-details-cover">
+          <img id="gameDetailsImage" src="" alt="Capa do jogo">
+          <button id="gameDetailsTrailerBtn" class="game-trailer-badge" type="button">TRAILER</button>
+        </div>
+
+        <div class="game-details-right">
+          <div class="game-details-header">
+            <div class="game-details-title" id="gameDetailsTitle">Jogo</div>
+            <button class="game-details-close" type="button" onclick="closeGameDetailsModal(event)">X</button>
+          </div>
+
+          <div class="game-details-divider"></div>
+
+          <div class="game-details-description" id="gameDetailsDescription"></div>
+
+          <div class="game-trailer-frame-wrap" id="gameTrailerWrap">
+            <iframe id="gameTrailerFrame" class="game-trailer-frame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+
+          <div class="game-details-divider"></div>
+
+          <div class="game-details-meta">
+            <div>Tipo: <strong id="gameDetailsCategory" style="color:#66ccff;"></strong></div>
+            <div><strong id="gameDetailsPremium" style="color:#ffd700;"></strong></div>
+          </div>
+
+          <button id="gameDetailsDownloadBtn" class="game-details-download" type="button">Baixar agora</button>
+          <div class="game-details-note">Clique no trailer para assistir sem sair do site.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="toast-container"></div>
   <div id="trophy-notify-root"></div>
 
@@ -2200,9 +2405,11 @@ const MASTER_NICK = "Srgokucheats";
     const categoria = normalizeCategoria(g?.categoria ?? g?.category ?? g?.cat);
     const link = safeStr(g?.link ?? g?.url ?? g?.href ?? "").trim();
     const capa = safeStr(g?.capa ?? g?.img ?? g?.image ?? g?.cover ?? "").trim();
+    const descricao = safeStr(g?.descricao ?? g?.description ?? g?.desc ?? "").trim();
+    const trailer = safeStr(g?.trailer ?? g?.trailer_url ?? g?.trailerUrl ?? g?.youtube ?? "").trim();
     const premium = Boolean(g?.premium === true || g?.isPremium === true || categoria === "Premium");
     const created_at = Number(g?.created_at ?? g?.createdAt ?? g?.added_at ?? g?.addedAt ?? 0) || 0;
-    return { nome, categoria, link, capa, premium, created_at };
+    return { nome, categoria, link, capa, descricao, trailer, premium, created_at };
   }
 
   /* ===============================
@@ -3681,6 +3888,122 @@ const MASTER_NICK = "Srgokucheats";
     render();
   }
 
+  function getYouTubeEmbedUrl(url){
+    const raw = safeStr(url, "").trim();
+    if(!raw) return "";
+
+    try{
+      const u = new URL(raw);
+      let videoId = "";
+
+      if(u.hostname.includes("youtu.be")){
+        videoId = u.pathname.replace(/^\//, "").split("/")[0];
+      }else if(u.searchParams.get("v")){
+        videoId = u.searchParams.get("v");
+      }else if(u.pathname.includes("/embed/")){
+        videoId = u.pathname.split("/embed/")[1]?.split(/[?&/]/)[0] || "";
+      }else if(u.pathname.includes("/shorts/")){
+        videoId = u.pathname.split("/shorts/")[1]?.split(/[?&/]/)[0] || "";
+      }
+
+      if(!videoId) return raw;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+    }catch{
+      return raw;
+    }
+  }
+
+  function closeGameDetailsModal(){
+    const modal = document.getElementById("gameDetailsModal");
+    const frame = document.getElementById("gameTrailerFrame");
+    const wrap = document.getElementById("gameTrailerWrap");
+    if(frame) frame.src = "";
+    if(wrap) wrap.classList.remove("active");
+    if(modal) modal.style.display = "none";
+    window.__toolflixCurrentGame = null;
+  }
+  window.closeGameDetailsModal = closeGameDetailsModal;
+
+  function openGameDetails(j){
+    window.__toolflixCurrentGame = j || null;
+
+    const modal = document.getElementById("gameDetailsModal");
+    const image = document.getElementById("gameDetailsImage");
+    const title = document.getElementById("gameDetailsTitle");
+    const desc = document.getElementById("gameDetailsDescription");
+    const cat = document.getElementById("gameDetailsCategory");
+    const premium = document.getElementById("gameDetailsPremium");
+    const trailerBtn = document.getElementById("gameDetailsTrailerBtn");
+    const frame = document.getElementById("gameTrailerFrame");
+    const wrap = document.getElementById("gameTrailerWrap");
+    const downloadBtn = document.getElementById("gameDetailsDownloadBtn");
+
+    if(!modal || !title || !desc || !downloadBtn) return;
+
+    const capaFinal = j?.capa || "https://via.placeholder.com/512x512.png?text=ToolFlix";
+    const hasTrailer = !!safeStr(j?.trailer, "").trim();
+
+    if(image){
+      image.src = capaFinal;
+      image.onerror = ()=> { image.src = "https://via.placeholder.com/512x512.png?text=ToolFlix"; };
+    }
+    title.textContent = safeStr(j?.nome, "Sem nome");
+    desc.textContent = safeStr(j?.descricao, "Descrição indisponível no momento.");
+    if(cat) cat.textContent = normalizeCategoria(j?.categoria || "Conteúdo");
+    if(premium) premium.textContent = j?.premium ? "💎 Premium" : "";
+
+    if(frame) frame.src = "";
+    if(wrap) wrap.classList.remove("active");
+
+    if(trailerBtn){
+      trailerBtn.style.display = hasTrailer ? "block" : "none";
+      trailerBtn.onclick = ()=>{
+        const embed = getYouTubeEmbedUrl(j?.trailer || "");
+        if(!embed){
+          showToast("Trailer indisponível.");
+          return;
+        }
+        if(frame) frame.src = embed;
+        if(wrap) wrap.classList.add("active");
+      };
+    }
+
+    downloadBtn.onclick = ()=>{
+      const link = safeStr(j?.link, "").trim();
+      if(!link){
+        showToast("Link inválido.");
+        return;
+      }
+
+      window.open(link, "_blank");
+
+      const u = loadUser();
+      if(!u || !u.nick) return;
+
+      if(j.categoria === "YouTube"){
+        const left = ytCooldownLeft();
+        if(left <= 0){
+          localStorage.setItem(LAST_YT_KEY, Date.now());
+          awardXp(XP_RULES.youtube, "YouTube");
+        }else{
+          showToast("⏳ Aguarde 5 minutos para ganhar XP novamente.");
+        }
+        return;
+      }
+
+      const d = getDaily();
+      if(d.downloads < 3){
+        d.downloads++;
+        setDaily(d);
+        awardXp(XP_RULES.download, "Download");
+      } else {
+        showToast("⚠️ Limite diário de downloads atingido.");
+      }
+    };
+
+    modal.style.display = "flex";
+  }
+
   /* ===============================
      CATALOGO SYNC
   ================================= */
@@ -3766,37 +4089,7 @@ const MASTER_NICK = "Srgokucheats";
           showToast("🔒 Conteúdo Premium!");
           return;
         }
-
-        const link = j.link;
-        if(link){
-          window.open(link, "_blank");
-        }else{
-          showToast("Link inválido.");
-          return;
-        }
-
-        const u = loadUser();
-        if(!u || !u.nick) return;
-
-        if(j.categoria === "YouTube"){
-          const left = ytCooldownLeft();
-          if(left <= 0){
-            localStorage.setItem(LAST_YT_KEY, Date.now());
-            awardXp(XP_RULES.youtube, "YouTube");
-          }else{
-            showToast("⏳ Aguarde 5 minutos para ganhar XP novamente.");
-          }
-          return;
-        }
-
-        const d = getDaily();
-        if(d.downloads < 3){
-          d.downloads++;
-          setDaily(d);
-          awardXp(XP_RULES.download, "Download");
-        } else {
-          showToast("⚠️ Limite diário de downloads atingido.");
-        }
+        openGameDetails(j);
       };
 
       const capaFinal = j.capa || "https://via.placeholder.com/512x512.png?text=ToolFlix";
@@ -4029,7 +4322,9 @@ const MASTER_NICK = "Srgokucheats";
         <input type="text" id="nomeJogo" class="admin-input" placeholder="Nome do Título">
         <input type="text" id="linkCapa" class="admin-input" placeholder="Link da Imagem (URL)">
         <input type="text" id="linkJogo" class="admin-input" placeholder="Link do Download (URL)">
+        <input type="text" id="trailerJogo" class="admin-input" placeholder="Link do trailer no YouTube">
         <select id="selectCategoria" class="admin-input"></select>
+        <textarea id="descricaoJogo" class="admin-input admin-textarea" placeholder="Descrição do jogo"></textarea>
 
         <label class="admin-input" style="display:flex; align-items:center; gap:10px; cursor:pointer;">
           <input type="checkbox" id="isPremiumItem" style="transform: scale(1.2);">
@@ -4155,6 +4450,8 @@ const MASTER_NICK = "Srgokucheats";
             link,
             image: capa,
             category: categoria,
+            description: descricao,
+            trailer_url: trailer,
             premium: !!(chk && chk.checked)
           })
         });
@@ -4530,11 +4827,15 @@ document.getElementById("masterChatsTopBtn")?.addEventListener("click", async ()
       const c = document.getElementById("linkCapa");
       const l = document.getElementById("linkJogo");
       const cat = document.getElementById("selectCategoria");
+      const trailerInput = document.getElementById("trailerJogo");
+      const descInput = document.getElementById("descricaoJogo");
       const chk = document.getElementById("isPremiumItem");
 
       const nome = (n.value || "").trim();
       const capa = (c.value || "").trim();
       const link = (l.value || "").trim();
+      const trailer = (trailerInput?.value || "").trim();
+      const descricao = (descInput?.value || "").trim();
       const categoria = (cat.value || "").trim();
 
       if(!nome || !link) return showToast("Nome e link são obrigatórios!");
@@ -4561,6 +4862,8 @@ document.getElementById("masterChatsTopBtn")?.addEventListener("click", async ()
             link,
             image: capa,
             category: categoria,
+            description: descricao,
+            trailer_url: trailer,
             premium: !!(chk && chk.checked)
           })
         });
@@ -4577,6 +4880,8 @@ document.getElementById("masterChatsTopBtn")?.addEventListener("click", async ()
         document.getElementById("addJogoBtn").innerText = "💾 SALVAR CONTEÚDO";
 
         n.value = ""; c.value = ""; l.value = "";
+        if(trailerInput) trailerInput.value = "";
+        if(descInput) descInput.value = "";
         if(chk) chk.checked = false;
 
         await syncJogos();
@@ -4605,6 +4910,8 @@ document.getElementById("masterChatsTopBtn")?.addEventListener("click", async ()
     document.getElementById("nomeJogo").value = j.nome || "";
     document.getElementById("linkCapa").value = j.capa || "";
     document.getElementById("linkJogo").value = j.link || "";
+    document.getElementById("trailerJogo").value = j.trailer || "";
+    document.getElementById("descricaoJogo").value = j.descricao || "";
     document.getElementById("selectCategoria").value = j.categoria || "Jogos PS2";
 
     const chk = document.getElementById("isPremiumItem");
@@ -4653,6 +4960,11 @@ document.getElementById("masterChatsTopBtn")?.addEventListener("click", async ()
     showToast("Modo Admin desativado.");
     render();
   }
+
+
+  document.addEventListener("keydown", (e)=>{
+    if(e.key === "Escape") closeGameDetailsModal();
+  });
 
   document.getElementById("adminBtn")?.addEventListener("click", (e)=>{
     e.preventDefault();
