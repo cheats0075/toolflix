@@ -506,6 +506,240 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     }
 
 
+
+
+    /* ===== PROFILE SELECTOR (PlayStation style) ===== */
+    #profileSelectorModal{
+      z-index: 100020;
+      background:
+        radial-gradient(circle at top center, rgba(0,120,255,.22), transparent 32%),
+        linear-gradient(180deg, rgba(4,27,68,.96), rgba(1,7,18,.98));
+      backdrop-filter: blur(10px);
+    }
+    .profile-selector-box{
+      width:min(980px, 96vw);
+      max-height: 92vh;
+      overflow:auto;
+      background: transparent;
+      border:none;
+      padding: 34px 22px 26px;
+      box-shadow:none;
+    }
+    .profile-selector-top{
+      text-align:center;
+      margin-bottom: 26px;
+    }
+    .profile-selector-title{
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 900;
+      letter-spacing: -.5px;
+      color:#fff;
+      text-shadow: 0 10px 40px rgba(0,0,0,.34);
+    }
+    .profile-selector-sub{
+      margin-top: 10px;
+      color: rgba(220,235,255,.72);
+      font-size: clamp(14px, 1.8vw, 22px);
+      letter-spacing: 1.8px;
+    }
+    .profile-selector-icon{
+      width: 56px;
+      height: 56px;
+      margin: 18px auto 0;
+      border-radius: 50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow: 0 0 22px rgba(0,180,255,.20);
+      font-size: 24px;
+    }
+    .profile-selector-list{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:flex-start;
+      gap: 30px;
+      margin-top: 36px;
+    }
+    .profile-select-card{
+      width: 180px;
+      background: transparent;
+      border:none;
+      color:#fff;
+      text-align:center;
+      cursor:pointer;
+      position:relative;
+    }
+    .profile-select-card:focus-visible{ outline: 2px solid rgba(0,180,255,.85); outline-offset: 8px; border-radius: 18px; }
+    .profile-select-avatar-wrap{
+      width: 132px;
+      height: 132px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      padding: 4px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 8px 30px rgba(0,0,0,.26);
+      transition: .28s ease;
+      position:relative;
+    }
+    .profile-select-card:hover .profile-select-avatar-wrap,
+    .profile-select-card.active .profile-select-avatar-wrap{
+      transform: scale(1.06);
+      border-color: rgba(0,180,255,.75);
+      box-shadow: 0 0 0 2px rgba(0,170,255,.55), 0 0 22px rgba(0,180,255,.32), 0 12px 34px rgba(0,0,0,.34);
+    }
+    .profile-select-avatar{
+      width:100%;
+      height:100%;
+      border-radius:50%;
+      object-fit:cover;
+      display:block;
+      background: rgba(255,255,255,.05);
+    }
+    .profile-select-name{
+      font-size: 16px;
+      font-weight: 900;
+      line-height:1.25;
+      color:#fff;
+      text-shadow: 0 4px 18px rgba(0,0,0,.35);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+    .profile-select-meta{
+      margin-top:8px;
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .profile-select-pill{
+      border-radius:999px;
+      padding:5px 10px;
+      font-size:11px;
+      font-weight:900;
+      background: rgba(255,255,255,.09);
+      border:1px solid rgba(255,255,255,.09);
+      color:#fff;
+      backdrop-filter: blur(10px);
+    }
+    .profile-select-pill.premium{
+      background: linear-gradient(90deg, rgba(255,215,0,.88), rgba(255,153,0,.84));
+      color:#111;
+      border:none;
+    }
+    .profile-remove-btn{
+      position:absolute;
+      top: 2px;
+      right: 10px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.42);
+      color:#fff;
+      font-size:14px;
+      font-weight:900;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      opacity:.82;
+      transition:.22s ease;
+      z-index:2;
+    }
+    .profile-remove-btn:hover{ opacity:1; transform: scale(1.08); background: rgba(255,30,30,.72); }
+    .profile-add-card .profile-select-avatar-wrap{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(255,255,255,.02);
+      border-style: solid;
+    }
+    .profile-add-plus{
+      width: 100%;
+      height: 100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 48px;
+      color:#fff;
+    }
+    .profile-selector-bottom{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      margin-top: 34px;
+      flex-wrap:wrap;
+    }
+    .profile-selector-btn{
+      min-width: 200px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.08);
+      color:#fff;
+      font-weight: 900;
+      cursor:pointer;
+      box-shadow: 0 12px 28px rgba(0,0,0,.22);
+    }
+    .profile-selector-btn.primary{
+      background: linear-gradient(90deg, #0ee7f1, #09b7ff);
+      color:#00131a;
+      border:none;
+    }
+    .profile-selector-empty{
+      margin: 22px auto 0;
+      width:min(620px, 92vw);
+      padding: 18px 20px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      color: rgba(255,255,255,.88);
+      text-align:center;
+      line-height:1.5;
+      box-shadow: 0 12px 30px rgba(0,0,0,.20);
+    }
+    .login-shell{
+      width:min(540px, 94vw);
+      padding: 22px;
+      border-radius: 34px;
+      background: linear-gradient(180deg, rgba(10,10,14,.96), rgba(12,12,12,.96));
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: 0 24px 60px rgba(0,0,0,.55), 0 0 22px rgba(0,255,255,.08);
+      position:relative;
+      overflow:hidden;
+    }
+    .login-shell::before{
+      content:"";
+      position:absolute;
+      inset:-40% auto auto 50%;
+      transform:translateX(-50%);
+      width: 360px;
+      height: 360px;
+      background: radial-gradient(circle, rgba(0,255,255,.08), transparent 60%);
+      pointer-events:none;
+    }
+    .login-back-btn{
+      display:none;
+      width:100%;
+      margin-top: 12px;
+      background: rgba(255,255,255,.07) !important;
+      color:#fff !important;
+      border:1px solid rgba(255,255,255,.10) !important;
+    }
+    #userLoginModal.has-selector-back .login-back-btn{ display:block; }
+    @media (max-width: 760px){
+      .profile-select-card{ width: 140px; }
+      .profile-select-avatar-wrap{ width: 102px; height: 102px; }
+      .profile-selector-list{ gap: 22px; }
+      .profile-selector-btn{ min-width: 160px; }
+    }
+
     /* ===== TROPHY POPUP (PlayStation style) ===== */
     #trophy-notify-root{
       position: fixed;
@@ -858,73 +1092,6 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       font-size:12px;
       opacity:.78;
       line-height:1.7;
-    }
-
-    .avatar-picker-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
-      gap:12px;
-      margin-top:16px;
-    }
-    .avatar-picker-card{
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.05);
-      padding:10px;
-      text-align:center;
-      cursor:pointer;
-      transition:.22s;
-      position:relative;
-    }
-    .avatar-picker-card:hover{
-      transform:translateY(-2px);
-      border-color:rgba(0,255,255,.25);
-      box-shadow:0 10px 24px rgba(0,0,0,.22);
-    }
-    .avatar-picker-card img{
-      width:72px;
-      height:72px;
-      border-radius:50%;
-      object-fit:cover;
-      display:block;
-      margin:0 auto 10px;
-      border:2px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-    }
-    .avatar-picker-card.selected{
-      border-color:rgba(255,215,0,.60);
-      box-shadow:0 0 0 1px rgba(255,215,0,.25), 0 12px 30px rgba(255,215,0,.10);
-      background:rgba(255,215,0,.08);
-    }
-    .avatar-picker-card.locked{
-      opacity:.55;
-      cursor:not-allowed;
-      filter:grayscale(100%);
-    }
-    .avatar-picker-card.locked:hover{
-      transform:none;
-      border-color:rgba(255,255,255,.10);
-      box-shadow:none;
-    }
-    .avatar-picker-badge{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:5px 9px;
-      border-radius:999px;
-      font-size:11px;
-      font-weight:900;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.08);
-    }
-    .avatar-picker-card.selected .avatar-picker-badge{
-      background:linear-gradient(90deg,#ffd700,#ffb700);
-      color:#111;
-      border-color:rgba(255,215,0,.45);
-    }
-    .avatar-picker-card.locked .avatar-picker-badge{
-      background:rgba(255,255,255,.06);
-      color:rgba(255,255,255,.86);
     }
 
     /* SUPORTE */
@@ -1917,7 +2084,6 @@ select optgroup{
 
         <div id="userMenuBox" class="userMenuBox" style="display:none;">
           <button class="userMenuItem" id="openProfileBtn">👤 Perfil</button>
-          <button class="userMenuItem" id="openAvatarPickerBtn">🖼️ Trocar avatar</button>
           <button class="userMenuItem" id="openGameBtn">🎮 Game</button>
           <button class="userMenuItem" id="openAchBtn">🏆 Conquistas</button>
           <button class="userMenuItem" id="logoutBtn">🚪 Sair</button>
@@ -1946,9 +2112,29 @@ select optgroup{
       </div>
     </div>
 
+
+    <!-- ===== PROFILE SELECTOR ===== -->
+    <div id="profileSelectorModal" class="modal-overlay">
+      <div class="profile-selector-box">
+        <div class="profile-selector-top">
+          <div class="profile-selector-title">Welcome Back to ToolFlix Network</div>
+          <div class="profile-selector-sub">Quem vai usar este dispositivo?</div>
+          <div class="profile-selector-icon">🎮</div>
+        </div>
+        <div id="profileSelectorList" class="profile-selector-list"></div>
+        <div id="profileSelectorEmpty" class="profile-selector-empty" style="display:none;">
+          Nenhum perfil salvo neste navegador ainda. Entre ou crie sua conta para aparecer aqui depois.
+        </div>
+        <div class="profile-selector-bottom">
+          <button type="button" id="profileSelectorLoginAnotherBtn" class="profile-selector-btn primary">+ Usar outra conta</button>
+          <button type="button" id="profileSelectorCloseBtn" class="profile-selector-btn">Fechar</button>
+        </div>
+      </div>
+    </div>
+
 	    <!-- ===== LOGIN GAME ===== -->
     <div id="userLoginModal" class="modal-overlay">
-      <div class="modal-box">
+      <div class="modal-box login-shell">
         <h2 id="userAuthTitle">👤 Entrar no Game</h2>
 
         <input type="text" id="userNickInput" class="admin-input"
@@ -1997,6 +2183,7 @@ select optgroup{
           <div style="margin-top:8px; opacity:.85;">
             Ao criar conta, você libera o chat e seu XP/Nível fica salvo na sua conta.
           </div>
+          <button id="backToProfilesBtn" class="nav-item login-back-btn">← Voltar para perfis salvos</button>
         </div>
       </div>
     </div>
@@ -2019,19 +2206,6 @@ select optgroup{
           <button id="closeProfileBtn" class="nav-item" style="padding:8px 12px;">✖</button>
         </div>
         <div id="profileContent"></div>
-      </div>
-    </div>
-
-    <!-- ===== MODAL TROCAR AVATAR ===== -->
-    <div id="avatarPickerModal" class="modal-overlay">
-      <div class="modal-box" style="width:640px; max-width:94vw; text-align:left;">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:10px;">
-          <h2 style="color:gold;">🖼️ Trocar avatar</h2>
-          <button id="closeAvatarPickerBtn" class="nav-item" style="padding:8px 12px;">✖</button>
-        </div>
-        <div style="font-size:12px; opacity:.84; line-height:1.6;">Escolha qualquer avatar já desbloqueado pelo seu nível. Os bloqueados ficam liberados quando você subir de nível.</div>
-        <div id="avatarPickerSummary" style="margin-top:12px; font-size:13px; font-weight:800; color:#7cf3ff;"></div>
-        <div id="avatarPickerGrid" class="avatar-picker-grid"></div>
       </div>
     </div>
 
@@ -2696,6 +2870,133 @@ const MASTER_NICK = "Srgokucheats";
   let profileCache = null;
   let loginFailCount = 0;
 
+
+  const SAVED_PROFILES_KEY = "toolflix_saved_profiles";
+
+  function loadSavedProfiles(){
+    try{
+      const raw = JSON.parse(localStorage.getItem(SAVED_PROFILES_KEY) || "[]");
+      if(!Array.isArray(raw)) return [];
+      return raw.filter(Boolean).map((item)=> ({
+        nick: String(item.nick || "").trim(),
+        xp: Number(item.xp || 0),
+        avatar: String(item.avatar || "").trim(),
+        premium: !!item.premium,
+        lastLoginAt: Number(item.lastLoginAt || item.last_login_at || 0)
+      })).filter((item)=> item.nick);
+    }catch(e){
+      return [];
+    }
+  }
+
+  function saveSavedProfiles(list){
+    const safe = Array.isArray(list) ? list.slice(0, 8) : [];
+    localStorage.setItem(SAVED_PROFILES_KEY, JSON.stringify(safe));
+  }
+
+  function upsertSavedProfile(profile){
+    const nick = String(profile?.nick || "").trim();
+    if(!nick) return;
+    const list = loadSavedProfiles().filter((item)=> String(item.nick || "").trim().toLowerCase() !== nick.toLowerCase());
+    list.unshift({
+      nick,
+      xp: Number(profile?.xp || 0),
+      avatar: String(profile?.avatar || "").trim(),
+      premium: !!profile?.premium,
+      lastLoginAt: Date.now()
+    });
+    saveSavedProfiles(list);
+  }
+
+  function removeSavedProfile(nick){
+    const cleanNick = String(nick || "").trim().toLowerCase();
+    const next = loadSavedProfiles().filter((item)=> String(item.nick || "").trim().toLowerCase() !== cleanNick);
+    saveSavedProfiles(next);
+    renderProfileSelector();
+  }
+
+  function renderProfileSelector(){
+    const listEl = document.getElementById("profileSelectorList");
+    const emptyEl = document.getElementById("profileSelectorEmpty");
+    if(!listEl) return;
+    const profiles = loadSavedProfiles().sort((a,b)=> Number(b.lastLoginAt || 0) - Number(a.lastLoginAt || 0));
+    listEl.innerHTML = "";
+
+    if(!profiles.length){
+      if(emptyEl) emptyEl.style.display = "block";
+    } else {
+      if(emptyEl) emptyEl.style.display = "none";
+      profiles.forEach((profile, index)=>{
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "profile-select-card" + (index === 0 ? " active" : "");
+        card.innerHTML = `
+          <div class="profile-select-avatar-wrap">
+            <img class="profile-select-avatar ${getAvatarClass(profile.level || getAutoAvatarLevelFromXp(profile.xp))}" src="${getAvatarSrc(profile)}" alt="${safeStr(profile.nick)}">
+          </div>
+          <div class="profile-select-name">${safeStr(profile.nick)}</div>
+          <div class="profile-select-meta">
+            <span class="profile-select-pill">Lv ${getLevelInfo(Number(profile.xp || 0)).level}</span>
+            ${profile.premium ? '<span class="profile-select-pill premium">💎 Premium</span>' : ''}
+          </div>
+        `;
+        card.addEventListener("click", ()=> selectSavedProfile(profile.nick));
+
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "profile-remove-btn";
+        removeBtn.title = "Remover perfil salvo";
+        removeBtn.textContent = "✕";
+        removeBtn.addEventListener("click", (e)=>{
+          e.stopPropagation();
+          removeSavedProfile(profile.nick);
+        });
+        card.appendChild(removeBtn);
+        listEl.appendChild(card);
+      });
+    }
+
+    const addCard = document.createElement("button");
+    addCard.type = "button";
+    addCard.className = "profile-select-card profile-add-card";
+    addCard.innerHTML = `
+      <div class="profile-select-avatar-wrap"><div class="profile-add-plus">+</div></div>
+      <div class="profile-select-name">Adicionar conta</div>
+    `;
+    addCard.addEventListener("click", ()=> openLoginFromSelector("login"));
+    listEl.appendChild(addCard);
+  }
+
+  function openProfileSelector(){
+    const modal = document.getElementById("profileSelectorModal");
+    renderProfileSelector();
+    if(modal) modal.style.display = "flex";
+    document.getElementById("userLoginModal")?.classList.add("has-selector-back");
+  }
+
+  function closeProfileSelector(){
+    const modal = document.getElementById("profileSelectorModal");
+    if(modal) modal.style.display = "none";
+  }
+
+  function openLoginFromSelector(mode){
+    closeProfileSelector();
+    openLogin(mode || "login");
+  }
+
+  function selectSavedProfile(nick){
+    const cleanNick = String(nick || "").trim();
+    if(!cleanNick) return;
+    closeProfileSelector();
+    openLogin("login");
+    const nickInput = document.getElementById("userNickInput");
+    const passInput = document.getElementById("userPassInput");
+    if(nickInput) nickInput.value = cleanNick;
+    if(passInput) passInput.value = "";
+    if(passInput) passInput.focus();
+    tryAutoOpenRecoveryByNick();
+  }
+
   function setLoginFailCount(n){
     loginFailCount = Math.max(0, Number(n || 0));
     const forgotBtn = document.getElementById("forgotPasswordBtn");
@@ -3007,111 +3308,6 @@ const MASTER_NICK = "Srgokucheats";
     renderProfileCard(profile);
   }
 
-  function getAvatarFilenameByLevel(level){
-    const n = clampAvatarLevel(level);
-    return `level-${n}.webp`;
-  }
-
-  function getUnlockedAvatarList(level){
-    const max = clampAvatarLevel(level);
-    const list = [];
-    for(let i=1;i<=15;i++){
-      list.push({
-        level:i,
-        file:getAvatarFilenameByLevel(i),
-        unlocked:i <= max
-      });
-    }
-    return list;
-  }
-
-  async function saveSelectedAvatar(fileName){
-    const token = getToken();
-    if(!token) return showToast("Faça login para trocar avatar.");
-    try{
-      const r = await fetch(API_BASE + "/api/profile/avatar", {
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json",
-          "Authorization":"Bearer " + token
-        },
-        body: JSON.stringify({ avatar: fileName })
-      });
-      const j = await r.json().catch(()=> ({}));
-      if(!r.ok || !j?.ok || !j?.profile){
-        if(j?.error === "AVATAR_LOCKED") return showToast("Esse avatar ainda está bloqueado para seu nível.");
-        return showToast(j?.error || "Não foi possível trocar o avatar.");
-      }
-
-      profileCache = j.profile;
-      const old = loadUser() || {};
-      saveUser({
-        ...old,
-        nick: j.profile.nick,
-        xp: Number(j.profile.xp || 0),
-        avatar: j.profile.avatar,
-        premium: !!j.profile.premium,
-        password_temp: !!j.profile.passwordTemp
-      });
-      updateUserUI?.();
-      renderAvatarPicker(j.profile);
-      showToast("✅ Avatar atualizado.");
-    }catch(e){
-      showToast("Erro ao trocar avatar.");
-    }
-  }
-
-  function renderAvatarPicker(profile){
-    const grid = document.getElementById("avatarPickerGrid");
-    const summary = document.getElementById("avatarPickerSummary");
-    if(!grid) return;
-    if(!profile){
-      grid.innerHTML = `<div style="opacity:.82;">Perfil não encontrado.</div>`;
-      if(summary) summary.textContent = "";
-      return;
-    }
-
-    const level = clampAvatarLevel(profile.level || getAutoAvatarLevelFromXp(profile.xp || 0));
-    const selected = String(profile.avatar || getAvatarFilenameByLevel(level)).trim().toLowerCase();
-    if(summary){
-      summary.textContent = `Seu nível atual é ${level}. Avatares liberados: 1 até ${level}.`;
-    }
-
-    grid.innerHTML = getUnlockedAvatarList(level).map(item => {
-      const selectedCls = item.file.toLowerCase() === selected ? " selected" : "";
-      const lockedCls = item.unlocked ? "" : " locked";
-      const badge = item.unlocked
-        ? (item.file.toLowerCase() === selected ? "Em uso" : `Nível ${item.level}`)
-        : `Desbloqueia no ${item.level}`;
-      return `
-        <button type="button" class="avatar-picker-card${selectedCls}${lockedCls}" data-avatar="${item.file}" ${item.unlocked ? "" : "disabled"}>
-          <img class="${getAvatarClass(item.level)}" src="/toolflix/assets/img/avatars/${item.file}" alt="Avatar nível ${item.level}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
-          <div style="font-weight:900; margin-bottom:8px;">Avatar ${item.level}</div>
-          <div class="avatar-picker-badge">${badge}</div>
-        </button>
-      `;
-    }).join("");
-
-    grid.querySelectorAll(".avatar-picker-card[data-avatar]:not(.locked)").forEach(btn => {
-      btn.addEventListener("click", ()=>{
-        const avatar = btn.getAttribute("data-avatar");
-        if(avatar) saveSelectedAvatar(avatar);
-      });
-    });
-  }
-
-  async function openAvatarPickerModal(force=false){
-    const modal = document.getElementById("avatarPickerModal");
-    const grid = document.getElementById("avatarPickerGrid");
-    const summary = document.getElementById("avatarPickerSummary");
-    if(grid) grid.innerHTML = `<div style="opacity:.82;">Carregando avatars...</div>`;
-    if(summary) summary.textContent = "";
-    if(modal) modal.style.display = "flex";
-
-    const profile = await fetchProfileMe(force);
-    renderAvatarPicker(profile);
-  }
-
   async function changeOwnPassword(){
     const currentPassword = (document.getElementById("currentPasswordInput")?.value || "");
     const newPassword = (document.getElementById("newPasswordInput")?.value || "");
@@ -3386,7 +3582,7 @@ const MASTER_NICK = "Srgokucheats";
     const userAvatarEl = ensureUserAvatarEl();
 
     if(!u || !u.nick){
-      if(nickEl) nickEl.innerText = "Entrar";
+      if(nickEl) nickEl.innerText = loadSavedProfiles().length ? "Perfis" : "Entrar";
       if(xpFill) xpFill.style.width = "0%";
       if(xpText) xpText.innerText = "0/100";
       if(userAvatarEl){ userAvatarEl.src = `/toolflix/assets/img/avatars/level-1.webp`; userAvatarEl.className = "user-avatar avatar-glow-low"; }
@@ -3558,6 +3754,7 @@ const MASTER_NICK = "Srgokucheats";
     const m = document.getElementById("userLoginModal");
     const inp = document.getElementById("userNickInput");
     if(m) m.style.display = "flex";
+    m?.classList.toggle("has-selector-back", loadSavedProfiles().length > 0);
     setAuthMode(mode || "login");
     setLoginFailCount(mode === "login" ? loginFailCount : 0);
     toggleForgotPasswordBox(false);
@@ -3581,7 +3778,7 @@ const MASTER_NICK = "Srgokucheats";
 
   document.getElementById("userArea")?.addEventListener("click", ()=>{
     const u = loadUser();
-    if(!u || !u.nick) openLogin("login");
+    if(!u || !u.nick) openProfileSelector();
     else toggleUserMenu();
   });
 
@@ -3637,8 +3834,10 @@ const MASTER_NICK = "Srgokucheats";
       setLoginFailCount(0);
       saveAuth({ token: j2.token, userId: j2.user.id, nick: j2.user.nick });
       saveUser({ nick: j2.user.nick, xp: Number(j2.user.xp || 0), password_temp: !!j2.user.password_temp });
+      upsertSavedProfile({ nick: j2.user.nick, xp: Number(j2.user.xp || 0), premium: !!j2.user.premium });
       profileCache = null;
-      await fetchProfileMe(true);
+      const freshProfile = await fetchProfileMe(true);
+      if(freshProfile) upsertSavedProfile(freshProfile);
 
       localStorage.removeItem("toolflix_recovery_nick");
       closeLogin();
@@ -3682,6 +3881,11 @@ const MASTER_NICK = "Srgokucheats";
     }
   });
 
+  document.getElementById("profileSelectorLoginAnotherBtn")?.addEventListener("click", ()=> openLoginFromSelector("login"));
+  document.getElementById("profileSelectorCloseBtn")?.addEventListener("click", ()=> closeProfileSelector());
+  document.getElementById("backToProfilesBtn")?.addEventListener("click", ()=>{ closeLogin(); openProfileSelector(); });
+  document.getElementById("profileSelectorModal")?.addEventListener("click", (e)=>{ if(e.target?.id === "profileSelectorModal") closeProfileSelector(); });
+
   document.getElementById("forgotPasswordBtn")?.addEventListener("click", ()=>{
     toggleForgotPasswordBox();
     const nickInput = document.getElementById("forgotNickInput");
@@ -3719,6 +3923,7 @@ const MASTER_NICK = "Srgokucheats";
 
   document.getElementById("logoutBtn")?.addEventListener("click", ()=>{
     const old = loadUser();
+    if(old?.nick) upsertSavedProfile(old);
     const keepXp = old ? Number(old.xp || 0) : 0;
     saveUser({ nick: null, xp: keepXp });
     clearAuth();
@@ -3948,11 +4153,6 @@ const MASTER_NICK = "Srgokucheats";
     await openProfileModal(true);
   });
 
-  document.getElementById("openAvatarPickerBtn")?.addEventListener("click", async ()=>{
-    toggleUserMenu(true);
-    await openAvatarPickerModal(true);
-  });
-
   document.getElementById("closeProfileBtn")?.addEventListener("click", ()=>{
     document.getElementById("profileModal").style.display = "none";
   });
@@ -3982,10 +4182,6 @@ const MASTER_NICK = "Srgokucheats";
 
   document.getElementById("closeAchBtn")?.addEventListener("click", ()=>{
     document.getElementById("achModal").style.display = "none";
-  });
-
-  document.getElementById("closeAvatarPickerBtn")?.addEventListener("click", ()=>{
-    document.getElementById("avatarPickerModal").style.display = "none";
   });
 
   const _awardXpOriginal = awardXp;
