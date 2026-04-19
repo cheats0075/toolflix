@@ -1537,6 +1537,92 @@ select optgroup{
       }
     }
 
+    #ps3PanelTopBtn.active{
+      background: linear-gradient(90deg, #00ffff, #0080ff);
+      color:#000;
+      font-weight:900;
+      border:none;
+      box-shadow: 0 0 15px rgba(0,255,255,0.35);
+    }
+    #ps3PanelDock{ display:none; margin-bottom:24px; }
+    #ps3PanelDock.show{ display:block; }
+    .ps3-panel-wrap{
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(20,20,20,.55);
+      backdrop-filter: blur(14px);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.24);
+    }
+    .ps3-panel-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+    .ps3-panel-title{
+      font-size:18px;
+      font-weight:900;
+      margin-bottom:6px;
+    }
+    .ps3-panel-sub{
+      opacity:.88;
+      line-height:1.45;
+      font-size:14px;
+    }
+    .ps3-panel-meta{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .ps3-panel-chip{
+      padding:9px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      font-size:12px;
+      font-weight:800;
+    }
+    .ps3-panel-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .ps3-panel-input{
+      min-width:220px;
+      padding:12px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:#fff;
+      outline:none;
+    }
+    .ps3-panel-btn{
+      border:none;
+      border-radius:999px;
+      padding:12px 18px;
+      font-weight:900;
+      cursor:pointer;
+      color:#fff;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .ps3-panel-btn:hover{ transform: translateY(-1px); }
+    .ps3-panel-note{
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:16px;
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.07);
+      font-size:13px;
+      opacity:.92;
+    }
+
+
   </style>
 
 <style id="masterChatsOverlayStyle">
@@ -1776,7 +1862,6 @@ select optgroup{
       <button class="catBtn" data-cat="Jogos PS2">🕹️ PS2</button>
       <button class="catBtn" data-cat="PS2 com Cheats">🔥 PS2 Cheats</button>
       <button class="catBtn" data-cat="Jogos PS3">🕹️ PS3</button>
-      <button class="catBtn" data-cat="PAINEL PS3">🚀 PAINEL PS3</button>
       <button class="catBtn" data-cat="PS3 com Cheats">🔥 PS3 Cheats</button>
 
       <button class="catBtn" data-cat="Xbox Clássico">💚 Xbox Clássico</button>
@@ -1830,6 +1915,7 @@ select optgroup{
 
       <button id="chatToggleBtn" class="nav-item">💬 Chat</button>
       <button id="globalChatBtn" class="nav-item">🎮 Chat ToolFlix</button>
+      <button id="ps3PanelTopBtn" class="nav-item" type="button">🚀 PAINEL PS3</button>
 	  <button id="masterChatsTopBtn" class="nav-item"
   onclick="openMasterChatsTop()"
   style="display:none;">
@@ -1970,6 +2056,7 @@ select optgroup{
     </div>
 
     <section id="adminSection"></section>
+    <section id="ps3PanelDock"></section>
 
     <h2 id="sectionTitle"
         style="margin-bottom:30px; font-size:28px;">
@@ -2361,7 +2448,6 @@ document.addEventListener("DOMContentLoaded", function(){
   ================================= */
   const API_URL  = "https://toolflix-api.onrender.com";
   const URL_JOGOS = `${API_URL}/api/games`;
-  const URL_PS3_GAMES = `${API_URL}/api/ps3-games`;
   const API_BASE = "https://toolflix-api.onrender.com";
   // 👑 SUPER ADMIN MASTER
 const MASTER_NICK = "Srgokucheats";
@@ -2411,7 +2497,11 @@ const MASTER_NICK = "Srgokucheats";
     const trailer = safeStr(g?.trailer ?? g?.trailer_url ?? g?.trailerUrl ?? g?.youtube ?? "").trim();
     const premium = Boolean(g?.premium === true || g?.isPremium === true || categoria === "Premium");
     const created_at = Number(g?.created_at ?? g?.createdAt ?? g?.added_at ?? g?.addedAt ?? 0) || 0;
-    return { nome, categoria, link, capa, descricao, trailer, premium, created_at };
+    const region = safeStr(g?.region ?? g?.regiao ?? "").trim();
+    const title_id = safeStr(g?.title_id ?? g?.titleId ?? "").trim();
+    const file_size = Number(g?.file_size ?? g?.fileSize ?? 0) || 0;
+    const sha256 = safeStr(g?.sha256 ?? "").trim();
+    return { nome, categoria, link, capa, descricao, trailer, premium, created_at, region, title_id, file_size, sha256 };
   }
 
   /* ===============================
@@ -2443,18 +2533,15 @@ const MASTER_NICK = "Srgokucheats";
   let catAtiva  = "Todos";
   let sortModo  = "recentes";
   let filterFav = false;
+  const PS3_PANEL_SENTINEL = "__PAINEL_PS3__";
+  let ps3Jogos = [];
+  let ps3Page = 1;
+  let ps3Limit = 24;
+  let ps3Total = 0;
+  let ps3Search = "";
+  let ps3Loading = false;
+  let ps3LoadedOnce = false;
 
-  const PS3_PANEL_CATEGORY = "PAINEL PS3";
-  let ps3PanelState = {
-    items: [],
-    loading: false,
-    search: "",
-    page: 1,
-    limit: 24,
-    total: 0,
-    hasMore: true,
-    lastError: ""
-  };
 
   const GUEST_TRIAL_KEY = "toolflix_guest_trial";
   const GUEST_TRIAL_DURATION_MS = 10 * 60 * 1000;
@@ -3901,6 +3988,148 @@ const MASTER_NICK = "Srgokucheats";
     render();
   }
 
+
+  function svgToDataUri(svg){
+    return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+  }
+
+  function buildCoverPlaceholder(title, subtitle="ToolFlix"){
+    const t = safeStr(title, "ToolFlix").slice(0, 28);
+    const s = safeStr(subtitle, "CAPA").slice(0, 22);
+    return svgToDataUri(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#0f172a"/>
+            <stop offset="100%" stop-color="#111827"/>
+          </linearGradient>
+        </defs>
+        <rect width="512" height="512" rx="32" fill="url(#g)"/>
+        <rect x="20" y="20" width="472" height="472" rx="26" fill="none" stroke="rgba(255,255,255,0.08)"/>
+        <text x="50%" y="44%" text-anchor="middle" fill="#00ffff" font-size="24" font-family="Arial, sans-serif" font-weight="700">${s}</text>
+        <text x="50%" y="56%" text-anchor="middle" fill="#ffffff" font-size="28" font-family="Arial, sans-serif" font-weight="700">${t}</text>
+      </svg>
+    `);
+  }
+
+  function getCoverSrcValue(raw, title="", subtitle="ToolFlix"){
+    const clean = safeStr(raw, "").trim();
+    if(clean && !/via\.placeholder\.com/i.test(clean)) return clean;
+    return buildCoverPlaceholder(title || "ToolFlix", subtitle || "CAPA");
+  }
+
+  function setPs3TopButtonState(active){
+    const btn = document.getElementById("ps3PanelTopBtn");
+    if(btn) btn.classList.toggle("active", !!active);
+  }
+
+  function ensurePs3SidebarButtonHidden(){
+    document.querySelectorAll('.catBtn[data-cat="PAINEL PS3"], .catBtn[data-cat="__PAINEL_PS3__"]').forEach(btn=>{
+      btn.style.display = "none";
+    });
+  }
+
+  function renderPs3Dock(){
+    const dock = document.getElementById("ps3PanelDock");
+    if(!dock) return;
+    const active = catAtiva === PS3_PANEL_SENTINEL;
+    dock.classList.toggle("show", active);
+    dock.style.display = active ? "block" : "none";
+    if(!active){
+      dock.innerHTML = "";
+      return;
+    }
+
+    dock.innerHTML = `
+      <div class="ps3-panel-wrap">
+        <div class="ps3-panel-top">
+          <div>
+            <div class="ps3-panel-title">🚀 PAINEL PS3</div>
+            <div class="ps3-panel-sub">Busca separada, carregamento leve e sem misturar com seus jogos normais.</div>
+            <div class="ps3-panel-meta">
+              <span class="ps3-panel-chip">Itens carregados: ${ps3Jogos.length} de ${ps3Total}</span>
+              <span class="ps3-panel-chip">Resultados por página: ${ps3Limit}</span>
+              <span class="ps3-panel-chip">Busca atual: ${ps3Search ? safeStr(ps3Search) : "todas"}</span>
+            </div>
+          </div>
+          <div class="ps3-panel-actions">
+            <input id="ps3PanelSearchInput" class="ps3-panel-input" type="text" placeholder="Buscar jogo PS3...">
+            <button id="ps3PanelSearchBtn" class="ps3-panel-btn" type="button">🔎 Buscar no painel</button>
+            <button id="ps3PanelMoreBtn" class="ps3-panel-btn" type="button">➕ Carregar mais</button>
+          </div>
+        </div>
+        <div class="ps3-panel-note" id="ps3PanelNote">${ps3Loading ? "Carregando painel PS3..." : "Clique em buscar ou carregar mais para navegar pelos jogos do painel."}</div>
+      </div>
+    `;
+
+    const input = document.getElementById("ps3PanelSearchInput");
+    if(input) input.value = ps3Search;
+
+    document.getElementById("ps3PanelSearchBtn")?.addEventListener("click", async (e)=>{
+      e.preventDefault();
+      ps3Search = (document.getElementById("ps3PanelSearchInput")?.value || "").trim();
+      await loadPs3Jogos(true);
+    });
+
+    document.getElementById("ps3PanelSearchInput")?.addEventListener("keydown", async (e)=>{
+      if(e.key === "Enter"){
+        e.preventDefault();
+        ps3Search = (document.getElementById("ps3PanelSearchInput")?.value || "").trim();
+        await loadPs3Jogos(true);
+      }
+    });
+
+    document.getElementById("ps3PanelMoreBtn")?.addEventListener("click", async (e)=>{
+      e.preventDefault();
+      if(ps3Loading) return;
+      if(ps3Jogos.length >= ps3Total && ps3Total > 0){
+        showToast("Todos os jogos do painel já foram carregados.");
+        return;
+      }
+      ps3Page += 1;
+      await loadPs3Jogos(false);
+    });
+  }
+
+  async function loadPs3Jogos(reset=false){
+    if(ps3Loading) return;
+    ps3Loading = true;
+    if(reset){
+      ps3Page = 1;
+      ps3Jogos = [];
+      ps3Total = 0;
+    }
+    renderPs3Dock();
+    try{
+      const url = `${API_URL}/api/ps3-games?page=${ps3Page}&limit=${ps3Limit}&search=${encodeURIComponent(ps3Search)}&v=${Date.now()}`;
+      const r = await fetch(url);
+      const j = await r.json().catch(()=> ({}));
+      if(!r.ok || !j?.ok){
+        throw new Error(j?.error || "PS3_PANEL_FAIL");
+      }
+      const incoming = Array.isArray(j.games) ? j.games.map(normalizeGame) : [];
+      ps3Total = Number(j.total || 0);
+      if(reset) ps3Jogos = incoming;
+      else{
+        const seen = new Set(ps3Jogos.map(x => `${x.title_id || ""}|${x.nome}`));
+        incoming.forEach(item=>{
+          const key = `${item.title_id || ""}|${item.nome}`;
+          if(!seen.has(key)){
+            seen.add(key);
+            ps3Jogos.push(item);
+          }
+        });
+      }
+      ps3LoadedOnce = true;
+    }catch(e){
+      showToast("Não foi possível carregar o painel PS3 agora.");
+      if(reset) ps3Jogos = [];
+    }finally{
+      ps3Loading = false;
+      render();
+    }
+  }
+
   function getYouTubeEmbedUrl(url){
     const raw = safeStr(url, "").trim();
     if(!raw) return "";
@@ -3953,12 +4182,12 @@ const MASTER_NICK = "Srgokucheats";
 
     if(!modal || !title || !desc || !downloadBtn) return;
 
-    const capaFinal = j?.capa || "https://via.placeholder.com/512x512.png?text=ToolFlix";
+    const capaFinal = getCoverSrcValue(j?.capa, safeStr(j?.nome, "ToolFlix"), normalizeCategoria(j?.categoria || "ToolFlix"));
     const hasTrailer = !!safeStr(j?.trailer, "").trim();
 
     if(image){
       image.src = capaFinal;
-      image.onerror = ()=> { image.src = "https://via.placeholder.com/512x512.png?text=ToolFlix"; };
+      image.onerror = ()=> { image.src = buildCoverPlaceholder(safeStr(j?.nome, "ToolFlix"), normalizeCategoria(j?.categoria || "ToolFlix")); };
     }
     title.textContent = safeStr(j?.nome, "Sem nome");
     desc.textContent = safeStr(j?.descricao, "Descrição indisponível no momento.");
@@ -4044,113 +4273,6 @@ const MASTER_NICK = "Srgokucheats";
       console.warn("syncJogos fail:", e);
     }
   }
-  async function loadPs3Panel(reset=false){
-    if(ps3PanelState.loading) return;
-    if(reset){
-      ps3PanelState.items = [];
-      ps3PanelState.page = 1;
-      ps3PanelState.total = 0;
-      ps3PanelState.hasMore = true;
-      ps3PanelState.lastError = "";
-    }
-
-    ps3PanelState.loading = true;
-    render();
-
-    try{
-      const params = new URLSearchParams({
-        page: String(ps3PanelState.page),
-        limit: String(ps3PanelState.limit)
-      });
-      const term = safeStr(ps3PanelState.search, "").trim();
-      if(term) params.set("search", term);
-
-      const r = await fetch(`${URL_PS3_GAMES}?${params.toString()}`);
-      const data = await r.json().catch(()=>({ ok:false }));
-      if(!r.ok || !data?.ok) throw new Error(data?.error || 'PS3_PANEL_LOAD_FAIL');
-
-      const novos = Array.isArray(data.games) ? data.games.map(normalizeGame) : [];
-      ps3PanelState.items = reset ? novos : ps3PanelState.items.concat(novos);
-      ps3PanelState.total = Number(data.total || 0);
-      ps3PanelState.hasMore = !!data.hasMore;
-      ps3PanelState.page = Number(data.page || ps3PanelState.page) + 1;
-      ps3PanelState.lastError = "";
-    }catch(e){
-      console.warn('loadPs3Panel fail:', e);
-      ps3PanelState.lastError = 'Não foi possível carregar o painel PS3 agora.';
-    }finally{
-      ps3PanelState.loading = false;
-      render();
-    }
-  }
-
-  function triggerPs3Search(){
-    ps3PanelState.search = safeStr(document.getElementById('searchBar')?.value, '').trim();
-    loadPs3Panel(true);
-  }
-
-  function renderPs3Panel(){
-    const grid = document.getElementById('catalogo');
-    if(!grid) return;
-
-    grid.style.display = 'block';
-
-    const items = Array.isArray(ps3PanelState.items) ? ps3PanelState.items : [];
-    const countLabel = ps3PanelState.total > 0 ? `${items.length} de ${ps3PanelState.total}` : `${items.length}`;
-
-    const cardsHtml = items.map(j => {
-      const nomeSafe = safeStr(j.nome).replace(/'/g, "\'");
-      const linkOk = !!safeStr(j.link, '').trim();
-      const capaFinal = j.capa || 'https://via.placeholder.com/512x512.png?text=PS3';
-      const regiao = /Região:\s*([^•]+)/i.exec(safeStr(j.descricao,''))?.[1]?.trim() || 'N/D';
-      return `
-        <div class="jogo" onclick="window.openGameDetails(window.__ps3GameMap['${nomeSafe}'])">
-          <img src="${capaFinal}" alt="" onerror="this.src='https://via.placeholder.com/512x512.png?text=PS3';">
-          <div style="margin-top:12px; text-align:center">
-            <span style="font-size:10px; color:var(--cor-accent); font-weight:800; letter-spacing:1px">🚀 PAINEL PS3 • ${regiao}</span>
-            <p style="font-weight:600; font-size:13px; margin-top:4px;">${safeStr(j.nome,'Sem nome')}</p>
-            <div style="font-size:11px; opacity:.72; margin-top:6px;">${linkOk ? 'Link pronto' : 'Link indisponível'}</div>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    grid.innerHTML = `
-      <div style="display:flex; flex-direction:column; gap:18px;">
-        <div style="padding:18px; border-radius:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); box-shadow:0 15px 35px rgba(0,0,0,0.22);">
-          <div style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; align-items:center;">
-            <div>
-              <div style="font-size:22px; font-weight:900;">🚀 PAINEL PS3</div>
-              <div style="font-size:13px; opacity:.8; margin-top:6px;">Busca separada, carregamento leve e sem misturar com seus jogos normais.</div>
-            </div>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="nav-item" id="ps3SearchBtn">🔎 Buscar no painel</button>
-              <button class="nav-item" id="ps3LoadMoreBtn" ${ps3PanelState.loading || !ps3PanelState.hasMore ? 'disabled' : ''}>${ps3PanelState.loading ? 'Carregando...' : '➕ Carregar mais'}</button>
-            </div>
-          </div>
-          <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
-            <span style="padding:8px 12px; border-radius:999px; background:rgba(0,255,255,0.08); border:1px solid rgba(0,255,255,0.18); font-size:12px; font-weight:800;">Itens carregados: ${countLabel}</span>
-            <span style="padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); font-size:12px;">Resultados por página: ${ps3PanelState.limit}</span>
-            <span style="padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); font-size:12px;">Busca atual: ${safeStr(ps3PanelState.search || 'todas')}</span>
-          </div>
-          ${ps3PanelState.lastError ? `<div style="margin-top:12px; padding:12px 14px; border-radius:14px; background:rgba(255,71,87,0.12); border:1px solid rgba(255,71,87,0.25);">${ps3PanelState.lastError}</div>` : ''}
-        </div>
-
-        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(190px,1fr)); gap:25px;">
-          ${cardsHtml || '<div style="grid-column:1/-1; padding:28px; border-radius:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); text-align:center; opacity:.85;">Nenhum jogo encontrado no painel PS3.</div>'}
-        </div>
-      </div>
-    `;
-
-    window.__ps3GameMap = {};
-    items.forEach(j => { window.__ps3GameMap[safeStr(j.nome)] = j; });
-
-    document.getElementById('ps3SearchBtn')?.addEventListener('click', triggerPs3Search);
-    document.getElementById('ps3LoadMoreBtn')?.addEventListener('click', ()=>{
-      if(!ps3PanelState.loading && ps3PanelState.hasMore) loadPs3Panel(false);
-    });
-  }
-
     /* ===============================
      RENDER
   ================================= */
@@ -4174,45 +4296,47 @@ const MASTER_NICK = "Srgokucheats";
       btnS.style.display = isPremium ? "none" : "block";
     }
 
+    const sectionTitle = document.getElementById("sectionTitle");
+    const isPs3Panel = catAtiva === PS3_PANEL_SENTINEL;
+    setPs3TopButtonState(isPs3Panel);
+    ensurePs3SidebarButtonHidden();
+    renderPs3Dock();
+
     grid.innerHTML = "";
 
-    if(catAtiva === PS3_PANEL_CATEGORY){
-      const btnP3 = document.getElementById("premiumTriggerBtn");
-      const btnS3 = document.getElementById("solicitarTokenBtn");
-      if(btnP3 && btnS3){
-        btnP3.style.display = isPremium ? "none" : "block";
-        btnS3.style.display = isPremium ? "none" : "block";
+    let lista = [];
+    if(isPs3Panel){
+      if(sectionTitle) sectionTitle.style.display = "none";
+      lista = ps3Jogos.map(normalizeGame);
+    }else{
+      if(sectionTitle){
+        sectionTitle.style.display = "block";
+        sectionTitle.innerText = catAtiva;
       }
-      renderPs3Panel();
-      updatePremiumSidebar();
-      updateUserUI();
-      return;
+
+      lista = db_jogos.map(normalizeGame);
+
+      if(catAtiva !== "Todos"){
+        lista = lista.filter(j => normalizeCategoria(j.categoria) === catAtiva);
+      }
+
+      const search = (document.getElementById("searchBar")?.value || "").toLowerCase();
+      if(search){
+        lista = lista.filter(j => safeStr(j.nome,"").toLowerCase().includes(search));
+      }
+
+      if(filterFav){
+        lista = lista.filter(j => db_favs.includes(j.nome));
+      }
+
+      if(sortModo === "az") lista.sort((a,b)=> a.nome.localeCompare(b.nome));
+      else if(sortModo === "za") lista.sort((a,b)=> b.nome.localeCompare(a.nome));
+      else if(sortModo === "recentes") lista.sort((a,b)=> (Number(b.created_at||0) - Number(a.created_at||0)));
     }
-
-    grid.style.display = "grid";
-
-    let lista = db_jogos.map(normalizeGame);
-
-    if(catAtiva !== "Todos"){
-      lista = lista.filter(j => normalizeCategoria(j.categoria) === catAtiva);
-    }
-
-    const search = (document.getElementById("searchBar")?.value || "").toLowerCase();
-    if(search){
-      lista = lista.filter(j => safeStr(j.nome,"").toLowerCase().includes(search));
-    }
-
-    if(filterFav){
-      lista = lista.filter(j => db_favs.includes(j.nome));
-    }
-
-    if(sortModo === "az") lista.sort((a,b)=> a.nome.localeCompare(b.nome));
-    else if(sortModo === "za") lista.sort((a,b)=> b.nome.localeCompare(a.nome));
-    else if(sortModo === "recentes") lista.sort((a,b)=> (Number(b.created_at||0) - Number(a.created_at||0)));
 
     lista.forEach(j => {
       const isFav = db_favs.includes(j.nome);
-      const isP = j.premium === true;
+      const isP = !isPs3Panel && j.premium === true;
       const guestUnlocked = canAccessPremiumAsGuest();
       const lock = isP && !isPremium && !modoAdmin && !guestUnlocked;
 
@@ -4227,15 +4351,17 @@ const MASTER_NICK = "Srgokucheats";
         openGameDetails(j);
       };
 
-      const capaFinal = j.capa || "https://via.placeholder.com/512x512.png?text=ToolFlix";
-      const catFinal = normalizeCategoria(j.categoria);
+      const catFinal = isPs3Panel
+        ? `PAINEL PS3${j.region ? " • " + j.region : ""}`
+        : normalizeCategoria(j.categoria);
+      const capaFinal = getCoverSrcValue(j.capa, safeStr(j.nome,"ToolFlix"), catFinal);
 
       card.innerHTML = `
         <button onclick="event.stopPropagation(); window.toggleFav('${safeStr(j.nome).replace(/'/g,"\\'")}')"
           style="position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.7);
           color:${isFav ? "#ff4757" : "#fff"}; border:none; width:34px; height:34px;
           border-radius:50%; cursor:pointer; z-index:10;
-          display:flex; align-items:center; justify-content:center; font-size:18px;">
+          display:${isPs3Panel ? "none" : "flex"}; align-items:center; justify-content:center; font-size:18px;">
           ${isFav ? "❤️" : "🤍"}
         </button>
 
@@ -4243,7 +4369,7 @@ const MASTER_NICK = "Srgokucheats";
 
         ${isP && guestUnlocked ? '<span class="guest-trial-chip">🎁 LIBERADO AGORA</span>' : ""}
 
-        <img src="${capaFinal}" alt="" onerror="this.src='https://via.placeholder.com/512x512.png?text=ToolFlix';">
+        <img alt="Capa do jogo">
 
         <div style="margin-top:12px; text-align:center">
           <span style="font-size:10px; color:var(--cor-accent); font-weight:800; letter-spacing:1px">
@@ -4252,37 +4378,24 @@ const MASTER_NICK = "Srgokucheats";
           <p style="font-weight:600; font-size:13px; margin-top:4px;">
             ${safeStr(j.nome,"Sem nome")}
           </p>
+          ${isPs3Panel ? `<p style="font-size:11px; opacity:.78; margin-top:8px;">${j.link ? "Link pronto" : "Link indisponível"}</p>` : ""}
         </div>
-
-        ${lock ? `<div class="guest-trial-locked-note">💬 Crie uma conta e peça acesso grátis no chat</div>` : ""}
-
-        ${modoAdmin ? `
-          <div style="display:flex; gap:5px; margin-top:10px">
-            <button onclick="event.stopPropagation(); window.editJogo('${safeStr(j.nome).replace(/'/g,"\\'")}')"
-              style="flex:1; background:gold; color:#000; border:none;
-              padding:8px; border-radius:10px; font-weight:bold;
-              cursor:pointer; font-size:11px">
-              EDITAR
-            </button>
-            <button onclick="event.stopPropagation(); window.delJogo('${safeStr(j.nome).replace(/'/g,"\\'")}')"
-              style="flex:1; background:#ff4757; color:#fff; border:none;
-              padding:8px; border-radius:10px;
-              cursor:pointer; font-size:11px">
-              DELETAR
-            </button>
-          </div>
-        ` : ""}
       `;
+
+      const img = card.querySelector("img");
+      if(img){
+        img.src = capaFinal;
+        img.onerror = ()=>{ img.onerror = null; img.src = buildCoverPlaceholder(safeStr(j.nome,"ToolFlix"), catFinal); };
+      }
 
       grid.appendChild(card);
     });
 
-    updatePremiumSidebar();
-    updateUserUI();
+    if(lista.length === 0){
+      grid.innerHTML = `<div style="opacity:.9; padding:14px; border:1px dashed rgba(255,255,255,.15); border-radius:18px; background:rgba(255,255,255,.03);">${isPs3Panel ? "Nenhum jogo encontrado no painel PS3." : "Nenhum item encontrado."}</div>`;
+    }
   }
-    /* ===============================
-     FAVORITOS
-  ================================= */
+
   window.toggleFav = (nome)=>{
     const idx = db_favs.indexOf(nome);
 
@@ -4333,25 +4446,23 @@ const MASTER_NICK = "Srgokucheats";
       document.querySelectorAll(".catBtn").forEach(b=> b.classList.remove("active"));
       btn.classList.add("active");
       catAtiva = btn.dataset.cat;
-      document.getElementById("sectionTitle").innerText = catAtiva;
-      if(catAtiva === PS3_PANEL_CATEGORY){
-        ps3PanelState.search = safeStr(document.getElementById("searchBar")?.value, "").trim();
-        if(ps3PanelState.items.length === 0) loadPs3Panel(true);
-        else render();
-        return;
-      }
+      setPs3TopButtonState(false);
       render();
     });
   });
 
-  document.getElementById("searchBar")?.addEventListener("input", ()=>{
-    if(catAtiva === PS3_PANEL_CATEGORY){
-      clearTimeout(window.__ps3SearchTimer);
-      window.__ps3SearchTimer = setTimeout(triggerPs3Search, 250);
-      return;
+  document.getElementById("searchBar")?.addEventListener("input", render);
+
+  document.getElementById("ps3PanelTopBtn")?.addEventListener("click", async ()=>{
+    document.querySelectorAll(".catBtn").forEach(b=> b.classList.remove("active"));
+    catAtiva = PS3_PANEL_SENTINEL;
+    if(!ps3LoadedOnce){
+      await loadPs3Jogos(true);
+    }else{
+      render();
     }
-    render();
   });
+
 
   /* ===============================
      TEMA (premium + XP)
@@ -6350,6 +6461,16 @@ document.addEventListener("DOMContentLoaded", function(){
   });
 
 })();
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  try{
+    ensurePs3SidebarButtonHidden?.();
+    renderPs3Dock?.();
+  }catch(e){}
+});
 </script>
 
 </body>
