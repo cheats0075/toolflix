@@ -1776,6 +1776,7 @@ select optgroup{
       <button class="catBtn" data-cat="Jogos PS2">🕹️ PS2</button>
       <button class="catBtn" data-cat="PS2 com Cheats">🔥 PS2 Cheats</button>
       <button class="catBtn" data-cat="Jogos PS3">🕹️ PS3</button>
+      <button class="catBtn" data-cat="PAINEL PS3">🚀 PAINEL PS3</button>
       <button class="catBtn" data-cat="PS3 com Cheats">🔥 PS3 Cheats</button>
 
       <button class="catBtn" data-cat="Xbox Clássico">💚 Xbox Clássico</button>
@@ -2360,6 +2361,7 @@ document.addEventListener("DOMContentLoaded", function(){
   ================================= */
   const API_URL  = "https://toolflix-api.onrender.com";
   const URL_JOGOS = `${API_URL}/api/games`;
+  const URL_PS3_GAMES = `${API_URL}/api/ps3-games`;
   const API_BASE = "https://toolflix-api.onrender.com";
   // 👑 SUPER ADMIN MASTER
 const MASTER_NICK = "Srgokucheats";
@@ -2442,6 +2444,17 @@ const MASTER_NICK = "Srgokucheats";
   let sortModo  = "recentes";
   let filterFav = false;
 
+  const PS3_PANEL_CATEGORY = "PAINEL PS3";
+  let ps3PanelState = {
+    items: [],
+    loading: false,
+    search: "",
+    page: 1,
+    limit: 24,
+    total: 0,
+    hasMore: true,
+    lastError: ""
+  };
 
   const GUEST_TRIAL_KEY = "toolflix_guest_trial";
   const GUEST_TRIAL_DURATION_MS = 10 * 60 * 1000;
@@ -4031,6 +4044,113 @@ const MASTER_NICK = "Srgokucheats";
       console.warn("syncJogos fail:", e);
     }
   }
+  async function loadPs3Panel(reset=false){
+    if(ps3PanelState.loading) return;
+    if(reset){
+      ps3PanelState.items = [];
+      ps3PanelState.page = 1;
+      ps3PanelState.total = 0;
+      ps3PanelState.hasMore = true;
+      ps3PanelState.lastError = "";
+    }
+
+    ps3PanelState.loading = true;
+    render();
+
+    try{
+      const params = new URLSearchParams({
+        page: String(ps3PanelState.page),
+        limit: String(ps3PanelState.limit)
+      });
+      const term = safeStr(ps3PanelState.search, "").trim();
+      if(term) params.set("search", term);
+
+      const r = await fetch(`${URL_PS3_GAMES}?${params.toString()}`);
+      const data = await r.json().catch(()=>({ ok:false }));
+      if(!r.ok || !data?.ok) throw new Error(data?.error || 'PS3_PANEL_LOAD_FAIL');
+
+      const novos = Array.isArray(data.games) ? data.games.map(normalizeGame) : [];
+      ps3PanelState.items = reset ? novos : ps3PanelState.items.concat(novos);
+      ps3PanelState.total = Number(data.total || 0);
+      ps3PanelState.hasMore = !!data.hasMore;
+      ps3PanelState.page = Number(data.page || ps3PanelState.page) + 1;
+      ps3PanelState.lastError = "";
+    }catch(e){
+      console.warn('loadPs3Panel fail:', e);
+      ps3PanelState.lastError = 'Não foi possível carregar o painel PS3 agora.';
+    }finally{
+      ps3PanelState.loading = false;
+      render();
+    }
+  }
+
+  function triggerPs3Search(){
+    ps3PanelState.search = safeStr(document.getElementById('searchBar')?.value, '').trim();
+    loadPs3Panel(true);
+  }
+
+  function renderPs3Panel(){
+    const grid = document.getElementById('catalogo');
+    if(!grid) return;
+
+    grid.style.display = 'block';
+
+    const items = Array.isArray(ps3PanelState.items) ? ps3PanelState.items : [];
+    const countLabel = ps3PanelState.total > 0 ? `${items.length} de ${ps3PanelState.total}` : `${items.length}`;
+
+    const cardsHtml = items.map(j => {
+      const nomeSafe = safeStr(j.nome).replace(/'/g, "\'");
+      const linkOk = !!safeStr(j.link, '').trim();
+      const capaFinal = j.capa || 'https://via.placeholder.com/512x512.png?text=PS3';
+      const regiao = /Região:\s*([^•]+)/i.exec(safeStr(j.descricao,''))?.[1]?.trim() || 'N/D';
+      return `
+        <div class="jogo" onclick="window.openGameDetails(window.__ps3GameMap['${nomeSafe}'])">
+          <img src="${capaFinal}" alt="" onerror="this.src='https://via.placeholder.com/512x512.png?text=PS3';">
+          <div style="margin-top:12px; text-align:center">
+            <span style="font-size:10px; color:var(--cor-accent); font-weight:800; letter-spacing:1px">🚀 PAINEL PS3 • ${regiao}</span>
+            <p style="font-weight:600; font-size:13px; margin-top:4px;">${safeStr(j.nome,'Sem nome')}</p>
+            <div style="font-size:11px; opacity:.72; margin-top:6px;">${linkOk ? 'Link pronto' : 'Link indisponível'}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    grid.innerHTML = `
+      <div style="display:flex; flex-direction:column; gap:18px;">
+        <div style="padding:18px; border-radius:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); box-shadow:0 15px 35px rgba(0,0,0,0.22);">
+          <div style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; align-items:center;">
+            <div>
+              <div style="font-size:22px; font-weight:900;">🚀 PAINEL PS3</div>
+              <div style="font-size:13px; opacity:.8; margin-top:6px;">Busca separada, carregamento leve e sem misturar com seus jogos normais.</div>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="nav-item" id="ps3SearchBtn">🔎 Buscar no painel</button>
+              <button class="nav-item" id="ps3LoadMoreBtn" ${ps3PanelState.loading || !ps3PanelState.hasMore ? 'disabled' : ''}>${ps3PanelState.loading ? 'Carregando...' : '➕ Carregar mais'}</button>
+            </div>
+          </div>
+          <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
+            <span style="padding:8px 12px; border-radius:999px; background:rgba(0,255,255,0.08); border:1px solid rgba(0,255,255,0.18); font-size:12px; font-weight:800;">Itens carregados: ${countLabel}</span>
+            <span style="padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); font-size:12px;">Resultados por página: ${ps3PanelState.limit}</span>
+            <span style="padding:8px 12px; border-radius:999px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); font-size:12px;">Busca atual: ${safeStr(ps3PanelState.search || 'todas')}</span>
+          </div>
+          ${ps3PanelState.lastError ? `<div style="margin-top:12px; padding:12px 14px; border-radius:14px; background:rgba(255,71,87,0.12); border:1px solid rgba(255,71,87,0.25);">${ps3PanelState.lastError}</div>` : ''}
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(190px,1fr)); gap:25px;">
+          ${cardsHtml || '<div style="grid-column:1/-1; padding:28px; border-radius:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); text-align:center; opacity:.85;">Nenhum jogo encontrado no painel PS3.</div>'}
+        </div>
+      </div>
+    `;
+
+    window.__ps3GameMap = {};
+    items.forEach(j => { window.__ps3GameMap[safeStr(j.nome)] = j; });
+
+    document.getElementById('ps3SearchBtn')?.addEventListener('click', triggerPs3Search);
+    document.getElementById('ps3LoadMoreBtn')?.addEventListener('click', ()=>{
+      if(!ps3PanelState.loading && ps3PanelState.hasMore) loadPs3Panel(false);
+    });
+  }
+
     /* ===============================
      RENDER
   ================================= */
@@ -4055,6 +4175,21 @@ const MASTER_NICK = "Srgokucheats";
     }
 
     grid.innerHTML = "";
+
+    if(catAtiva === PS3_PANEL_CATEGORY){
+      const btnP3 = document.getElementById("premiumTriggerBtn");
+      const btnS3 = document.getElementById("solicitarTokenBtn");
+      if(btnP3 && btnS3){
+        btnP3.style.display = isPremium ? "none" : "block";
+        btnS3.style.display = isPremium ? "none" : "block";
+      }
+      renderPs3Panel();
+      updatePremiumSidebar();
+      updateUserUI();
+      return;
+    }
+
+    grid.style.display = "grid";
 
     let lista = db_jogos.map(normalizeGame);
 
@@ -4199,11 +4334,24 @@ const MASTER_NICK = "Srgokucheats";
       btn.classList.add("active");
       catAtiva = btn.dataset.cat;
       document.getElementById("sectionTitle").innerText = catAtiva;
+      if(catAtiva === PS3_PANEL_CATEGORY){
+        ps3PanelState.search = safeStr(document.getElementById("searchBar")?.value, "").trim();
+        if(ps3PanelState.items.length === 0) loadPs3Panel(true);
+        else render();
+        return;
+      }
       render();
     });
   });
 
-  document.getElementById("searchBar")?.addEventListener("input", render);
+  document.getElementById("searchBar")?.addEventListener("input", ()=>{
+    if(catAtiva === PS3_PANEL_CATEGORY){
+      clearTimeout(window.__ps3SearchTimer);
+      window.__ps3SearchTimer = setTimeout(triggerPs3Search, 250);
+      return;
+    }
+    render();
+  });
 
   /* ===============================
      TEMA (premium + XP)
