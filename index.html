@@ -1094,6 +1094,82 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       line-height:1.7;
     }
 
+
+    .avatar-picker-grid{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+    .avatar-picker-card{
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);
+      padding:10px 8px;
+      text-align:center;
+      cursor:pointer;
+      transition:.22s;
+      position:relative;
+      min-width:0;
+    }
+    .avatar-picker-card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(0,255,255,.25);
+      box-shadow:0 10px 24px rgba(0,0,0,.22);
+    }
+    .avatar-picker-card img{
+      width:64px;
+      height:64px;
+      border-radius:50%;
+      object-fit:cover;
+      display:block;
+      margin:0 auto 10px;
+      border:2px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+    }
+    .avatar-picker-card.selected{
+      border-color:rgba(255,215,0,.60);
+      box-shadow:0 0 0 1px rgba(255,215,0,.25), 0 12px 30px rgba(255,215,0,.10);
+      background:rgba(255,215,0,.08);
+    }
+    .avatar-picker-card.locked{
+      opacity:.55;
+      cursor:not-allowed;
+      filter:grayscale(100%);
+    }
+    .avatar-picker-card.locked:hover{
+      transform:none;
+      border-color:rgba(255,255,255,.10);
+      box-shadow:none;
+    }
+    .avatar-picker-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:900;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .avatar-picker-card.selected .avatar-picker-badge{
+      background:linear-gradient(90deg,#ffd700,#ffb700);
+      color:#111;
+      border-color:rgba(255,215,0,.45);
+    }
+    .avatar-picker-card.locked .avatar-picker-badge{
+      background:rgba(255,255,255,.06);
+      color:rgba(255,255,255,.86);
+    }
+    @media (max-width: 860px){
+      .avatar-picker-grid{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+    }
+    @media (max-width: 640px){
+      .avatar-picker-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+      .avatar-picker-card img{ width:56px; height:56px; }
+    }
+
     /* SUPORTE */
     .suporte-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; }
     .suporte-btn {
@@ -2084,6 +2160,7 @@ select optgroup{
 
         <div id="userMenuBox" class="userMenuBox" style="display:none;">
           <button class="userMenuItem" id="openProfileBtn">👤 Perfil</button>
+          <button class="userMenuItem" id="openAvatarPickerBtn">🖼️ Trocar avatar</button>
           <button class="userMenuItem" id="openGameBtn">🎮 Game</button>
           <button class="userMenuItem" id="openAchBtn">🏆 Conquistas</button>
           <button class="userMenuItem" id="logoutBtn">🚪 Sair</button>
@@ -2117,7 +2194,7 @@ select optgroup{
     <div id="profileSelectorModal" class="modal-overlay">
       <div class="profile-selector-box">
         <div class="profile-selector-top">
-          <div class="profile-selector-title">Welcome Back to ToolFlix Network</div>
+          <div class="profile-selector-title">ToolFlix</div>
           <div class="profile-selector-sub">Quem vai usar este dispositivo?</div>
           <div class="profile-selector-icon">🎮</div>
         </div>
@@ -2208,6 +2285,20 @@ select optgroup{
         <div id="profileContent"></div>
       </div>
     </div>
+
+    <!-- ===== MODAL TROCAR AVATAR ===== -->
+    <div id="avatarPickerModal" class="modal-overlay">
+      <div class="modal-box" style="width:640px; max-width:94vw; text-align:left;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:10px;">
+          <h2 style="color:gold;">🖼️ Trocar avatar</h2>
+          <button id="closeAvatarPickerBtn" class="nav-item" style="padding:8px 12px;">✖</button>
+        </div>
+        <div style="font-size:12px; opacity:.84; line-height:1.6;">Escolha qualquer avatar já desbloqueado pelo seu nível. Os bloqueados ficam liberados quando você subir de nível.</div>
+        <div id="avatarPickerSummary" style="margin-top:12px; font-size:13px; font-weight:800; color:#7cf3ff;"></div>
+        <div id="avatarPickerGrid" class="avatar-picker-grid"></div>
+      </div>
+    </div>
+
 
     <!-- ===== MODAL CONQUISTAS ===== -->
     <div id="achModal" class="modal-overlay">
@@ -3308,6 +3399,111 @@ const MASTER_NICK = "Srgokucheats";
     renderProfileCard(profile);
   }
 
+  function getAvatarFilenameByLevel(level){
+    const n = clampAvatarLevel(level);
+    return `level-${n}.webp`;
+  }
+
+  function getUnlockedAvatarList(level){
+    const max = clampAvatarLevel(level);
+    const list = [];
+    for(let i=1;i<=15;i++){
+      list.push({
+        level:i,
+        file:getAvatarFilenameByLevel(i),
+        unlocked:i <= max
+      });
+    }
+    return list;
+  }
+
+  async function saveSelectedAvatar(fileName){
+    const token = getToken();
+    if(!token) return showToast("Faça login para trocar avatar.");
+    try{
+      const r = await fetch(API_BASE + "/api/profile/avatar", {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "Authorization":"Bearer " + token
+        },
+        body: JSON.stringify({ avatar: fileName })
+      });
+      const j = await r.json().catch(()=> ({}));
+      if(!r.ok || !j?.ok || !j?.profile){
+        if(j?.error === "AVATAR_LOCKED") return showToast("Esse avatar ainda está bloqueado para seu nível.");
+        return showToast(j?.error || "Não foi possível trocar o avatar.");
+      }
+
+      profileCache = j.profile;
+      const old = loadUser() || {};
+      saveUser({
+        ...old,
+        nick: j.profile.nick,
+        xp: Number(j.profile.xp || 0),
+        avatar: j.profile.avatar,
+        premium: !!j.profile.premium,
+        password_temp: !!j.profile.passwordTemp
+      });
+      updateUserUI?.();
+      renderAvatarPicker(j.profile);
+      showToast("✅ Avatar atualizado.");
+    }catch(e){
+      showToast("Erro ao trocar avatar.");
+    }
+  }
+
+  function renderAvatarPicker(profile){
+    const grid = document.getElementById("avatarPickerGrid");
+    const summary = document.getElementById("avatarPickerSummary");
+    if(!grid) return;
+    if(!profile){
+      grid.innerHTML = `<div style="opacity:.82;">Perfil não encontrado.</div>`;
+      if(summary) summary.textContent = "";
+      return;
+    }
+
+    const level = clampAvatarLevel(profile.level || getAutoAvatarLevelFromXp(profile.xp || 0));
+    const selected = String(profile.avatar || getAvatarFilenameByLevel(level)).trim().toLowerCase();
+    if(summary){
+      summary.textContent = `Seu nível atual é ${level}. Avatares liberados: 1 até ${level}.`;
+    }
+
+    grid.innerHTML = getUnlockedAvatarList(level).map(item => {
+      const selectedCls = item.file.toLowerCase() === selected ? " selected" : "";
+      const lockedCls = item.unlocked ? "" : " locked";
+      const badge = item.unlocked
+        ? (item.file.toLowerCase() === selected ? "Em uso" : `Nível ${item.level}`)
+        : `Desbloqueia no ${item.level}`;
+      return `
+        <button type="button" class="avatar-picker-card${selectedCls}${lockedCls}" data-avatar="${item.file}" ${item.unlocked ? "" : "disabled"}>
+          <img class="${getAvatarClass(item.level)}" src="/toolflix/assets/img/avatars/${item.file}" alt="Avatar nível ${item.level}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1.webp';">
+          <div style="font-weight:900; margin-bottom:8px;">Avatar ${item.level}</div>
+          <div class="avatar-picker-badge">${badge}</div>
+        </button>
+      `;
+    }).join("");
+
+    grid.querySelectorAll(".avatar-picker-card[data-avatar]:not(.locked)").forEach(btn => {
+      btn.addEventListener("click", ()=>{
+        const avatar = btn.getAttribute("data-avatar");
+        if(avatar) saveSelectedAvatar(avatar);
+      });
+    });
+  }
+
+  async function openAvatarPickerModal(force=false){
+    const modal = document.getElementById("avatarPickerModal");
+    const grid = document.getElementById("avatarPickerGrid");
+    const summary = document.getElementById("avatarPickerSummary");
+    if(grid) grid.innerHTML = `<div style="opacity:.82;">Carregando avatars...</div>`;
+    if(summary) summary.textContent = "";
+    if(modal) modal.style.display = "flex";
+
+    const profile = await fetchProfileMe(force);
+    renderAvatarPicker(profile);
+  }
+
   async function changeOwnPassword(){
     const currentPassword = (document.getElementById("currentPasswordInput")?.value || "");
     const newPassword = (document.getElementById("newPasswordInput")?.value || "");
@@ -4153,8 +4349,17 @@ const MASTER_NICK = "Srgokucheats";
     await openProfileModal(true);
   });
 
+  document.getElementById("openAvatarPickerBtn")?.addEventListener("click", async ()=>{
+    toggleUserMenu(true);
+    await openAvatarPickerModal(true);
+  });
+
   document.getElementById("closeProfileBtn")?.addEventListener("click", ()=>{
     document.getElementById("profileModal").style.display = "none";
+  });
+
+  document.getElementById("closeAvatarPickerBtn")?.addEventListener("click", ()=>{
+    document.getElementById("avatarPickerModal").style.display = "none";
   });
 
   document.getElementById("userNick")?.addEventListener("click", async (e)=>{
