@@ -972,6 +972,29 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     }
     #userArea #xpText { color:#fff; font-weight:600; }
     #userArea .xpBar { background:#000; }
+    #userArea {
+      min-height: 54px;
+      padding-right: 18px !important;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    #userArea:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 16px rgba(0,255,255,.18), 0 0 24px rgba(0,0,0,.45);
+      border-color: rgba(0,255,255,.30);
+    }
+    .user-area-trigger-icon{
+      margin-left: 2px;
+      font-size: 14px;
+      font-weight: 900;
+      opacity: .82;
+      transition: transform .22s ease, opacity .22s ease;
+      user-select:none;
+      flex: 0 0 auto;
+    }
+    #userArea.menu-open .user-area-trigger-icon{
+      transform: rotate(180deg);
+      opacity: 1;
+    }
 
     /* ===== CONQUISTAS ===== */
     .ach-badge {
@@ -2151,12 +2174,13 @@ select optgroup{
       <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
       <button class="nav-item" id="adminBtn">⚙️ Admin</button>
 	        <!-- ===== ÁREA DO USUÁRIO (GAME) ===== -->
-      <div id="userArea" class="nav-item" style="display:flex; align-items:center; gap:10px; position:relative; cursor:pointer;">
+      <div id="userArea" class="nav-item" style="display:flex; align-items:center; gap:10px; position:relative; cursor:pointer;" title="Abrir menu do perfil">
         <span id="userNick">Entrar</span>
         <div class="xpBar">
           <div class="xpFill" id="xpFill" style="width:0%"></div>
         </div>
         <span id="xpText">0/100</span>
+        <span id="userAreaCaret" class="user-area-trigger-icon">▼</span>
 
         <div id="userMenuBox" class="userMenuBox" style="display:none;">
           <button class="userMenuItem" id="openProfileBtn">👤 Perfil</button>
@@ -2201,10 +2225,6 @@ select optgroup{
         <div id="profileSelectorList" class="profile-selector-list"></div>
         <div id="profileSelectorEmpty" class="profile-selector-empty" style="display:none;">
           Nenhum perfil salvo neste navegador ainda. Entre ou crie sua conta para aparecer aqui depois.
-        </div>
-        <div class="profile-selector-bottom">
-          <button type="button" id="profileSelectorLoginAnotherBtn" class="profile-selector-btn primary">+ Usar outra conta</button>
-          <button type="button" id="profileSelectorCloseBtn" class="profile-selector-btn">Fechar</button>
         </div>
       </div>
     </div>
@@ -3060,6 +3080,7 @@ const MASTER_NICK = "Srgokucheats";
 
   function openProfileSelector(){
     const modal = document.getElementById("profileSelectorModal");
+    toggleUserMenu(true);
     renderProfileSelector();
     if(modal) modal.style.display = "flex";
     document.getElementById("userLoginModal")?.classList.add("has-selector-back");
@@ -3967,9 +3988,16 @@ const MASTER_NICK = "Srgokucheats";
 
   function toggleUserMenu(forceClose=false){
     const box = document.getElementById("userMenuBox");
+    const area = document.getElementById("userArea");
     if(!box) return;
-    if(forceClose){ box.style.display = "none"; return; }
-    box.style.display = (box.style.display === "block") ? "none" : "block";
+    if(forceClose){
+      box.style.display = "none";
+      area?.classList.remove("menu-open");
+      return;
+    }
+    const willOpen = box.style.display !== "block";
+    box.style.display = willOpen ? "block" : "none";
+    area?.classList.toggle("menu-open", willOpen);
   }
 
   document.getElementById("userArea")?.addEventListener("click", ()=>{
@@ -3982,7 +4010,10 @@ const MASTER_NICK = "Srgokucheats";
     const box = document.getElementById("userMenuBox");
     const area = document.getElementById("userArea");
     if(!box || !area) return;
-    if(!area.contains(e.target) && !box.contains(e.target)) box.style.display = "none";
+    if(!area.contains(e.target) && !box.contains(e.target)){
+      box.style.display = "none";
+      area.classList.remove("menu-open");
+    }
   });
 
   document.getElementById("userRegisterSubmit")?.addEventListener("click", (e)=>{
@@ -4077,8 +4108,6 @@ const MASTER_NICK = "Srgokucheats";
     }
   });
 
-  document.getElementById("profileSelectorLoginAnotherBtn")?.addEventListener("click", ()=> openLoginFromSelector("login"));
-  document.getElementById("profileSelectorCloseBtn")?.addEventListener("click", ()=> closeProfileSelector());
   document.getElementById("backToProfilesBtn")?.addEventListener("click", ()=>{ closeLogin(); openProfileSelector(); });
   document.getElementById("profileSelectorModal")?.addEventListener("click", (e)=>{ if(e.target?.id === "profileSelectorModal") closeProfileSelector(); });
 
@@ -5882,6 +5911,16 @@ document.addEventListener("click", async (ev)=>{
   render();
 
   if(getToken()) fetchProfileMe(true);
+  else setTimeout(()=>{
+    const loginModal = document.getElementById("userLoginModal");
+    const selectorModal = document.getElementById("profileSelectorModal");
+    const menuBox = document.getElementById("userMenuBox");
+    const user = loadUser?.() || null;
+    if(user?.nick) return;
+    if(menuBox) menuBox.style.display = "none";
+    if(loginModal && getComputedStyle(loginModal).display !== "none") return;
+    if(selectorModal && getComputedStyle(selectorModal).display === "none") openProfileSelector();
+  }, 180);
   maybeOpenPendingPremiumChatRequest();
   checkPremiumSync();
   syncJogos();
