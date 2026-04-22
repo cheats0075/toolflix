@@ -4139,14 +4139,14 @@ const MASTER_NICK = "Srgokucheats";
     setTimeout(()=> playTone(1318, 0.12, 0.24, "triangle"), 235);
   }
 
-  function playLevelUpSound(){
-    playTone(523, 0.10, 0.17, "sine");
-    setTimeout(()=> playTone(659, 0.10, 0.18, "sine"), 120);
-    setTimeout(()=> playTone(784, 0.12, 0.19, "sine"), 240);
-    setTimeout(()=> playTone(1046,0.14, 0.22, "sine"), 380);
-    setTimeout(()=> playTone(1318,0.16, 0.24, "triangle"), 560);
-    setTimeout(()=> playTone(1568,0.18, 0.25, "triangle"), 760);
-    setTimeout(()=> playTone(2093,0.22, 0.27, "triangle"), 1040);
+  function playLevelUpSound(level){
+    const lv = Number(level || 0);
+    if(lv < 2 || lv > 7) return;
+
+    const audio = new Audio(`/toolflix/assets/sounds/audio nv${lv}.mp3`);
+    audio.preload = "auto";
+    audio.volume = 0.9;
+    audio.play().catch(()=>{});
   }
 
   let levelUpOverlayTimer = null;
@@ -4191,7 +4191,7 @@ const MASTER_NICK = "Srgokucheats";
       }, 10000);
     }
 
-    playLevelUpSound();
+    playLevelUpSound(newLevel);
     showToast(`🎉 UP! Você subiu para o nível ${newLevel}!`);
   }
 
@@ -7116,38 +7116,6 @@ document.addEventListener("DOMContentLoaded", function(){
     setInterval(()=> refreshGlobalChat(false), 12000);
   });
 
-})();
-</script>
-
-
-<script>
-(function(){
-  function playLevelAudio(level){
-    if(level >=2 && level <=7){
-      const audio = new Audio('/toolflix/assets/sounds/audio nv'+level+'.mp3');
-      audio.volume = 0.8;
-      audio.play().catch(()=>{});
-    }
-  }
-
-  let lastLevel = localStorage.getItem('lastLevel') || 0;
-
-  window.addEventListener('load', ()=>{
-    try{
-      const el = document.getElementById('xpText');
-      if(!el) return;
-      const txt = el.innerText || '';
-      const match = txt.match(/Nv\s*(\d+)/i);
-      if(!match) return;
-      const currentLevel = parseInt(match[1]);
-
-      if(currentLevel > lastLevel){
-        playLevelAudio(currentLevel);
-      }
-
-      localStorage.setItem('lastLevel', currentLevel);
-    }catch(e){}
-  });
 })();
 </script>
 
