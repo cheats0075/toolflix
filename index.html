@@ -7119,5 +7119,37 @@ document.addEventListener("DOMContentLoaded", function(){
 })();
 </script>
 
+
+<script>
+(function(){
+  function playLevelAudio(level){
+    if(level >=2 && level <=7){
+      const audio = new Audio('/toolflix/assets/sounds/audio nv'+level+'.mp3');
+      audio.volume = 0.8;
+      audio.play().catch(()=>{});
+    }
+  }
+
+  let lastLevel = localStorage.getItem('lastLevel') || 0;
+
+  window.addEventListener('load', ()=>{
+    try{
+      const el = document.getElementById('xpText');
+      if(!el) return;
+      const txt = el.innerText || '';
+      const match = txt.match(/Nv\s*(\d+)/i);
+      if(!match) return;
+      const currentLevel = parseInt(match[1]);
+
+      if(currentLevel > lastLevel){
+        playLevelAudio(currentLevel);
+      }
+
+      localStorage.setItem('lastLevel', currentLevel);
+    }catch(e){}
+  });
+})();
+</script>
+
 </body>
 </html>
