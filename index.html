@@ -1223,17 +1223,25 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     /* Level up fx */
     @keyframes levelPop {
       0% { transform: translateY(0) scale(1); box-shadow: 0 0 0 rgba(255,215,0,0); }
-      35% { transform: translateY(-2px) scale(1.06); box-shadow: 0 0 24px rgba(255,215,0,0.35); }
+      20% { transform: translateY(-3px) scale(1.05); box-shadow: 0 0 30px rgba(255,215,0,0.26); }
+      55% { transform: translateY(-1px) scale(1.02); box-shadow: 0 0 44px rgba(0,255,255,0.18); }
       100% { transform: translateY(0) scale(1); box-shadow: 0 0 0 rgba(255,215,0,0); }
     }
     @keyframes levelRing {
       0% { opacity: 0; transform: scale(0.9); }
-      20% { opacity: 1; }
-      100% { opacity: 0; transform: scale(1.25); }
+      15% { opacity: 1; }
+      100% { opacity: 0; transform: scale(1.34); }
+    }
+    @keyframes levelAura {
+      0% { box-shadow: 0 0 0 rgba(255,215,0,0), 0 0 0 rgba(0,255,255,0); }
+      25% { box-shadow: 0 0 24px rgba(255,215,0,0.28), 0 0 38px rgba(0,255,255,0.10); }
+      50% { box-shadow: 0 0 38px rgba(255,215,0,0.35), 0 0 54px rgba(0,255,255,0.16); }
+      75% { box-shadow: 0 0 28px rgba(255,215,0,0.22), 0 0 40px rgba(0,255,255,0.10); }
+      100% { box-shadow: 0 0 0 rgba(255,215,0,0), 0 0 0 rgba(0,255,255,0); }
     }
     #userArea.level-up-pop {
-      animation: levelPop 0.75s ease;
-      border-color: rgba(255,215,0,0.55) !important;
+      animation: levelPop 1.2s ease, levelAura 10s ease;
+      border-color: rgba(255,215,0,0.68) !important;
     }
     #userArea.level-up-pop::after{
       content:"";
@@ -1241,8 +1249,224 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       inset:-6px;
       border-radius: 999px;
       border: 2px solid rgba(255,215,0,0.25);
-      animation: levelRing 0.75s ease;
+      animation: levelRing 1.3s ease;
       pointer-events:none;
+    }
+
+    #levelUpOverlay{
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100120;
+      pointer-events: none;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at center, rgba(255,215,0,.12), transparent 24%),
+        radial-gradient(circle at center, rgba(0,255,255,.10), transparent 38%),
+        rgba(2,6,12,.18);
+      backdrop-filter: blur(4px);
+    }
+    #levelUpOverlay.show{ display:flex; }
+    #levelUpOverlay.hide .level-up-stage{ animation: levelStageOut .7s ease forwards; }
+    .level-up-stage{
+      position: relative;
+      width: min(900px, 94vw);
+      min-height: 360px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding: 38px 28px;
+      border-radius: 36px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,.10), transparent 36%),
+        linear-gradient(180deg, rgba(11,15,22,.94), rgba(5,7,12,.96));
+      box-shadow: 0 40px 120px rgba(0,0,0,.56), 0 0 38px rgba(255,215,0,.10);
+      overflow:hidden;
+      isolation:isolate;
+      animation: levelStageIn .6s cubic-bezier(.2,.9,.2,1) forwards;
+    }
+    .level-up-stage::before,
+    .level-up-stage::after{
+      content:"";
+      position:absolute;
+      inset:auto;
+      width: 420px;
+      height: 420px;
+      border-radius:50%;
+      filter: blur(18px);
+      opacity:.42;
+      z-index:-1;
+      animation: levelOrbFloat 5s ease-in-out infinite;
+    }
+    .level-up-stage::before{
+      top:-130px;
+      left:-90px;
+      background: radial-gradient(circle, rgba(255,215,0,.28), transparent 60%);
+    }
+    .level-up-stage::after{
+      right:-120px;
+      bottom:-160px;
+      background: radial-gradient(circle, rgba(0,255,255,.22), transparent 60%);
+      animation-delay: .8s;
+    }
+    .level-up-content{
+      position:relative;
+      z-index:2;
+      max-width: 760px;
+    }
+    .level-up-kicker{
+      font-size: clamp(16px, 2vw, 24px);
+      font-weight: 900;
+      letter-spacing: 7px;
+      color:#ffe27a;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      text-shadow: 0 0 18px rgba(255,215,0,.24);
+      animation: levelTextPulse 1.8s ease-in-out infinite;
+    }
+    .level-up-title{
+      font-size: clamp(54px, 10vw, 116px);
+      line-height: .95;
+      font-weight: 1000;
+      letter-spacing: -2px;
+      color:#fff;
+      text-shadow: 0 0 26px rgba(255,255,255,.18), 0 0 40px rgba(255,215,0,.10);
+      margin-bottom: 10px;
+    }
+    .level-up-level{
+      font-size: clamp(22px, 4vw, 40px);
+      font-weight: 900;
+      background: linear-gradient(90deg, #ffffff, #ffe27a, #00ffff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+      text-shadow: 0 0 18px rgba(255,255,255,.12);
+    }
+    .level-up-sub{
+      font-size: clamp(14px, 2.2vw, 20px);
+      line-height: 1.6;
+      color: rgba(255,255,255,.86);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .level-up-progress{
+      width:min(520px, 82vw);
+      height:8px;
+      margin: 24px auto 0;
+      border-radius:999px;
+      overflow:hidden;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: inset 0 0 16px rgba(0,0,0,.26);
+    }
+    .level-up-progress > div{
+      width:100%;
+      height:100%;
+      transform-origin:left center;
+      background: linear-gradient(90deg, #ffd700, #ffb700, #00ffff);
+      animation: levelProgress 10s linear forwards;
+    }
+    .level-up-burst,
+    .level-up-ring,
+    .level-up-particles{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+    }
+    .level-up-burst{
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,.30), transparent 0 16%),
+        radial-gradient(circle at center, rgba(255,215,0,.26), transparent 32%),
+        radial-gradient(circle at center, rgba(0,255,255,.18), transparent 50%);
+      mix-blend-mode: screen;
+      animation: levelBurst 2.2s ease-out forwards;
+    }
+    .level-up-ring::before,
+    .level-up-ring::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width: 180px;
+      height: 180px;
+      border-radius:50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid rgba(255,215,0,.35);
+      box-shadow: 0 0 24px rgba(255,215,0,.18);
+      animation: levelShockwave 3s ease-out infinite;
+    }
+    .level-up-ring::after{
+      width: 240px;
+      height: 240px;
+      border-color: rgba(0,255,255,.28);
+      box-shadow: 0 0 24px rgba(0,255,255,.14);
+      animation-delay: .6s;
+    }
+    .level-up-particles span{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:8px;
+      height:18px;
+      border-radius:999px;
+      background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,215,0,.45));
+      transform-origin: center -140px;
+      opacity:0;
+      animation: levelParticle 3.8s ease-out infinite;
+      box-shadow: 0 0 12px rgba(255,255,255,.26);
+    }
+    .level-up-particles span:nth-child(2n){ background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(0,255,255,.45)); }
+    .level-up-particles span:nth-child(1){--a:0deg; transform: translate(-50%, -50%) rotate(0deg); animation-delay: 0s; }
+    .level-up-particles span:nth-child(2){--a:30deg; transform: translate(-50%, -50%) rotate(30deg); animation-delay: .12s; }
+    .level-up-particles span:nth-child(3){--a:60deg; transform: translate(-50%, -50%) rotate(60deg); animation-delay: .24s; }
+    .level-up-particles span:nth-child(4){--a:90deg; transform: translate(-50%, -50%) rotate(90deg); animation-delay: .36s; }
+    .level-up-particles span:nth-child(5){--a:120deg; transform: translate(-50%, -50%) rotate(120deg); animation-delay: .48s; }
+    .level-up-particles span:nth-child(6){--a:150deg; transform: translate(-50%, -50%) rotate(150deg); animation-delay: .6s; }
+    .level-up-particles span:nth-child(7){--a:180deg; transform: translate(-50%, -50%) rotate(180deg); animation-delay: .72s; }
+    .level-up-particles span:nth-child(8){--a:210deg; transform: translate(-50%, -50%) rotate(210deg); animation-delay: .84s; }
+    .level-up-particles span:nth-child(9){--a:240deg; transform: translate(-50%, -50%) rotate(240deg); animation-delay: .96s; }
+    .level-up-particles span:nth-child(10){--a:270deg; transform: translate(-50%, -50%) rotate(270deg); animation-delay: 1.08s; }
+    .level-up-particles span:nth-child(11){--a:300deg; transform: translate(-50%, -50%) rotate(300deg); animation-delay: 1.2s; }
+    .level-up-particles span:nth-child(12){--a:330deg; transform: translate(-50%, -50%) rotate(330deg); animation-delay: 1.32s; }
+
+    @keyframes levelStageIn{
+      from{ opacity:0; transform: translateY(16px) scale(.94); }
+      to{ opacity:1; transform: translateY(0) scale(1); }
+    }
+    @keyframes levelStageOut{
+      from{ opacity:1; transform: translateY(0) scale(1); }
+      to{ opacity:0; transform: translateY(-10px) scale(.98); }
+    }
+    @keyframes levelTextPulse{
+      0%,100%{ opacity:.85; transform: scale(1); }
+      50%{ opacity:1; transform: scale(1.04); }
+    }
+    @keyframes levelOrbFloat{
+      0%,100%{ transform: translateY(0); }
+      50%{ transform: translateY(18px); }
+    }
+    @keyframes levelBurst{
+      0%{ opacity:0; transform: scale(.65); }
+      20%{ opacity:1; }
+      100%{ opacity:0; transform: scale(1.35); }
+    }
+    @keyframes levelShockwave{
+      0%{ opacity:0; transform: translate(-50%, -50%) scale(.25); }
+      18%{ opacity:.9; }
+      100%{ opacity:0; transform: translate(-50%, -50%) scale(3.4); }
+    }
+    @keyframes levelParticle{
+      0%{ opacity:0; transform: translate(-50%, -50%) rotate(var(--a,0deg)) scale(.3); }
+      10%{ opacity:1; }
+      100%{ opacity:0; transform: translate(-50%, -50%) rotate(var(--a,0deg)) translateY(-170px) scale(1.2); }
+    }
+    @keyframes levelProgress{
+      from{ transform:scaleX(1); }
+      to{ transform:scaleX(0); }
     }
   
     /* ===== CHAT BOLHAS (WhatsApp style) ===== */
@@ -2382,6 +2606,24 @@ select optgroup{
 
   <div id="toast-container"></div>
   <div id="trophy-notify-root"></div>
+
+  <div id="levelUpOverlay" aria-hidden="true">
+    <div class="level-up-stage">
+      <div class="level-up-burst"></div>
+      <div class="level-up-ring"></div>
+      <div class="level-up-particles">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="level-up-content">
+        <div class="level-up-kicker">LEVEL UP</div>
+        <div class="level-up-title">PARABÉNS</div>
+        <div class="level-up-level" id="levelUpOverlayText">Você alcançou o nível 1</div>
+        <div class="level-up-sub">Seu perfil evoluiu. Continue assistindo, baixando e explorando para desbloquear ainda mais recompensas.</div>
+        <div class="level-up-progress"><div></div></div>
+      </div>
+    </div>
+  </div>
 
   <div id="guestExpiredModal" class="modal-overlay">
     <div class="modal-box">
@@ -3898,10 +4140,59 @@ const MASTER_NICK = "Srgokucheats";
   }
 
   function playLevelUpSound(){
-    playTone(523, 0.08, 0.16, "sine");
-    setTimeout(()=> playTone(659, 0.08, 0.16, "sine"), 90);
-    setTimeout(()=> playTone(784, 0.09, 0.18, "sine"), 180);
-    setTimeout(()=> playTone(1046,0.11, 0.22, "sine"), 280);
+    playTone(523, 0.10, 0.17, "sine");
+    setTimeout(()=> playTone(659, 0.10, 0.18, "sine"), 120);
+    setTimeout(()=> playTone(784, 0.12, 0.19, "sine"), 240);
+    setTimeout(()=> playTone(1046,0.14, 0.22, "sine"), 380);
+    setTimeout(()=> playTone(1318,0.16, 0.24, "triangle"), 560);
+    setTimeout(()=> playTone(1568,0.18, 0.25, "triangle"), 760);
+    setTimeout(()=> playTone(2093,0.22, 0.27, "triangle"), 1040);
+  }
+
+  let levelUpOverlayTimer = null;
+  let levelUpOverlayHideTimer = null;
+
+  function triggerLevelUpFx(newLevel){
+    const el = document.getElementById("userArea");
+    const overlay = document.getElementById("levelUpOverlay");
+    const overlayText = document.getElementById("levelUpOverlayText");
+    const stage = overlay ? overlay.querySelector('.level-up-stage') : null;
+    const progress = overlay ? overlay.querySelector('.level-up-progress > div') : null;
+
+    if(el){
+      el.classList.remove("level-up-pop");
+      void el.offsetWidth;
+      el.classList.add("level-up-pop");
+      setTimeout(()=> el.classList.remove("level-up-pop"), 10000);
+    }
+
+    if(overlay && overlayText){
+      clearTimeout(levelUpOverlayTimer);
+      clearTimeout(levelUpOverlayHideTimer);
+      overlay.classList.remove('hide');
+      overlay.classList.add('show');
+      overlay.setAttribute('aria-hidden', 'false');
+      if(stage){
+        stage.classList.remove('replay');
+        void stage.offsetWidth;
+      }
+      if(progress){
+        progress.style.animation = 'none';
+        void progress.offsetWidth;
+        progress.style.animation = 'levelProgress 10s linear forwards';
+      }
+      overlayText.textContent = `Você alcançou o nível ${newLevel}`;
+      levelUpOverlayTimer = setTimeout(()=>{
+        overlay.classList.add('hide');
+        levelUpOverlayHideTimer = setTimeout(()=>{
+          overlay.classList.remove('show','hide');
+          overlay.setAttribute('aria-hidden', 'true');
+        }, 700);
+      }, 10000);
+    }
+
+    playLevelUpSound();
+    showToast(`🎉 UP! Você subiu para o nível ${newLevel}!`);
   }
 
   window.playTrophySound = playTrophySound;
@@ -3909,17 +4200,6 @@ const MASTER_NICK = "Srgokucheats";
     /* ===============================
      XP / LEVEL UP
   ================================= */
-  function triggerLevelUpFx(newLevel){
-    const el = document.getElementById("userArea");
-    if(!el) return;
-    el.classList.remove("level-up-pop");
-    void el.offsetWidth;
-    el.classList.add("level-up-pop");
-    setTimeout(()=> el.classList.remove("level-up-pop"), 850);
-
-    playLevelUpSound();
-    showToast(`🎉 UP! Você subiu para o nível ${newLevel}!`);
-  }
 
   async function awardXp(amount, reason){
     const u = loadUser();
