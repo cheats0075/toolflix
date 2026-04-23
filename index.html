@@ -2231,6 +2231,130 @@ select optgroup{
   z-index: 10 !important;
 }
 
+
+/* ===== TOP USER BAR PREMIUM ===== */
+.top-nav{
+  align-items: flex-start !important;
+}
+#userArea{
+  min-height: 74px !important;
+  padding: 12px 20px 12px 14px !important;
+  border-radius: 28px !important;
+  background:
+    linear-gradient(90deg, rgba(22,18,40,.92) 0%, rgba(9,12,24,.96) 42%, rgba(6,18,30,.96) 100%) !important;
+  border: 1px solid rgba(130, 67, 255, .55) !important;
+  box-shadow:
+    0 0 0 1px rgba(0,255,255,.18),
+    0 0 26px rgba(128,0,255,.18),
+    0 0 18px rgba(0,255,255,.14) !important;
+  backdrop-filter: blur(18px);
+  gap: 16px !important;
+  overflow: visible !important;
+}
+#userArea:hover{
+  transform:none !important;
+  box-shadow:
+    0 0 0 1px rgba(0,255,255,.22),
+    0 0 28px rgba(128,0,255,.22),
+    0 0 20px rgba(0,255,255,.16) !important;
+}
+#userArea img,
+#userArea .user-avatar,
+#userArea .presence-avatar{
+  width: 54px !important;
+  height: 54px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(255,255,255,.14) !important;
+  box-shadow: 0 0 0 3px rgba(147,51,234,.32), 0 0 20px rgba(147,51,234,.22) !important;
+  object-fit: cover !important;
+  flex: 0 0 54px !important;
+}
+#userArea strong,
+#userArea .user-name{
+  font-size: 15px !important;
+  font-weight: 900 !important;
+  color: #fff !important;
+  letter-spacing: -.1px;
+}
+#userArea #xpText{
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  color:#fff !important;
+  margin-left: 0 !important;
+}
+#userArea .xpBar{
+  width: 180px !important;
+  height: 10px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.10) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  box-shadow: inset 0 0 10px rgba(0,0,0,.35) !important;
+  overflow: hidden !important;
+}
+#userArea .xpFill{
+  background: linear-gradient(90deg, #15d1ff 0%, #77f34f 58%, #f1d40f 100%) !important;
+  box-shadow: 0 0 16px rgba(21,209,255,.24) !important;
+}
+#userArea .user-area-trigger-icon{
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(0,0,0,.28);
+  border: 1px solid rgba(255,255,255,.10);
+  font-size: 18px !important;
+  margin-left: 8px !important;
+  opacity: 1 !important;
+}
+#userArea .user-area-trigger-icon:hover{
+  background: rgba(255,255,255,.08);
+}
+#userArea .top-user-percent{
+  color: #67ff4e !important;
+  font-weight: 900 !important;
+  font-size: 14px !important;
+  text-shadow: 0 0 8px rgba(103,255,78,.16);
+}
+#userArea .top-user-level-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #6d28d9, #8b5cf6);
+  color:#fff;
+  font-weight: 900;
+  font-size: 14px;
+  box-shadow: 0 0 18px rgba(139,92,246,.28);
+  white-space: nowrap;
+}
+#userArea .top-user-online{
+  position:absolute;
+  left: 18px;
+  bottom: -10px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #0f8f35, #17b74a);
+  color:#fff;
+  font-size: 10px;
+  font-weight: 900;
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 0 12px rgba(23,183,74,.18);
+}
+body.modal-active #userArea{
+  opacity: 0.08 !important;
+  pointer-events: none !important;
+  transform: scale(.98) !important;
+}
+body.modal-active .top-nav{
+  z-index: 2 !important;
+}
+.modal-overlay{
+  z-index: 1000000 !important;
+}
+
 </style>
 
 <style id="masterChatsOverlayStyle">
@@ -7372,6 +7496,81 @@ document.addEventListener("DOMContentLoaded", function(){
   }
 
   setInterval(checkModal, 500);
+})();
+</script>
+
+
+<script>
+(function(){
+  function buildPremiumTopUserBar(){
+    const userArea = document.getElementById('userArea');
+    if(!userArea || userArea.dataset.premiumTopBuilt === '1') return;
+
+    const avatarEl = userArea.querySelector('img');
+    const avatar = avatarEl ? avatarEl.getAttribute('src') : '';
+    const xpTextEl = document.getElementById('xpText');
+    const xpTextRaw = (xpTextEl ? xpTextEl.textContent : userArea.textContent || '').replace(/\s+/g,' ').trim();
+
+    let level = '--', xpNow = '0', xpMax = '0';
+    const m = xpTextRaw.match(/(\d+)\s*\/\s*(\d+).*?(?:Nv|Nível)\s*(\d+)/i);
+    if(m){
+      xpNow = m[1];
+      xpMax = m[2];
+      level = m[3];
+    }
+    const pct = Math.max(0, Math.min(100, Math.round((Number(xpNow) / Math.max(1, Number(xpMax))) * 100)));
+
+    let name = 'Usuário';
+    const allTexts = Array.from(userArea.querySelectorAll('*')).map(el => (el.textContent || '').trim()).filter(Boolean);
+    const foundName = allTexts.find(t => /[A-Za-z0-9]/.test(t) && !/XP|Nv|Nível|Bem-vindo/i.test(t) && t.length < 28);
+    if(foundName) name = foundName;
+
+    userArea.innerHTML = `
+      <div style="position:relative;display:flex;align-items:center;gap:14px;min-width:0;flex:1;">
+        <img src="${avatar}" alt="Avatar">
+        <span class="top-user-online">ONLINE</span>
+        <div style="display:flex;flex-direction:column;gap:3px;min-width:0;">
+          <div style="display:flex;align-items:center;gap:8px;min-width:0;">
+            <strong style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</strong>
+            <span style="color:#8b5cf6;font-size:16px;filter:drop-shadow(0 0 8px rgba(139,92,246,.22));">✔</span>
+          </div>
+        </div>
+      </div>
+      <div class="top-user-level-badge">NV ${level}</div>
+      <div style="display:flex;align-items:center;gap:10px;min-width:0;flex:0 1 330px;">
+        <span id="xpText">${xpNow} / ${xpMax} XP</span>
+        <div class="xpBar"><div class="xpFill" style="width:${pct}%"></div></div>
+        <span class="top-user-percent">${pct}%</span>
+      </div>
+      <span class="user-area-trigger-icon">⌄</span>
+    `;
+    userArea.dataset.premiumTopBuilt = '1';
+  }
+
+  function syncModalState(){
+    const modals = document.querySelectorAll('.modal-overlay');
+    let modalOpen = false;
+    modals.forEach(m => {
+      const ds = getComputedStyle(m).display;
+      if(ds !== 'none') modalOpen = true;
+    });
+    document.body.classList.toggle('modal-active', modalOpen);
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    buildPremiumTopUserBar();
+    syncModalState();
+
+    setTimeout(buildPremiumTopUserBar, 700);
+    setTimeout(syncModalState, 700);
+
+    const observer = new MutationObserver(function(){
+      syncModalState();
+    });
+    document.querySelectorAll('.modal-overlay').forEach(m => {
+      observer.observe(m, { attributes:true, attributeFilter:['style','class'] });
+    });
+  });
 })();
 </script>
 
