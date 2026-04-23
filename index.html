@@ -2094,7 +2094,122 @@ select optgroup{
       }
     }
 
-  </style>
+  
+/* ===== SIDEBAR UPGRADE: icons + profile footer ===== */
+#categoriaBtns{
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.catBtn{
+  position: relative;
+  gap: 10px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border-radius: 18px;
+  min-height: 46px;
+  background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 8px 18px rgba(0,0,0,.20);
+}
+.catBtn:hover{
+  transform: translateY(-1px);
+}
+.catBtn.active{
+  color:#fff;
+  background: linear-gradient(90deg, rgba(0,153,255,.95), rgba(0,215,255,.85));
+  box-shadow: 0 0 0 1px rgba(120,220,255,.20), 0 12px 28px rgba(0,153,255,.28);
+}
+.catBtn .cat-icon-wrap{
+  width: 22px;
+  height: 22px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex: 0 0 22px;
+  color:#2db7ff;
+  filter: drop-shadow(0 0 8px rgba(0,183,255,.10));
+}
+.catBtn.active .cat-icon-wrap{
+  color:#fff;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,.12));
+}
+.catBtn .cat-label{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-weight:700;
+}
+.sidebar-profile-card{
+  margin-top: 14px;
+  padding: 14px 14px 12px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 12px 28px rgba(0,0,0,.24);
+}
+.sidebar-profile-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+.sidebar-profile-avatar{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  object-fit:cover;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.05);
+  box-shadow:0 8px 20px rgba(0,0,0,.22);
+}
+.sidebar-profile-name{
+  font-weight:900;
+  color:#fff;
+  line-height:1.1;
+  font-size:15px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.sidebar-profile-level{
+  margin-left:auto;
+  flex:0 0 auto;
+  padding:6px 10px;
+  border-radius:999px;
+  background: linear-gradient(90deg, rgba(56,110,255,.95), rgba(62,175,255,.95));
+  color:#fff;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.3px;
+  box-shadow: 0 6px 14px rgba(40,120,255,.24);
+}
+.sidebar-profile-xp-text{
+  font-size:13px;
+  font-weight:800;
+  color:#fff;
+  margin-bottom:8px;
+}
+.sidebar-profile-xpbar{
+  width:100%;
+  height:8px;
+  border-radius:999px;
+  background: rgba(255,255,255,.08);
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow: inset 0 0 10px rgba(0,0,0,.25);
+}
+.sidebar-profile-xpfill{
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  background: linear-gradient(90deg, #00b7ff, #00e5ff);
+  box-shadow: 0 0 14px rgba(0,215,255,.20);
+  transition: width .35s ease;
+}
+
+
+</style>
 
 <style id="masterChatsOverlayStyle">
 /* ===== Painel exclusivo de Chats (Master) ===== */
@@ -7116,6 +7231,145 @@ document.addEventListener("DOMContentLoaded", function(){
     setInterval(()=> refreshGlobalChat(false), 12000);
   });
 
+})();
+</script>
+
+
+<script>
+(function(){
+  const CAT_ICON_SVG = {
+    'Todos': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="4.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="14.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="14.5" width="7" height="7" rx="1.8"/></svg>',
+    'Nintendo': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="4"/><path d="M8 12h4"/><path d="M10 10v4"/><circle cx="16.5" cy="10.5" r="1"/><circle cx="18.5" cy="13.5" r="1"/></svg>',
+    'Super Nintendo': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="4"/><circle cx="15.5" cy="10.5" r="1.2"/><circle cx="18.2" cy="13.2" r="1.2"/><path d="M8 12h4"/><path d="M10 10v4"/></svg>',
+    'Mega Drive': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5c2.2-2 11.8-2 14 0"/><rect x="4" y="10" width="16" height="8" rx="4"/><circle cx="9" cy="14" r="1"/><circle cx="15.5" cy="14" r="1"/></svg>',
+    'Master System': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="10" rx="3"/><path d="M8 12h3"/><path d="M9.5 10.5v3"/></svg>',
+    'Game Boy / GBA': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3.5" width="12" height="17" rx="2.5"/><rect x="8.7" y="6.5" width="6.6" height="5.4" rx="1"/><path d="M10 15.3h2.8"/><path d="M11.4 13.9v2.8"/><circle cx="15.8" cy="15.8" r="0.9"/></svg>',
+    'PS1': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8.5l5-2 5 2"/><path d="M12 6.5v10"/><path d="M7 16l5 2 5-2"/></svg>',
+    'PS1 Cheats': '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.5l2.7 5.3 5.8.8-4.2 4 1 5.7L12 15.7 6.7 18.3l1-5.7-4.2-4 5.8-.8L12 2.5z"/></svg>',
+    'PS2': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8l6-3 6 3"/><path d="M6 16l6 3 6-3"/><path d="M12 5v14"/></svg>',
+    'PS2 Cheats': '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.5l2.7 5.3 5.8.8-4.2 4 1 5.7L12 15.7 6.7 18.3l1-5.7-4.2-4 5.8-.8L12 2.5z"/></svg>',
+    'PS3': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7.5l6-3 6 3"/><path d="M6 12l6 3 6-3"/><path d="M6 16.5l6 3 6-3"/></svg>',
+    'PS3 Cheats': '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2.5l2.7 5.3 5.8.8-4.2 4 1 5.7L12 15.7 6.7 18.3l1-5.7-4.2-4 5.8-.8L12 2.5z"/></svg>',
+    'Xbox Clássico': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M8 8l8 8"/><path d="M16 8l-8 8"/></svg>',
+    'Xbox 360': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M8 8l8 8"/><path d="M16 8l-8 8"/></svg>',
+    'Nintendo 64': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18V7l5 3v11z"/><path d="M12 21V10l5-3v11z"/><path d="M7 7l5-4 5 4"/></svg>',
+    'GameCube': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 3v8l7-4"/><path d="M12 11l-7-4"/></svg>',
+    'Nintendo DS': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="7" rx="1.5"/><rect x="6" y="13" width="12" height="7" rx="1.5"/><path d="M9 16.5h2.8"/><path d="M10.4 15.1v2.8"/></svg>',
+    'Wii': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="4" width="4" height="16" rx="2"/><rect x="13" y="7" width="4" height="13" rx="2"/></svg>',
+    'PSP': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="10" rx="5"/><rect x="8.4" y="9.4" width="7.2" height="5.2" rx="1"/><circle cx="17.6" cy="12" r="0.9"/></svg>',
+    'NAOMI': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="5" width="12" height="14" rx="2"/><path d="M9 9h6"/><path d="M9 13h6"/></svg>',
+    'SEGA 32X': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14"/><path d="M7 6h10v12H7z"/><path d="M10 12h4"/></svg>',
+    'ATARI 2600/5200/7800': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18l3-12"/><path d="M18 18l-3-12"/><path d="M12 6v12"/></svg>',
+    'SEGA SATURN': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="7" ry="5"/><path d="M7 9.5l10 5"/></svg>',
+    'JAGUAR': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16c2-4 10-4 12 0"/><circle cx="9" cy="11" r="1"/><circle cx="15" cy="11" r="1"/></svg>',
+    'DREAMCAST': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4c4 0 7 2.6 7 6.5S16 18 12 20c-4-2-7-5.6-7-9.5S8 4 12 4z"/></svg>',
+    'ARCADE': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5h8l2 4H6z"/><rect x="7" y="9" width="10" height="10" rx="2"/><circle cx="10" cy="13" r="1"/><path d="M13.5 15.5h2.5"/></svg>',
+    'Nintendo Switch': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="6" height="16" rx="2"/><rect x="13" y="4" width="6" height="16" rx="2"/><circle cx="8" cy="9" r="1"/><circle cx="16" cy="15" r="1"/></svg>',
+    'Arquivos': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></svg>',
+    'Apps Android': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9h8v8H8z"/><path d="M9 5l1.5 2"/><path d="M15 5l-1.5 2"/><path d="M10 13h0"/><path d="M14 13h0"/></svg>',
+    'Filmes e Séries': '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 5v14"/><path d="M16 5v14"/></svg>'
+  };
+
+  const EMOJI_STRIP = /^[^A-Za-z0-9À-ÿ]+/;
+
+  function getCategoryLabel(btn){
+    const raw = (btn.textContent || '').replace(/\s+/g,' ').trim();
+    return raw.replace(EMOJI_STRIP, '').trim();
+  }
+
+  function upgradeCategoryButtons(){
+    const buttons = document.querySelectorAll('#categoriaBtns .catBtn');
+    buttons.forEach(btn=>{
+      if(btn.dataset.iconized === '1') return;
+      const label = getCategoryLabel(btn);
+      const svg = CAT_ICON_SVG[label] || CAT_ICON_SVG[btn.dataset.cat] || CAT_ICON_SVG['Todos'];
+      btn.innerHTML = '<span class="cat-icon-wrap">'+svg+'</span><span class="cat-label"></span>';
+      const labelEl = btn.querySelector('.cat-label');
+      labelEl.textContent = label;
+      btn.dataset.iconized = '1';
+    });
+  }
+
+  function getText(el){
+    return (el && el.textContent ? el.textContent : '').replace(/\s+/g,' ').trim();
+  }
+
+  function parseUserInfo(){
+    const userArea = document.getElementById('userArea');
+    if(!userArea) return null;
+
+    const avatar = (userArea.querySelector('img') || {}).src || '';
+    const xpTextRaw = getText(document.getElementById('xpText')) || getText(userArea);
+    let name = '';
+    let level = '';
+    let xpNow = '';
+    let xpMax = '';
+    let fill = 0;
+
+    const nameNodes = Array.from(userArea.querySelectorAll('*')).map(getText).filter(Boolean);
+    const nameCandidate = nameNodes.find(t => /[A-Za-z0-9]/.test(t) && !/XP|Nv|Nível|Bem-vindo/i.test(t) && t.length < 30);
+    if(nameCandidate) name = nameCandidate;
+
+    const m = xpTextRaw.match(/(\d+)\s*\/\s*(\d+).*?(?:Nv|Nível)\s*(\d+)/i);
+    if(m){
+      xpNow = m[1];
+      xpMax = m[2];
+      level = m[3];
+      fill = Math.max(0, Math.min(100, (Number(xpNow)/Math.max(1, Number(xpMax)))*100));
+    }
+
+    if(!name){
+      const welcome = Array.from(document.querySelectorAll('*')).map(getText).find(t => /^Bem-vindo/i.test(t));
+      if(welcome) name = welcome.replace(/^Bem-vindo,?\s*/i,'').trim();
+    }
+
+    if(!name) name = 'Usuário';
+    return { avatar, name, level: level || '--', xpNow: xpNow || '0', xpMax: xpMax || '0', fill };
+  }
+
+  function renderSidebarProfileCard(){
+    const sidebar = document.querySelector('.sidebar');
+    if(!sidebar) return;
+
+    let card = document.getElementById('sidebarProfileCard');
+    if(!card){
+      card = document.createElement('div');
+      card.id = 'sidebarProfileCard';
+      card.className = 'sidebar-profile-card';
+      sidebar.appendChild(card);
+    }
+
+    const data = parseUserInfo();
+    if(!data){
+      card.style.display = 'none';
+      return;
+    }
+
+    card.style.display = '';
+    card.innerHTML = '<div class="sidebar-profile-top">' +
+      '<img class="sidebar-profile-avatar" src="' + data.avatar + '" alt="Avatar">' +
+      '<div style="min-width:0;flex:1;"><div class="sidebar-profile-name">' + data.name + '</div></div>' +
+      '<div class="sidebar-profile-level">NV ' + data.level + '</div>' +
+      '</div>' +
+      '<div class="sidebar-profile-xp-text">' + data.xpNow + ' / ' + data.xpMax + ' XP</div>' +
+      '<div class="sidebar-profile-xpbar"><div class="sidebar-profile-xpfill" style="width:' + data.fill + '%"></div></div>';
+  }
+
+  function refreshSidebarUpgrade(){
+    upgradeCategoryButtons();
+    renderSidebarProfileCard();
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    refreshSidebarUpgrade();
+    setTimeout(refreshSidebarUpgrade, 600);
+    setTimeout(refreshSidebarUpgrade, 1600);
+
+    const observer = new MutationObserver(function(){
+      refreshSidebarUpgrade();
+    });
+    observer.observe(document.body, { childList:true, subtree:true, characterData:true });
+  });
 })();
 </script>
 
