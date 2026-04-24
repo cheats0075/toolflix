@@ -2231,6 +2231,26 @@ select optgroup{
   z-index: 10 !important;
 }
 
+
+/* ===== PERFIL CLICÁVEL NOS ONLINE / ÚLTIMOS VISTOS ===== */
+.presence-user{
+  cursor: pointer;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.presence-user:hover{
+  transform: translateY(-2px);
+  border-color: rgba(0,255,255,.28) !important;
+  background: rgba(255,255,255,.07) !important;
+  box-shadow: 0 14px 30px rgba(0,0,0,.26), 0 0 16px rgba(0,255,255,.10) !important;
+}
+.presence-user.profile-disabled{
+  cursor: default;
+  opacity: .82;
+}
+.presence-user.profile-disabled:hover{
+  transform:none;
+}
+
 </style>
 
 <style id="masterChatsOverlayStyle">
@@ -7372,6 +7392,42 @@ document.addEventListener("DOMContentLoaded", function(){
   }
 
   setInterval(checkModal, 500);
+})();
+</script>
+
+
+<script>
+(function(){
+  function getPresenceNick(row){
+    if(!row) return "";
+    const nameEl = row.querySelector(".presence-name");
+    return (nameEl ? nameEl.textContent : "").replace(/\s+/g, " ").trim();
+  }
+
+  function isVisitorRow(row, nick){
+    const txt = (row ? row.textContent : "").toLowerCase();
+    return txt.includes("visitante") || /^usuário\s*\d+/i.test(nick || "");
+  }
+
+  document.addEventListener("click", function(e){
+    const row = e.target.closest(".presence-user");
+    if(!row) return;
+
+    const nick = getPresenceNick(row);
+    if(!nick) return;
+
+    if(isVisitorRow(row, nick)){
+      if(typeof showToast === "function") showToast("Visitante ainda não possui perfil.");
+      return;
+    }
+
+    if(typeof openPublicProfileModalByNick === "function"){
+      openPublicProfileModalByNick(nick);
+      return;
+    }
+
+    if(typeof showToast === "function") showToast("Perfil indisponível no momento.");
+  }, true);
 })();
 </script>
 
