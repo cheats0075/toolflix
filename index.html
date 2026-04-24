@@ -2414,15 +2414,6 @@ body.avatar-modal-open{
   margin-bottom:2px;
 }
 
-
-/* WHATSAPP STYLE FORCE */
-.wa-msg{display:flex;gap:8px;margin:10px 0;align-items:flex-end}
-.wa-msg.me{justify-content:flex-end}
-.wa-avatar{width:28px;height:28px;border-radius:50%}
-.wa-bubble{max-width:70%;padding:10px 14px;border-radius:16px;font-size:13px}
-.wa-msg.me .wa-bubble{background:#00a8a8;color:#001}
-.wa-msg.other .wa-bubble{background:#1f1f1f;color:#fff}
-.wa-name{font-size:11px;opacity:.7;margin-bottom:2px}
 </style>
 
 <style id="masterChatsOverlayStyle">
@@ -2659,15 +2650,6 @@ body.avatar-modal-open{
   margin-bottom:2px;
 }
 
-
-/* WHATSAPP STYLE FORCE */
-.wa-msg{display:flex;gap:8px;margin:10px 0;align-items:flex-end}
-.wa-msg.me{justify-content:flex-end}
-.wa-avatar{width:28px;height:28px;border-radius:50%}
-.wa-bubble{max-width:70%;padding:10px 14px;border-radius:16px;font-size:13px}
-.wa-msg.me .wa-bubble{background:#00a8a8;color:#001}
-.wa-msg.other .wa-bubble{background:#1f1f1f;color:#fff}
-.wa-name{font-size:11px;opacity:.7;margin-bottom:2px}
 </style>
 
 </head>
@@ -6998,15 +6980,6 @@ document.addEventListener("DOMContentLoaded", function(){
   margin-bottom:2px;
 }
 
-
-/* WHATSAPP STYLE FORCE */
-.wa-msg{display:flex;gap:8px;margin:10px 0;align-items:flex-end}
-.wa-msg.me{justify-content:flex-end}
-.wa-avatar{width:28px;height:28px;border-radius:50%}
-.wa-bubble{max-width:70%;padding:10px 14px;border-radius:16px;font-size:13px}
-.wa-msg.me .wa-bubble{background:#00a8a8;color:#001}
-.wa-msg.other .wa-bubble{background:#1f1f1f;color:#fff}
-.wa-name{font-size:11px;opacity:.7;margin-bottom:2px}
 </style>
 
 
@@ -8044,34 +8017,42 @@ function tfRenderMessage(msg){
 
 
 <script>
-/* FORCE RE-RENDER CHAT */
-function tfConvertChat(){
-  const box=document.getElementById('chatMessages');
+/* FIX FINAL CHAT DUPLICADO */
+function tfFixChat(){
+  const box = document.getElementById('chatMessages');
   if(!box) return;
 
-  const nodes=[...box.children];
+  const nodes = [...box.children];
+
   nodes.forEach(node=>{
+    // já convertido
     if(node.classList.contains('wa-msg')) return;
 
-    const text=node.innerText || "";
-    const isMe=text.toLowerCase().includes((window.currentUserNick||"").toLowerCase());
+    // ignora elementos vazios
+    const text = node.innerText?.trim();
+    if(!text) return;
 
-    const div=document.createElement('div');
-    div.className='wa-msg '+(isMe?'me':'other');
+    const isMe = text.toLowerCase().includes((window.currentUserNick||"").toLowerCase());
 
-    const avatar=document.createElement('img');
-    avatar.className='wa-avatar';
-    avatar.src='/toolflix/assets/img/avatars/level-1-1.webp';
+    const div = document.createElement('div');
+    div.className = 'wa-msg ' + (isMe ? 'me':'other');
 
-    const wrap=document.createElement('div');
+    const avatar = document.createElement('img');
+    avatar.className = 'wa-avatar';
+    avatar.src = '/toolflix/assets/img/avatars/level-1-1.webp';
 
-    const name=document.createElement('div');
-    name.className='wa-name';
-    name.textContent=isMe?'Você':'Usuário';
+    const wrap = document.createElement('div');
 
-    const bubble=document.createElement('div');
-    bubble.className='wa-bubble';
-    bubble.textContent=text;
+    const name = document.createElement('div');
+    name.className = 'wa-name';
+    name.textContent = isMe ? 'Você' : 'Suporte';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'wa-bubble';
+
+    // remove nome duplicado da mensagem antiga
+    let cleanText = text.replace(/Srgokucheats/gi,'').replace(/Goku/gi,'').trim();
+    bubble.textContent = cleanText;
 
     wrap.appendChild(name);
     wrap.appendChild(bubble);
@@ -8088,8 +8069,10 @@ function tfConvertChat(){
   });
 }
 
+// roda uma vez forte e depois leve
 document.addEventListener("DOMContentLoaded",()=>{
-  setInterval(tfConvertChat,500);
+  setTimeout(tfFixChat,200);
+  setInterval(tfFixChat,1000);
 });
 </script>
 </body>
