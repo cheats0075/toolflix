@@ -2378,6 +2378,227 @@ body.avatar-modal-open{
   100%{ transform:scale(1); box-shadow:0 0 12px rgba(255,0,0,.42), 0 0 25px rgba(255,0,0,.18); }
 }
 
+
+/* ===== SUPORTE PREMIUM UI ===== */
+.suporte-container{
+  z-index:100010 !important;
+}
+.suporte-painel{
+  width:360px !important;
+  height:520px !important;
+  max-height:72vh !important;
+  padding:0 !important;
+  overflow:hidden !important;
+  border-radius:24px !important;
+  background:
+    radial-gradient(circle at top left, rgba(0,255,255,.12), transparent 36%),
+    linear-gradient(180deg, rgba(18,22,28,.98), rgba(8,10,14,.98)) !important;
+  border:1px solid rgba(0,255,255,.16) !important;
+  box-shadow:0 26px 70px rgba(0,0,0,.65), 0 0 28px rgba(0,255,255,.10) !important;
+  backdrop-filter: blur(18px) !important;
+  transform-origin: bottom right;
+  animation: supportPanelIn .28s cubic-bezier(.2,.9,.2,1);
+}
+.suporte-container:not(.ativo) .suporte-painel{
+  animation:none;
+}
+@keyframes supportPanelIn{
+  from{ opacity:0; transform:translateY(18px) scale(.96); }
+  to{ opacity:1; transform:translateY(0) scale(1); }
+}
+.tf-support-head{
+  height:68px;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:
+    linear-gradient(90deg, rgba(0,255,255,.12), rgba(255,255,255,.03)),
+    rgba(255,255,255,.02);
+}
+.tf-support-title{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-width:0;
+}
+.tf-support-title strong{
+  font-size:15px;
+  font-weight:900;
+  color:#fff;
+  letter-spacing:.2px;
+}
+.tf-support-status{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:11px;
+  color:rgba(255,255,255,.75);
+  font-weight:800;
+}
+.tf-support-status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#3cff72;
+  box-shadow:0 0 12px rgba(60,255,114,.85);
+  animation:supportOnlinePulse 1.4s infinite ease-in-out;
+}
+@keyframes supportOnlinePulse{
+  0%,100%{ transform:scale(1); opacity:.9; }
+  50%{ transform:scale(1.35); opacity:1; }
+}
+.tf-support-close{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.07);
+  color:#fff;
+  cursor:pointer;
+  font-size:18px;
+  font-weight:1000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.18s ease;
+}
+.tf-support-close:hover{
+  background:rgba(255,45,45,.85);
+  border-color:rgba(255,255,255,.18);
+  transform:scale(1.06);
+}
+.suporte-painel h3,
+.suporte-painel > strong,
+.suporte-painel > b{
+  display:none !important;
+}
+.suporte-painel .tf-support-body{
+  height:calc(100% - 68px);
+  display:flex;
+  flex-direction:column;
+}
+.suporte-painel #chatMessages,
+.suporte-painel #suporteMensagens,
+.suporte-painel #supportMessages{
+  flex:1 !important;
+  min-height:0 !important;
+  max-height:none !important;
+  overflow-y:auto !important;
+  padding:16px !important;
+  gap:12px !important;
+  background:
+    radial-gradient(circle at top right, rgba(0,255,255,.06), transparent 34%),
+    rgba(0,0,0,.12);
+}
+.suporte-painel #chatMessages::-webkit-scrollbar,
+.suporte-painel #suporteMensagens::-webkit-scrollbar,
+.suporte-painel #supportMessages::-webkit-scrollbar{
+  width:7px;
+}
+.suporte-painel #chatMessages::-webkit-scrollbar-thumb,
+.suporte-painel #suporteMensagens::-webkit-scrollbar-thumb,
+.suporte-painel #supportMessages::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,#00ffff,#ffd700);
+  border-radius:999px;
+}
+.suporte-painel .tf-chat-msg{
+  animation:supportMsgIn .22s ease both;
+}
+@keyframes supportMsgIn{
+  from{ opacity:0; transform:translateY(7px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+.suporte-painel .tf-chat-name{
+  font-size:11px !important;
+  opacity:.8 !important;
+  font-weight:900 !important;
+}
+.suporte-painel .tf-chat-bubble,
+.suporte-painel .recovery-msg,
+.suporte-painel .chat-bubble{
+  border-radius:18px !important;
+  padding:11px 13px !important;
+  box-shadow:0 10px 24px rgba(0,0,0,.28) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  line-height:1.4 !important;
+}
+.suporte-painel .tf-chat-right .tf-chat-bubble{
+  background:linear-gradient(180deg, rgba(0,255,255,.18), rgba(0,120,120,.18)) !important;
+  border-color:rgba(0,255,255,.22) !important;
+}
+.suporte-painel .tf-chat-left .tf-chat-bubble{
+  background:rgba(255,255,255,.07) !important;
+}
+.suporte-painel form,
+.suporte-painel #chatForm,
+.suporte-painel #suporteForm{
+  display:flex !important;
+  align-items:center !important;
+  gap:8px !important;
+  padding:12px !important;
+  border-top:1px solid rgba(255,255,255,.08) !important;
+  background:rgba(0,0,0,.34) !important;
+}
+.suporte-painel input[type="text"],
+.suporte-painel input:not([type]),
+.suporte-painel textarea,
+.suporte-painel #chatInput,
+.suporte-painel #suporteInput{
+  flex:1 !important;
+  min-width:0 !important;
+  height:42px !important;
+  max-height:90px !important;
+  border-radius:999px !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  background:rgba(255,255,255,.06) !important;
+  color:#fff !important;
+  padding:0 14px !important;
+  outline:none !important;
+  resize:none !important;
+}
+.suporte-painel input:focus,
+.suporte-painel textarea:focus{
+  border-color:rgba(0,255,255,.36) !important;
+  box-shadow:0 0 0 3px rgba(0,255,255,.08) !important;
+}
+.suporte-painel button[type="submit"],
+.suporte-painel #chatSend,
+.suporte-painel #suporteEnviar{
+  height:42px !important;
+  min-width:62px !important;
+  border:none !important;
+  border-radius:999px !important;
+  background:linear-gradient(90deg,#00ffff,#00aaff) !important;
+  color:#001014 !important;
+  font-weight:900 !important;
+  cursor:pointer !important;
+  box-shadow:0 10px 22px rgba(0,255,255,.16) !important;
+}
+.suporte-painel button[type="submit"]:hover,
+.suporte-painel #chatSend:hover,
+.suporte-painel #suporteEnviar:hover{
+  filter:brightness(1.08);
+  transform:translateY(-1px);
+}
+.suporte-btn{
+  position:relative;
+}
+.suporte-btn::after{
+  content:"";
+  position:absolute;
+  inset:-7px;
+  border-radius:50%;
+  border:1px solid rgba(255,215,0,.36);
+  animation:supportBtnRing 1.8s infinite ease-out;
+}
+@keyframes supportBtnRing{
+  from{ opacity:.9; transform:scale(.86); }
+  to{ opacity:0; transform:scale(1.22); }
+}
+
 </style>
 
 <style id="masterChatsOverlayStyle">
@@ -6606,7 +6827,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
   <div style="display:flex;border-top:1px solid #222;">
     <input id="chatInput" type="text"
-      placeholder="Digite sua mensagem..."
+      placeholder="💬 Digite sua mensagem..."
       style="flex:1;padding:8px;border:none;background:#111;color:#fff;">
     <button id="chatSendBtn" onclick="sendChatMessage()"
   style="padding:8px 12px;background:var(--cor-accent);border:none;color:#000;">
@@ -7863,6 +8084,77 @@ document.addEventListener("DOMContentLoaded", function(){
       setTimeout(function(){ window.tfSetChatNewMessagesBadge(0); }, 80);
     }
   }, true);
+})();
+</script>
+
+
+<script>
+/* ===== SUPORTE PREMIUM: header, X e estrutura moderna ===== */
+(function(){
+  function qsAny(root, selectors){
+    for(const s of selectors){
+      const el = root.querySelector(s);
+      if(el) return el;
+    }
+    return null;
+  }
+
+  function enhanceSupportPanel(){
+    const container = document.querySelector(".suporte-container");
+    const panel = document.querySelector(".suporte-painel");
+    if(!container || !panel || panel.dataset.premiumSupportReady === "1") return;
+
+    const oldTitle = qsAny(panel, ["h3", "strong", "b"]);
+    const titleText = (oldTitle?.textContent || "💬 Suporte").trim();
+
+    const head = document.createElement("div");
+    head.className = "tf-support-head";
+    head.innerHTML = `
+      <div class="tf-support-title">
+        <strong>${titleText.includes("Suporte") ? titleText : "💬 Suporte ToolFlix"}</strong>
+        <span class="tf-support-status"><span class="tf-support-status-dot"></span> Atendimento online</span>
+      </div>
+      <button type="button" class="tf-support-close" aria-label="Fechar suporte">×</button>
+    `;
+
+    const body = document.createElement("div");
+    body.className = "tf-support-body";
+
+    Array.from(panel.childNodes).forEach(node => {
+      body.appendChild(node);
+    });
+
+    panel.appendChild(head);
+    panel.appendChild(body);
+
+    const closeBtn = panel.querySelector(".tf-support-close");
+    closeBtn?.addEventListener("click", function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      container.classList.remove("ativo");
+      const painel = document.querySelector(".suporte-painel");
+      if(painel) painel.style.display = "";
+    });
+
+    panel.dataset.premiumSupportReady = "1";
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    enhanceSupportPanel();
+
+    const btn = document.querySelector(".suporte-btn");
+    if(btn){
+      btn.addEventListener("click", function(){
+        setTimeout(enhanceSupportPanel, 60);
+      }, true);
+    }
+  });
+
+  document.addEventListener("keydown", function(e){
+    if(e.key !== "Escape") return;
+    const container = document.querySelector(".suporte-container.ativo");
+    if(container) container.classList.remove("ativo");
+  });
 })();
 </script>
 
