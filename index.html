@@ -2272,12 +2272,11 @@ select optgroup{
 }
 
 
-/* ===== FIX MODAL AVATAR: trava fundo e rola só o modal ===== */
+/* ===== FIX MODAL AVATAR: rola só o modal, não o fundo ===== */
 body.avatar-modal-open{
   overflow:hidden !important;
 }
 #avatarPickerModal{
-  align-items:center !important;
   overflow:hidden !important;
 }
 #avatarPickerModal .modal-box{
@@ -3874,6 +3873,7 @@ const MASTER_NICK = "Srgokucheats";
     const box = document.getElementById("profileContent");
     if(box) box.innerHTML = `<div style="opacity:.82;">Carregando perfil...</div>`;
     if(modal) modal.style.display = "flex";
+    document.body.classList.add("avatar-modal-open");
 
     const profile = await fetchProfileMe(force);
     renderProfileCard(profile);
@@ -3899,10 +3899,6 @@ const MASTER_NICK = "Srgokucheats";
       }
     }
     return list;
-  });
-      }
-    }
-    return list;
   }
 
   async function saveSelectedAvatar(fileName){
@@ -3910,12 +3906,12 @@ const MASTER_NICK = "Srgokucheats";
     if(!token) return showToast("Faça login para trocar avatar.");
 
     const cleanFile = String(fileName || "").trim().toLowerCase();
-    const m = cleanFile.match(/^level-(\d+)-([1-3])\.webp$/i);
+    const match = cleanFile.match(/^level-(\d+)-([1-3])\.webp$/i);
     const currentProfile = profileCache || loadUser() || {};
     const currentLevel = clampAvatarLevel(currentProfile.level || getAutoAvatarLevelFromXp(currentProfile.xp || 0));
 
-    if(!m) return showToast("Avatar inválido.");
-    if(Number(m[1]) > currentLevel) return showToast("Esse avatar ainda está bloqueado para seu nível.");
+    if(!match) return showToast("Avatar inválido.");
+    if(Number(match[1]) > currentLevel) return showToast("Esse avatar ainda está bloqueado para seu nível.");
 
     try{
       const r = await fetch(API_BASE + "/api/profile/avatar", {
@@ -3946,11 +3942,11 @@ const MASTER_NICK = "Srgokucheats";
 
       updateUserUI?.();
       renderAvatarPicker(j.profile);
-      renderSidebarProfileCard?.();
 
-      const freshSrc = "/toolflix/assets/img/avatars/" + (j.profile.avatar || cleanFile) + "?v=" + Date.now();
       const userAvatar = document.getElementById("userAvatar");
-      if(userAvatar) userAvatar.src = freshSrc;
+      if(userAvatar){
+        userAvatar.src = "/toolflix/assets/img/avatars/" + (j.profile.avatar || cleanFile) + "?v=" + Date.now();
+      }
 
       showToast("✅ Avatar atualizado.");
     }catch(e){
@@ -3970,23 +3966,22 @@ const MASTER_NICK = "Srgokucheats";
 
     const level = clampAvatarLevel(profile.level || getAutoAvatarLevelFromXp(profile.xp || 0));
     const selected = String(profile.avatar || getAvatarFilenameByLevel(level, 1)).trim().toLowerCase();
-    const unlockedTotal = level * 3;
 
     if(summary){
-      summary.textContent = `Seu nível atual é ${level}. Avatares liberados: ${unlockedTotal} (${level} níveis × 3 avatares).`;
+      summary.textContent = `Seu nível atual é ${level}. Avatares liberados: ${level * 3} (${level} níveis × 3 avatares).`;
     }
 
-    grid.innerHTML = getUnlockedAvatarList(level).map((item) => {
+    grid.innerHTML = getUnlockedAvatarList(level).map(item => {
+      const avatarNumber = ((item.level - 1) * 3) + item.slot;
       const selectedCls = item.file.toLowerCase() === selected ? " selected" : "";
       const lockedCls = item.unlocked ? "" : " locked";
-      const avatarNumber = ((item.level - 1) * 3) + item.slot;
       const badge = item.unlocked
         ? (item.file.toLowerCase() === selected ? "Em uso" : `Nv ${item.level}`)
         : `Desbloqueia no Nv ${item.level}`;
 
       return `
         <button type="button" class="avatar-picker-card${selectedCls}${lockedCls}" data-avatar="${item.file}" ${item.unlocked ? "" : "disabled"}>
-          <img class="${getAvatarClass(item.level)}" src="/toolflix/assets/img/avatars/${item.file}" alt="Avatar nível ${item.level} opção ${item.slot}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1-1.webp';">
+          <img class="${getAvatarClass(item.level)}" src="/toolflix/assets/img/avatars/${item.file}" alt="Avatar ${avatarNumber}" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1-1.webp';">
           <div style="font-weight:900; margin-bottom:8px;">Avatar ${avatarNumber}</div>
           <div class="avatar-picker-badge">${badge}</div>
         </button>
@@ -4245,16 +4240,13 @@ const MASTER_NICK = "Srgokucheats";
       if(/^https?:\/\//i.test(raw)) return raw;
       if(raw.startsWith("/")) return raw;
       if(/^level-\d+-[1-3]\.webp$/i.test(raw)) return `/toolflix/assets/img/avatars/${raw}`;
+      if(/^level-\d+-[1-3]\.webp$/i.test(raw)) return `/toolflix/assets/img/avatars/${raw}`;
       if(/^level-\d+\.webp$/i.test(raw)){
         const m = raw.match(/^level-(\d+)\.webp$/i);
         return `/toolflix/assets/img/avatars/level-${m?.[1] || 1}-1.webp`;
       }
       return `/toolflix/assets/img/avatars/${raw}`;
     }
-    const byLevel = item?.avatar_level || item?.level || getAutoAvatarLevelFromXp(item?.xp || 0);
-    const level = clampAvatarLevel(byLevel);
-    return `/toolflix/assets/img/avatars/level-${level}-1.webp`;
-  }
     const byLevel = item?.avatar_level || item?.level || getAutoAvatarLevelFromXp(item?.xp || 0);
     const level = clampAvatarLevel(byLevel);
     return `/toolflix/assets/img/avatars/level-${level}-1.webp`;
@@ -7531,30 +7523,15 @@ document.addEventListener("DOMContentLoaded", function(){
 
 <script>
 (function(){
-  function syncAvatarModalScrollLock(){
-    const modal = document.getElementById("avatarPickerModal");
-    const open = !!modal && getComputedStyle(modal).display !== "none";
-    document.body.classList.toggle("avatar-modal-open", open);
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
+  document.addEventListener("click", function(){
     const modal = document.getElementById("avatarPickerModal");
     if(!modal) return;
-
-    syncAvatarModalScrollLock();
-
-    const obs = new MutationObserver(syncAvatarModalScrollLock);
-    obs.observe(modal, { attributes:true, attributeFilter:["style","class"] });
-
-    modal.addEventListener("wheel", function(e){
-      const box = modal.querySelector(".modal-box");
-      if(box && box.contains(e.target)){
-        e.stopPropagation();
-      }else{
-        e.preventDefault();
+    setTimeout(function(){
+      if(getComputedStyle(modal).display === "none"){
+        document.body.classList.remove("avatar-modal-open");
       }
-    }, { passive:false });
-  });
+    }, 50);
+  }, true);
 })();
 </script>
 
