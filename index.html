@@ -3942,6 +3942,7 @@ const MASTER_NICK = "Srgokucheats";
 
       updateUserUI?.();
       renderAvatarPicker(j.profile);
+      if(typeof window.tfRefreshOwnChatAvatar === "function") setTimeout(window.tfRefreshOwnChatAvatar, 80);
 
       const userAvatar = document.getElementById("userAvatar");
       if(userAvatar){
@@ -7531,6 +7532,107 @@ document.addEventListener("DOMContentLoaded", function(){
         document.body.classList.remove("avatar-modal-open");
       }
     }, 50);
+  }, true);
+})();
+</script>
+
+
+<script>
+/* ===== FIX: avatar atual no chat geral ===== */
+(function(){
+  function tfGetCurrentUser(){
+    try{
+      if(typeof loadUser === "function"){
+        const u = loadUser();
+        if(u && u.nick) return u;
+      }
+    }catch(e){}
+
+    try{
+      const keys = ["toolflix_user", "user", "tf_user"];
+      for(const k of keys){
+        const raw = localStorage.getItem(k);
+        if(!raw) continue;
+        const u = JSON.parse(raw);
+        if(u && u.nick) return u;
+      }
+    }catch(e){}
+
+    return null;
+  }
+
+  function tfAvatarSrcFromUser(u){
+    if(!u) return "/toolflix/assets/img/avatars/level-1-1.webp";
+    const raw = String(u.avatar || "").trim();
+
+    if(raw){
+      if(/^https?:\/\//i.test(raw)) return raw;
+      if(raw.startsWith("/")) return raw;
+      if(/^level-\d+\.webp$/i.test(raw)){
+        const m = raw.match(/^level-(\d+)\.webp$/i);
+        return "/toolflix/assets/img/avatars/level-" + (m && m[1] ? m[1] : "1") + "-1.webp";
+      }
+      return "/toolflix/assets/img/avatars/" + raw;
+    }
+
+    const lv = Number(u.level || 1) || 1;
+    return "/toolflix/assets/img/avatars/level-" + Math.max(1, Math.min(15, lv)) + "-1.webp";
+  }
+
+  window.tfRefreshOwnChatAvatar = function(){
+    const u = tfGetCurrentUser();
+    if(!u || !u.nick) return;
+
+    const nick = String(u.nick).trim().toLowerCase();
+    const src = tfAvatarSrcFromUser(u) + (tfAvatarSrcFromUser(u).includes("?") ? "&" : "?") + "v=" + Date.now();
+
+    const containers = [
+      document.getElementById("globalChatMessages"),
+      document.getElementById("chatMessages"),
+      document.getElementById("adminChatMsgs")
+    ].filter(Boolean);
+
+    containers.forEach(container=>{
+      container.querySelectorAll("img").forEach(img=>{
+        const row = img.closest(".global-chat-row, .tf-chat-msg, .chat-msg, .message, [data-nick], [data-user], [data-sender]");
+        const text = (row ? row.textContent : img.parentElement?.textContent || "").toLowerCase();
+
+        const attrNick = (
+          row?.getAttribute("data-nick") ||
+          row?.getAttribute("data-user") ||
+          row?.getAttribute("data-sender") ||
+          ""
+        ).toLowerCase();
+
+        const isMine = attrNick === nick || text.includes(nick);
+
+        if(isMine && img.src && img.src.includes("/toolflix/assets/img/avatars/")){
+          img.src = src;
+        }
+      });
+    });
+  };
+
+  // Reaplica quando o chat carrega/atualiza, sem observer pesado no site todo
+  document.addEventListener("DOMContentLoaded", function(){
+    setTimeout(window.tfRefreshOwnChatAvatar, 500);
+    setTimeout(window.tfRefreshOwnChatAvatar, 1500);
+
+    const chat = document.getElementById("globalChatMessages");
+    if(chat){
+      const obs = new MutationObserver(function(){
+        clearTimeout(window.__tfChatAvatarTimer);
+        window.__tfChatAvatarTimer = setTimeout(window.tfRefreshOwnChatAvatar, 80);
+      });
+      obs.observe(chat, { childList:true, subtree:true });
+    }
+  });
+
+  document.addEventListener("click", function(e){
+    if(e.target && (e.target.id === "globalChatBtn" || e.target.closest("#globalChatBtn"))){
+      setTimeout(window.tfRefreshOwnChatAvatar, 400);
+      setTimeout(window.tfRefreshOwnChatAvatar, 1200);
+    }
   }, true);
 })();
 </script>
