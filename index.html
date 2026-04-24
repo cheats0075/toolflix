@@ -2423,6 +2423,226 @@ body.avatar-modal-open{
 .wa-msg.me .wa-bubble{background:#00a8a8;color:#001}
 .wa-msg.other .wa-bubble{background:#1f1f1f;color:#fff}
 .wa-name{font-size:11px;opacity:.7;margin-bottom:2px}
+
+/* ===== SUPORTE WHATSAPP REAL - NOVO LAYOUT ===== */
+.suporte-container{
+  position:fixed !important;
+  right:24px !important;
+  bottom:24px !important;
+  z-index:100020 !important;
+}
+.suporte-btn{
+  display:none !important;
+}
+.suporte-painel{
+  position:absolute !important;
+  right:0 !important;
+  bottom:0 !important;
+  width:390px !important;
+  height:560px !important;
+  max-height:78vh !important;
+  padding:0 !important;
+  display:none;
+  overflow:hidden !important;
+  border-radius:22px !important;
+  background:
+    radial-gradient(circle at top left, rgba(0,255,255,.08), transparent 34%),
+    linear-gradient(180deg, rgba(15,17,22,.98), rgba(7,8,11,.98)) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  box-shadow:0 28px 80px rgba(0,0,0,.72), 0 0 28px rgba(0,255,255,.08) !important;
+  backdrop-filter:blur(16px) !important;
+  animation:tfSupportIn .22s ease both;
+}
+.suporte-container.ativo .suporte-painel{ display:flex !important; flex-direction:column !important; }
+@keyframes tfSupportIn{
+  from{ opacity:0; transform:translateY(14px) scale(.98); }
+  to{ opacity:1; transform:translateY(0) scale(1); }
+}
+.tf-support-header{
+  height:60px;
+  padding:0 12px 0 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(90deg, rgba(0,255,255,.10), rgba(255,255,255,.02));
+  flex:0 0 auto;
+}
+.tf-support-title{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-width:0;
+}
+.tf-support-title strong{
+  font-size:15px;
+  font-weight:900;
+  color:#fff;
+}
+.tf-support-status{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:11px;
+  color:rgba(255,255,255,.70);
+  font-weight:800;
+}
+.tf-support-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#45ff7a;
+  box-shadow:0 0 10px rgba(69,255,122,.8);
+  animation:tfSupportDot 1.4s infinite ease-in-out;
+}
+@keyframes tfSupportDot{
+  0%,100%{ transform:scale(1); opacity:.85; }
+  50%{ transform:scale(1.35); opacity:1; }
+}
+.tf-support-close{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  font-size:20px;
+  font-weight:1000;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.tf-support-close:hover{
+  background:rgba(255,45,45,.86);
+  transform:scale(1.04);
+}
+#chatMessages{
+  flex:1 !important;
+  min-height:0 !important;
+  overflow-y:auto !important;
+  padding:16px 14px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:12px !important;
+  background:rgba(0,0,0,.10);
+}
+#chatMessages::-webkit-scrollbar{ width:7px; }
+#chatMessages::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,#00ffff,#ffd700);
+  border-radius:999px;
+}
+.tf-wa-row{
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  max-width:92%;
+  animation:tfWaMsgIn .18s ease both;
+}
+.tf-wa-row.user{ align-self:flex-start; }
+.tf-wa-row.admin{ align-self:flex-end; flex-direction:row-reverse; }
+@keyframes tfWaMsgIn{
+  from{ opacity:0; transform:translateY(6px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+.tf-wa-avatar{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  object-fit:cover;
+  flex:0 0 32px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  box-shadow:0 6px 14px rgba(0,0,0,.28);
+}
+.tf-wa-content{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.tf-wa-row.admin .tf-wa-content{ align-items:flex-end; }
+.tf-wa-name{
+  font-size:11px;
+  font-weight:900;
+  color:rgba(255,255,255,.72);
+  padding:0 4px;
+}
+.tf-wa-bubble{
+  max-width:260px;
+  padding:10px 13px;
+  border-radius:18px;
+  font-size:13px;
+  line-height:1.42;
+  white-space:pre-wrap;
+  word-break:break-word;
+  box-shadow:0 8px 20px rgba(0,0,0,.26);
+  border:1px solid rgba(255,255,255,.08);
+}
+.tf-wa-row.user .tf-wa-bubble{
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  border-top-left-radius:7px;
+}
+.tf-wa-row.admin .tf-wa-bubble{
+  background:linear-gradient(180deg, rgba(0,204,204,.92), rgba(0,154,164,.92));
+  color:#001416;
+  border-color:rgba(0,255,255,.22);
+  border-top-right-radius:7px;
+}
+.tf-wa-time{
+  font-size:10px;
+  opacity:.55;
+  padding:0 4px;
+}
+#chatInputArea,
+.suporte-painel .chat-input-area{
+  height:58px;
+  flex:0 0 auto;
+  display:flex !important;
+  align-items:center;
+  gap:8px;
+  padding:10px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.38);
+}
+#chatInput{
+  flex:1 !important;
+  min-width:0;
+  height:40px !important;
+  border-radius:999px !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  background:rgba(255,255,255,.06) !important;
+  color:#fff !important;
+  outline:none !important;
+  padding:0 14px !important;
+  font:inherit !important;
+}
+#chatInput:focus{
+  border-color:rgba(0,255,255,.34) !important;
+  box-shadow:0 0 0 3px rgba(0,255,255,.08) !important;
+}
+#chatInput::placeholder{ color:rgba(255,255,255,.45); }
+#chatSendBtn,
+#chatInputArea button,
+.suporte-painel .chat-input-area button{
+  height:40px !important;
+  min-width:64px !important;
+  border:none !important;
+  border-radius:999px !important;
+  background:linear-gradient(90deg,#00ffff,#00aaff) !important;
+  color:#001014 !important;
+  font-weight:900 !important;
+  cursor:pointer !important;
+  padding:0 14px !important;
+}
+#chatSendBtn:hover,
+#chatInputArea button:hover{
+  filter:brightness(1.07);
+  transform:translateY(-1px);
+}
+
 </style>
 
 <style id="masterChatsOverlayStyle">
@@ -6388,70 +6608,94 @@ document.getElementById("loginInput")?.addEventListener("keydown", (e)=>{
       const box = document.getElementById("chatMessages");
       if(!box) return { ok:true, count: messages.length };
 
-      // render (bolhas)
-      const u = loadUser?.() || loadUser() || {};
+      const u = loadUser?.() || {};
       const myNick = (u && u.nick) ? u.nick : "Você";
+      const myAvatar = getAvatarSrc ? getAvatarSrc(u) : `/toolflix/assets/img/avatars/${u.avatar || "level-1-1.webp"}`;
+      const adminAvatar = "/toolflix/assets/img/avatars/level-1-1.webp";
 
       box.innerHTML = "";
       messages.forEach(m=>{
         const isAdmin = (m.sender === "admin");
+        const row = document.createElement("div");
+        row.className = "tf-wa-row " + (isAdmin ? "admin" : "user");
 
-        const wrap = document.createElement("div");
-        wrap.className = "tf-chat-msg " + (isAdmin ? "tf-chat-right" : "tf-chat-left");
+        const avatar = document.createElement("img");
+        avatar.className = "tf-wa-avatar";
+        avatar.src = isAdmin ? adminAvatar : myAvatar;
+        avatar.alt = isAdmin ? "Goku" : myNick;
+        avatar.onerror = function(){
+          this.onerror = null;
+          this.src = "/toolflix/assets/img/avatars/level-1-1.webp";
+        };
+
+        const content = document.createElement("div");
+        content.className = "tf-wa-content";
 
         const name = document.createElement("div");
-        name.className = "tf-chat-name";
+        name.className = "tf-wa-name";
         name.textContent = isAdmin ? "Goku" : myNick;
 
         const bubble = document.createElement("div");
-        bubble.className = "tf-chat-bubble";
+        bubble.className = "tf-wa-bubble";
         bubble.textContent = (m.message || "");
 
-        wrap.appendChild(name);
-        wrap.appendChild(bubble);
-        box.appendChild(wrap);
+        const time = document.createElement("div");
+        time.className = "tf-wa-time";
+        try{
+          const d = new Date(Number(m.created_at || m.createdAt || Date.now()));
+          time.textContent = d.toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
+        }catch(e){ time.textContent = ""; }
+
+        content.appendChild(name);
+        content.appendChild(bubble);
+        content.appendChild(time);
+
+        row.appendChild(avatar);
+        row.appendChild(content);
+        box.appendChild(row);
       });
 
       box.scrollTop = box.scrollHeight;
 
-      // badge logic (WhatsApp style)
-const currentCount = messages.length;
-const chatOpen = !!window.__chatIsOpen;
+      const currentCount = messages.length;
 
-const unseen = Math.max(0, currentCount - (window.__chatLastSeenCount || 0));
+      if(!window.__chatBadge){
+        window.__chatBadge = document.createElement("span");
+        window.__chatBadge.id = "chatBadge";
+        window.__chatBadge.style.cssText = `
+          position:absolute; top:-8px; right:-8px; min-width:22px; height:22px; padding:0 6px;
+          border-radius:999px; background:red; color:white; font-size:12px; font-weight:900;
+          display:none; align-items:center; justify-content:center; box-shadow:0 0 14px rgba(255,0,0,.55);
+        `;
+        const btn = document.getElementById("chatToggleBtn");
+        if(btn){
+          btn.style.position = "relative";
+          btn.appendChild(window.__chatBadge);
+        }
+      }
 
-if(!chatOpen && unseen > 0){
-  // mostra número
-  if(window.__chatBadge){
-    window.__chatBadge.style.display = "flex";
-    window.__chatBadge.innerText = unseen > 9 ? "9+" : String(unseen);
-  }
-  // liga glow no botão
-  const btn = document.getElementById("chatToggleBtn");
-  if(btn) btn.classList.add("chat-has-new");
-} else {
-  // se não tem não-lidas (ou chat aberto), esconde
-  if(window.__chatBadge){
-    window.__chatBadge.style.display = "none";
-    window.__chatBadge.innerText = "";
-  }
-  const btn = document.getElementById("chatToggleBtn");
-  if(btn) btn.classList.remove("chat-has-new");
-}
+      if(!opts.markSeen && currentCount > window.__chatLastSeenCount){
+        const diff = currentCount - window.__chatLastSeenCount;
+        if(window.__chatBadge){
+          window.__chatBadge.style.display = "flex";
+          window.__chatBadge.innerText = diff;
+        }
+        const btn = document.getElementById("chatToggleBtn");
+        if(btn) btn.classList.add("chat-has-new");
+      }
 
-// se abriu (markSeen) -> marca tudo como visto e apaga badge + glow
-if(opts.markSeen){
-  window.__chatLastSeenCount = currentCount;
-  localStorage.setItem(window.__chatLastSeenKey, String(currentCount));
+      if(opts.markSeen){
+        window.__chatLastSeenCount = currentCount;
+        localStorage.setItem(window.__chatLastSeenKey, String(currentCount));
 
-  if(window.__chatBadge){
-    window.__chatBadge.style.display = "none";
-    window.__chatBadge.innerText = "";
-  }
+        if(window.__chatBadge){
+          window.__chatBadge.style.display = "none";
+          window.__chatBadge.innerText = "";
+        }
 
-  const btn = document.getElementById("chatToggleBtn");
-  if(btn) btn.classList.remove("chat-has-new");
-}
+        const btn = document.getElementById("chatToggleBtn");
+        if(btn) btn.classList.remove("chat-has-new");
+      }
 
       return { ok:true, count: currentCount };
     }catch(e){
@@ -8098,5 +8342,65 @@ document.addEventListener("DOMContentLoaded",()=>{
   setInterval(tfCleanConvert,800);
 });
 </script>
+
+<script>
+/* ===== SUPORTE WHATSAPP REAL: estrutura e fechar ===== */
+(function(){
+  function enhanceSupportChat(){
+    const panel = document.querySelector(".suporte-painel");
+    if(!panel || panel.dataset.whatsappSupportReady === "1") return;
+
+    const oldTitle = panel.querySelector("h3, .suporte-title, strong, b");
+    if(oldTitle) oldTitle.style.display = "none";
+
+    let header = panel.querySelector(".tf-support-header");
+    if(!header){
+      header = document.createElement("div");
+      header.className = "tf-support-header";
+      header.innerHTML = `
+        <div class="tf-support-title">
+          <strong>💬 Suporte ToolFlix</strong>
+          <span class="tf-support-status"><span class="tf-support-dot"></span> Atendimento online</span>
+        </div>
+        <button type="button" class="tf-support-close" aria-label="Fechar suporte">×</button>
+      `;
+      panel.insertBefore(header, panel.firstChild);
+    }
+
+    header.querySelector(".tf-support-close")?.addEventListener("click", function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      document.querySelector(".suporte-container")?.classList.remove("ativo");
+    });
+
+    const input = document.getElementById("chatInput");
+    const send = document.querySelector("#chatSendBtn, #chatInputArea button, .suporte-painel button[onclick*='sendChatMessage']");
+    if(input && send && !document.getElementById("chatInputArea")){
+      const area = document.createElement("div");
+      area.id = "chatInputArea";
+      input.parentNode.insertBefore(area, input);
+      area.appendChild(input);
+      area.appendChild(send);
+    }
+    if(input) input.placeholder = "Digite sua mensagem...";
+
+    panel.dataset.whatsappSupportReady = "1";
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    enhanceSupportChat();
+    document.querySelector(".suporte-btn")?.addEventListener("click", function(){
+      setTimeout(enhanceSupportChat, 60);
+    }, true);
+  });
+
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape"){
+      document.querySelector(".suporte-container")?.classList.remove("ativo");
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
