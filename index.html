@@ -2414,6 +2414,26 @@ body.avatar-modal-open{
   margin-bottom:2px;
 }
 
+
+/* CHAT WHATSAPP FINAL */
+.msg{
+  display:flex;
+  gap:8px;
+  margin:10px 0;
+}
+.msg.me{justify-content:flex-end;}
+.msg img{
+  width:28px;height:28px;border-radius:50%;
+}
+.msg .bubble{
+  padding:10px 14px;
+  border-radius:16px;
+  max-width:70%;
+  font-size:13px;
+}
+.msg.me .bubble{background:#00a8a8;color:#001;}
+.msg.other .bubble{background:#1f1f1f;color:#fff;}
+.name{font-size:11px;opacity:.7;margin-bottom:2px;}
 </style>
 
 <style id="masterChatsOverlayStyle">
@@ -2650,6 +2670,26 @@ body.avatar-modal-open{
   margin-bottom:2px;
 }
 
+
+/* CHAT WHATSAPP FINAL */
+.msg{
+  display:flex;
+  gap:8px;
+  margin:10px 0;
+}
+.msg.me{justify-content:flex-end;}
+.msg img{
+  width:28px;height:28px;border-radius:50%;
+}
+.msg .bubble{
+  padding:10px 14px;
+  border-radius:16px;
+  max-width:70%;
+  font-size:13px;
+}
+.msg.me .bubble{background:#00a8a8;color:#001;}
+.msg.other .bubble{background:#1f1f1f;color:#fff;}
+.name{font-size:11px;opacity:.7;margin-bottom:2px;}
 </style>
 
 </head>
@@ -6980,6 +7020,26 @@ document.addEventListener("DOMContentLoaded", function(){
   margin-bottom:2px;
 }
 
+
+/* CHAT WHATSAPP FINAL */
+.msg{
+  display:flex;
+  gap:8px;
+  margin:10px 0;
+}
+.msg.me{justify-content:flex-end;}
+.msg img{
+  width:28px;height:28px;border-radius:50%;
+}
+.msg .bubble{
+  padding:10px 14px;
+  border-radius:16px;
+  max-width:70%;
+  font-size:13px;
+}
+.msg.me .bubble{background:#00a8a8;color:#001;}
+.msg.other .bubble{background:#1f1f1f;color:#fff;}
+.name{font-size:11px;opacity:.7;margin-bottom:2px;}
 </style>
 
 
@@ -8015,5 +8075,43 @@ function tfRenderMessage(msg){
 }
 </script>
 
+
+<script>
+function appendMessageFixed(data){
+  const box=document.getElementById('chatMessages');
+  if(!box) return;
+
+  const isMe=data.nick===window.currentUserNick;
+
+  const div=document.createElement('div');
+  div.className='msg '+(isMe?'me':'other');
+
+  const avatar=document.createElement('img');
+  avatar.src=data.avatar||'/toolflix/assets/img/avatars/level-1-1.webp';
+
+  const wrap=document.createElement('div');
+
+  const name=document.createElement('div');
+  name.className='name';
+  name.textContent=data.nick;
+
+  const bubble=document.createElement('div');
+  bubble.className='bubble';
+  bubble.textContent=data.message;
+
+  wrap.appendChild(name);
+  wrap.appendChild(bubble);
+
+  if(isMe){
+    div.appendChild(wrap);
+    div.appendChild(avatar);
+  }else{
+    div.appendChild(avatar);
+    div.appendChild(wrap);
+  }
+
+  box.appendChild(div);
+}
+</script>
 </body>
 </html>
