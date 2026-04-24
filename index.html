@@ -2414,6 +2414,15 @@ body.avatar-modal-open{
   margin-bottom:2px;
 }
 
+
+/* FINAL CLEAN CHAT */
+.wa-msg{display:flex;gap:8px;margin:10px 0;align-items:flex-end}
+.wa-msg.me{justify-content:flex-end}
+.wa-avatar{width:28px;height:28px;border-radius:50%}
+.wa-bubble{max-width:70%;padding:10px 14px;border-radius:16px;font-size:13px}
+.wa-msg.me .wa-bubble{background:#00a8a8;color:#001}
+.wa-msg.other .wa-bubble{background:#1f1f1f;color:#fff}
+.wa-name{font-size:11px;opacity:.7;margin-bottom:2px}
 </style>
 
 <style id="masterChatsOverlayStyle">
@@ -2650,6 +2659,15 @@ body.avatar-modal-open{
   margin-bottom:2px;
 }
 
+
+/* FINAL CLEAN CHAT */
+.wa-msg{display:flex;gap:8px;margin:10px 0;align-items:flex-end}
+.wa-msg.me{justify-content:flex-end}
+.wa-avatar{width:28px;height:28px;border-radius:50%}
+.wa-bubble{max-width:70%;padding:10px 14px;border-radius:16px;font-size:13px}
+.wa-msg.me .wa-bubble{background:#00a8a8;color:#001}
+.wa-msg.other .wa-bubble{background:#1f1f1f;color:#fff}
+.wa-name{font-size:11px;opacity:.7;margin-bottom:2px}
 </style>
 
 </head>
@@ -6980,6 +6998,15 @@ document.addEventListener("DOMContentLoaded", function(){
   margin-bottom:2px;
 }
 
+
+/* FINAL CLEAN CHAT */
+.wa-msg{display:flex;gap:8px;margin:10px 0;align-items:flex-end}
+.wa-msg.me{justify-content:flex-end}
+.wa-avatar{width:28px;height:28px;border-radius:50%}
+.wa-bubble{max-width:70%;padding:10px 14px;border-radius:16px;font-size:13px}
+.wa-msg.me .wa-bubble{background:#00a8a8;color:#001}
+.wa-msg.other .wa-bubble{background:#1f1f1f;color:#fff}
+.wa-name{font-size:11px;opacity:.7;margin-bottom:2px}
 </style>
 
 
@@ -8017,19 +8044,20 @@ function tfRenderMessage(msg){
 
 
 <script>
-/* FIX FINAL CHAT DUPLICADO */
-function tfFixChat(){
+function tfCleanConvert(){
   const box = document.getElementById('chatMessages');
   if(!box) return;
 
-  const nodes = [...box.children];
-
-  nodes.forEach(node=>{
-    // já convertido
+  [...box.children].forEach(node=>{
     if(node.classList.contains('wa-msg')) return;
 
-    // ignora elementos vazios
-    const text = node.innerText?.trim();
+    // pega apenas texto puro (sem img/html)
+    let text = '';
+    node.childNodes.forEach(n=>{
+      if(n.nodeType === 3) text += n.textContent;
+    });
+
+    text = text.trim();
     if(!text) return;
 
     const isMe = text.toLowerCase().includes((window.currentUserNick||"").toLowerCase());
@@ -8049,10 +8077,7 @@ function tfFixChat(){
 
     const bubble = document.createElement('div');
     bubble.className = 'wa-bubble';
-
-    // remove nome duplicado da mensagem antiga
-    let cleanText = text.replace(/Srgokucheats/gi,'').replace(/Goku/gi,'').trim();
-    bubble.textContent = cleanText;
+    bubble.textContent = text;
 
     wrap.appendChild(name);
     wrap.appendChild(bubble);
@@ -8069,10 +8094,8 @@ function tfFixChat(){
   });
 }
 
-// roda uma vez forte e depois leve
 document.addEventListener("DOMContentLoaded",()=>{
-  setTimeout(tfFixChat,200);
-  setInterval(tfFixChat,1000);
+  setInterval(tfCleanConvert,800);
 });
 </script>
 </body>
