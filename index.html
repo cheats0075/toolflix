@@ -2335,6 +2335,49 @@ body.avatar-modal-open{
   line-height:1.45;
 }
 
+
+/* ===== BADGE CHAT: "X novas mensagens" ===== */
+#chatToggleBtn{
+  position:relative !important;
+  overflow:visible !important;
+}
+#chatBadge,
+#chatNewMsgBadge{
+  position:absolute !important;
+  top:-18px !important;
+  right:-26px !important;
+  min-width:34px !important;
+  height:auto !important;
+  min-height:26px !important;
+  padding:6px 12px !important;
+  border-radius:999px !important;
+  background:linear-gradient(135deg,#ff1b1b,#ff0000,#b90000) !important;
+  color:#fff !important;
+  font-size:12px !important;
+  font-weight:900 !important;
+  line-height:1 !important;
+  display:none;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:5px !important;
+  white-space:nowrap !important;
+  box-shadow:0 0 18px rgba(255,0,0,.55), 0 0 34px rgba(255,0,0,.25) !important;
+  border:1px solid rgba(255,255,255,.22) !important;
+  z-index:100500 !important;
+  pointer-events:none !important;
+  transform-origin:center !important;
+}
+#chatBadge.show-text-badge,
+#chatNewMsgBadge.show-text-badge{
+  display:flex !important;
+  animation: chatTextBadgePulse 1.15s infinite ease-in-out;
+}
+@keyframes chatTextBadgePulse{
+  0%{ transform:scale(1); box-shadow:0 0 12px rgba(255,0,0,.42), 0 0 25px rgba(255,0,0,.18); }
+  50%{ transform:scale(1.08); box-shadow:0 0 22px rgba(255,0,0,.70), 0 0 42px rgba(255,0,0,.30); }
+  100%{ transform:scale(1); box-shadow:0 0 12px rgba(255,0,0,.42), 0 0 25px rgba(255,0,0,.18); }
+}
+
 </style>
 
 <style id="masterChatsOverlayStyle">
@@ -7745,6 +7788,80 @@ document.addEventListener("DOMContentLoaded", function(){
 
     const nick = btn.dataset.nick || btn.getAttribute("data-nick") || "";
     tfMasterOpenPrivateChatByNick(nick, btn);
+  }, true);
+})();
+</script>
+
+
+<script>
+/* ===== FIX VISUAL: "X novas mensagens" no botão Chat ===== */
+(function(){
+  function plural(n){
+    return Number(n) === 1 ? "nova mensagem" : "novas mensagens";
+  }
+
+  function getOrCreateChatTextBadge(){
+    const btn = document.getElementById("chatToggleBtn");
+    if(!btn) return null;
+
+    let badge = document.getElementById("chatBadge") || document.getElementById("chatNewMsgBadge");
+    if(!badge){
+      badge = document.createElement("span");
+      badge.id = "chatBadge";
+      btn.appendChild(badge);
+    }
+    return badge;
+  }
+
+  window.tfSetChatNewMessagesBadge = function(count){
+    const btn = document.getElementById("chatToggleBtn");
+    const badge = getOrCreateChatTextBadge();
+    if(!btn || !badge) return;
+
+    count = Math.max(0, Number(count || 0));
+
+    if(count > 0){
+      badge.textContent = count + " " + plural(count);
+      badge.classList.add("show-text-badge");
+      badge.style.display = "flex";
+      btn.classList.add("chat-has-new");
+    }else{
+      badge.textContent = "";
+      badge.classList.remove("show-text-badge");
+      badge.style.display = "none";
+      btn.classList.remove("chat-has-new");
+    }
+  };
+
+  // Compatibilidade com o código antigo: quando ele muda o texto/display do badge, convertemos para texto completo.
+  document.addEventListener("DOMContentLoaded", function(){
+    const badge = getOrCreateChatTextBadge();
+    if(!badge) return;
+
+    const normalize = function(){
+      const raw = (badge.textContent || "").trim();
+      const n = parseInt(raw, 10);
+      const visible = getComputedStyle(badge).display !== "none";
+      if(visible && n > 0){
+        window.tfSetChatNewMessagesBadge(n);
+      }
+    };
+
+    const obs = new MutationObserver(function(){
+      clearTimeout(window.__tfChatBadgeNormalizeTimer);
+      window.__tfChatBadgeNormalizeTimer = setTimeout(normalize, 30);
+    });
+    obs.observe(badge, { childList:true, characterData:true, subtree:true, attributes:true, attributeFilter:["style","class"] });
+
+    setTimeout(normalize, 300);
+    setTimeout(normalize, 1200);
+  });
+
+  // Ao abrir o chat, some o aviso.
+  document.addEventListener("click", function(e){
+    if(e.target && (e.target.id === "chatToggleBtn" || e.target.closest("#chatToggleBtn"))){
+      setTimeout(function(){ window.tfSetChatNewMessagesBadge(0); }, 80);
+    }
   }, true);
 })();
 </script>
