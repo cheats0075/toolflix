@@ -7671,5 +7671,83 @@ document.addEventListener("DOMContentLoaded", function(){
 })();
 </script>
 
+
+<script>
+/* ===== FIX CLIQUE: botão Master "Chamar no privado" ===== */
+(function(){
+  async function tfMasterOpenPrivateChatByNick(nick, btn){
+    nick = String(nick || "").trim();
+    if(!nick) return showToast?.("Nick inválido.");
+
+    const authNick = String((loadAuth?.()?.nick || loadUser?.()?.nick || "")).trim();
+    if(authNick !== "Srgokucheats"){
+      return showToast?.("Apenas a conta Master pode abrir chat privado.");
+    }
+
+    try{
+      if(btn){
+        btn.disabled = true;
+        btn.style.opacity = ".7";
+        btn.textContent = "Abrindo chat...";
+      }
+
+      const token = getToken?.();
+      const r = await fetch(API_URL + "/api/admin/chats/open-by-nick", {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "Authorization":"Bearer " + token
+        },
+        body: JSON.stringify({ nick })
+      });
+
+      const j = await r.json().catch(()=> ({}));
+      if(!r.ok || !j?.ok || !j?.chat){
+        throw new Error(j?.error || "Não foi possível abrir o chat.");
+      }
+
+      const profileModal = document.getElementById("profileModal");
+      if(profileModal) profileModal.style.display = "none";
+
+      if(typeof window.openMasterChatsTop === "function"){
+        await window.openMasterChatsTop();
+      }
+
+      if(typeof window.loadAdminChats === "function"){
+        await window.loadAdminChats({ sortRecent:true });
+      }
+
+      if(typeof loadAdminChatMessages === "function"){
+        await loadAdminChatMessages(j.chat.id, j.chat.nick || nick);
+      }else if(typeof window.loadAdminChatMessages === "function"){
+        await window.loadAdminChatMessages(j.chat.id, j.chat.nick || nick);
+      }
+
+      showToast?.("✅ Chat privado aberto.");
+    }catch(e){
+      console.error(e);
+      showToast?.(e.message || "Erro ao abrir chat privado.");
+    }finally{
+      if(btn){
+        btn.disabled = false;
+        btn.style.opacity = "1";
+        btn.textContent = "💬 Chamar no privado";
+      }
+    }
+  }
+
+  document.addEventListener("click", function(e){
+    const btn = e.target.closest("#masterOpenPrivateChatBtn");
+    if(!btn) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const nick = btn.dataset.nick || btn.getAttribute("data-nick") || "";
+    tfMasterOpenPrivateChatByNick(nick, btn);
+  }, true);
+})();
+</script>
+
 </body>
 </html>
