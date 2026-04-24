@@ -2379,149 +2379,63 @@ body.avatar-modal-open{
 }
 
 
+/* ===== FIX SUPORTE DEFINITIVO ===== */
 
-
-
-/* ===== SUPORTE FIX PREMIUM SEGURO ===== */
-.suporte-container{
-  z-index:100010 !important;
+/* REMOVE BOTÃO FLUTUANTE */
+.suporte-btn{
+  display:none !important;
 }
-.suporte-container.ativo .suporte-btn{
-  display:none !important; /* não fica em cima do campo/botão enviar */
-}
+
+/* PAINEL */
 .suporte-painel{
-  width:360px !important;
-  height:520px !important;
-  max-height:72vh !important;
-  padding:0 !important;
-  border-radius:22px !important;
-  overflow:hidden !important;
-  background:
-    radial-gradient(circle at top left, rgba(0,255,255,.08), transparent 34%),
-    linear-gradient(180deg, rgba(18,18,22,.98), rgba(9,10,12,.98)) !important;
-  border:1px solid rgba(255,255,255,.10) !important;
-  box-shadow:0 24px 70px rgba(0,0,0,.65), 0 0 24px rgba(0,255,255,.08) !important;
-  backdrop-filter: blur(14px) !important;
-  animation:supportOpenSafe .22s ease both;
+  border-radius:20px !important;
+  background:linear-gradient(180deg,#0b0c10,#050608) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  box-shadow:0 20px 60px rgba(0,0,0,.7) !important;
+  animation:fadeInSup .2s ease;
 }
-@keyframes supportOpenSafe{
-  from{ opacity:0; transform:translateY(12px) scale(.98); }
-  to{ opacity:1; transform:translateY(0) scale(1); }
+@keyframes fadeInSup{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:none}
 }
 
-/* header real do suporte */
-.suporte-painel > h3,
-.suporte-painel > strong,
-.suporte-painel > b,
-.suporte-painel .suporte-title{
-  height:54px !important;
-  margin:0 !important;
-  padding:0 56px 0 16px !important;
+/* HEADER */
+.suporte-painel h3{
   display:flex !important;
-  align-items:center !important;
-  border-bottom:1px solid rgba(255,255,255,.08) !important;
-  background:linear-gradient(90deg, rgba(0,255,255,.10), rgba(255,255,255,.02)) !important;
-  color:#fff !important;
-  font-weight:900 !important;
-  font-size:15px !important;
-}
-
-/* X criado via JS */
-.tf-support-close-safe{
-  position:absolute;
-  top:9px;
-  right:10px;
-  width:36px;
-  height:36px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.08);
-  color:#fff;
-  cursor:pointer;
-  font-size:20px;
-  font-weight:1000;
-  display:flex;
   align-items:center;
-  justify-content:center;
-  z-index:5;
-  transition:.18s ease;
-}
-.tf-support-close-safe:hover{
-  background:rgba(255,45,45,.85);
-  transform:scale(1.06);
+  justify-content:space-between;
+  padding:12px 14px !important;
+  font-size:14px !important;
+  border-bottom:1px solid rgba(255,255,255,.06);
 }
 
-/* área das mensagens sem quebrar o form */
-.suporte-painel #chatMessages,
-.suporte-painel #suporteMensagens,
-.suporte-painel #supportMessages{
-  height:calc(100% - 108px) !important;
-  max-height:none !important;
-  overflow-y:auto !important;
-  padding:16px !important;
-  background:rgba(0,0,0,.10) !important;
+/* BOTÃO X */
+.tf-close{
+  width:32px;
+  height:32px;
+  border-radius:10px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  cursor:pointer;
 }
-.suporte-painel #chatMessages::-webkit-scrollbar,
-.suporte-painel #suporteMensagens::-webkit-scrollbar,
-.suporte-painel #supportMessages::-webkit-scrollbar{
-  width:7px;
-}
-.suporte-painel #chatMessages::-webkit-scrollbar-thumb,
-.suporte-painel #suporteMensagens::-webkit-scrollbar-thumb,
-.suporte-painel #supportMessages::-webkit-scrollbar-thumb{
-  background:linear-gradient(180deg,#00ffff,#ffd700);
-  border-radius:999px;
+.tf-close:hover{
+  background:#ff3b3b;
 }
 
-/* form embaixo */
-.suporte-painel form,
-.suporte-painel #chatForm,
-.suporte-painel #suporteForm{
-  height:54px !important;
-  display:flex !important;
-  align-items:center !important;
-  gap:8px !important;
-  padding:8px !important;
-  border-top:1px solid rgba(255,255,255,.08) !important;
-  background:rgba(0,0,0,.34) !important;
-}
-.suporte-painel input[type="text"],
-.suporte-painel input:not([type]),
-.suporte-painel textarea,
-.suporte-painel #chatInput,
-.suporte-painel #suporteInput{
-  flex:1 !important;
-  min-width:0 !important;
-  height:38px !important;
-  border-radius:12px !important;
-  border:1px solid rgba(255,255,255,.10) !important;
-  background:rgba(255,255,255,.06) !important;
-  color:#fff !important;
-  padding:0 12px !important;
-  outline:none !important;
-  resize:none !important;
-}
-.suporte-painel button[type="submit"],
-.suporte-painel #chatSend,
-.suporte-painel #suporteEnviar{
-  height:38px !important;
-  min-width:62px !important;
-  border:none !important;
-  border-radius:10px !important;
-  background:linear-gradient(90deg,#00ffff,#00aaff) !important;
-  color:#001014 !important;
-  font-weight:900 !important;
-  cursor:pointer !important;
-}
-
-/* bolhas um pouco melhores, sem mudar estrutura */
-.suporte-painel .tf-chat-bubble,
-.suporte-painel .recovery-msg,
+/* MENSAGENS */
 .suporte-painel .chat-bubble{
-  border-radius:16px !important;
-  box-shadow:0 8px 22px rgba(0,0,0,.25) !important;
+  border-radius:14px !important;
+  box-shadow:0 6px 16px rgba(0,0,0,.4);
 }
 
+/* INPUT */
+.suporte-painel input{
+  border-radius:10px !important;
+  background:rgba(255,255,255,.06) !important;
+}
+.suporte-painel button{
+  border-radius:10px !important;
+}
 </style>
 
 <style id="masterChatsOverlayStyle">
@@ -2722,7 +2636,65 @@ body.avatar-modal-open{
       }
     }
 
-  </style>
+  
+/* ===== FIX SUPORTE DEFINITIVO ===== */
+
+/* REMOVE BOTÃO FLUTUANTE */
+.suporte-btn{
+  display:none !important;
+}
+
+/* PAINEL */
+.suporte-painel{
+  border-radius:20px !important;
+  background:linear-gradient(180deg,#0b0c10,#050608) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  box-shadow:0 20px 60px rgba(0,0,0,.7) !important;
+  animation:fadeInSup .2s ease;
+}
+@keyframes fadeInSup{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:none}
+}
+
+/* HEADER */
+.suporte-painel h3{
+  display:flex !important;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 14px !important;
+  font-size:14px !important;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+/* BOTÃO X */
+.tf-close{
+  width:32px;
+  height:32px;
+  border-radius:10px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  cursor:pointer;
+}
+.tf-close:hover{
+  background:#ff3b3b;
+}
+
+/* MENSAGENS */
+.suporte-painel .chat-bubble{
+  border-radius:14px !important;
+  box-shadow:0 6px 16px rgba(0,0,0,.4);
+}
+
+/* INPUT */
+.suporte-painel input{
+  border-radius:10px !important;
+  background:rgba(255,255,255,.06) !important;
+}
+.suporte-painel button{
+  border-radius:10px !important;
+}
+</style>
 
 </head>
 <body class="theme-default">
@@ -7016,7 +6988,65 @@ document.addEventListener("DOMContentLoaded", function(){
       }
     }
 
-  </style>
+  
+/* ===== FIX SUPORTE DEFINITIVO ===== */
+
+/* REMOVE BOTÃO FLUTUANTE */
+.suporte-btn{
+  display:none !important;
+}
+
+/* PAINEL */
+.suporte-painel{
+  border-radius:20px !important;
+  background:linear-gradient(180deg,#0b0c10,#050608) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  box-shadow:0 20px 60px rgba(0,0,0,.7) !important;
+  animation:fadeInSup .2s ease;
+}
+@keyframes fadeInSup{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:none}
+}
+
+/* HEADER */
+.suporte-painel h3{
+  display:flex !important;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 14px !important;
+  font-size:14px !important;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+/* BOTÃO X */
+.tf-close{
+  width:32px;
+  height:32px;
+  border-radius:10px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  cursor:pointer;
+}
+.tf-close:hover{
+  background:#ff3b3b;
+}
+
+/* MENSAGENS */
+.suporte-painel .chat-bubble{
+  border-radius:14px !important;
+  box-shadow:0 6px 16px rgba(0,0,0,.4);
+}
+
+/* INPUT */
+.suporte-painel input{
+  border-radius:10px !important;
+  background:rgba(255,255,255,.06) !important;
+}
+.suporte-painel button{
+  border-radius:10px !important;
+}
+</style>
 
 
 <!-- ===== PATCH: Boas-vindas + Contador de visualizações (Render API) ===== -->
@@ -8011,50 +8041,24 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-
 <script>
-/* ===== SUPORTE FIX: X + esconder botão flutuante aberto ===== */
-(function(){
-  function closeSupport(){
-    const c = document.querySelector(".suporte-container");
-    if(c) c.classList.remove("ativo");
-    const p = document.querySelector(".suporte-painel");
-    if(p) p.style.display = "";
+document.addEventListener("DOMContentLoaded",()=>{
+  const painel=document.querySelector(".suporte-painel");
+  if(!painel) return;
+
+  const header=painel.querySelector("h3");
+  if(!header) return;
+
+  if(!header.querySelector(".tf-close")){
+    const btn=document.createElement("button");
+    btn.className="tf-close";
+    btn.innerHTML="✕";
+    btn.onclick=()=>{
+      document.querySelector(".suporte-container")?.classList.remove("ativo");
+    };
+    header.appendChild(btn);
   }
-
-  function addSupportClose(){
-    const panel = document.querySelector(".suporte-painel");
-    if(!panel || panel.querySelector(".tf-support-close-safe")) return;
-
-    panel.style.position = "absolute";
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "tf-support-close-safe";
-    btn.textContent = "×";
-    btn.setAttribute("aria-label", "Fechar suporte");
-    btn.addEventListener("click", function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      closeSupport();
-    });
-    panel.appendChild(btn);
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
-    addSupportClose();
-    const openBtn = document.querySelector(".suporte-btn");
-    if(openBtn){
-      openBtn.addEventListener("click", function(){
-        setTimeout(addSupportClose, 50);
-      }, true);
-    }
-  });
-
-  document.addEventListener("keydown", function(e){
-    if(e.key === "Escape") closeSupport();
-  });
-})();
+});
 </script>
-
 </body>
 </html>
