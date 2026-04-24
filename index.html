@@ -2310,6 +2310,31 @@ body.avatar-modal-open{
   .avatar-picker-grid{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
 }
 
+
+/* ===== BOTÃO MASTER: CHAMAR NO PRIVADO ===== */
+.master-private-chat-btn{
+  width:100%;
+  margin:14px 0 4px;
+  border:none;
+  border-radius:16px;
+  padding:14px 16px;
+  cursor:pointer;
+  font-weight:900;
+  color:#061014;
+  background:linear-gradient(90deg,#00ffff,#ffd700);
+  box-shadow:0 12px 28px rgba(0,255,255,.14), 0 0 18px rgba(255,215,0,.10);
+}
+.master-private-chat-btn:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.06);
+}
+.master-private-chat-note{
+  margin-bottom:10px;
+  font-size:12px;
+  opacity:.74;
+  line-height:1.45;
+}
+
 </style>
 
 <style id="masterChatsOverlayStyle">
@@ -3789,6 +3814,13 @@ const MASTER_NICK = "Srgokucheats";
     const auth = loadAuth() || {};
     const isOwnProfile = !!auth?.nick && String(auth.nick).trim().toLowerCase() === String(profile.nick || "").trim().toLowerCase();
     const tempAlert = profile.passwordTemp ? `<div class="temp-pass-alert">🔐 Você entrou com uma senha temporária. Troque agora no seu perfil.</div>` : "";
+    const isMasterViewingOtherProfile = !!auth?.nick && String(auth.nick).trim() === MASTER_NICK && !isOwnProfile && String(profile.nick || "").trim() !== MASTER_NICK;
+    const masterPrivateChatHtml = isMasterViewingOtherProfile ? `
+      <button type="button" id="masterOpenPrivateChatBtn" class="master-private-chat-btn" data-nick="${safeStr(profile.nick || "")}">
+        💬 Chamar no privado
+      </button>
+      <div class="master-private-chat-note">Atalho exclusivo da conta Master para abrir o chat privado desse usuário.</div>
+    ` : "";
     const changePasswordHtml = isOwnProfile ? `
       <div class="password-panel">
         <button id="togglePasswordPanelBtn" class="nav-item" style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px; ${profile.passwordTemp ? 'background:rgba(255,215,0,.14); border-color:rgba(255,215,0,.30); color:#ffe27a;' : ''}">
@@ -3851,6 +3883,8 @@ const MASTER_NICK = "Srgokucheats";
         <div>🗓️ Conta criada em: <b>${fmtDateTime(profile.createdAt)}</b></div>
         <div>⏱️ Último login: <b>${fmtDateTime(profile.lastLoginAt)}</b></div>
       </div>
+
+      ${masterPrivateChatHtml}
 
       ${changePasswordHtml}
     `;
