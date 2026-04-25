@@ -2689,6 +2689,151 @@ body.avatar-modal-open{
   transform:scale(1.08) !important;
 }
 
+
+/* ===== VISITANTE: MENSAGEM AUTOMÁTICA DE ACESSO GRÁTIS ===== */
+#guestSupportNotify{
+  position:fixed;
+  top:18px;
+  right:24px;
+  z-index:100200;
+  display:none;
+  align-items:center;
+  gap:10px;
+  padding:13px 16px;
+  border-radius:999px;
+  background:linear-gradient(90deg, rgba(255,30,30,.96), rgba(180,0,0,.96));
+  color:#fff;
+  font-weight:900;
+  font-size:13px;
+  box-shadow:0 0 18px rgba(255,0,0,.55), 0 0 36px rgba(255,0,0,.22);
+  border:1px solid rgba(255,255,255,.18);
+  cursor:pointer;
+  animation:guestSupportPulse 1.15s infinite ease-in-out;
+}
+#guestSupportNotify.show{ display:flex; }
+#guestSupportNotify .guest-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 0 10px rgba(255,255,255,.9);
+}
+@keyframes guestSupportPulse{
+  0%,100%{ transform:scale(1); }
+  50%{ transform:scale(1.05); }
+}
+#guestSupportOverlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  z-index:100201;
+}
+#guestSupportOverlay.open{ display:block; }
+#guestSupportOverlay .guest-support-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(8px);
+}
+#guestSupportBox{
+  position:relative;
+  width:min(420px, 92vw);
+  margin:12vh auto 0;
+  overflow:hidden;
+  border-radius:24px;
+  background:linear-gradient(180deg, rgba(12,18,24,.98), rgba(7,10,14,.98));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 28px 80px rgba(0,0,0,.70), 0 0 30px rgba(0,255,255,.10);
+  animation:guestSupportIn .22s ease both;
+}
+@keyframes guestSupportIn{
+  from{ opacity:0; transform:translateY(14px) scale(.98); }
+  to{ opacity:1; transform:translateY(0) scale(1); }
+}
+.guest-support-head{
+  height:62px;
+  padding:0 14px 0 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(90deg, rgba(0,255,255,.10), rgba(255,255,255,.02));
+}
+.guest-support-head strong{
+  font-size:15px;
+}
+.guest-support-close{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  font-size:20px;
+  font-weight:900;
+  cursor:pointer;
+}
+.guest-support-close:hover{ background:#ff3b3b; }
+.guest-support-body{
+  padding:18px;
+  background-color:#0b141a;
+  background-image:url('/toolflix/assets/img/chat-bg.png');
+  background-repeat:repeat;
+}
+.guest-auto-row{
+  display:flex;
+  align-items:flex-end;
+  gap:9px;
+  margin:8px 0 14px;
+}
+.guest-auto-avatar{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  object-fit:cover;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.07);
+}
+.guest-auto-content{
+  max-width:310px;
+}
+.guest-auto-name{
+  font-size:11px;
+  font-weight:900;
+  opacity:.75;
+  margin:0 0 4px 4px;
+}
+.guest-auto-bubble{
+  padding:12px 14px;
+  border-radius:18px;
+  border-top-left-radius:7px;
+  background:rgba(0,0,0,.62);
+  color:#fff;
+  line-height:1.45;
+  font-size:14px;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+.guest-create-account-btn{
+  width:100%;
+  margin-top:14px;
+  border:none;
+  border-radius:16px;
+  padding:14px 16px;
+  font-weight:1000;
+  cursor:pointer;
+  color:#001014;
+  background:linear-gradient(90deg,#00ffff,#ffd700);
+  box-shadow:0 12px 26px rgba(0,255,255,.16);
+}
+.guest-create-account-note{
+  margin-top:10px;
+  font-size:12px;
+  opacity:.74;
+  line-height:1.45;
+  text-align:center;
+}
+
 </style>
 
 <style id="masterChatsOverlayStyle">
@@ -8495,6 +8640,162 @@ document.addEventListener("DOMContentLoaded",()=>{
   });
 
   window.fecharSuporteFinal = fecharSuporteFinal;
+})();
+</script>
+
+
+<script>
+/* ===== VISITANTE: SUPORTE AUTOMÁTICO PARA CONVERSÃO ===== */
+(function(){
+  const STORAGE_SEEN = "toolflix_guest_support_auto_seen_v1";
+  const STORAGE_AFTER_REGISTER = "toolflix_after_register_show_chat_hint_v1";
+
+  function hasLoggedUser(){
+    try{
+      const u = typeof loadUser === "function" ? loadUser() : null;
+      const t = typeof getToken === "function" ? getToken() : localStorage.getItem("toolflix_token");
+      return !!(t && u && u.nick);
+    }catch(e){
+      return !!localStorage.getItem("toolflix_token");
+    }
+  }
+
+  function ensureGuestSupportUI(){
+    if(!document.getElementById("guestSupportNotify")){
+      const n = document.createElement("div");
+      n.id = "guestSupportNotify";
+      n.innerHTML = `<span class="guest-dot"></span><span>💬 Nova mensagem do suporte</span>`;
+      document.body.appendChild(n);
+      n.addEventListener("click", openGuestSupport);
+    }
+
+    if(!document.getElementById("guestSupportOverlay")){
+      const o = document.createElement("div");
+      o.id = "guestSupportOverlay";
+      o.innerHTML = `
+        <div class="guest-support-backdrop"></div>
+        <div id="guestSupportBox">
+          <div class="guest-support-head">
+            <strong>💬 Suporte ToolFlix</strong>
+            <button type="button" class="guest-support-close">×</button>
+          </div>
+          <div class="guest-support-body">
+            <div class="guest-auto-row">
+              <img class="guest-auto-avatar" src="/toolflix/assets/img/avatars/level-1-1.webp" alt="Suporte">
+              <div class="guest-auto-content">
+                <div class="guest-auto-name">Goku • Suporte</div>
+                <div class="guest-auto-bubble">
+                  👋 Quer acesso grátis? Crie uma conta rapidinho e depois me chame aqui no chat para liberar seu premium.
+                </div>
+              </div>
+            </div>
+            <button type="button" class="guest-create-account-btn" id="guestCreateAccountBtn">Criar conta agora</button>
+            <div class="guest-create-account-note">Depois do cadastro, envie no chat: <b>quero acesso grátis</b></div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(o);
+
+      o.querySelector(".guest-support-backdrop")?.addEventListener("click", closeGuestSupport);
+      o.querySelector(".guest-support-close")?.addEventListener("click", closeGuestSupport);
+      o.querySelector("#guestCreateAccountBtn")?.addEventListener("click", function(){
+        sessionStorage.setItem(STORAGE_AFTER_REGISTER, "1");
+        closeGuestSupport();
+
+        const notify = document.getElementById("guestSupportNotify");
+        if(notify) notify.classList.remove("show");
+
+        if(typeof openLoginModal === "function"){
+          openLoginModal("register");
+        }else{
+          const loginModal = document.getElementById("userLoginModal") || document.getElementById("loginModal");
+          if(loginModal) loginModal.style.display = "flex";
+          const registerTab = document.querySelector("[data-auth-tab='register'], #registerTab, #showRegisterBtn");
+          registerTab?.click?.();
+        }
+      });
+    }
+  }
+
+  function openGuestSupport(){
+    ensureGuestSupportUI();
+    document.getElementById("guestSupportOverlay")?.classList.add("open");
+    document.getElementById("guestSupportNotify")?.classList.remove("show");
+    localStorage.setItem(STORAGE_SEEN, "1");
+  }
+
+  function closeGuestSupport(){
+    document.getElementById("guestSupportOverlay")?.classList.remove("open");
+  }
+
+  function maybeShowGuestNotify(){
+    if(hasLoggedUser()) return;
+    if(localStorage.getItem(STORAGE_SEEN) === "1") return;
+    ensureGuestSupportUI();
+    setTimeout(()=>{
+      if(hasLoggedUser()) return;
+      const n = document.getElementById("guestSupportNotify");
+      if(n) n.classList.add("show");
+    }, 5000);
+  }
+
+  function showAfterRegisterHint(){
+    const should = sessionStorage.getItem(STORAGE_AFTER_REGISTER) === "1";
+    if(!should || !hasLoggedUser()) return;
+    sessionStorage.removeItem(STORAGE_AFTER_REGISTER);
+
+    setTimeout(()=>{
+      if(typeof showToast === "function"){
+        showToast("💬 Conta criada! Abra o chat e envie: quero acesso grátis");
+      }
+
+      const btn = document.getElementById("chatToggleBtn");
+      if(btn){
+        btn.classList.add("chat-has-new");
+        let b = document.getElementById("chatBadge");
+        if(!b){
+          b = document.createElement("span");
+          b.id = "chatBadge";
+          b.style.cssText = "position:absolute;top:-18px;right:-26px;padding:6px 12px;border-radius:999px;background:red;color:white;font-size:12px;font-weight:900;white-space:nowrap;z-index:100500;";
+          btn.style.position = "relative";
+          btn.appendChild(b);
+        }
+        b.textContent = "envie: quero acesso grátis";
+        b.style.display = "flex";
+      }
+
+      // Se já existir função para abrir chat, não força abertura para não assustar.
+    }, 900);
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    maybeShowGuestNotify();
+    showAfterRegisterHint();
+  });
+
+  window.openGuestSupport = openGuestSupport;
+})();
+</script>
+
+
+<script>
+/* ===== CHECK PÓS-CADASTRO VISITANTE ===== */
+(function(){
+  let tries = 0;
+  const timer = setInterval(function(){
+    tries++;
+    try{
+      const flag = sessionStorage.getItem("toolflix_after_register_show_chat_hint_v1") === "1";
+      const hasToken = !!(typeof getToken === "function" ? getToken() : localStorage.getItem("toolflix_token"));
+      if(flag && hasToken){
+        sessionStorage.removeItem("toolflix_after_register_show_chat_hint_v1");
+        if(typeof showToast === "function") showToast("💬 Agora abra o chat e envie: quero acesso grátis");
+        const btn = document.getElementById("chatToggleBtn");
+        if(btn) btn.classList.add("chat-has-new");
+      }
+    }catch(e){}
+    if(tries > 40) clearInterval(timer);
+  }, 500);
 })();
 </script>
 
