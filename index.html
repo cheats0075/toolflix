@@ -2580,8 +2580,17 @@ body.avatar-modal-open{
   box-shadow:0 8px 20px rgba(0,0,0,.26);
   border:1px solid rgba(255,255,255,.08);
 }
-.tf-wa-row.user .tf-wa-bubble{background: rgba(0,0,0,0.55); color:#fff; border-top-left-radius:7px;}
-.tf-wa-row.admin .tf-wa-bubble{background: linear-gradient(180deg, #00d4d4, #009fa5); color:#001416; border-top-right-radius:7px;}
+.tf-wa-row.user .tf-wa-bubble{
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  border-top-left-radius:7px;
+}
+.tf-wa-row.admin .tf-wa-bubble{
+  background:linear-gradient(180deg, rgba(0,204,204,.92), rgba(0,154,164,.92));
+  color:#001416;
+  border-color:rgba(0,255,255,.22);
+  border-top-right-radius:7px;
+}
 .tf-wa-time{
   font-size:10px;
   opacity:.55;
@@ -2632,6 +2641,52 @@ body.avatar-modal-open{
 #chatInputArea button:hover{
   filter:brightness(1.07);
   transform:translateY(-1px);
+}
+
+
+/* ===== SUPORTE WHATSAPP FINAL CORRIGIDO ===== */
+.suporte-painel{
+  position:relative !important;
+}
+#chatMessages{
+  background-color:#0b141a !important;
+  background-image:url('/toolflix/assets/img/chat-bg.png') !important;
+  background-repeat:repeat !important;
+  background-size:auto !important;
+}
+.tf-wa-row.user .tf-wa-bubble{
+  background:rgba(0,0,0,.62) !important;
+  color:#fff !important;
+  border-color:rgba(255,255,255,.16) !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.5);
+}
+.tf-wa-row.admin .tf-wa-bubble{
+  background:linear-gradient(180deg,#00d4d4,#009fa5) !important;
+  color:#001416 !important;
+  border-color:rgba(0,255,255,.24) !important;
+}
+.tf-support-close{
+  position:absolute !important;
+  top:8px !important;
+  right:10px !important;
+  width:34px !important;
+  height:34px !important;
+  border-radius:10px !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  background:rgba(255,255,255,.10) !important;
+  color:#fff !important;
+  font-size:18px !important;
+  font-weight:900 !important;
+  cursor:pointer !important;
+  z-index:999999 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  transition:.2s !important;
+}
+.tf-support-close:hover{
+  background:#ff3b3b !important;
+  transform:scale(1.08) !important;
 }
 
 </style>
@@ -8395,9 +8450,52 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
 <script>
-function fecharSuporte(){
-  document.querySelector('.suporte-container')?.classList.remove('ativo');
-}
+/* ===== BOTÃO X REAL DO SUPORTE ===== */
+(function(){
+  function fecharSuporteFinal(){
+    const c = document.querySelector(".suporte-container");
+    if(c) c.classList.remove("ativo");
+  }
+
+  function garantirBotaoFecharSuporte(){
+    const painel = document.querySelector(".suporte-painel");
+    if(!painel) return;
+
+    if(!painel.querySelector(".tf-support-close")){
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "tf-support-close";
+      btn.textContent = "×";
+      btn.setAttribute("aria-label", "Fechar suporte");
+      btn.addEventListener("click", function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        fecharSuporteFinal();
+      });
+      painel.appendChild(btn);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    garantirBotaoFecharSuporte();
+
+    document.querySelector(".suporte-btn")?.addEventListener("click", function(){
+      setTimeout(garantirBotaoFecharSuporte, 50);
+    }, true);
+  });
+
+  document.addEventListener("click", function(e){
+    if(e.target && e.target.closest(".suporte-container")){
+      setTimeout(garantirBotaoFecharSuporte, 50);
+    }
+  }, true);
+
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape") fecharSuporteFinal();
+  });
+
+  window.fecharSuporteFinal = fecharSuporteFinal;
+})();
 </script>
 
 </body>
