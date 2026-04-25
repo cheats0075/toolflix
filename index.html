@@ -2580,17 +2580,8 @@ body.avatar-modal-open{
   box-shadow:0 8px 20px rgba(0,0,0,.26);
   border:1px solid rgba(255,255,255,.08);
 }
-.tf-wa-row.user .tf-wa-bubble{
-  background:rgba(255,255,255,.08);
-  color:#fff;
-  border-top-left-radius:7px;
-}
-.tf-wa-row.admin .tf-wa-bubble{
-  background:linear-gradient(180deg, rgba(0,204,204,.92), rgba(0,154,164,.92));
-  color:#001416;
-  border-color:rgba(0,255,255,.22);
-  border-top-right-radius:7px;
-}
+.tf-wa-row.user .tf-wa-bubble{background: rgba(0,0,0,0.55); color:#fff; border-top-left-radius:7px;}
+.tf-wa-row.admin .tf-wa-bubble{background: linear-gradient(180deg, #00d4d4, #009fa5); color:#001416; border-top-right-radius:7px;}
 .tf-wa-time{
   font-size:10px;
   opacity:.55;
@@ -2641,15 +2632,6 @@ body.avatar-modal-open{
 #chatInputArea button:hover{
   filter:brightness(1.07);
   transform:translateY(-1px);
-}
-
-
-/* ===== FUNDO WHATSAPP CORRIGIDO ===== */
-#chatMessages{
-  background-color:#0b141a !important;
-  background-image:url('/toolflix/assets/img/chat-bg.png') !important;
-  background-repeat:repeat !important;
-  background-size:auto !important;
 }
 
 </style>
@@ -8409,6 +8391,13 @@ document.addEventListener("DOMContentLoaded",()=>{
     }
   });
 })();
+</script>
+
+
+<script>
+function fecharSuporte(){
+  document.querySelector('.suporte-container')?.classList.remove('ativo');
+}
 </script>
 
 </body>
