@@ -3216,8 +3216,8 @@ body.avatar-modal-open{
     overflow:hidden;
     border:1px solid rgba(255,255,255,.10);
     background:
-      radial-gradient(circle at 72% 45%, rgba(0,229,255,.24), transparent 22%),
-      radial-gradient(circle at 92% 48%, rgba(180,76,255,.28), transparent 32%),
+      radial-gradient(circle at 55% 48%, rgba(0,229,255,.18), transparent 24%),
+      radial-gradient(circle at 86% 50%, rgba(180,76,255,.28), transparent 32%),
       linear-gradient(120deg, rgba(18,21,44,.96), rgba(12,14,31,.88));
     box-shadow: 0 24px 70px rgba(0,0,0,.28), 0 0 28px rgba(0,229,255,.08);
     position:relative;
@@ -3226,58 +3226,39 @@ body.avatar-modal-open{
     position:relative;
     z-index:2;
     display:grid;
-    grid-template-columns: minmax(330px, .9fr) minmax(0, 1.55fr);
-    gap:18px;
+    grid-template-columns: minmax(300px, 1fr) minmax(260px, .75fr) minmax(260px, .75fr) minmax(210px, .55fr);
+    gap:0;
     align-items:stretch;
     min-height:240px;
   }
-  #tfNeonHero .tf-hero-content{
-    padding:26px 28px;
+  #tfNeonHero .tf-hero-panel{
+    min-width:0;
+    padding:24px;
     display:flex;
     flex-direction:column;
     justify-content:center;
     border-right:1px solid rgba(255,255,255,.08);
-    background:linear-gradient(90deg, rgba(9,11,24,.62), rgba(9,11,24,.12));
+    position:relative;
+  }
+  #tfNeonHero .tf-hero-content{
+    background:linear-gradient(90deg, rgba(9,11,24,.68), rgba(9,11,24,.18));
   }
   #tfNeonHero .tf-hero-kicker{ color:#8befff; font-size:12px; font-weight:900; letter-spacing:1.6px; text-transform:uppercase; margin-bottom:10px; }
-  #tfNeonHero .tf-hero-title{ font-size: clamp(27px, 3.4vw, 44px); line-height:1.02; font-weight:1000; letter-spacing:-1px; margin-bottom:10px; }
+  #tfNeonHero .tf-hero-title{ font-size: clamp(27px, 3.1vw, 42px); line-height:1.02; font-weight:1000; letter-spacing:-1px; margin-bottom:10px; }
   #tfNeonHero .tf-hero-sub{ color:rgba(255,255,255,.78); line-height:1.5; font-size:14px; max-width:520px; }
   #tfNeonHero .tf-hero-tags{ display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
   #tfNeonHero .tf-hero-tags span{ padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.08); font-size:12px; font-weight:800; }
-  .tf-yt-carousel-wrap{
-    min-width:0;
-    display:flex;
-    align-items:center;
-    position:relative;
-    overflow:hidden;
-    padding:20px 20px 20px 4px;
+  .tf-hero-block-title{
+    font-size:12px;
+    font-weight:1000;
+    letter-spacing:1.4px;
+    text-transform:uppercase;
+    color:#8befff;
+    margin-bottom:12px;
   }
-  .tf-yt-carousel-wrap::before,
-  .tf-yt-carousel-wrap::after{
-    content:"";
-    position:absolute;
-    top:0;
-    bottom:0;
-    width:70px;
-    z-index:4;
-    pointer-events:none;
-  }
-  .tf-yt-carousel-wrap::before{ left:0; background:linear-gradient(90deg, rgba(13,16,34,.92), transparent); }
-  .tf-yt-carousel-wrap::after{ right:0; background:linear-gradient(270deg, rgba(27,17,48,.92), transparent); }
-  .tf-yt-carousel{
+  .tf-feature-card{
     width:100%;
-    display:flex;
-    gap:16px;
-    overflow-x:auto;
-    overflow-y:hidden;
-    scroll-behavior:smooth;
-    scrollbar-width:none;
-    padding:8px 12px;
-  }
-  .tf-yt-carousel::-webkit-scrollbar{ display:none; }
-  .tf-yt-card{
-    flex:0 0 min(360px, 52vw);
-    height:178px;
+    height:164px;
     border-radius:22px;
     overflow:hidden;
     position:relative;
@@ -3287,22 +3268,33 @@ body.avatar-modal-open{
     cursor:pointer;
     transition:.28s ease;
   }
-  .tf-yt-card:hover{ transform:translateY(-4px) scale(1.015); border-color:rgba(0,229,255,.45); box-shadow:0 24px 54px rgba(0,0,0,.36), 0 0 18px rgba(0,229,255,.16); }
-  .tf-yt-card img{ width:100%; height:100%; object-fit:cover; display:block; filter:saturate(1.08) contrast(1.02); }
-  .tf-yt-card::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 38%, rgba(0,0,0,.88)); }
-  .tf-yt-play{
+  .tf-feature-card:hover{ transform:translateY(-4px) scale(1.015); border-color:rgba(0,229,255,.45); box-shadow:0 24px 54px rgba(0,0,0,.36), 0 0 18px rgba(0,229,255,.16); }
+  .tf-feature-card img{ width:100%; height:100%; object-fit:cover; display:block; filter:saturate(1.08) contrast(1.02); }
+  .tf-feature-card::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 34%, rgba(0,0,0,.9)); }
+  .tf-feature-play{
     position:absolute;
     top:50%; left:50%; transform:translate(-50%,-50%);
     z-index:2;
-    width:54px; height:54px; border-radius:50%;
+    width:58px; height:58px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
-    background:rgba(255,0,0,.88);
-    color:#fff; font-size:22px; font-weight:900;
+    background:rgba(255,0,0,.9);
+    color:#fff; font-size:23px; font-weight:900;
     box-shadow:0 0 24px rgba(255,0,0,.34);
   }
-  .tf-yt-info{ position:absolute; left:14px; right:14px; bottom:12px; z-index:3; }
-  .tf-yt-info small{ color:#8befff; font-size:10px; font-weight:1000; letter-spacing:1px; text-transform:uppercase; }
-  .tf-yt-info strong{ display:block; color:#fff; font-size:15px; line-height:1.2; margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .tf-feature-info{ position:absolute; left:14px; right:14px; bottom:12px; z-index:3; }
+  .tf-feature-info small{ color:#8befff; font-size:10px; font-weight:1000; letter-spacing:1px; text-transform:uppercase; }
+  .tf-feature-info strong{ display:block; color:#fff; font-size:15px; line-height:1.2; margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .tf-feature-card.tf-game-feature .tf-feature-play{ background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); color:#fff; box-shadow:0 0 20px rgba(0,229,255,.20); }
+  .tf-stat-list{ display:grid; gap:10px; }
+  .tf-stat-pill{
+    padding:12px 12px;
+    border-radius:18px;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.09);
+    box-shadow:0 12px 28px rgba(0,0,0,.18);
+  }
+  .tf-stat-number{ font-size:20px; font-weight:1000; color:#fff; line-height:1; }
+  .tf-stat-label{ margin-top:4px; font-size:12px; font-weight:800; color:rgba(255,255,255,.75); }
   .tf-yt-empty{
     width:100%;
     min-height:150px;
@@ -3316,11 +3308,17 @@ body.avatar-modal-open{
     border:1px dashed rgba(255,255,255,.14);
     background:rgba(255,255,255,.045);
   }
+  @media(max-width:1240px){
+    #tfNeonHero .tf-hero-layout{ grid-template-columns:1fr 1fr; }
+    #tfNeonHero .tf-hero-panel:nth-child(2){ border-right:0; }
+    #tfNeonHero .tf-hero-panel:nth-child(1),
+    #tfNeonHero .tf-hero-panel:nth-child(2){ border-bottom:1px solid rgba(255,255,255,.08); }
+  }
   @media(max-width:920px){
     #tfNeonHero .tf-hero-layout{ grid-template-columns:1fr; }
-    #tfNeonHero .tf-hero-content{ border-right:0; border-bottom:1px solid rgba(255,255,255,.08); }
-    .tf-yt-carousel-wrap{ padding:8px 14px 18px; }
-    .tf-yt-card{ flex-basis:78vw; height:178px; }
+    #tfNeonHero .tf-hero-panel{ border-right:0; border-bottom:1px solid rgba(255,255,255,.08); }
+    #tfNeonHero .tf-hero-panel:last-child{ border-bottom:0; }
+    .tf-feature-card{ height:178px; }
   }
   #sectionTitle{
     margin:10px 0 18px !important;
@@ -3422,7 +3420,7 @@ body.avatar-modal-open{
       <button class="catBtn" data-cat="Nintendo Switch">🎮 Nintendo Switch</button>
 
       <button class="catBtn" data-cat="Jogos PC">💻 Jogos PC</button>
-      <button class="catBtn" data-cat="YouTube">▶️Youtube</button>
+      <button class="catBtn" data-cat="YouTube"></button>
       <button class="catBtn" data-cat="Emuladores">🕹️ Emuladores</button>
       <button class="catBtn" data-cat="Fix SteamTools">🛠️ SteamTools</button>
       <button class="catBtn" data-cat="Arquivos">🗄️ Arquivos</button>
@@ -3506,7 +3504,7 @@ body.avatar-modal-open{
 
     <section id="tfNeonHero" aria-label="Destaques ToolFlix">
       <div class="tf-hero-layout">
-        <div class="tf-hero-content">
+        <div class="tf-hero-panel tf-hero-content">
           <div class="tf-hero-kicker">ToolFlix Pro</div>
           <div class="tf-hero-title">Ganhe XP assistindo vídeos e usando o site</div>
           <div class="tf-hero-sub">Clique nos vídeos do YouTube para ganhar XP, baixe conteúdos, troque temas, marque favoritos, suba de nível e desbloqueie troféus e novos avatares.</div>
@@ -3518,8 +3516,22 @@ body.avatar-modal-open{
             <span>🧑‍🚀 Avatares por nível</span>
           </div>
         </div>
-        <div class="tf-yt-carousel-wrap">
-          <div id="tfYoutubeCarousel" class="tf-yt-carousel" aria-label="Vídeos em destaque do YouTube"></div>
+
+        <div class="tf-hero-panel tf-youtube-panel">
+          <div class="tf-hero-block-title">🎬 Vídeo do YouTube</div>
+          <div id="tfYoutubeCarousel" aria-label="Vídeo em destaque do YouTube"></div>
+        </div>
+
+        <div class="tf-hero-panel tf-featured-panel">
+          <div class="tf-hero-block-title">🔥 Destaque do catálogo</div>
+          <div id="tfFeaturedGameBox" aria-label="Jogo em destaque"></div>
+        </div>
+
+        <div class="tf-hero-panel tf-stats-panel">
+          <div class="tf-hero-block-title">📊 Números ToolFlix</div>
+          <div id="tfSiteStatsBox" class="tf-stat-list" aria-label="Estatísticas do site">
+            <div class="tf-stat-pill"><div class="tf-stat-number">...</div><div class="tf-stat-label">carregando</div></div>
+          </div>
         </div>
       </div>
     </section>
@@ -5614,51 +5626,136 @@ const MASTER_NICK = "Srgokucheats";
   }
 
   let tfHeroCarouselTimer = null;
-  function updateHeroCarousel(){
-    const box = document.getElementById("tfYoutubeCarousel");
-    if(!box || !Array.isArray(db_jogos)) return;
+  let tfHeroVideoIndex = 0;
+  let tfHeroFeaturedIndex = 0;
 
-    const videos = db_jogos
+  function fmtCompactNumber(n){
+    n = Number(n || 0);
+    try { return n.toLocaleString("pt-BR"); } catch { return String(n); }
+  }
+
+  function escHtml(v){
+    return safeStr(v, "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+
+  function getHeroYoutubeVideos(){
+    if(!Array.isArray(db_jogos)) return [];
+    return db_jogos
       .map(normalizeGame)
-      .filter(j => normalizeCategoria(j.categoria).toLowerCase() === "youtube" && safeStr(j.link || j.trailer, "").trim())
-      .slice(0, 18);
+      .filter(j => normalizeCategoria(j.categoria).toLowerCase() === "youtube" && safeStr(j.link || j.trailer, "").trim());
+  }
+
+  function getHeroFeaturedGames(){
+    if(!Array.isArray(db_jogos)) return [];
+    return db_jogos
+      .map(normalizeGame)
+      .filter(j => normalizeCategoria(j.categoria).toLowerCase() !== "youtube" && safeStr(j.link, "").trim())
+      .slice(0, 24);
+  }
+
+  function renderSingleYoutubeHighlight(videos){
+    const box = document.getElementById("tfYoutubeCarousel");
+    if(!box) return;
 
     if(!videos.length){
-      box.innerHTML = `<div class="tf-yt-empty">🎬 Cadastre vídeos na categoria <b style="color:#8befff;margin:0 4px;">YouTube</b> para eles aparecerem deslizando aqui.</div>`;
+      box.innerHTML = `<div class="tf-yt-empty">🎬 Cadastre vídeos na categoria <b style="color:#8befff;margin:0 4px;">YouTube</b> para aparecerem aqui.</div>`;
       return;
     }
 
-    box.innerHTML = videos.map((j, i)=>{
-      const title = safeStr(j.nome, "Vídeo do YouTube");
-      const url = safeStr(j.link || j.trailer, "");
-      const thumb = safeStr(j.capa, "") || getYouTubeThumb(url, "");
-      return `
-        <article class="tf-yt-card" data-yt-index="${i}" title="Abrir no YouTube">
-          <img src="${thumb}" alt="" onerror="this.src='${getYouTubeThumb(url, '') || 'https://via.placeholder.com/640x360.png?text=YouTube'}';">
-          <div class="tf-yt-play">▶</div>
-          <div class="tf-yt-info">
-            <small>Vídeo da categoria YouTube</small>
-            <strong>${title.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</strong>
-          </div>
-        </article>`;
-    }).join("");
+    if(tfHeroVideoIndex >= videos.length) tfHeroVideoIndex = 0;
+    const j = videos[tfHeroVideoIndex];
+    const title = safeStr(j.nome, "Vídeo do YouTube");
+    const url = safeStr(j.link || j.trailer, "");
+    const thumb = safeStr(j.capa, "") || getYouTubeThumb(url, "");
 
-    box.querySelectorAll(".tf-yt-card").forEach(card=>{
-      card.addEventListener("click", ()=>{
-        const idx = Number(card.dataset.ytIndex || 0);
-        openYoutubeHighlight(videos[idx]);
-      });
-    });
+    box.innerHTML = `
+      <article class="tf-feature-card tf-youtube-feature" title="Abrir no YouTube">
+        <img src="${escHtml(thumb)}" alt="" onerror="this.src='${escHtml(getYouTubeThumb(url, '') || 'https://via.placeholder.com/640x360.png?text=YouTube')}';">
+        <div class="tf-feature-play">▶</div>
+        <div class="tf-feature-info">
+          <small>Vídeo da categoria YouTube</small>
+          <strong>${escHtml(title)}</strong>
+        </div>
+      </article>`;
+
+    box.querySelector(".tf-feature-card")?.addEventListener("click", ()=> openYoutubeHighlight(j));
+  }
+
+  function renderFeaturedGameHighlight(games){
+    const box = document.getElementById("tfFeaturedGameBox");
+    if(!box) return;
+
+    if(!games.length){
+      box.innerHTML = `<div class="tf-yt-empty">🔥 Cadastre jogos para aparecerem como destaque.</div>`;
+      return;
+    }
+
+    if(tfHeroFeaturedIndex >= games.length) tfHeroFeaturedIndex = 0;
+    const j = games[tfHeroFeaturedIndex];
+    const title = safeStr(j.nome, "Destaque ToolFlix");
+    const thumb = safeStr(j.capa, "") || "https://via.placeholder.com/640x360.png?text=ToolFlix";
+    const cat = normalizeCategoria(j.categoria || "Conteúdo");
+
+    box.innerHTML = `
+      <article class="tf-feature-card tf-game-feature" title="Abrir destaque">
+        <img src="${escHtml(thumb)}" alt="" onerror="this.src='https://via.placeholder.com/640x360.png?text=ToolFlix';">
+        <div class="tf-feature-play">🔥</div>
+        <div class="tf-feature-info">
+          <small>Destaque • ${escHtml(cat)}</small>
+          <strong>${escHtml(title)}</strong>
+        </div>
+      </article>`;
+
+    box.querySelector(".tf-feature-card")?.addEventListener("click", ()=> openGameDetails(j));
+  }
+
+  async function updateHeroSiteStats(){
+    const box = document.getElementById("tfSiteStatsBox");
+    if(!box) return;
+
+    let stats = { downloads:0, favorites:0, themes:0, youtube:0 };
+    try{
+      const cached = JSON.parse(localStorage.getItem("toolflix_site_stats_cache") || "null");
+      if(cached && cached.t && (Date.now() - cached.t) < 60*60*1000 && cached.stats){
+        stats = cached.stats;
+      }else{
+        const resp = await fetch(`${API_BASE}/api/site-stats?v=${Date.now()}`);
+        const data = await resp.json().catch(()=>null);
+        if(data?.ok && data.stats){
+          stats = data.stats;
+          localStorage.setItem("toolflix_site_stats_cache", JSON.stringify({ t:Date.now(), stats }));
+        }
+      }
+    }catch(e){
+      try{
+        const u = loadUser();
+        const p = profileCache?.stats || {};
+        stats = { downloads:p.downloads||0, favorites:p.favorites||0, themes:p.themes||0, youtube:p.youtube||0 };
+      }catch{}
+    }
+
+    box.innerHTML = `
+      <div class="tf-stat-pill"><div class="tf-stat-number">🧲 +${fmtCompactNumber(stats.downloads)}</div><div class="tf-stat-label">downloads</div></div>
+      <div class="tf-stat-pill"><div class="tf-stat-number">❤️ +${fmtCompactNumber(stats.favorites)}</div><div class="tf-stat-label">favoritos</div></div>
+      <div class="tf-stat-pill"><div class="tf-stat-number">🎨 +${fmtCompactNumber(stats.themes)}</div><div class="tf-stat-label">temas trocados</div></div>
+      <div class="tf-stat-pill"><div class="tf-stat-number">🎬 +${fmtCompactNumber(stats.youtube)}</div><div class="tf-stat-label">vídeos assistidos</div></div>`;
+  }
+
+  function updateHeroCarousel(){
+    const videos = getHeroYoutubeVideos();
+    const games = getHeroFeaturedGames();
+
+    renderSingleYoutubeHighlight(videos);
+    renderFeaturedGameHighlight(games);
+    updateHeroSiteStats();
 
     if(tfHeroCarouselTimer) clearInterval(tfHeroCarouselTimer);
     tfHeroCarouselTimer = setInterval(()=>{
-      if(!document.body.contains(box) || videos.length <= 1) return;
-      const first = box.querySelector(".tf-yt-card");
-      const step = first ? first.getBoundingClientRect().width + 16 : 360;
-      const nearEnd = box.scrollLeft + box.clientWidth >= box.scrollWidth - 20;
-      if(nearEnd) box.scrollTo({ left: 0, behavior: "smooth" });
-      else box.scrollBy({ left: step, behavior: "smooth" });
-    }, 5000);
+      if(videos.length > 1){
+        tfHeroVideoIndex = (tfHeroVideoIndex + 1) % videos.length;
+        renderSingleYoutubeHighlight(videos);
+      }
+    }, 15000);
   }
 
   function renderGamePanel(){
