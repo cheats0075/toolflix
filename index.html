@@ -3320,7 +3320,7 @@ body.avatar-modal-open{
             <div><strong id="gameDetailsPremium" style="color:#ffd700;"></strong></div>
           </div>
 
-          <button id="gameDetailsDownloadBtn" class="game-details-download" type="button">Baixar agora</button>
+          <button id="gameDetailsDownloadBtn" class="game-details-download" type="button">Download</button>
           <div class="game-details-note">Clique no trailer para assistir sem sair do site.</div>
         </div>
       </div>
@@ -3867,6 +3867,7 @@ const MASTER_NICK = "Srgokucheats";
   function showGuestExpiredModal(){
     const modal = document.getElementById("guestExpiredModal");
     if(modal) modal.style.display = "flex";
+    document.body.classList.add("game-details-open");
   }
 
   function markGuestTrialExpiredShown(){
@@ -5579,6 +5580,7 @@ const MASTER_NICK = "Srgokucheats";
     if(frame) frame.src = "";
     if(wrap) wrap.classList.remove("active");
     if(modal) modal.style.display = "none";
+    document.body.classList.remove("game-details-open");
     window.__toolflixCurrentGame = null;
   }
   window.closeGameDetailsModal = closeGameDetailsModal;
