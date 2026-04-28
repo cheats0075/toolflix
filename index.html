@@ -1801,7 +1801,7 @@ select optgroup{
       align-items:center;
       gap:10px;
       margin:0;
-      padding-right:42px;
+      padding-right:0;
     }
     .global-chat-avatar{
       width:40px;
@@ -1845,29 +1845,29 @@ select optgroup{
       opacity:.62;
     }
     .global-chat-actions{
-      position:absolute;
-      top:10px;
-      right:10px;
+      position:static;
       display:flex;
-      gap:8px;
+      gap:10px;
       align-items:center;
+      margin:8px 0 0 50px;
+      flex-wrap:wrap;
+      opacity:.92;
     }
     .global-chat-delete-btn{
       border:none;
-      width:28px;
-      height:28px;
       border-radius:999px;
-      padding:0;
-      font-size:18px;
+      padding:6px 10px;
+      font-size:11px;
       line-height:1;
       font-weight:900;
       cursor:pointer;
       color:#fff;
-      background: linear-gradient(180deg, #d61f1f, #9f1010);
-      box-shadow: 0 6px 16px rgba(0,0,0,.22);
+      background:rgba(255,60,60,.14);
+      border:1px solid rgba(255,60,60,.25);
+      box-shadow: 0 6px 16px rgba(0,0,0,.16);
     }
     .global-chat-delete-btn:hover{
-      filter: brightness(1.08);
+      background:rgba(255,60,60,.22);
       transform: translateY(-1px);
     }
     .global-chat-bubble.deleted{
@@ -1958,7 +1958,12 @@ select optgroup{
     .mention-suggestion small{ opacity:.65; font-weight:800; margin-left:auto; }
     .global-chat-reply-btn{ border:none; border-radius:999px; padding:6px 10px; font-size:11px; font-weight:900; cursor:pointer; color:#fff; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.10); }
     .global-chat-reply-btn:hover{ background:rgba(0,255,255,.14); border-color:rgba(0,255,255,.22); }
-    .global-chat-actions{ opacity:.92; }
+    .global-chat-row.own .global-chat-actions,
+    .global-chat-row.own .global-chat-meta{
+      margin-left:0;
+      margin-right:0;
+      justify-content:flex-start;
+    }
     .global-chat-quote{ margin:0 0 8px; padding:8px 10px; border-left:3px solid #8befff; border-radius:10px; background:rgba(0,255,255,.08); color:rgba(255,255,255,.88); font-size:12px; line-height:1.35; }
     .global-chat-quote strong{ color:#8befff; display:block; margin-bottom:2px; }
     .global-chat-mention{ color:#8befff; font-weight:1000; background:rgba(0,255,255,.10); border-radius:8px; padding:1px 4px; }
@@ -1966,11 +1971,14 @@ select optgroup{
 
 
     #profileModal{
-      z-index: 100100 !important;
+      z-index: 300000 !important;
+      position: fixed !important;
+      pointer-events: auto;
     }
     #profileModal .modal-box{
       position: relative;
-      z-index: 100101;
+      z-index: 300001 !important;
+      pointer-events: auto;
     }
     .global-chat-avatar,
     .global-chat-name{
@@ -3454,7 +3462,7 @@ body.avatar-modal-open{
       <button class="catBtn" data-cat="Nintendo Switch">🎮 Nintendo Switch</button>
 
       <button class="catBtn" data-cat="Jogos PC">💻 Jogos PC</button>
-      <button class="catBtn" data-cat="YouTube">Youtube</button>
+      <button class="catBtn" data-cat="YouTube"></button>
       <button class="catBtn" data-cat="Emuladores">🕹️ Emuladores</button>
       <button class="catBtn" data-cat="Fix SteamTools">🛠️ SteamTools</button>
       <button class="catBtn" data-cat="Arquivos">🗄️ Arquivos</button>
@@ -4639,6 +4647,11 @@ const MASTER_NICK = "Srgokucheats";
   async function openPublicProfileModalByNick(nick){
     const modal = document.getElementById("profileModal");
     const box = document.getElementById("profileContent");
+    if(modal){
+      modal.style.zIndex = "300000";
+      modal.style.position = "fixed";
+      modal.style.pointerEvents = "auto";
+    }
     const cleanNick = String(nick || "").trim();
     if(box) box.innerHTML = `<div style="opacity:.82;">Carregando perfil...</div>`;
     if(modal) modal.style.display = "flex";
@@ -4790,6 +4803,11 @@ const MASTER_NICK = "Srgokucheats";
 
   async function openProfileModal(force=false){
     const modal = document.getElementById("profileModal");
+    if(modal){
+      modal.style.zIndex = "300000";
+      modal.style.position = "fixed";
+      modal.style.pointerEvents = "auto";
+    }
     const box = document.getElementById("profileContent");
     if(box) box.innerHTML = `<div style="opacity:.82;">Carregando perfil...</div>`;
     if(modal) modal.style.display = "flex";
@@ -5808,7 +5826,7 @@ const MASTER_NICK = "Srgokucheats";
       const step = card ? (card.getBoundingClientRect().width + 12) : 150;
       if(scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 8){ scroller.scrollTo({ left: 0, behavior: "smooth" }); }
       else{ scroller.scrollBy({ left: step, behavior: "smooth" }); }
-    }, 3000);
+    }, 7000);
   }
 
   function renderGamePanel(){
@@ -8351,9 +8369,9 @@ document.addEventListener("DOMContentLoaded", function(){
     const id = String(msg?.id || "").trim();
     const nick = String(msg?.nick || "Usuário").trim();
     const text = stripGlobalReplyMarkup(msg?.message || "").replace(/\s+/g," ").trim().slice(0, 120);
-    const replyBtn = msg?.deleted ? "" : `<button class="global-chat-reply-btn" type="button" title="Responder" data-global-reply-id="${escapeHtml(id)}" data-global-reply-nick="${escapeHtml(nick)}" data-global-reply-text="${escapeHtml(text)}">↩ Responder</button>`;
+    const replyBtn = msg?.deleted ? "" : `<button class="global-chat-reply-btn" type="button" title="Responder" data-global-reply-id="${escapeHtml(id)}" data-global-reply-nick="${escapeHtml(nick)}" data-global-reply-text="${escapeHtml(text)}">↪️ responder</button>`;
     let delBtn = "";
-    if(isMasterGlobalChatAdmin() && !msg?.deleted && id){ delBtn = `<button class="global-chat-delete-btn" type="button" aria-label="Apagar mensagem" title="Apagar mensagem" data-global-delete-id="${escapeHtml(id)}">×</button>`; }
+    if(isMasterGlobalChatAdmin() && !msg?.deleted && id){ delBtn = `<button class="global-chat-delete-btn" type="button" aria-label="Apagar mensagem" title="Apagar mensagem" data-global-delete-id="${escapeHtml(id)}">apagar ❌</button>`; }
     if(!replyBtn && !delBtn) return "";
     return `<div class="global-chat-actions">${replyBtn}${delBtn}</div>`;
   }
@@ -8472,8 +8490,8 @@ document.addEventListener("DOMContentLoaded", function(){
           <div class="global-chat-name" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}">${escapeHtml(formatGlobalAuthor(msg))}</div>
         </div>
         <div class="${bubbleClass}">${quoteHtml}${deleted ? escapeHtml(bubbleText) : linkGlobalMentions(bubbleText)}</div>
-        <div class="global-chat-meta">${formatGlobalTime(msg?.created_at)}</div>
         ${globalChatDeleteButtonHtml(msg)}
+        <div class="global-chat-meta">${formatGlobalTime(msg?.created_at)}</div>
       </div>
     `;
   }
