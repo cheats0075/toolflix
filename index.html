@@ -1931,6 +1931,40 @@ select optgroup{
     }
 
 
+
+    /* ===== HOME: destaques em carrossel horizontal ===== */
+    #tfNeonHero .tf-featured-panel{ justify-content:flex-start; overflow:hidden; }
+    #tfNeonHero .tf-featured-panel .tf-hero-block-title{ flex:0 0 auto; }
+    .tf-featured-scroll{ display:flex; gap:12px; overflow-x:auto; overflow-y:hidden; scroll-behavior:smooth; padding:2px 2px 8px; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+    .tf-featured-scroll::-webkit-scrollbar{ display:none; }
+    .tf-featured-scroll .tf-feature-card{ flex:0 0 134px; height:164px; border-radius:20px; }
+    .tf-featured-scroll .tf-feature-play{ width:42px; height:42px; font-size:18px; }
+    .tf-featured-scroll .tf-feature-info{ left:10px; right:10px; bottom:10px; }
+    .tf-featured-scroll .tf-feature-info strong{ font-size:13px; }
+    .tf-featured-scroll .tf-feature-info small{ font-size:9px; }
+    @media(max-width:920px){ .tf-featured-scroll .tf-feature-card{ flex-basis:145px; height:172px; } }
+
+    /* ===== CHAT GLOBAL: mencionar e responder ===== */
+    #globalChatComposer{ position:relative; }
+    #globalReplyPreview{ display:none; margin:0 0 10px; padding:10px 42px 10px 12px; border-radius:14px; background:rgba(0,255,255,.08); border:1px solid rgba(0,255,255,.18); color:#fff; position:relative; box-shadow:0 10px 24px rgba(0,0,0,.16); }
+    #globalReplyPreview.show{ display:block; }
+    #globalReplyPreview strong{ display:block; color:#8befff; font-size:12px; margin-bottom:4px; }
+    #globalReplyPreview span{ display:block; opacity:.82; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    #globalReplyCancel{ position:absolute; right:10px; top:50%; transform:translateY(-50%); width:26px; height:26px; border-radius:999px; border:none; background:rgba(255,255,255,.10); color:#fff; font-weight:900; cursor:pointer; }
+    #globalMentionBox{ display:none; position:absolute; left:16px; right:126px; bottom:72px; max-height:190px; overflow:auto; z-index:5; padding:8px; border-radius:16px; background:rgba(10,12,18,.98); border:1px solid rgba(0,255,255,.18); box-shadow:0 18px 42px rgba(0,0,0,.45), 0 0 18px rgba(0,255,255,.08); backdrop-filter:blur(14px); }
+    #globalMentionBox.show{ display:block; }
+    .mention-suggestion{ width:100%; border:none; display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:12px; cursor:pointer; text-align:left; color:#fff; background:transparent; font-weight:900; }
+    .mention-suggestion:hover,.mention-suggestion.active{ background:rgba(0,255,255,.12); }
+    .mention-suggestion small{ opacity:.65; font-weight:800; margin-left:auto; }
+    .global-chat-reply-btn{ border:none; border-radius:999px; padding:6px 10px; font-size:11px; font-weight:900; cursor:pointer; color:#fff; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.10); }
+    .global-chat-reply-btn:hover{ background:rgba(0,255,255,.14); border-color:rgba(0,255,255,.22); }
+    .global-chat-actions{ opacity:.92; }
+    .global-chat-quote{ margin:0 0 8px; padding:8px 10px; border-left:3px solid #8befff; border-radius:10px; background:rgba(0,255,255,.08); color:rgba(255,255,255,.88); font-size:12px; line-height:1.35; }
+    .global-chat-quote strong{ color:#8befff; display:block; margin-bottom:2px; }
+    .global-chat-mention{ color:#8befff; font-weight:1000; background:rgba(0,255,255,.10); border-radius:8px; padding:1px 4px; }
+    @media(max-width:640px){ #globalMentionBox{ right:16px; bottom:78px; } #globalChatForm{ flex-direction:column; align-items:stretch; } #globalChatSend{ width:100%; } }
+
+
     #profileModal{
       z-index: 100100 !important;
     }
@@ -3226,7 +3260,7 @@ body.avatar-modal-open{
     position:relative;
     z-index:2;
     display:grid;
-    grid-template-columns: minmax(300px, 1fr) minmax(260px, .75fr) minmax(260px, .75fr) minmax(210px, .55fr);
+    grid-template-columns: minmax(300px, 1fr) minmax(260px, .78fr) minmax(390px, 1.18fr) minmax(210px, .55fr);
     gap:0;
     align-items:stretch;
     min-height:240px;
@@ -3523,8 +3557,8 @@ body.avatar-modal-open{
         </div>
 
         <div class="tf-hero-panel tf-featured-panel">
-          <div class="tf-hero-block-title">🔥 Destaque do catálogo</div>
-          <div id="tfFeaturedGameBox" aria-label="Jogo em destaque"></div>
+          <div class="tf-hero-block-title">🔥 Destaques do catálogo</div>
+          <div id="tfFeaturedGameBox" aria-label="Cards em destaque do catálogo"></div>
         </div>
 
         <div class="tf-hero-panel tf-stats-panel">
@@ -3845,6 +3879,8 @@ body.avatar-modal-open{
       </div>
       <div id="globalChatMessages"></div>
       <div id="globalChatComposer">
+        <div id="globalReplyPreview"><strong></strong><span></span><button id="globalReplyCancel" type="button">×</button></div>
+        <div id="globalMentionBox"></div>
         <form id="globalChatForm">
           <textarea id="globalChatInput" maxlength="200" placeholder="Escreva algo para a comunidade..." rows="1"></textarea>
           <button id="globalChatSend" type="submit">Enviar</button>
@@ -5626,6 +5662,7 @@ const MASTER_NICK = "Srgokucheats";
   }
 
   let tfHeroCarouselTimer = null;
+  let tfHeroFeaturedTimer = null;
   let tfHeroVideoIndex = 0;
   let tfHeroFeaturedIndex = 0;
 
@@ -5685,28 +5722,33 @@ const MASTER_NICK = "Srgokucheats";
     const box = document.getElementById("tfFeaturedGameBox");
     if(!box) return;
 
-    if(!games.length){
-      box.innerHTML = `<div class="tf-yt-empty">🔥 Cadastre jogos para aparecerem como destaque.</div>`;
+    const list = (Array.isArray(games) ? games : []).slice(0, 8);
+    if(!list.length){
+      box.innerHTML = `<div class="tf-yt-empty">🔥 Cadastre jogos/apps para aparecerem como destaque.</div>`;
       return;
     }
 
-    if(tfHeroFeaturedIndex >= games.length) tfHeroFeaturedIndex = 0;
-    const j = games[tfHeroFeaturedIndex];
-    const title = safeStr(j.nome, "Destaque ToolFlix");
-    const thumb = safeStr(j.capa, "") || "https://via.placeholder.com/640x360.png?text=ToolFlix";
-    const cat = normalizeCategoria(j.categoria || "Conteúdo");
+    box.innerHTML = `<div class="tf-featured-scroll" id="tfFeaturedScroll">${list.map((j, idx)=>{
+      const title = safeStr(j.nome, "Destaque ToolFlix");
+      const thumb = safeStr(j.capa, "") || "https://via.placeholder.com/640x360.png?text=ToolFlix";
+      const cat = normalizeCategoria(j.categoria || "Conteúdo");
+      return `
+        <article class="tf-feature-card tf-game-feature" data-feature-idx="${idx}" title="Abrir destaque">
+          <img src="${escHtml(thumb)}" alt="" onerror="this.src='https://via.placeholder.com/640x360.png?text=ToolFlix';">
+          <div class="tf-feature-play">🔥</div>
+          <div class="tf-feature-info">
+            <small>${escHtml(cat)}</small>
+            <strong>${escHtml(title)}</strong>
+          </div>
+        </article>`;
+    }).join("")}</div>`;
 
-    box.innerHTML = `
-      <article class="tf-feature-card tf-game-feature" title="Abrir destaque">
-        <img src="${escHtml(thumb)}" alt="" onerror="this.src='https://via.placeholder.com/640x360.png?text=ToolFlix';">
-        <div class="tf-feature-play">🔥</div>
-        <div class="tf-feature-info">
-          <small>Destaque • ${escHtml(cat)}</small>
-          <strong>${escHtml(title)}</strong>
-        </div>
-      </article>`;
-
-    box.querySelector(".tf-feature-card")?.addEventListener("click", ()=> openGameDetails(j));
+    box.querySelectorAll("[data-feature-idx]").forEach(card=>{
+      card.addEventListener("click", ()=>{
+        const idx = Number(card.getAttribute("data-feature-idx") || 0);
+        openGameDetails(list[idx]);
+      });
+    });
   }
 
   async function updateHeroSiteStats(){
@@ -5751,11 +5793,22 @@ const MASTER_NICK = "Srgokucheats";
 
     if(tfHeroCarouselTimer) clearInterval(tfHeroCarouselTimer);
     tfHeroCarouselTimer = setInterval(()=>{
-      if(videos.length > 1){
-        tfHeroVideoIndex = (tfHeroVideoIndex + 1) % videos.length;
-        renderSingleYoutubeHighlight(videos);
+      const freshVideos = getHeroYoutubeVideos();
+      if(freshVideos.length > 1){
+        tfHeroVideoIndex = (tfHeroVideoIndex + 1) % freshVideos.length;
+        renderSingleYoutubeHighlight(freshVideos);
       }
-    }, 15000);
+    }, 7000);
+
+    if(tfHeroFeaturedTimer) clearInterval(tfHeroFeaturedTimer);
+    tfHeroFeaturedTimer = setInterval(()=>{
+      const scroller = document.getElementById("tfFeaturedScroll");
+      if(!scroller) return;
+      const card = scroller.querySelector(".tf-feature-card");
+      const step = card ? (card.getBoundingClientRect().width + 12) : 150;
+      if(scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 8){ scroller.scrollTo({ left: 0, behavior: "smooth" }); }
+      else{ scroller.scrollBy({ left: step, behavior: "smooth" }); }
+    }, 7000);
   }
 
   function renderGamePanel(){
@@ -8295,15 +8348,14 @@ document.addEventListener("DOMContentLoaded", function(){
   }
 
   function globalChatDeleteButtonHtml(msg){
-    if(!isMasterGlobalChatAdmin()) return "";
-    if(msg?.deleted) return "";
     const id = String(msg?.id || "").trim();
-    if(!id) return "";
-    return `
-      <div class="global-chat-actions">
-        <button class="global-chat-delete-btn" type="button" aria-label="Apagar mensagem" title="Apagar mensagem" data-global-delete-id="${escapeHtml(id)}">×</button>
-      </div>
-    `;
+    const nick = String(msg?.nick || "Usuário").trim();
+    const text = stripGlobalReplyMarkup(msg?.message || "").replace(/\s+/g," ").trim().slice(0, 120);
+    const replyBtn = msg?.deleted ? "" : `<button class="global-chat-reply-btn" type="button" title="Responder" data-global-reply-id="${escapeHtml(id)}" data-global-reply-nick="${escapeHtml(nick)}" data-global-reply-text="${escapeHtml(text)}">↩ Responder</button>`;
+    let delBtn = "";
+    if(isMasterGlobalChatAdmin() && !msg?.deleted && id){ delBtn = `<button class="global-chat-delete-btn" type="button" aria-label="Apagar mensagem" title="Apagar mensagem" data-global-delete-id="${escapeHtml(id)}">×</button>`; }
+    if(!replyBtn && !delBtn) return "";
+    return `<div class="global-chat-actions">${replyBtn}${delBtn}</div>`;
   }
 
   function isOwnGlobalChatMessage(msg){
@@ -8318,19 +8370,108 @@ document.addEventListener("DOMContentLoaded", function(){
     }
   }
 
+  let globalChatReplyTarget = null;
+  let globalChatMentionUsers = [];
+
+  function stripGlobalReplyMarkup(text){
+    return String(text || "").replace(/^↪ Respondendo a .+?:\s*"[\s\S]{0,160}?"\n+/i, "");
+  }
+
+  function parseGlobalReplyMarkup(text){
+    const raw = String(text || "");
+    const m = raw.match(/^↪ Respondendo a (.+?):\s*"([\s\S]{0,160}?)"\n+([\s\S]*)$/i);
+    if(!m) return { reply:null, body:raw };
+    return { reply:{ nick:m[1], text:m[2] }, body:m[3] || "" };
+  }
+
+  function linkGlobalMentions(text){
+    return escapeHtml(String(text || "")).replace(/(^|\s)@([\wÀ-ÿ.-]{2,32})/g, function(all, pre, nick){
+      return `${pre}<span class="global-chat-mention">@${nick}</span>`;
+    });
+  }
+
+  function setGlobalReplyTarget(msg){
+    const nick = String(msg?.nick || "Usuário").trim();
+    const clean = stripGlobalReplyMarkup(msg?.message || "").replace(/\s+/g," ").trim().slice(0, 95);
+    globalChatReplyTarget = { nick, text: clean || "mensagem" };
+    const wrap = document.getElementById("globalReplyPreview");
+    if(wrap){
+      wrap.classList.add("show");
+      const strong = wrap.querySelector("strong");
+      const span = wrap.querySelector("span");
+      if(strong) strong.textContent = `Respondendo a ${nick}`;
+      if(span) span.textContent = clean || "mensagem";
+    }
+    document.getElementById("globalChatInput")?.focus();
+  }
+
+  function clearGlobalReplyTarget(){
+    globalChatReplyTarget = null;
+    const wrap = document.getElementById("globalReplyPreview");
+    if(wrap) wrap.classList.remove("show");
+  }
+
+  function updateGlobalMentionUsers(list){
+    const seen = new Set();
+    globalChatMentionUsers = (Array.isArray(list) ? list : [])
+      .map(m => String(m?.nick || "").trim())
+      .filter(n => n && !/^Usuário\s/i.test(n))
+      .filter(n => { const k = n.toLowerCase(); if(seen.has(k)) return false; seen.add(k); return true; })
+      .slice(0, 40);
+  }
+
+  function getCurrentMentionQuery(input){
+    const value = String(input?.value || "");
+    const pos = input?.selectionStart ?? value.length;
+    const left = value.slice(0, pos);
+    const m = left.match(/(^|\s)@([\wÀ-ÿ.-]{0,32})$/);
+    if(!m) return null;
+    return { query:m[2] || "", start: pos - (m[2] || "").length - 1, end: pos };
+  }
+
+  function renderGlobalMentionBox(){
+    const input = document.getElementById("globalChatInput");
+    const box = document.getElementById("globalMentionBox");
+    if(!input || !box) return;
+    const info = getCurrentMentionQuery(input);
+    if(!info){ box.classList.remove("show"); box.innerHTML = ""; return; }
+    const q = info.query.toLowerCase();
+    const matches = globalChatMentionUsers.filter(n => n.toLowerCase().includes(q)).slice(0, 8);
+    if(!matches.length){ box.classList.remove("show"); box.innerHTML = ""; return; }
+    box.innerHTML = matches.map((nick, i)=>`<button type="button" class="mention-suggestion ${i===0?'active':''}" data-mention-nick="${escapeHtml(nick)}">@${escapeHtml(nick)}<small>mencionar</small></button>`).join("");
+    box.classList.add("show");
+  }
+
+  function insertGlobalMention(nick){
+    const input = document.getElementById("globalChatInput");
+    const box = document.getElementById("globalMentionBox");
+    if(!input) return;
+    const value = String(input.value || "");
+    const info = getCurrentMentionQuery(input);
+    if(!info) return;
+    input.value = value.slice(0, info.start) + `@${nick} ` + value.slice(info.end);
+    const pos = info.start + nick.length + 2;
+    input.focus();
+    input.setSelectionRange(pos, pos);
+    if(box){ box.classList.remove("show"); box.innerHTML = ""; }
+    input.dispatchEvent(new Event("input", { bubbles:true }));
+  }
+
   function globalChatRowHtml(msg){
     const deleted = !!msg?.deleted;
     const own = isOwnGlobalChatMessage(msg);
-    const bubbleText = deleted ? "Mensagem apagada pelo administrador" : String(msg?.message || "");
+    const parsed = parseGlobalReplyMarkup(msg?.message || "");
+    const bubbleText = deleted ? "Mensagem apagada pelo administrador" : String(parsed.body || "");
     const bubbleClass = deleted ? "global-chat-bubble deleted" : "global-chat-bubble";
     const avatar = getAvatarSrc(msg);
+    const quoteHtml = (!deleted && parsed.reply) ? `<div class="global-chat-quote"><strong>↪ ${escapeHtml(parsed.reply.nick)}</strong><span>${escapeHtml(parsed.reply.text)}</span></div>` : "";
     return `
       <div class="global-chat-row ${own ? "own" : ""}" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
         <div class="global-chat-head">
           <img class="global-chat-avatar ${getAvatarClass(msg?.level)}" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1-1.webp';">
           <div class="global-chat-name" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}">${escapeHtml(formatGlobalAuthor(msg))}</div>
         </div>
-        <div class="${bubbleClass}">${escapeHtml(bubbleText)}</div>
+        <div class="${bubbleClass}">${quoteHtml}${deleted ? escapeHtml(bubbleText) : linkGlobalMentions(bubbleText)}</div>
         <div class="global-chat-meta">${formatGlobalTime(msg?.created_at)}</div>
         ${globalChatDeleteButtonHtml(msg)}
       </div>
@@ -8341,6 +8482,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const box = document.getElementById("globalChatMessages");
     if(!box) return;
     const list = Array.isArray(data?.messages) ? data.messages : [];
+    updateGlobalMentionUsers(list);
     if(!list.length){
       box.innerHTML = '<div class="global-chat-empty">Ainda não há mensagens no chat global.</div>';
       return;
@@ -8412,8 +8554,13 @@ document.addEventListener("DOMContentLoaded", function(){
   async function sendGlobalChatMessage(){
     const input = document.getElementById("globalChatInput");
     if(!input) return;
-    const message = String(input.value || "").trim();
+    let message = String(input.value || "").trim();
     if(!message) return;
+    if(globalChatReplyTarget){
+      const nick = String(globalChatReplyTarget.nick || "Usuário").replace(/[\n\r"]/g, " ").slice(0, 40);
+      const quote = String(globalChatReplyTarget.text || "mensagem").replace(/[\n\r"]/g, " ").slice(0, 95);
+      message = `↪ Respondendo a ${nick}: "${quote}"\n${message}`;
+    }
     try{
       const auth = getPresenceAuthHeaders();
       const r = await fetch(API_URL + "/api/global-chat/send", {
@@ -8424,6 +8571,7 @@ document.addEventListener("DOMContentLoaded", function(){
       const j = await r.json().catch(()=> ({}));
       if(r.ok && j?.ok){
         input.value = "";
+        clearGlobalReplyTarget();
         const count = document.getElementById("globalChatCount");
         if(count) count.textContent = "0";
         refreshGlobalChat(true);
@@ -8456,6 +8604,11 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
     document.getElementById("globalChatMessages")?.addEventListener("click", function(e){
+      const replyBtn = e.target.closest("[data-global-reply-id]");
+      if(replyBtn){
+        setGlobalReplyTarget({ id: replyBtn.getAttribute("data-global-reply-id") || "", nick: replyBtn.getAttribute("data-global-reply-nick") || "Usuário", message: replyBtn.getAttribute("data-global-reply-text") || "mensagem" });
+        return;
+      }
       const profileTarget = e.target.closest("[data-profile-nick]");
       if(profileTarget){
         const nick = profileTarget.getAttribute("data-profile-nick") || "";
@@ -8471,14 +8624,35 @@ document.addEventListener("DOMContentLoaded", function(){
       deleteGlobalChatMessage(id);
     });
 
+    document.getElementById("globalReplyCancel")?.addEventListener("click", clearGlobalReplyTarget);
+
+    document.getElementById("globalMentionBox")?.addEventListener("click", function(e){
+      const btnMention = e.target.closest("[data-mention-nick]");
+      if(!btnMention) return;
+      insertGlobalMention(btnMention.getAttribute("data-mention-nick") || "");
+    });
+
     input?.addEventListener("input", function(){
       if(count) count.textContent = String((input.value || "").length);
       input.style.height = "auto";
       input.style.height = Math.min(input.scrollHeight, 120) + "px";
+      renderGlobalMentionBox();
+    });
+
+    input?.addEventListener("keydown", function(e){
+      const mentionBox = document.getElementById("globalMentionBox");
+      if(e.key === "Tab" && mentionBox?.classList.contains("show")){
+        const first = mentionBox.querySelector("[data-mention-nick]");
+        if(first){ e.preventDefault(); insertGlobalMention(first.getAttribute("data-mention-nick") || ""); }
+      }
     });
 
     document.addEventListener("keydown", function(e){
-      if(e.key === "Escape") closeGlobalChat();
+      if(e.key === "Escape"){
+        const mentionBox = document.getElementById("globalMentionBox");
+        if(mentionBox?.classList.contains("show")){ mentionBox.classList.remove("show"); return; }
+        closeGlobalChat();
+      }
       if(e.key === "Enter" && !e.shiftKey && document.getElementById("globalChatOverlay")?.classList.contains("open") && document.activeElement === input){
         e.preventDefault();
         sendGlobalChatMessage();
