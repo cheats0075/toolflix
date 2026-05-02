@@ -3021,7 +3021,35 @@ body.avatar-modal-open{
   .game-details-cover img{ height:340px !important; }
 }
 
-  </style>
+  
+/* ===== FIX: botão X visível para fechar o Suporte ===== */
+#supportCloseBtn,
+.support-close-btn{
+  margin-left:auto;
+  width:34px;
+  height:34px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.07);
+  color:#fff;
+  font-size:18px;
+  font-weight:900;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transition:.2s ease;
+  line-height:1;
+}
+#supportCloseBtn:hover,
+.support-close-btn:hover{
+  background:rgba(255,40,40,.22);
+  border-color:rgba(255,70,70,.55);
+  color:#ff5b5b;
+  transform:scale(1.05);
+}
+
+</style>
 
 <style id="masterChatsOverlayStyle">
 /* ===== Painel exclusivo de Chats (Master) ===== */
@@ -9833,6 +9861,79 @@ document.addEventListener("DOMContentLoaded",()=>{
       window.openMasterChatsTop?.();
     }, true);
   });
+})();
+</script>
+
+
+<script>
+/* ===== FIX: X fecha o chat Suporte sem depender do ESC ===== */
+(function(){
+  function closeSupportChat(){
+    const containers = [
+      document.querySelector(".suporte-container.ativo"),
+      document.querySelector(".suporte-container"),
+      document.getElementById("suporteContainer"),
+      document.getElementById("supportContainer")
+    ].filter(Boolean);
+
+    containers.forEach(c => {
+      c.classList.remove("ativo");
+      c.classList.remove("open");
+    });
+
+    const panels = [
+      document.querySelector(".suporte-painel"),
+      document.getElementById("suportePainel"),
+      document.getElementById("supportPanel")
+    ].filter(Boolean);
+
+    panels.forEach(p => {
+      p.style.display = "none";
+    });
+  }
+
+  function ensureSupportCloseButton(){
+    const panel = document.querySelector(".suporte-painel") || document.getElementById("suportePainel") || document.getElementById("supportPanel");
+    if(!panel || document.getElementById("supportCloseBtn")) return;
+
+    let header = Array.from(panel.querySelectorAll("div, header")).find(el => {
+      const text = (el.textContent || "").trim().toLowerCase();
+      return text.includes("suporte") && el.children.length <= 4;
+    });
+
+    if(!header){
+      header = document.createElement("div");
+      header.style.display = "flex";
+      header.style.alignItems = "center";
+      header.style.gap = "10px";
+      header.style.marginBottom = "10px";
+      header.innerHTML = "<strong>💬 Suporte</strong>";
+      panel.insertBefore(header, panel.firstChild);
+    }
+
+    header.style.display = "flex";
+    header.style.alignItems = "center";
+    header.style.gap = "10px";
+
+    const btn = document.createElement("button");
+    btn.id = "supportCloseBtn";
+    btn.className = "support-close-btn";
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Fechar suporte");
+    btn.title = "Fechar suporte";
+    btn.textContent = "✕";
+    btn.addEventListener("click", function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      closeSupportChat();
+    });
+
+    header.appendChild(btn);
+  }
+
+  document.addEventListener("DOMContentLoaded", ensureSupportCloseButton);
+  setTimeout(ensureSupportCloseButton, 600);
+  window.closeSupportChat = closeSupportChat;
 })();
 </script>
 
