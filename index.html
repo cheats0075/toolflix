@@ -2368,6 +2368,14 @@ select optgroup{
   }
 }
 
+
+/* FIX: esconde tooltip quando o menu do perfil está aberto */
+#userArea.menu-open::after{
+  opacity:0 !important;
+  transform: translateY(-4px) !important;
+  display:none !important;
+}
+
 /* ===== MODAL FIX (sempre na frente) ===== */
 .modal-overlay{
   z-index: 999999 !important;
