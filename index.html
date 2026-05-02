@@ -9699,5 +9699,142 @@ document.addEventListener("DOMContentLoaded",()=>{
 })();
 </script>
 
+
+<script>
+/* ===== FIX MASTER CHATS: reabrir sem ficar vazio ===== */
+(function(){
+  function ensureMasterOverlay(){
+    let overlay = document.getElementById("masterChatsOverlay");
+    if(!overlay){
+      overlay = document.createElement("div");
+      overlay.id = "masterChatsOverlay";
+      overlay.innerHTML = `
+        <div class="mco-backdrop"></div>
+        <div class="mco-modal" role="dialog" aria-modal="true">
+          <div class="mco-topbar">
+            <div class="mco-title">📨 Chats (Master)</div>
+            <button class="mco-close" type="button" aria-label="Fechar">✖</button>
+          </div>
+          <div class="mco-body"></div>
+          <div class="mco-hint">Dica: pressione <strong>ESC</strong> para fechar.</div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+    }
+
+    const closeBtn = overlay.querySelector(".mco-close");
+    const backdrop = overlay.querySelector(".mco-backdrop");
+
+    if(closeBtn && !closeBtn.dataset.bound){
+      closeBtn.dataset.bound = "1";
+      closeBtn.addEventListener("click", ()=> window.closeMasterChatsOverlay?.());
+    }
+
+    if(backdrop && !backdrop.dataset.bound){
+      backdrop.dataset.bound = "1";
+      backdrop.addEventListener("click", ()=> window.closeMasterChatsOverlay?.());
+    }
+
+    return overlay;
+  }
+
+  function getOrCreatePanelPlaceholder(panel){
+    let ph = document.getElementById("adminChatsPanelPlaceholder");
+    if(!ph){
+      ph = document.createElement("div");
+      ph.id = "adminChatsPanelPlaceholder";
+      const adminSection = document.getElementById("adminSection");
+      if(panel && panel.parentElement){
+        panel.parentElement.insertBefore(ph, panel);
+      }else if(adminSection){
+        adminSection.appendChild(ph);
+      }else{
+        document.body.appendChild(ph);
+      }
+    }
+    return ph;
+  }
+
+  window.closeMasterChatsOverlay = function(){
+    const overlay = document.getElementById("masterChatsOverlay");
+    const panel = document.getElementById("adminChatsPanel");
+
+    if(overlay) overlay.style.display = "none";
+
+    if(window.__mcoEscHandler){
+      document.removeEventListener("keydown", window.__mcoEscHandler);
+      window.__mcoEscHandler = null;
+    }
+
+    if(panel){
+      const ph = getOrCreatePanelPlaceholder(panel);
+      ph.replaceWith(panel);
+      panel.style.display = "none";
+    }
+  };
+
+  window.openMasterChatsTop = async function(){
+    try{ window.ensureAdminUI?.(); }catch(e){ console.error(e); }
+
+    const overlay = ensureMasterOverlay();
+    const body = overlay.querySelector(".mco-body");
+
+    let panel = document.getElementById("adminChatsPanel");
+    if(!panel){
+      try{ window.ensureAdminUI?.(); }catch(e){ console.error(e); }
+      panel = document.getElementById("adminChatsPanel");
+    }
+
+    if(!panel || !body){
+      alert("Painel de chats não encontrado.");
+      return;
+    }
+
+    getOrCreatePanelPlaceholder(panel);
+
+    body.innerHTML = "";
+    body.appendChild(panel);
+
+    overlay.style.display = "block";
+    panel.style.display = "block";
+
+    if(window.__mcoEscHandler){
+      document.removeEventListener("keydown", window.__mcoEscHandler);
+    }
+    window.__mcoEscHandler = function(e){
+      if(e.key === "Escape") window.closeMasterChatsOverlay?.();
+    };
+    document.addEventListener("keydown", window.__mcoEscHandler);
+
+    try{
+      if(typeof window.clearMasterNotification === "function") window.clearMasterNotification();
+      if(window.__masterChatBadge) window.__masterChatBadge.style.display = "none";
+    }catch(e){}
+
+    try{
+      if(typeof window.loadAdminChats === "function"){
+        await window.loadAdminChats({ sortRecent:true });
+      }else{
+        alert("Função loadAdminChats não encontrada.");
+      }
+    }catch(e){
+      console.error(e);
+      alert("Erro ao carregar chats.");
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", function(){
+    const btn = document.getElementById("masterChatsTopBtn");
+    if(!btn || btn.dataset.masterChatsFixed === "1") return;
+    btn.dataset.masterChatsFixed = "1";
+    btn.addEventListener("click", function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      window.openMasterChatsTop?.();
+    }, true);
+  });
+})();
+</script>
+
 </body>
 </html>
