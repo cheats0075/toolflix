@@ -6440,9 +6440,9 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
         return;
       }
 
-      window.open(link, "_blank");
-
       registerGlobalGameDownload(j);
+
+      window.open(link, "_blank");
 
       const u = loadUser();
       if(!u || !u.nick) return;
@@ -6503,7 +6503,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     return safeStr(j?.link || j?.nome || "").trim().toLowerCase();
   }
 
-  const GAME_DOWNLOAD_ENDPOINT = (typeof API !== "undefined" ? API : "") + "/api/games/download";
+  const GAME_DOWNLOAD_ENDPOINT = (typeof API_URL !== "undefined" ? API_URL : "https://toolflix-api.onrender.com") + "/api/games/download";
 
   function getCardDownloadCount(j){
     return Math.max(0, Number(j?.downloads || 0) || 0);
@@ -6530,7 +6530,8 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
       const resp = await fetch(GAME_DOWNLOAD_ENDPOINT, {
         method:"POST",
         headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify({ link, title: safeStr(j?.nome || "") })
+        body: JSON.stringify({ link, title: safeStr(j?.nome || "") }),
+        keepalive: true
       });
 
       const data = await resp.json().catch(()=> ({}));
