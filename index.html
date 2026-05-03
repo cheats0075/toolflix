@@ -3049,6 +3049,38 @@ body.avatar-modal-open{
   transform:scale(1.05);
 }
 
+
+/* ===== CONTADOR GLOBAL DE DOWNLOADS NOS CARDS ===== */
+.tf-card-download-count{
+  position:absolute;
+  right:14px;
+  bottom:22px;
+  z-index:9;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:6px 9px;
+  border-radius:999px;
+  background:rgba(0,0,0,.62);
+  border:1px solid rgba(255,255,255,.13);
+  color:#eaffff;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.2px;
+  box-shadow:0 8px 20px rgba(0,0,0,.28), 0 0 12px rgba(0,255,255,.10);
+  backdrop-filter:blur(8px);
+  pointer-events:none;
+}
+.tf-card-download-count .tf-dl-icon{
+  color:#00ffff;
+  font-size:12px;
+  text-shadow:0 0 8px rgba(0,255,255,.55);
+}
+.jogo:hover .tf-card-download-count{
+  background:rgba(0,0,0,.78);
+  border-color:rgba(0,255,255,.25);
+}
+
 </style>
 
 <style id="masterChatsOverlayStyle">
@@ -4293,7 +4325,8 @@ const MASTER_NICK = "Srgokucheats";
     const trailer = safeStr(g?.trailer ?? g?.trailer_url ?? g?.trailerUrl ?? g?.youtube ?? "").trim();
     const premium = Boolean(g?.premium === true || g?.isPremium === true || categoria === "Premium");
     const created_at = Number(g?.created_at ?? g?.createdAt ?? g?.added_at ?? g?.addedAt ?? 0) || 0;
-    return { nome, categoria, link, capa, descricao, trailer, premium, created_at };
+    const downloads = Number(g?.downloads ?? g?.download_count ?? g?.downloadCount ?? g?.total_downloads ?? g?.totalDownloads ?? 0) || 0;
+    return { nome, categoria, link, capa, descricao, trailer, premium, created_at, downloads };
   }
 
   /* ===============================
@@ -6409,6 +6442,8 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
 
       window.open(link, "_blank");
 
+      registerGlobalGameDownload(j);
+
       const u = loadUser();
       if(!u || !u.nick) return;
 
@@ -6463,9 +6498,53 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
       console.warn("syncJogos fail:", e);
     }
   }
-    /* ===============================
-     RENDER
-  ================================= */
+  
+  function getGameKeyForDownloads(j){
+    return safeStr(j?.link || j?.nome || "").trim().toLowerCase();
+  }
+
+  const GAME_DOWNLOAD_ENDPOINT = (typeof API !== "undefined" ? API : "") + "/api/games/download";
+
+  function getCardDownloadCount(j){
+    return Math.max(0, Number(j?.downloads || 0) || 0);
+  }
+
+  function setGameDownloadCountByLink(link, downloads){
+    const cleanLink = safeStr(link || "").trim();
+    if(!cleanLink) return;
+    const count = Math.max(0, Number(downloads || 0) || 0);
+
+    db_jogos = db_jogos.map(g => {
+      const ng = normalizeGame(g);
+      return safeStr(ng.link || "").trim() === cleanLink ? { ...ng, downloads: count } : ng;
+    });
+
+    try{ localStorage.setItem(LS_JOGOS, JSON.stringify(db_jogos)); }catch{}
+  }
+
+  async function registerGlobalGameDownload(j){
+    try{
+      const link = safeStr(j?.link || "").trim();
+      if(!link) return null;
+
+      const resp = await fetch(GAME_DOWNLOAD_ENDPOINT, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ link, title: safeStr(j?.nome || "") })
+      });
+
+      const data = await resp.json().catch(()=> ({}));
+      if(data && data.ok && typeof data.downloads !== "undefined"){
+        setGameDownloadCountByLink(data.link || link, data.downloads);
+        render();
+        return Number(data.downloads || 0);
+      }
+    }catch(e){
+      console.warn("download count global fail:", e);
+    }
+    return null;
+  }
+
   function render(){
     const grid = document.getElementById("catalogo");
     if(!grid) return;
@@ -6541,6 +6620,11 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
         ${isP && guestUnlocked ? '<span class="guest-trial-chip">🎁 LIBERADO AGORA</span>' : ""}
 
         <img src="${capaFinal}" alt="" onerror="this.src='https://via.placeholder.com/512x512.png?text=ToolFlix';">
+
+        <div class="tf-card-download-count" title="Downloads deste arquivo">
+          <span class="tf-dl-icon">⬇</span>
+          <span>${fmtCompactNumber(getCardDownloadCount(j))}</span>
+        </div>
 
         <div style="margin-top:12px; text-align:center">
           <span style="font-size:10px; color:var(--cor-accent); font-weight:800; letter-spacing:1px">
