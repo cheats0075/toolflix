@@ -6526,6 +6526,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
       }
     };
 
+    refreshModalDownloadMeterForGame(j);
     modal.style.display = "flex";
   }
 
@@ -6578,6 +6579,14 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     });
 
     try{ localStorage.setItem(LS_JOGOS, JSON.stringify(db_jogos)); }catch{}
+  }
+
+
+
+  function refreshModalDownloadMeterForGame(j){
+    try{
+      setModalDownloadMeter(getCardDownloadCount(j));
+    }catch{}
   }
 
 
@@ -10149,6 +10158,18 @@ document.addEventListener("DOMContentLoaded",()=>{
       closeGameDetailsModal();
     }
   });
+})();
+</script>
+
+
+<script>
+/* ===== FIX: reset contador do modal ao fechar ===== */
+(function(){
+  document.addEventListener("click", function(e){
+    if(!e.target.closest(".game-details-close")) return;
+    const n = document.getElementById("modalDownloadNumber");
+    if(n) n.textContent = "0";
+  }, true);
 })();
 </script>
 
