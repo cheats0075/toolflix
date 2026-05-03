@@ -3081,6 +3081,45 @@ body.avatar-modal-open{
   border-color:rgba(0,255,255,.25);
 }
 
+
+/* ===== CONTADOR DE DOWNLOADS NO MODAL ===== */
+.tf-modal-download-meter{
+  margin: 18px auto 0;
+  width: fit-content;
+  min-width: 180px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:11px 18px;
+  border-radius:999px;
+  background:rgba(0,0,0,.48);
+  border:1px solid rgba(0,255,255,.22);
+  color:#fff;
+  font-size:16px;
+  font-weight:1000;
+  letter-spacing:.2px;
+  box-shadow:0 12px 28px rgba(0,0,0,.30), 0 0 18px rgba(0,255,255,.10);
+  backdrop-filter:blur(10px);
+}
+.tf-modal-download-meter .tf-modal-dl-icon{
+  color:#00ffff;
+  text-shadow:0 0 10px rgba(0,255,255,.55);
+}
+.tf-modal-download-meter.bump{
+  animation:tfModalDownloadBump .75s ease;
+}
+@keyframes tfModalDownloadBump{
+  0%{ transform:scale(1); }
+  35%{ transform:scale(1.14); border-color:rgba(255,215,0,.55); box-shadow:0 0 24px rgba(0,255,255,.24), 0 0 28px rgba(255,215,0,.14); }
+  100%{ transform:scale(1); }
+}
+.game-details-download.preparing{
+  opacity:.92;
+  filter:saturate(1.2);
+  cursor:wait !important;
+}
+
 </style>
 
 <style id="masterChatsOverlayStyle">
@@ -3914,6 +3953,11 @@ body.avatar-modal-open{
 
           <button id="gameDetailsDownloadBtn" class="game-details-download" type="button">Baixar agora</button>
           <div class="game-details-note">Clique no trailer para assistir sem sair do site.</div>
+          <div id="modalDownloadMeter" class="tf-modal-download-meter" title="Downloads deste arquivo">
+            <span class="tf-modal-dl-icon">⬇</span>
+            <span id="modalDownloadNumber">0</span>
+            <span>downloads</span>
+          </div>
         </div>
       </div>
     </div>
@@ -6384,6 +6428,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     const wrap = document.getElementById("gameTrailerWrap");
     if(frame) frame.src = "";
     if(wrap) wrap.classList.remove("active");
+    setModalDownloadMeter(getCardDownloadCount(j));
     if(modal) modal.style.display = "none";
     window.__toolflixCurrentGame = null;
   }
@@ -6440,9 +6485,22 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
         return;
       }
 
-      registerGlobalGameDownload(j);
+      const oldDownloadCount = getCardDownloadCount(j);
+      downloadBtn.classList.add("preparing");
+      const oldBtnText = downloadBtn.textContent;
+      downloadBtn.textContent = "Preparando download...";
 
-      window.open(link, "_blank");
+      registerGlobalGameDownload(j).then((newCount)=>{
+        if(Number(newCount || 0) > 0){
+          updateModalDownloadMeter(Number(newCount || 0), oldDownloadCount);
+        }
+      });
+
+      setTimeout(()=>{
+        window.open(link, "_blank");
+        downloadBtn.classList.remove("preparing");
+        downloadBtn.textContent = oldBtnText || "Baixar agora";
+      }, 2000);
 
       const u = loadUser();
       if(!u || !u.nick) return;
@@ -6521,6 +6579,45 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
 
     try{ localStorage.setItem(LS_JOGOS, JSON.stringify(db_jogos)); }catch{}
   }
+
+
+  function animateNumberText(el, from, to, duration=650){
+    if(!el) return;
+    from = Number(from || 0) || 0;
+    to = Number(to || 0) || 0;
+    const start = performance.now();
+    const diff = to - from;
+
+    function step(now){
+      const p = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const current = Math.round(from + diff * eased);
+      el.textContent = fmtCompactNumber(current);
+      if(p < 1) requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  function setModalDownloadMeter(count){
+    const num = document.getElementById("modalDownloadNumber");
+    if(num) num.textContent = fmtCompactNumber(Number(count || 0) || 0);
+  }
+
+  function updateModalDownloadMeter(newCount, oldCount){
+    try{
+      const meter = document.getElementById("modalDownloadMeter");
+      const num = document.getElementById("modalDownloadNumber");
+      if(!meter || !num) return;
+
+      meter.classList.remove("bump");
+      void meter.offsetWidth;
+      meter.classList.add("bump");
+
+      animateNumberText(num, oldCount, newCount, 650);
+    }catch{}
+  }
+
 
   async function registerGlobalGameDownload(j){
     try{
@@ -10019,6 +10116,39 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.addEventListener("DOMContentLoaded", ensureSupportCloseButton);
   setTimeout(ensureSupportCloseButton, 600);
   window.closeSupportChat = closeSupportChat;
+})();
+</script>
+
+
+<script>
+/* ===== FIX: botão X do modal de detalhes fecha corretamente ===== */
+(function(){
+  function closeGameDetailsModal(){
+    const overlay =
+      document.getElementById("gameDetailsModal") ||
+      document.querySelector(".game-details-modal-box")?.closest(".modal-overlay") ||
+      document.querySelector(".modal-overlay[style*='flex']");
+
+    if(overlay){
+      overlay.style.display = "none";
+      overlay.classList.remove("open", "ativo", "active");
+    }
+  }
+
+  document.addEventListener("click", function(e){
+    const closeBtn = e.target.closest(".game-details-close");
+    if(!closeBtn) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+    closeGameDetailsModal();
+  }, true);
+
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape"){
+      closeGameDetailsModal();
+    }
+  });
 })();
 </script>
 
