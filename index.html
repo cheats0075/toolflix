@@ -5232,7 +5232,8 @@ const MASTER_NICK = "Srgokucheats";
     if(amount <= 0) return;
 
     const u = loadUser() || {};
-    const token = getToken();
+    const auth = loadAuth?.() || {};
+    const token = getToken?.() || auth?.token || "";
 
     // se NÃO estiver logado → mantém local
     if(!token){
@@ -5254,12 +5255,23 @@ const MASTER_NICK = "Srgokucheats";
       });
 
       const j = await r.json().catch(()=> ({}));
-      if(j?.ok){
+      if(r.ok && j?.ok){
         u.xp = Number(j.xp || 0);
+        if(auth && typeof auth === "object"){
+          auth.xp = Number(j.xp || 0);
+          saveAuth?.(auth);
+        }
         saveUser(u);
         updateUserUI?.();
+        return j;
       }
-    }catch(e){}
+
+      console.warn("ADD_XP_FAIL:", r.status, j);
+    }catch(e){
+      console.warn("ADD_XP_NETWORK_FAIL:", e);
+    }
+
+    return null;
   }
     function getDaily(){
     try{
@@ -6502,13 +6514,16 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
         downloadBtn.textContent = oldBtnText || "Baixar agora";
       }, 2000);
 
-      const u = loadUser();
-      if(!u || !u.nick) return;
+      const authUser = loadAuth?.() || {};
+      const u = loadUser() || {};
+      const hasLoggedUser = !!(getToken?.() || u?.nick || authUser?.nick);
+      if(!hasLoggedUser) return;
 
       if(j.categoria === "YouTube"){
         const left = ytCooldownLeft();
         if(left <= 0){
           localStorage.setItem(LAST_YT_KEY, Date.now());
+          syncProfileAction?.("youtube", 1);
           awardXp(XP_RULES.youtube, "YouTube");
         }else{
           showToast("⏳ Aguarde 5 minutos para ganhar XP novamente.");
@@ -6520,6 +6535,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
       if(d.downloads < 3){
         d.downloads++;
         setDaily(d);
+        syncProfileAction?.("download", 1);
         awardXp(XP_RULES.download, "Download");
       } else {
         showToast("⚠️ Limite diário de downloads atingido.");
@@ -10169,6 +10185,174 @@ document.addEventListener("DOMContentLoaded",()=>{
     if(!e.target.closest(".game-details-close")) return;
     const n = document.getElementById("modalDownloadNumber");
     if(n) n.textContent = "0";
+  }, true);
+})();
+</script>
+
+
+<script>
+/* ===== FIX FINAL: envio robusto do chat + Enter ===== */
+(function(){
+  const API_FIXED = "https://toolflix-api.onrender.com";
+
+  function tfGetToken(){
+    try{
+      if(typeof getToken === "function"){
+        const t = getToken();
+        if(t) return t;
+      }
+      const auth = JSON.parse(localStorage.getItem("toolflix_auth") || "null");
+      return auth?.token || "";
+    }catch{
+      return "";
+    }
+  }
+
+  window.sendChatMessage = async function(){
+    const input = document.getElementById("chatInput");
+    const msg = (input?.value || "").trim();
+    if(!msg) return;
+
+    const token = tfGetToken();
+    if(!token){
+      alert("Você precisa estar logado.");
+      return;
+    }
+
+    const btn = document.getElementById("chatSendBtn");
+    if(btn){
+      btn.disabled = true;
+      btn.dataset.oldText = btn.textContent || "Enviar";
+      btn.textContent = "Enviando...";
+    }
+
+    try{
+      const r = await fetch(API_FIXED + "/api/chat/send", {
+        method: "POST",
+        headers: {
+          "Content-Type":"application/json",
+          "Authorization":"Bearer " + token
+        },
+        body: JSON.stringify({ message: msg })
+      });
+
+      const j = await r.json().catch(()=> ({}));
+
+      if(r.ok && j?.ok){
+        if(input) input.value = "";
+        if(typeof loadChatMessages === "function"){
+          await loadChatMessages({ forceScroll: true, markSeen: true });
+        }
+        return;
+      }
+
+      if(j?.error === "SPAM"){
+        alert("Aguarde alguns segundos para enviar outra mensagem.");
+      }else if(j?.error === "NO_TOKEN" || j?.error === "TOKEN_INVALID"){
+        alert("Sua sessão expirou. Faça login novamente.");
+      }else{
+        console.warn("CHAT_SEND_FAIL:", r.status, j);
+        alert("Erro ao enviar mensagem.");
+      }
+    }catch(e){
+      console.error("CHAT_SEND_NETWORK_ERROR:", e);
+      alert("Erro de conexão.");
+    }finally{
+      if(btn){
+        btn.disabled = false;
+        btn.textContent = btn.dataset.oldText || "Enviar";
+      }
+    }
+  };
+
+  document.addEventListener("click", function(e){
+    const btn = e.target.closest("#chatSendBtn");
+    if(!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    window.sendChatMessage();
+  }, true);
+
+  document.addEventListener("keydown", function(e){
+    const input = e.target?.closest?.("#chatInput");
+    if(!input) return;
+    if(e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
+      window.sendChatMessage();
+    }
+  }, true);
+})();
+</script>
+
+
+<script>
+/* ===== FIX FINAL: envio robusto do chat global ===== */
+(function(){
+  const API_FIXED = "https://toolflix-api.onrender.com";
+
+  function tfPresenceHeaders(){
+    try{
+      if(typeof getPresenceAuthHeaders === "function") return getPresenceAuthHeaders();
+      const auth = JSON.parse(localStorage.getItem("toolflix_auth") || "null");
+      return auth?.token ? { Authorization: "Bearer " + auth.token } : {};
+    }catch{
+      return {};
+    }
+  }
+
+  window.sendGlobalChatMessageFixed = async function(){
+    const input = document.getElementById("globalChatInput");
+    if(!input) return;
+
+    let message = String(input.value || "").trim();
+    if(!message) return;
+
+    const btn = document.getElementById("globalChatSend");
+    if(btn){
+      btn.disabled = true;
+      btn.dataset.oldText = btn.textContent || "Enviar";
+      btn.textContent = "Enviando...";
+    }
+
+    try{
+      const r = await fetch(API_FIXED + "/api/global-chat/send", {
+        method: "POST",
+        headers: { "Content-Type":"application/json", ...tfPresenceHeaders() },
+        body: JSON.stringify({ message })
+      });
+      const j = await r.json().catch(()=> ({}));
+
+      if(r.ok && j?.ok){
+        input.value = "";
+        const count = document.getElementById("globalChatCount");
+        if(count) count.textContent = "0";
+        if(typeof refreshGlobalChat === "function") refreshGlobalChat(true);
+        return;
+      }
+
+      if(j?.error === "SPAM") showToast?.("Espere um pouco antes de enviar outra mensagem.");
+      else if(j?.error === "MESSAGE_TOO_LONG") showToast?.("Mensagem grande demais.");
+      else {
+        console.warn("GLOBAL_CHAT_SEND_FAIL:", r.status, j);
+        showToast?.("Não foi possível enviar a mensagem.");
+      }
+    }catch(e){
+      console.error("GLOBAL_CHAT_SEND_NETWORK_ERROR:", e);
+      showToast?.("Erro ao enviar mensagem.");
+    }finally{
+      if(btn){
+        btn.disabled = false;
+        btn.textContent = btn.dataset.oldText || "Enviar";
+      }
+    }
+  };
+
+  document.addEventListener("submit", function(e){
+    if(e.target && e.target.id === "globalChatForm"){
+      e.preventDefault();
+      e.stopPropagation();
+      window.sendGlobalChatMessageFixed();
+    }
   }, true);
 })();
 </script>
