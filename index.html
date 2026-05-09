@@ -10285,29 +10285,58 @@ document.addEventListener("DOMContentLoaded",()=>{
 </script>
 
 
+
 <script>
-/* ===== FIX FINAL: envio robusto do chat global ===== */
+/* ===== FIX DEFINITIVO: Chat ToolFlix / Chat Global ===== */
 (function(){
   const API_FIXED = "https://toolflix-api.onrender.com";
+  const GUEST_KEY = "toolflix_global_chat_guest_key";
 
-  function tfPresenceHeaders(){
+  function getStableGuestKey(){
     try{
-      if(typeof getPresenceAuthHeaders === "function") return getPresenceAuthHeaders();
+      let key = localStorage.getItem(GUEST_KEY);
+      if(!key){
+        key = "g_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 10);
+        localStorage.setItem(GUEST_KEY, key);
+      }
+      return key;
+    }catch{
+      return "g_" + Math.random().toString(36).slice(2, 10);
+    }
+  }
+
+  function getGlobalChatAuthHeaders(){
+    try{
       const auth = JSON.parse(localStorage.getItem("toolflix_auth") || "null");
-      return auth?.token ? { Authorization: "Bearer " + auth.token } : {};
+      const token = auth?.token || "";
+      return token ? { "Authorization": "Bearer " + token } : {};
     }catch{
       return {};
     }
   }
 
-  window.sendGlobalChatMessageFixed = async function(){
+  window.getPresenceAuthHeaders = window.getPresenceAuthHeaders || getGlobalChatAuthHeaders;
+
+  function getReplyTextIfAny(message){
+    try{
+      if(window.globalChatReplyTarget){
+        const nick = String(window.globalChatReplyTarget.nick || "Usuário").replace(/[\n\r"]/g, " ").slice(0, 40);
+        const quote = String(window.globalChatReplyTarget.text || "mensagem").replace(/[\n\r"]/g, " ").slice(0, 95);
+        return `↪ Respondendo a ${nick}: "${quote}"\n${message}`;
+      }
+    }catch{}
+    return message;
+  }
+
+  async function sendToolflixGlobalChat(){
     const input = document.getElementById("globalChatInput");
+    const btn = document.getElementById("globalChatSend");
     if(!input) return;
 
     let message = String(input.value || "").trim();
     if(!message) return;
+    message = getReplyTextIfAny(message);
 
-    const btn = document.getElementById("globalChatSend");
     if(btn){
       btn.disabled = true;
       btn.dataset.oldText = btn.textContent || "Enviar";
@@ -10317,41 +10346,85 @@ document.addEventListener("DOMContentLoaded",()=>{
     try{
       const r = await fetch(API_FIXED + "/api/global-chat/send", {
         method: "POST",
-        headers: { "Content-Type":"application/json", ...tfPresenceHeaders() },
-        body: JSON.stringify({ message })
+        headers: {
+          "Content-Type":"application/json",
+          ...getGlobalChatAuthHeaders()
+        },
+        body: JSON.stringify({
+          message,
+          guestKey: getStableGuestKey()
+        })
       });
+
       const j = await r.json().catch(()=> ({}));
 
       if(r.ok && j?.ok){
         input.value = "";
         const count = document.getElementById("globalChatCount");
         if(count) count.textContent = "0";
-        if(typeof refreshGlobalChat === "function") refreshGlobalChat(true);
+
+        try{ if(typeof clearGlobalReplyTarget === "function") clearGlobalReplyTarget(); }catch{}
+
+        if(typeof refreshGlobalChat === "function"){
+          await refreshGlobalChat(true);
+        }
+
+        setTimeout(()=>{
+          const box = document.getElementById("globalChatMessages");
+          if(box) box.scrollTop = box.scrollHeight;
+        }, 80);
+
         return;
       }
 
-      if(j?.error === "SPAM") showToast?.("Espere um pouco antes de enviar outra mensagem.");
-      else if(j?.error === "MESSAGE_TOO_LONG") showToast?.("Mensagem grande demais.");
-      else {
-        console.warn("GLOBAL_CHAT_SEND_FAIL:", r.status, j);
-        showToast?.("Não foi possível enviar a mensagem.");
+      if(j?.error === "SPAM"){
+        showToast?.("Aguarde 1 segundo para enviar outra mensagem.");
+      }else if(j?.error === "MESSAGE_TOO_LONG"){
+        showToast?.("Mensagem grande demais.");
+      }else if(j?.error === "TOKEN_INVALID"){
+        showToast?.("Sessão expirada. Entre novamente.");
+      }else{
+        console.warn("TOOLFLIX_GLOBAL_CHAT_SEND_FAIL:", r.status, j);
+        showToast?.("Não foi possível enviar no Chat ToolFlix.");
       }
     }catch(e){
-      console.error("GLOBAL_CHAT_SEND_NETWORK_ERROR:", e);
-      showToast?.("Erro ao enviar mensagem.");
+      console.error("TOOLFLIX_GLOBAL_CHAT_NETWORK_FAIL:", e);
+      showToast?.("Erro de conexão no Chat ToolFlix.");
     }finally{
       if(btn){
         btn.disabled = false;
         btn.textContent = btn.dataset.oldText || "Enviar";
       }
     }
-  };
+  }
+
+  window.sendGlobalChatMessage = sendToolflixGlobalChat;
+  window.sendGlobalChatMessageFixed = sendToolflixGlobalChat;
+  window.sendToolflixGlobalChat = sendToolflixGlobalChat;
 
   document.addEventListener("submit", function(e){
     if(e.target && e.target.id === "globalChatForm"){
       e.preventDefault();
-      e.stopPropagation();
-      window.sendGlobalChatMessageFixed();
+      e.stopImmediatePropagation();
+      sendToolflixGlobalChat();
+    }
+  }, true);
+
+  document.addEventListener("click", function(e){
+    const btn = e.target.closest("#globalChatSend");
+    if(!btn) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    sendToolflixGlobalChat();
+  }, true);
+
+  document.addEventListener("keydown", function(e){
+    const input = e.target?.closest?.("#globalChatInput");
+    if(!input) return;
+    if(e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      sendToolflixGlobalChat();
     }
   }, true);
 })();
