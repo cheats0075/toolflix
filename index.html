@@ -10358,11 +10358,21 @@ document.addEventListener("DOMContentLoaded",()=>{
 </script>
 
 
+
 <script>
-/* ===== FIX DEFINITIVO: Chat ToolFlix / Chat Global ===== */
+/* ===== FIX: Chat ToolFlix aparece instantâneo ===== */
 (function(){
   const API_FIXED = "https://toolflix-api.onrender.com";
   const GUEST_KEY = "toolflix_global_chat_guest_key";
+
+  function escapeTfChatHtml(s){
+    return String(s ?? "")
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
+  }
 
   function getStableGuestKey(){
     try{
@@ -10377,23 +10387,89 @@ document.addEventListener("DOMContentLoaded",()=>{
     }
   }
 
-  function getGlobalChatAuthHeaders(){
+  function getGlobalChatAuth(){
     try{
       const auth = JSON.parse(localStorage.getItem("toolflix_auth") || "null");
-      const token = auth?.token || "";
-      return token ? { "Authorization": "Bearer " + token } : {};
+      return auth || {};
     }catch{
       return {};
     }
   }
 
-  async function sendToolflixGlobalChat(){
+  function getGlobalChatHeaders(){
+    const auth = getGlobalChatAuth();
+    return auth?.token ? { "Authorization": "Bearer " + auth.token } : {};
+  }
+
+  function getLocalNick(){
+    try{
+      const auth = getGlobalChatAuth();
+      if(auth?.nick) return auth.nick;
+      const u = JSON.parse(localStorage.getItem("toolflix_user") || "null");
+      if(u?.nick) return u.nick;
+    }catch{}
+    return "Você";
+  }
+
+  function getLocalXp(){
+    try{
+      const u = JSON.parse(localStorage.getItem("toolflix_user") || "null");
+      return Number(u?.xp || 0) || 0;
+    }catch{
+      return 0;
+    }
+  }
+
+  function getLocalLevel(){
+    try{
+      if(typeof getLevelInfo === "function") return getLevelInfo(getLocalXp()).level || 1;
+    }catch{}
+    return 1;
+  }
+
+  function appendInstantGlobalMessage(message){
+    const box = document.getElementById("globalChatMessages");
+    if(!box) return;
+
+    const empty = box.querySelector(".global-chat-empty");
+    if(empty) empty.remove();
+
+    const nick = getLocalNick();
+    const level = getLocalLevel();
+    const now = Date.now();
+
+    const row = document.createElement("div");
+    row.className = "global-chat-row mine tf-instant-global-msg";
+    row.dataset.temp = "1";
+    row.innerHTML = `
+      <div class="global-chat-author">
+        <img class="global-chat-avatar" src="/toolflix/assets/img/avatares/level-${Math.max(1, Math.min(15, level))}-1.webp" onerror="this.style.display='none'">
+        <div>
+          <div class="global-chat-name">${escapeTfChatHtml(nick)}</div>
+          <div class="global-chat-level">Nv ${escapeTfChatHtml(level)}</div>
+        </div>
+      </div>
+      <div class="global-chat-bubble">${escapeTfChatHtml(message)}</div>
+      <div class="global-chat-meta">enviando...</div>
+    `;
+
+    box.appendChild(row);
+    box.scrollTop = box.scrollHeight;
+    return row;
+  }
+
+  async function sendToolflixGlobalChatInstant(){
     const input = document.getElementById("globalChatInput");
     const btn = document.getElementById("globalChatSend");
     if(!input) return;
 
-    const message = String(input.value || "").trim();
-    if(!message) return;
+    const originalMessage = String(input.value || "").trim();
+    if(!originalMessage) return;
+
+    const optimisticRow = appendInstantGlobalMessage(originalMessage);
+    input.value = "";
+    const count = document.getElementById("globalChatCount");
+    if(count) count.textContent = "0";
 
     if(btn){
       btn.disabled = true;
@@ -10406,10 +10482,10 @@ document.addEventListener("DOMContentLoaded",()=>{
         method: "POST",
         headers: {
           "Content-Type":"application/json",
-          ...getGlobalChatAuthHeaders()
+          ...getGlobalChatHeaders()
         },
         body: JSON.stringify({
-          message,
+          message: originalMessage,
           guestKey: getStableGuestKey()
         })
       });
@@ -10417,21 +10493,34 @@ document.addEventListener("DOMContentLoaded",()=>{
       const j = await r.json().catch(()=> ({}));
 
       if(r.ok && j?.ok){
-        input.value = "";
-        const count = document.getElementById("globalChatCount");
-        if(count) count.textContent = "0";
-        if(typeof refreshGlobalChat === "function") await refreshGlobalChat(true);
+        if(optimisticRow){
+          optimisticRow.dataset.temp = "0";
+          const meta = optimisticRow.querySelector(".global-chat-meta");
+          if(meta) meta.textContent = "agora";
+        }
+
         setTimeout(()=>{
-          const box = document.getElementById("globalChatMessages");
-          if(box) box.scrollTop = box.scrollHeight;
-        }, 80);
+          if(typeof refreshGlobalChat === "function") refreshGlobalChat(true);
+        }, 350);
         return;
       }
 
+      if(optimisticRow){
+        optimisticRow.style.opacity = ".55";
+        const meta = optimisticRow.querySelector(".global-chat-meta");
+        if(meta) meta.textContent = "falhou";
+      }
+
       if(j?.error === "SPAM") showToast?.("Aguarde 1 segundo para enviar outra mensagem.");
+      else if(j?.error === "MESSAGE_TOO_LONG") showToast?.("Mensagem grande demais.");
       else showToast?.("Não foi possível enviar no Chat ToolFlix.");
     }catch(e){
-      console.error("TOOLFLIX_GLOBAL_CHAT_NETWORK_FAIL:", e);
+      console.error("GLOBAL_CHAT_INSTANT_FAIL:", e);
+      if(optimisticRow){
+        optimisticRow.style.opacity = ".55";
+        const meta = optimisticRow.querySelector(".global-chat-meta");
+        if(meta) meta.textContent = "falhou";
+      }
       showToast?.("Erro de conexão no Chat ToolFlix.");
     }finally{
       if(btn){
@@ -10441,15 +10530,15 @@ document.addEventListener("DOMContentLoaded",()=>{
     }
   }
 
-  window.sendGlobalChatMessage = sendToolflixGlobalChat;
-  window.sendGlobalChatMessageFixed = sendToolflixGlobalChat;
-  window.sendToolflixGlobalChat = sendToolflixGlobalChat;
+  window.sendGlobalChatMessage = sendToolflixGlobalChatInstant;
+  window.sendGlobalChatMessageFixed = sendToolflixGlobalChatInstant;
+  window.sendToolflixGlobalChat = sendToolflixGlobalChatInstant;
 
   document.addEventListener("submit", function(e){
     if(e.target && e.target.id === "globalChatForm"){
       e.preventDefault();
       e.stopImmediatePropagation();
-      sendToolflixGlobalChat();
+      sendToolflixGlobalChatInstant();
     }
   }, true);
 
@@ -10458,7 +10547,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     if(!btn) return;
     e.preventDefault();
     e.stopImmediatePropagation();
-    sendToolflixGlobalChat();
+    sendToolflixGlobalChatInstant();
   }, true);
 
   document.addEventListener("keydown", function(e){
@@ -10467,7 +10556,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     if(e.key === "Enter" && !e.shiftKey){
       e.preventDefault();
       e.stopImmediatePropagation();
-      sendToolflixGlobalChat();
+      sendToolflixGlobalChatInstant();
     }
   }, true);
 })();
