@@ -1,10 +1,14 @@
 [
-  { "type": "musica",  "name": "Calcinha Preta",    "file": "musicas/calcinhapreta-dois-amoresduas-paixoes.mp3" },
-  { "type": "anuncio", "name": "Anúncio ToolFlix",  "file": "anuncios/anuncio1.mp3" },
-  { "type": "musica",  "name": "Hungria Hip Hop",   "file": "musicas/hungriahiphop-amor-e-fe.mp3" },
-  { "type": "anuncio", "name": "Anúncio ToolFlix",  "file": "anuncios/anuncio1.mp3" },
-  { "type": "musica",  "name": "Toque de Zoficial", "file": "musicas/toquedezoficial quando-tem-sentimento.mp3" },
-  { "type": "anuncio", "name": "Anúncio ToolFlix",  "file": "anuncios/anuncio1.mp3" }
-  { "type": "musica", "name": "Os Barões da Pisadinha", "file": "musicas/Os-Baroes-da-Pisadinha-Ja-Que-Me-Ensinou-a-Beber.mp3" },
-  { "type": "anuncio", "name": "Anúncio ToolFlix",  "file": "anuncios/anuncio1.mp3" }
+  { "type": "musica",  "name": "Calcinha Preta",       "file": "musicas/calcinhapreta-dois-amoresduas-paixoes.mp3" },
+  { "type": "anuncio", "name": "Anúncio ToolFlix",     "file": "anuncios/anuncio1.mp3" },
+  { "type": "musica",  "name": "Hungria Hip Hop",      "file": "musicas/hungriahiphop-amor-e-fe.mp3" },
+  { "type": "anuncio", "name": "Anúncio ToolFlix",     "file": "anuncios/anuncio1.mp3" },
+  { "type": "musica",  "name": "Toque de Zoficial",    "file": "musicas/toquedezoficial quando-tem-sentimento.mp3" },
+  { "type": "anuncio", "name": "Anúncio ToolFlix",     "file": "anuncios/anuncio1.mp3" },
+  { "type": "musica",  "name": "Henrique Juliano",     "file": "musicas/henriqueejulianooficial-quem-pegou-pegou.mp3" },
+  { "type": "anuncio", "name": "Anúncio ToolFlix",     "file": "anuncios/anuncio1.mp3" },
+  { "type": "musica",  "name": "Lambertos",            "file": "musicas/lambertos-the-final-cowntdown.mp3" },
+  { "type": "anuncio", "name": "Anúncio ToolFlix",     "file": "anuncios/anuncio1.mp3" },
+  { "type": "musica",  "name": "Tribo da Periferia",   "file": "musicas/tribodaperiferia-imprevisivel.mp3" },
+  { "type": "anuncio", "name": "Anúncio ToolFlix",     "file": "anuncios/anuncio1.mp3" }
 ]
