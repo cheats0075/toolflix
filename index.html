@@ -10585,23 +10585,25 @@ document.addEventListener("DOMContentLoaded",()=>{
 </script>
 
 <script>
-/* ===== RADIO TOOLFLIX ===== */
+/* ===== RADIO TOOLFLIX v2 — playlist.json + autoplay + anúncios ===== */
 (function(){
-  // Playlist de músicas no GitHub
-  const GITHUB_BASE = "https://raw.githubusercontent.com/cheats0075/toolflix/main/assets/sounds/";
-  const PLAYLIST = [
-    { name: "teste001", file: "teste001.mp3" },
-    { name: "audio nv2",  file: "audio nv2.mp3"  },
-    { name: "audio nv3",  file: "audio nv3.mp3"  },
-    { name: "audio nv4",  file: "audio nv4.mp3"  },
-    { name: "audio nv5",  file: "audio nv5.mp3"  },
-    { name: "audio nv6",  file: "audio nv6.mp3"  },
-    { name: "audio nv7",  file: "audio nv7.mp3"  },
-    { name: "trophy",     file: "trophy.mp3"      },
+  const GITHUB_BASE    = "https://raw.githubusercontent.com/cheats0075/toolflix/main/assets/radio/";
+  const PLAYLIST_URL   = GITHUB_BASE + "playlist.json?v=" + Date.now();
+
+  // Playlist de fallback caso o JSON não carregue
+  const PLAYLIST_FALLBACK = [
+    { type:"musica",  name:"Calinha Preta",         file:"musicas/calcinhapreta-dois-amoresduas-paixoes.mp3" },
+    { type:"anuncio", name:"Anúncio ToolFlix",      file:"anuncios/anuncio1.mp3" },
+    { type:"musica",  name:"Hungria Hip Hop",        file:"musicas/hungriahiphop-amor-e-fe.mp3" },
+    { type:"anuncio", name:"Anúncio ToolFlix",      file:"anuncios/anuncio1.mp3" },
+    { type:"musica",  name:"Toque de Zoficial",      file:"musicas/toquedezoficial quando-tem-sentimento.mp3" },
+    { type:"anuncio", name:"Anúncio ToolFlix",      file:"anuncios/anuncio1.mp3" },
   ];
 
-  let currentIdx = 0;
-  let isPlaying  = false;
+  let PLAYLIST = [];
+
+  let currentIdx   = 0;
+  let isPlaying    = false;
   let progressTimer = null;
 
   const audio      = document.getElementById("radioAudio");
@@ -10616,17 +10618,17 @@ document.addEventListener("DOMContentLoaded",()=>{
   function loadTrack(idx){
     currentIdx = ((idx % PLAYLIST.length) + PLAYLIST.length) % PLAYLIST.length;
     const track = PLAYLIST[currentIdx];
-    trackName.textContent = track.name;
-    audio.src = GITHUB_BASE + encodeURIComponent(track.file);
+    const isAnuncio = track.type === "anuncio";
+    trackName.textContent = isAnuncio ? "📢 ToolFlix Radio" : (track.name || track.file);
+    audio.src = GITHUB_BASE + track.file;
     progressEl.style.width = "0%";
-    statusEl.textContent = "carregando...";
-    statusEl.className = "radio-track-status";
+    statusEl.textContent = isAnuncio ? "anúncio" : "carregando...";
+    statusEl.className = "radio-track-status" + (isAnuncio ? "" : "");
   }
 
   function updateProgress(){
     if(!audio.duration || isNaN(audio.duration)) return;
-    const pct = (audio.currentTime / audio.duration) * 100;
-    progressEl.style.width = pct + "%";
+    progressEl.style.width = ((audio.currentTime / audio.duration) * 100) + "%";
   }
 
   function startPlay(){
@@ -10634,8 +10636,10 @@ document.addEventListener("DOMContentLoaded",()=>{
       isPlaying = true;
       playBtn.textContent = "⏸";
       playBtn.classList.add("playing");
-      statusEl.textContent = "tocando";
+      const isAnuncio = PLAYLIST[currentIdx]?.type === "anuncio";
+      statusEl.textContent = isAnuncio ? "anúncio" : "tocando";
       statusEl.className = "radio-track-status live";
+      clearInterval(progressTimer);
       progressTimer = setInterval(updateProgress, 1000);
     }).catch(()=>{
       statusEl.textContent = "erro ao carregar";
@@ -10656,13 +10660,10 @@ document.addEventListener("DOMContentLoaded",()=>{
   // Play / Pause
   playBtn.addEventListener("click", ()=>{
     if(isPlaying){ stopPlay(); }
-    else {
-      if(!audio.src || audio.src === window.location.href) loadTrack(currentIdx);
-      startPlay();
-    }
+    else { startPlay(); }
   });
 
-  // Próxima música ao terminar
+  // Próxima faixa ao terminar (música ou anúncio)
   audio.addEventListener("ended", ()=>{
     clearInterval(progressTimer);
     progressEl.style.width = "0%";
@@ -10670,25 +10671,61 @@ document.addEventListener("DOMContentLoaded",()=>{
     startPlay();
   });
 
-  // Erro: tenta próxima
+  // Erro: pula para próxima
   audio.addEventListener("error", ()=>{
-    statusEl.textContent = "erro ao carregar";
+    statusEl.textContent = "erro — pulando...";
     statusEl.className = "radio-track-status";
     clearInterval(progressTimer);
+    setTimeout(()=>{
+      loadTrack(currentIdx + 1);
+      if(isPlaying) startPlay();
+    }, 1500);
   });
 
-  // Volume toggle ao clicar no ponto
+  // Botão mudo
   let muted = false;
   volDot.addEventListener("click", ()=>{
     muted = !muted;
     audio.muted = muted;
-    volDot.style.background = muted ? "#e74c3c" : "var(--cor-accent)";
+    volDot.style.background  = muted ? "#e74c3c" : "var(--cor-accent)";
     volDot.style.boxShadow   = muted ? "0 0 6px #e74c3c" : "0 0 6px var(--cor-accent)";
     volDot.title = muted ? "Ativar som" : "Mudo";
   });
 
-  // Pré-carrega a primeira faixa sem tocar
-  loadTrack(0);
+  // Carrega playlist do JSON, com fallback
+  async function initRadio(){
+    try{
+      const resp = await fetch(PLAYLIST_URL);
+      if(!resp.ok) throw new Error("json não encontrado");
+      PLAYLIST = await resp.json();
+    }catch(e){
+      console.warn("Radio: usando playlist fallback.", e);
+      PLAYLIST = PLAYLIST_FALLBACK;
+    }
+    loadTrack(0);
+    // Autoplay — tenta direto; se o navegador bloquear, aguarda primeiro clique
+    audio.play().then(()=>{
+      isPlaying = true;
+      playBtn.textContent = "⏸";
+      playBtn.classList.add("playing");
+      statusEl.textContent = PLAYLIST[0]?.type === "anuncio" ? "anúncio" : "tocando";
+      statusEl.className = "radio-track-status live";
+      progressTimer = setInterval(updateProgress, 1000);
+    }).catch(()=>{
+      // Navegador bloqueou autoplay — aguarda interação do usuário
+      statusEl.textContent = "clique ▶ para tocar";
+      statusEl.className = "radio-track-status";
+      const startOnInteract = ()=>{
+        startPlay();
+        document.removeEventListener("click", startOnInteract);
+        document.removeEventListener("keydown", startOnInteract);
+      };
+      document.addEventListener("click", startOnInteract, { once: true });
+      document.addEventListener("keydown", startOnInteract, { once: true });
+    });
+  }
+
+  initRadio();
 })();
 </script>
 
