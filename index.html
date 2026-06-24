@@ -167,7 +167,39 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       color: #fff;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;
+    }
+
+    .radio-track-name span {
+      display: inline-block;
+      white-space: nowrap;
+      animation: radioMarquee 12s linear infinite;
+      padding-right: 40px;
+    }
+
+    @keyframes radioMarquee {
+      0%   { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    #radioSkipBtn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: 0.2s;
+    }
+
+    #radioSkipBtn:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.1);
     }
 
     .radio-track-status {
@@ -3738,12 +3770,13 @@ body.avatar-modal-open{
     <div id="radioPlayer" title="Rádio ToolFlix">
       <button id="radioPlayBtn" title="Play / Pause">▶</button>
       <div class="radio-info">
-        <div class="radio-track-name" id="radioTrackName">teste001</div>
+        <div class="radio-track-name" id="radioTrackName"><span>♪ ToolFlix Radio</span></div>
         <div class="radio-progress-wrap">
           <div class="radio-progress-bar" id="radioProgressBar"></div>
         </div>
         <div class="radio-track-status" id="radioTrackStatus">pronto para tocar</div>
       </div>
+      <button id="radioSkipBtn" title="Pular música">⏭</button>
       <div class="radio-vol-dot" id="radioVolDot" title="Volume"></div>
     </div>
     <audio id="radioAudio" preload="none"></audio>
@@ -10611,6 +10644,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   const statusEl   = document.getElementById("radioTrackStatus");
   const progressEl = document.getElementById("radioProgressBar");
   const volDot     = document.getElementById("radioVolDot");
+  const skipBtn    = document.getElementById("radioSkipBtn");
 
   if(!audio || !playBtn) return;
 
@@ -10636,7 +10670,12 @@ document.addEventListener("DOMContentLoaded",()=>{
     currentIdx = ((idx % PLAYLIST.length) + PLAYLIST.length) % PLAYLIST.length;
     const track = PLAYLIST[currentIdx];
     const isAnuncio = track.type === "anuncio";
-    trackName.textContent = isAnuncio ? "📢 ToolFlix Radio" : (track.name || track.file);
+    const nome = isAnuncio ? "📢 ToolFlix Radio" : ("♪ " + (track.name || track.file));
+    // Reinicia animação do marquee
+    trackName.innerHTML = "";
+    const span = document.createElement("span");
+    span.textContent = nome;
+    trackName.appendChild(span);
     audio.src = GITHUB_BASE + track.file;
     progressEl.style.width = "0%";
     statusEl.textContent = isAnuncio ? "anúncio" : "carregando...";
@@ -10678,6 +10717,23 @@ document.addEventListener("DOMContentLoaded",()=>{
     statusEl.textContent = "pausado";
     statusEl.className = "radio-track-status";
     clearInterval(progressTimer);
+  }
+
+  // Botão skip
+  if(skipBtn){
+    skipBtn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      clearInterval(progressTimer);
+      progressEl.style.width = "0%";
+      // Pula músicas do tipo anuncio, vai direto para próxima música
+      let next = currentIdx + 1;
+      if(next >= PLAYLIST.length){
+        PLAYLIST = shufflePlaylist(PLAYLIST);
+        next = 0;
+      }
+      loadTrack(next);
+      if(isPlaying || autoplayPendente) startPlay();
+    });
   }
 
   // Play/Pause manual
