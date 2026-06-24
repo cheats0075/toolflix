@@ -10585,26 +10585,25 @@ document.addEventListener("DOMContentLoaded",()=>{
 </script>
 
 <script>
-/* ===== RADIO TOOLFLIX v2 — playlist.json + autoplay + anúncios ===== */
+/* ===== RADIO TOOLFLIX v3 — aleatório + autoplay inteligente ===== */
 (function(){
-  const GITHUB_BASE    = "https://raw.githubusercontent.com/cheats0075/toolflix/main/assets/radio/";
-  const PLAYLIST_URL   = GITHUB_BASE + "playlist.json?v=" + Date.now();
+  const GITHUB_BASE  = "https://raw.githubusercontent.com/cheats0075/toolflix/main/assets/radio/";
+  const PLAYLIST_URL = GITHUB_BASE + "playlist.json?v=" + Date.now();
 
-  // Playlist de fallback caso o JSON não carregue
   const PLAYLIST_FALLBACK = [
-    { type:"musica",  name:"Calinha Preta",         file:"musicas/calcinhapreta-dois-amoresduas-paixoes.mp3" },
-    { type:"anuncio", name:"Anúncio ToolFlix",      file:"anuncios/anuncio1.mp3" },
-    { type:"musica",  name:"Hungria Hip Hop",        file:"musicas/hungriahiphop-amor-e-fe.mp3" },
-    { type:"anuncio", name:"Anúncio ToolFlix",      file:"anuncios/anuncio1.mp3" },
-    { type:"musica",  name:"Toque de Zoficial",      file:"musicas/toquedezoficial quando-tem-sentimento.mp3" },
-    { type:"anuncio", name:"Anúncio ToolFlix",      file:"anuncios/anuncio1.mp3" },
+    { type:"musica",  name:"Calcinha Preta",    file:"musicas/calcinhapreta-dois-amoresduas-paixoes.mp3" },
+    { type:"anuncio", name:"Anúncio ToolFlix",  file:"anuncios/anuncio1.mp3" },
+    { type:"musica",  name:"Hungria Hip Hop",   file:"musicas/hungriahiphop-amor-e-fe.mp3" },
+    { type:"anuncio", name:"Anúncio ToolFlix",  file:"anuncios/anuncio1.mp3" },
+    { type:"musica",  name:"Toque de Zoficial", file:"musicas/toquedezoficial quando-tem-sentimento.mp3" },
+    { type:"anuncio", name:"Anúncio ToolFlix",  file:"anuncios/anuncio1.mp3" },
   ];
 
-  let PLAYLIST = [];
-
+  let PLAYLIST     = [];
   let currentIdx   = 0;
   let isPlaying    = false;
   let progressTimer = null;
+  let autoplayPendente = false;
 
   const audio      = document.getElementById("radioAudio");
   const playBtn    = document.getElementById("radioPlayBtn");
@@ -10615,6 +10614,24 @@ document.addEventListener("DOMContentLoaded",()=>{
 
   if(!audio || !playBtn) return;
 
+  // Embaralha só as músicas, mantendo anúncio depois de cada música
+  function shufflePlaylist(raw){
+    const musicas  = raw.filter(t => t.type === "musica");
+    const anuncios = raw.filter(t => t.type === "anuncio");
+    // Fisher-Yates nas músicas
+    for(let i = musicas.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [musicas[i], musicas[j]] = [musicas[j], musicas[i]];
+    }
+    // Reconstrói: música → anúncio → música → anúncio...
+    const result = [];
+    musicas.forEach((m, i) => {
+      result.push(m);
+      if(anuncios.length > 0) result.push(anuncios[i % anuncios.length]);
+    });
+    return result;
+  }
+
   function loadTrack(idx){
     currentIdx = ((idx % PLAYLIST.length) + PLAYLIST.length) % PLAYLIST.length;
     const track = PLAYLIST[currentIdx];
@@ -10623,7 +10640,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     audio.src = GITHUB_BASE + track.file;
     progressEl.style.width = "0%";
     statusEl.textContent = isAnuncio ? "anúncio" : "carregando...";
-    statusEl.className = "radio-track-status" + (isAnuncio ? "" : "");
+    statusEl.className = "radio-track-status";
   }
 
   function updateProgress(){
@@ -10631,18 +10648,23 @@ document.addEventListener("DOMContentLoaded",()=>{
     progressEl.style.width = ((audio.currentTime / audio.duration) * 100) + "%";
   }
 
+  function setPlayingUI(){
+    isPlaying = true;
+    playBtn.textContent = "⏸";
+    playBtn.classList.add("playing");
+    const isAnuncio = PLAYLIST[currentIdx]?.type === "anuncio";
+    statusEl.textContent = isAnuncio ? "anúncio" : "tocando";
+    statusEl.className = "radio-track-status live";
+    clearInterval(progressTimer);
+    progressTimer = setInterval(updateProgress, 1000);
+  }
+
   function startPlay(){
     audio.play().then(()=>{
-      isPlaying = true;
-      playBtn.textContent = "⏸";
-      playBtn.classList.add("playing");
-      const isAnuncio = PLAYLIST[currentIdx]?.type === "anuncio";
-      statusEl.textContent = isAnuncio ? "anúncio" : "tocando";
-      statusEl.className = "radio-track-status live";
-      clearInterval(progressTimer);
-      progressTimer = setInterval(updateProgress, 1000);
+      setPlayingUI();
+      autoplayPendente = false;
     }).catch(()=>{
-      statusEl.textContent = "erro ao carregar";
+      statusEl.textContent = "clique em qualquer lugar ▶";
       statusEl.className = "radio-track-status";
     });
   }
@@ -10650,6 +10672,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   function stopPlay(){
     audio.pause();
     isPlaying = false;
+    autoplayPendente = false;
     playBtn.textContent = "▶";
     playBtn.classList.remove("playing");
     statusEl.textContent = "pausado";
@@ -10657,17 +10680,24 @@ document.addEventListener("DOMContentLoaded",()=>{
     clearInterval(progressTimer);
   }
 
-  // Play / Pause
-  playBtn.addEventListener("click", ()=>{
+  // Play/Pause manual
+  playBtn.addEventListener("click", (e)=>{
+    e.stopPropagation();
     if(isPlaying){ stopPlay(); }
-    else { startPlay(); }
+    else { autoplayPendente = false; startPlay(); }
   });
 
-  // Próxima faixa ao terminar (música ou anúncio)
+  // Próxima faixa ao terminar
   audio.addEventListener("ended", ()=>{
     clearInterval(progressTimer);
     progressEl.style.width = "0%";
-    loadTrack(currentIdx + 1);
+    // Se chegou no fim da playlist, embaralha de novo
+    if(currentIdx >= PLAYLIST.length - 1){
+      PLAYLIST = shufflePlaylist(PLAYLIST);
+      loadTrack(0);
+    } else {
+      loadTrack(currentIdx + 1);
+    }
     startPlay();
   });
 
@@ -10678,51 +10708,60 @@ document.addEventListener("DOMContentLoaded",()=>{
     clearInterval(progressTimer);
     setTimeout(()=>{
       loadTrack(currentIdx + 1);
-      if(isPlaying) startPlay();
+      if(isPlaying || autoplayPendente) startPlay();
     }, 1500);
   });
 
   // Botão mudo
   let muted = false;
-  volDot.addEventListener("click", ()=>{
+  volDot.addEventListener("click", (e)=>{
+    e.stopPropagation();
     muted = !muted;
     audio.muted = muted;
-    volDot.style.background  = muted ? "#e74c3c" : "var(--cor-accent)";
-    volDot.style.boxShadow   = muted ? "0 0 6px #e74c3c" : "0 0 6px var(--cor-accent)";
+    volDot.style.background = muted ? "#e74c3c" : "var(--cor-accent)";
+    volDot.style.boxShadow  = muted ? "0 0 6px #e74c3c" : "0 0 6px var(--cor-accent)";
     volDot.title = muted ? "Ativar som" : "Mudo";
   });
 
-  // Carrega playlist do JSON, com fallback
+  // Autoplay inteligente: tenta de cara; se bloqueado, dispara no primeiro clique/tecla
+  function tentarAutoplay(){
+    audio.play().then(()=>{
+      setPlayingUI();
+      autoplayPendente = false;
+    }).catch(()=>{
+      // Bloqueado pelo navegador — aguarda qualquer interação
+      autoplayPendente = true;
+      statusEl.textContent = "clique em qualquer lugar ▶";
+      statusEl.className = "radio-track-status";
+
+      const unlock = ()=>{
+        if(!autoplayPendente) return;
+        audio.play().then(()=>{
+          setPlayingUI();
+          autoplayPendente = false;
+        }).catch(()=>{});
+        document.removeEventListener("click",   unlock, true);
+        document.removeEventListener("keydown", unlock, true);
+        document.removeEventListener("touchstart", unlock, true);
+      };
+      document.addEventListener("click",      unlock, { capture: true, once: true });
+      document.addEventListener("keydown",    unlock, { capture: true, once: true });
+      document.addEventListener("touchstart", unlock, { capture: true, once: true });
+    });
+  }
+
   async function initRadio(){
     try{
       const resp = await fetch(PLAYLIST_URL);
       if(!resp.ok) throw new Error("json não encontrado");
-      PLAYLIST = await resp.json();
+      const raw = await resp.json();
+      PLAYLIST = shufflePlaylist(raw);
     }catch(e){
       console.warn("Radio: usando playlist fallback.", e);
-      PLAYLIST = PLAYLIST_FALLBACK;
+      PLAYLIST = shufflePlaylist(PLAYLIST_FALLBACK);
     }
     loadTrack(0);
-    // Autoplay — tenta direto; se o navegador bloquear, aguarda primeiro clique
-    audio.play().then(()=>{
-      isPlaying = true;
-      playBtn.textContent = "⏸";
-      playBtn.classList.add("playing");
-      statusEl.textContent = PLAYLIST[0]?.type === "anuncio" ? "anúncio" : "tocando";
-      statusEl.className = "radio-track-status live";
-      progressTimer = setInterval(updateProgress, 1000);
-    }).catch(()=>{
-      // Navegador bloqueou autoplay — aguarda interação do usuário
-      statusEl.textContent = "clique ▶ para tocar";
-      statusEl.className = "radio-track-status";
-      const startOnInteract = ()=>{
-        startPlay();
-        document.removeEventListener("click", startOnInteract);
-        document.removeEventListener("keydown", startOnInteract);
-      };
-      document.addEventListener("click", startOnInteract, { once: true });
-      document.addEventListener("keydown", startOnInteract, { once: true });
-    });
+    tentarAutoplay();
   }
 
   initRadio();
