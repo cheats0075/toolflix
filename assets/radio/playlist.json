@@ -5,6 +5,6 @@
   { "type": "anuncio", "name": "Anúncio ToolFlix",  "file": "anuncios/anuncio1.mp3" },
   { "type": "musica",  "name": "Toque de Zoficial", "file": "musicas/toquedezoficial quando-tem-sentimento.mp3" },
   { "type": "anuncio", "name": "Anúncio ToolFlix",  "file": "anuncios/anuncio1.mp3" }
-  { "type": "musica",  "name": "Toque de Zoficial", "file": "musicas/Os Baroes da Pisadinha - Ja Que Me Ensinou a Beber.mp3" },
+  { "type": "musica",  "name": "Os Baroes da Pisadinha", "file": "musicas/Os Baroes da Pisadinha - Ja Que Me Ensinou a Beber.mp3" },
   { "type": "anuncio", "name": "Anúncio ToolFlix",  "file": "anuncios/anuncio1.mp3" }
 ]
