@@ -1,0 +1,8 @@
+[
+  { "type": "musica",  "name": "Calcinha Preta",    "file": "musicas/calcinhapreta-dois-amoresduas-paixoes.mp3" },
+  { "type": "anuncio", "name": "Anúncio ToolFlix",  "file": "anuncios/anuncio1.mp3" },
+  { "type": "musica",  "name": "Hungria Hip Hop",   "file": "musicas/hungriahiphop-amor-e-fe.mp3" },
+  { "type": "anuncio", "name": "Anúncio ToolFlix",  "file": "anuncios/anuncio1.mp3" },
+  { "type": "musica",  "name": "Toque de Zoficial", "file": "musicas/toquedezoficial quando-tem-sentimento.mp3" },
+  { "type": "anuncio", "name": "Anúncio ToolFlix",  "file": "anuncios/anuncio1.mp3" }
+]
