@@ -278,6 +278,64 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       box-shadow: 0 0 15px rgba(0,255,255,0.6), inset 0 0 8px rgba(255,255,255,0.2);
     }
 
+    /* ===== HISTÓRICO DE JOGOS ===== */
+    #recentGamesSection {
+      margin-bottom: 28px;
+    }
+    #recentGamesSection h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #recentGamesSection h2 span.recent-clear {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      cursor: pointer;
+      margin-left: auto;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+    #recentGamesSection h2 span.recent-clear:hover { color: #e74c3c; }
+    #recentGamesList {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--cor-accent) transparent;
+    }
+    #recentGamesList::-webkit-scrollbar { height: 4px; }
+    #recentGamesList::-webkit-scrollbar-thumb { background: var(--cor-accent); border-radius: 2px; }
+    .recent-card {
+      flex-shrink: 0;
+      width: 90px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .recent-card:hover { transform: translateY(-4px); }
+    .recent-card img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.08);
+      display: block;
+      background: #222;
+    }
+    .recent-card .recent-name {
+      font-size: 10px;
+      color: rgba(255,255,255,0.75);
+      text-align: center;
+      margin-top: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     /* MAIN */
     main {
       margin-left: var(--sidebar-width);
@@ -3827,6 +3885,10 @@ body.avatar-modal-open{
   </aside>
 
   <main>
+    <div id="recentGamesSection" style="display:none;">
+      <h2>🕐 Vistos recentemente <span class="recent-clear" onclick="clearRecentGames()">limpar</span></h2>
+      <div id="recentGamesList"></div>
+    </div>
     <div class="top-nav">
       <select id="themeSelect" class="nav-item">
         <option value="default">🎭 Temas</option>
@@ -6592,6 +6654,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
 
   function openGameDetails(j){
     window.__toolflixCurrentGame = j || null;
+    if(j?.nome) addRecentGame(j);
 
     const modal = document.getElementById("gameDetailsModal");
     const image = document.getElementById("gameDetailsImage");
@@ -10822,6 +10885,64 @@ document.addEventListener("DOMContentLoaded",()=>{
 
   initRadio();
 })();
+</script>
+
+<script>
+/* ===== HISTÓRICO DE JOGOS (Vistos recentemente) ===== */
+const RECENT_KEY = "toolflix_recent_games";
+const RECENT_MAX = 12;
+
+function getRecentGames(){
+  try{ return JSON.parse(localStorage.getItem(RECENT_KEY) || "[]"); }
+  catch(e){ return []; }
+}
+
+function saveRecentGames(list){
+  try{ localStorage.setItem(RECENT_KEY, JSON.stringify(list)); }
+  catch(e){}
+}
+
+function addRecentGame(j){
+  if(!j?.nome) return;
+  let list = getRecentGames();
+  list = list.filter(g => g.nome !== j.nome);
+  list.unshift({ nome: j.nome, capa: j.capa || "", _raw: j });
+  if(list.length > RECENT_MAX) list = list.slice(0, RECENT_MAX);
+  saveRecentGames(list);
+  renderRecentGames();
+}
+
+function clearRecentGames(){
+  saveRecentGames([]);
+  renderRecentGames();
+}
+
+function renderRecentGames(){
+  const section = document.getElementById("recentGamesSection");
+  const list    = document.getElementById("recentGamesList");
+  if(!section || !list) return;
+  const games = getRecentGames();
+  if(games.length === 0){ section.style.display = "none"; return; }
+  section.style.display = "block";
+  list.innerHTML = games.map((g, i) => {
+    const capa = g.capa || "";
+    const nome = (g.nome || "").replace(/"/g, "&quot;");
+    return `<div class="recent-card" onclick="openRecentGame(${i})" title="${nome}">
+      <img src="${capa}" alt="${nome}" onerror="this.style.background='#333'">
+      <div class="recent-name">${g.nome || ""}</div>
+    </div>`;
+  }).join("");
+}
+
+function openRecentGame(idx){
+  const g = getRecentGames()[idx];
+  if(g && typeof openGameDetails === "function") openGameDetails(g._raw || g);
+}
+
+window.addRecentGame    = addRecentGame;
+window.clearRecentGames = clearRecentGames;
+
+renderRecentGames();
 </script>
 
 </body>
