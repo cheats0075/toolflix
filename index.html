@@ -278,118 +278,12 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       box-shadow: 0 0 15px rgba(0,255,255,0.6), inset 0 0 8px rgba(255,255,255,0.2);
     }
 
-    /* ===== SIDEBAR TOGGLE ===== */
-    #sidebarToggleBtn {
-      position: absolute;
-      top: 18px;
-      right: -16px;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--cor-accent);
-      border: 2px solid rgba(0,0,0,0.4);
-      color: #fff;
-      font-size: 13px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1001;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-      transition: background 0.2s, transform 0.3s;
-      line-height: 1;
-    }
-    #sidebarToggleBtn:hover { background: var(--cor-accent); filter: brightness(1.2); }
-
-    /* Sidebar colapsada */
-    body.sidebar-collapsed .sidebar {
-      width: 64px !important;
-      padding: 20px 10px !important;
-      overflow: hidden;
-    }
-    body.sidebar-collapsed .sidebar > *:not(#sidebarToggleBtn) {
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-    }
-    body.sidebar-collapsed #sidebarToggleBtn {
-      opacity: 1 !important;
-      pointer-events: all !important;
-      right: -16px;
-      transform: rotate(180deg);
-    }
-    body.sidebar-collapsed main {
-      margin-left: 64px !important;
-      width: calc(100% - 64px) !important;
-    }
-    .sidebar { transition: width 0.3s ease, padding 0.3s ease; position: relative; }
-    .sidebar > * { transition: opacity 0.2s; }
-
-    /* ===== HISTÓRICO DE JOGOS ===== */
-    #recentGamesSection {
-      margin-bottom: 28px;
-    }
-    #recentGamesSection h2 {
-      font-size: 15px;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    #recentGamesSection h2 span.recent-clear {
-      font-size: 11px;
-      color: rgba(255,255,255,0.35);
-      cursor: pointer;
-      margin-left: auto;
-      font-weight: 400;
-      transition: color 0.2s;
-    }
-    #recentGamesSection h2 span.recent-clear:hover { color: #e74c3c; }
-    #recentGamesList {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--cor-accent) transparent;
-    }
-    #recentGamesList::-webkit-scrollbar { height: 4px; }
-    #recentGamesList::-webkit-scrollbar-thumb { background: var(--cor-accent); border-radius: 2px; }
-    .recent-card {
-      flex-shrink: 0;
-      width: 90px;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .recent-card:hover { transform: translateY(-4px); }
-    .recent-card img {
-      width: 90px;
-      height: 90px;
-      object-fit: cover;
-      border-radius: 10px;
-      border: 2px solid rgba(255,255,255,0.08);
-      display: block;
-      background: #222;
-    }
-    .recent-card .recent-name {
-      font-size: 10px;
-      color: rgba(255,255,255,0.75);
-      text-align: center;
-      margin-top: 5px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
     /* MAIN */
     main {
       margin-left: var(--sidebar-width);
       flex: 1;
       padding: 30px 50px;
       width: calc(100% - var(--sidebar-width));
-      transition: margin-left 0.3s ease, width 0.3s ease;
     }
 
     .top-nav {
@@ -3852,7 +3746,6 @@ body.avatar-modal-open{
 </head>
 <body class="theme-default">
   <aside class="sidebar">
-    <button id="sidebarToggleBtn" title="Recolher/expandir sidebar">◀</button>
     <div id="logoToolFlix" onclick="location.reload()">ToolFlix</div>
 
     <div id="premiumBadge">💎 PREMIUM ATIVO</div>
@@ -3934,12 +3827,6 @@ body.avatar-modal-open{
   </aside>
 
   <main>
-    <!-- ===== HISTÓRICO DE JOGOS ===== -->
-    <div id="recentGamesSection" style="display:none;">
-      <h2>🕐 Vistos recentemente <span class="recent-clear" onclick="clearRecentGames()">limpar</span></h2>
-      <div id="recentGamesList"></div>
-    </div>
-
     <div class="top-nav">
       <select id="themeSelect" class="nav-item">
         <option value="default">🎭 Temas</option>
@@ -6705,8 +6592,6 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
 
   function openGameDetails(j){
     window.__toolflixCurrentGame = j || null;
-    // Salva no histórico
-    if(j?.nome) addRecentGame(j);
 
     const modal = document.getElementById("gameDetailsModal");
     const image = document.getElementById("gameDetailsImage");
@@ -10936,114 +10821,6 @@ document.addEventListener("DOMContentLoaded",()=>{
   }
 
   initRadio();
-})();
-</script>
-
-<script>
-/* ===== HISTÓRICO DE JOGOS (Vistos recentemente) ===== */
-const RECENT_KEY  = "toolflix_recent_games";
-const RECENT_MAX  = 12;
-
-function getRecentGames(){
-  try{ return JSON.parse(localStorage.getItem(RECENT_KEY) || "[]"); }
-  catch(e){ return []; }
-}
-
-function saveRecentGames(list){
-  try{ localStorage.setItem(RECENT_KEY, JSON.stringify(list)); }
-  catch(e){}
-}
-
-function addRecentGame(j){
-  if(!j?.nome) return;
-  let list = getRecentGames();
-  // Remove duplicata
-  list = list.filter(g => g.id !== j.id && g.nome !== j.nome);
-  // Adiciona no início
-  list.unshift({
-    id:       j.id   || j._id || "",
-    nome:     j.nome || "",
-    capa:     j.capa || "",
-    categoria: j.categoria || "",
-    _raw:     j
-  });
-  if(list.length > RECENT_MAX) list = list.slice(0, RECENT_MAX);
-  saveRecentGames(list);
-  renderRecentGames();
-}
-
-function clearRecentGames(){
-  saveRecentGames([]);
-  renderRecentGames();
-}
-
-function renderRecentGames(){
-  const section = document.getElementById("recentGamesSection");
-  const list    = document.getElementById("recentGamesList");
-  if(!section || !list) return;
-
-  const games = getRecentGames();
-  if(games.length === 0){ section.style.display = "none"; return; }
-
-  section.style.display = "block";
-  list.innerHTML = games.map((g, i) => {
-    const capa = g.capa || "https://via.placeholder.com/90x90.png?text=?";
-    const nome = (g.nome || "").replace(/"/g, "&quot;");
-    return `<div class="recent-card" onclick="openRecentGame(${i})" title="${nome}">
-      <img src="${capa}" alt="${nome}" onerror="this.src='https://via.placeholder.com/90x90.png?text=?'">
-      <div class="recent-name">${g.nome || ""}</div>
-    </div>`;
-  }).join("");
-}
-
-function openRecentGame(idx){
-  const games = getRecentGames();
-  const g = games[idx];
-  if(!g) return;
-  // Tenta usar o objeto raw salvo; senão usa o próprio g
-  if(typeof openGameDetails === "function"){
-    openGameDetails(g._raw || g);
-  }
-}
-
-// Expõe globalmente
-window.addRecentGame   = addRecentGame;
-window.clearRecentGames = clearRecentGames;
-
-// Renderiza ao carregar
-document.addEventListener("DOMContentLoaded", renderRecentGames);
-renderRecentGames();
-</script>
-
-<script>
-/* ===== SIDEBAR TOGGLE (modo compacto) ===== */
-(function(){
-  const STORAGE_KEY = "toolflix_sidebar_collapsed";
-  const btn  = document.getElementById("sidebarToggleBtn");
-  const body = document.body;
-
-  function setCollapsed(v){
-    if(v){
-      body.classList.add("sidebar-collapsed");
-      if(btn) btn.textContent = "▶";
-      localStorage.setItem(STORAGE_KEY, "1");
-    } else {
-      body.classList.remove("sidebar-collapsed");
-      if(btn) btn.textContent = "◀";
-      localStorage.setItem(STORAGE_KEY, "0");
-    }
-  }
-
-  // Restaura estado salvo
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if(saved === "1") setCollapsed(true);
-
-  if(btn){
-    btn.addEventListener("click", (e)=>{
-      e.stopPropagation();
-      setCollapsed(!body.classList.contains("sidebar-collapsed"));
-    });
-  }
 })();
 </script>
 
