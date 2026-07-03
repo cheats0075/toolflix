@@ -167,39 +167,7 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       color: #fff;
       white-space: nowrap;
       overflow: hidden;
-    }
-
-    .radio-track-name span {
-      display: inline-block;
-      white-space: nowrap;
-      animation: radioMarquee 12s linear infinite;
-      padding-right: 40px;
-    }
-
-    @keyframes radioMarquee {
-      0%   { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
-
-    #radioSkipBtn {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      color: #fff;
-      font-size: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: 0.2s;
-    }
-
-    #radioSkipBtn:hover {
-      background: rgba(255,255,255,0.2);
-      transform: scale(1.1);
+      text-overflow: ellipsis;
     }
 
     .radio-track-status {
@@ -276,64 +244,6 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       font-weight: 700;
       border: none;
       box-shadow: 0 0 15px rgba(0,255,255,0.6), inset 0 0 8px rgba(255,255,255,0.2);
-    }
-
-    /* ===== HISTÓRICO DE JOGOS ===== */
-    #recentGamesSection {
-      margin-bottom: 28px;
-    }
-    #recentGamesSection h2 {
-      font-size: 15px;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    #recentGamesSection h2 span.recent-clear {
-      font-size: 11px;
-      color: rgba(255,255,255,0.35);
-      cursor: pointer;
-      margin-left: auto;
-      font-weight: 400;
-      transition: color 0.2s;
-    }
-    #recentGamesSection h2 span.recent-clear:hover { color: #e74c3c; }
-    #recentGamesList {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--cor-accent) transparent;
-    }
-    #recentGamesList::-webkit-scrollbar { height: 4px; }
-    #recentGamesList::-webkit-scrollbar-thumb { background: var(--cor-accent); border-radius: 2px; }
-    .recent-card {
-      flex-shrink: 0;
-      width: 90px;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .recent-card:hover { transform: translateY(-4px); }
-    .recent-card img {
-      width: 90px;
-      height: 90px;
-      object-fit: cover;
-      border-radius: 10px;
-      border: 2px solid rgba(255,255,255,0.08);
-      display: block;
-      background: #222;
-    }
-    .recent-card .recent-name {
-      font-size: 10px;
-      color: rgba(255,255,255,0.75);
-      text-align: center;
-      margin-top: 5px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     /* MAIN */
@@ -3828,13 +3738,12 @@ body.avatar-modal-open{
     <div id="radioPlayer" title="Rádio ToolFlix">
       <button id="radioPlayBtn" title="Play / Pause">▶</button>
       <div class="radio-info">
-        <div class="radio-track-name" id="radioTrackName"><span>♪ ToolFlix Radio</span></div>
+        <div class="radio-track-name" id="radioTrackName">teste001</div>
         <div class="radio-progress-wrap">
           <div class="radio-progress-bar" id="radioProgressBar"></div>
         </div>
         <div class="radio-track-status" id="radioTrackStatus">pronto para tocar</div>
       </div>
-      <button id="radioSkipBtn" title="Pular música">⏭</button>
       <div class="radio-vol-dot" id="radioVolDot" title="Volume"></div>
     </div>
     <audio id="radioAudio" preload="none"></audio>
@@ -3885,10 +3794,6 @@ body.avatar-modal-open{
   </aside>
 
   <main>
-    <div id="recentGamesSection" style="display:none;">
-      <h2>🕐 Vistos recentemente <span class="recent-clear" onclick="clearRecentGames()">limpar</span></h2>
-      <div id="recentGamesList"></div>
-    </div>
     <div class="top-nav">
       <select id="themeSelect" class="nav-item">
         <option value="default">🎭 Temas</option>
@@ -6654,7 +6559,6 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
 
   function openGameDetails(j){
     window.__toolflixCurrentGame = j || null;
-    if(j?.nome) addRecentGame(j);
 
     const modal = document.getElementById("gameDetailsModal");
     const image = document.getElementById("gameDetailsImage");
@@ -10681,268 +10585,177 @@ document.addEventListener("DOMContentLoaded",()=>{
 </script>
 
 <script>
-/* ===== RADIO TOOLFLIX v3 — aleatório + autoplay inteligente ===== */
+/* ===== RADIO TOOLFLIX v4 — YouTube IFrame ===== */
 (function(){
-  const GITHUB_BASE  = "https://raw.githubusercontent.com/cheats0075/toolflix/main/assets/radio/";
-  const PLAYLIST_URL = GITHUB_BASE + "playlist.json?v=" + Date.now();
+  const PLAYLIST_ID = "PLTRU2u_bXJoqQE7zYT7NACr4ai_tFOt7W";
 
-  const PLAYLIST_FALLBACK = [
-    { type:"musica",  name:"Calcinha Preta",    file:"musicas/calcinhapreta-dois-amoresduas-paixoes.mp3" },
-    { type:"anuncio", name:"Anúncio ToolFlix",  file:"anuncios/anuncio1.mp3" },
-    { type:"musica",  name:"Hungria Hip Hop",   file:"musicas/hungriahiphop-amor-e-fe.mp3" },
-    { type:"anuncio", name:"Anúncio ToolFlix",  file:"anuncios/anuncio1.mp3" },
-    { type:"musica",  name:"Toque de Zoficial", file:"musicas/toquedezoficial quando-tem-sentimento.mp3" },
-    { type:"anuncio", name:"Anúncio ToolFlix",  file:"anuncios/anuncio1.mp3" },
-  ];
-
-  let PLAYLIST     = [];
-  let currentIdx   = 0;
-  let isPlaying    = false;
-  let progressTimer = null;
-  let autoplayPendente = false;
-
-  const audio      = document.getElementById("radioAudio");
   const playBtn    = document.getElementById("radioPlayBtn");
+  const skipBtn    = document.getElementById("radioSkipBtn");
   const trackName  = document.getElementById("radioTrackName");
   const statusEl   = document.getElementById("radioTrackStatus");
   const progressEl = document.getElementById("radioProgressBar");
   const volDot     = document.getElementById("radioVolDot");
-  const skipBtn    = document.getElementById("radioSkipBtn");
+  const audioEl    = document.getElementById("radioAudio");
 
-  if(!audio || !playBtn) return;
+  // Esconde o <audio> antigo — não é mais usado
+  if(audioEl) audioEl.style.display = "none";
 
-  // Embaralha só as músicas, mantendo anúncio depois de cada música
-  function shufflePlaylist(raw){
-    const musicas  = raw.filter(t => t.type === "musica");
-    const anuncios = raw.filter(t => t.type === "anuncio");
-    // Fisher-Yates nas músicas
-    for(let i = musicas.length - 1; i > 0; i--){
-      const j = Math.floor(Math.random() * (i + 1));
-      [musicas[i], musicas[j]] = [musicas[j], musicas[i]];
-    }
-    // Reconstrói: música → anúncio → música → anúncio...
-    const result = [];
-    musicas.forEach((m, i) => {
-      result.push(m);
-      if(anuncios.length > 0) result.push(anuncios[i % anuncios.length]);
-    });
-    return result;
-  }
+  let player       = null;
+  let isPlaying    = false;
+  let isMuted      = false;
+  let progressTimer = null;
+  let autoplayPendente = false;
 
-  function loadTrack(idx){
-    currentIdx = ((idx % PLAYLIST.length) + PLAYLIST.length) % PLAYLIST.length;
-    const track = PLAYLIST[currentIdx];
-    const isAnuncio = track.type === "anuncio";
-    const nome = isAnuncio ? "📢 ToolFlix Radio" : ("♪ " + (track.name || track.file));
-    // Reinicia animação do marquee
-    trackName.innerHTML = "";
-    const span = document.createElement("span");
-    span.textContent = nome;
-    trackName.appendChild(span);
-    audio.src = GITHUB_BASE + track.file;
-    progressEl.style.width = "0%";
-    statusEl.textContent = isAnuncio ? "anúncio" : "carregando...";
-    statusEl.className = "radio-track-status";
-  }
+  // Cria o iframe oculto do YouTube
+  const ytDiv = document.createElement("div");
+  ytDiv.id = "ytPlayerContainer";
+  ytDiv.style.cssText = "position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;";
+  document.body.appendChild(ytDiv);
 
-  function updateProgress(){
-    if(!audio.duration || isNaN(audio.duration)) return;
-    progressEl.style.width = ((audio.currentTime / audio.duration) * 100) + "%";
-  }
+  // Carrega a API do YouTube
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
 
-  function setPlayingUI(){
-    isPlaying = true;
-    playBtn.textContent = "⏸";
-    playBtn.classList.add("playing");
-    const isAnuncio = PLAYLIST[currentIdx]?.type === "anuncio";
-    statusEl.textContent = isAnuncio ? "anúncio" : "tocando";
-    statusEl.className = "radio-track-status live";
-    clearInterval(progressTimer);
-    progressTimer = setInterval(updateProgress, 1000);
-  }
-
-  function startPlay(){
-    audio.play().then(()=>{
-      setPlayingUI();
-      autoplayPendente = false;
-    }).catch(()=>{
-      statusEl.textContent = "clique em qualquer lugar ▶";
-      statusEl.className = "radio-track-status";
-    });
-  }
-
-  function stopPlay(){
-    audio.pause();
-    isPlaying = false;
-    autoplayPendente = false;
-    playBtn.textContent = "▶";
-    playBtn.classList.remove("playing");
-    statusEl.textContent = "pausado";
-    statusEl.className = "radio-track-status";
-    clearInterval(progressTimer);
-  }
-
-  // Botão skip
-  if(skipBtn){
-    skipBtn.addEventListener("click", (e)=>{
-      e.stopPropagation();
-      clearInterval(progressTimer);
-      progressEl.style.width = "0%";
-      // Pula músicas do tipo anuncio, vai direto para próxima música
-      let next = currentIdx + 1;
-      if(next >= PLAYLIST.length){
-        PLAYLIST = shufflePlaylist(PLAYLIST);
-        next = 0;
+  // Callback da API do YouTube
+  window.onYouTubeIframeAPIReady = function(){
+    player = new YT.Player("ytPlayerContainer", {
+      height: "1",
+      width:  "1",
+      playerVars: {
+        listType:   "playlist",
+        list:       PLAYLIST_ID,
+        autoplay:   0,
+        controls:   0,
+        shuffle:    1,
+        loop:       1,
+        playsinline: 1,
+        modestbranding: 1,
+      },
+      events: {
+        onReady:       onPlayerReady,
+        onStateChange: onPlayerStateChange,
+        onError:       onPlayerError,
       }
-      loadTrack(next);
-      if(isPlaying || autoplayPendente) startPlay();
     });
-  }
+  };
 
-  // Play/Pause manual
-  playBtn.addEventListener("click", (e)=>{
-    e.stopPropagation();
-    if(isPlaying){ stopPlay(); }
-    else { autoplayPendente = false; startPlay(); }
-  });
-
-  // Próxima faixa ao terminar
-  audio.addEventListener("ended", ()=>{
-    clearInterval(progressTimer);
-    progressEl.style.width = "0%";
-    // Se chegou no fim da playlist, embaralha de novo
-    if(currentIdx >= PLAYLIST.length - 1){
-      PLAYLIST = shufflePlaylist(PLAYLIST);
-      loadTrack(0);
-    } else {
-      loadTrack(currentIdx + 1);
-    }
-    startPlay();
-  });
-
-  // Erro: pula para próxima
-  audio.addEventListener("error", ()=>{
-    statusEl.textContent = "erro — pulando...";
-    statusEl.className = "radio-track-status";
-    clearInterval(progressTimer);
-    setTimeout(()=>{
-      loadTrack(currentIdx + 1);
-      if(isPlaying || autoplayPendente) startPlay();
-    }, 1500);
-  });
-
-  // Botão mudo
-  let muted = false;
-  volDot.addEventListener("click", (e)=>{
-    e.stopPropagation();
-    muted = !muted;
-    audio.muted = muted;
-    volDot.style.background = muted ? "#e74c3c" : "var(--cor-accent)";
-    volDot.style.boxShadow  = muted ? "0 0 6px #e74c3c" : "0 0 6px var(--cor-accent)";
-    volDot.title = muted ? "Ativar som" : "Mudo";
-  });
-
-  // Autoplay inteligente: tenta de cara; se bloqueado, dispara no primeiro clique/tecla
-  function tentarAutoplay(){
-    audio.play().then(()=>{
-      setPlayingUI();
-      autoplayPendente = false;
-    }).catch(()=>{
-      // Bloqueado pelo navegador — aguarda qualquer interação
-      autoplayPendente = true;
-      statusEl.textContent = "clique em qualquer lugar ▶";
-      statusEl.className = "radio-track-status";
-
-      const unlock = ()=>{
-        if(!autoplayPendente) return;
-        audio.play().then(()=>{
-          setPlayingUI();
-          autoplayPendente = false;
-        }).catch(()=>{});
-        document.removeEventListener("click",   unlock, true);
-        document.removeEventListener("keydown", unlock, true);
-        document.removeEventListener("touchstart", unlock, true);
-      };
-      document.addEventListener("click",      unlock, { capture: true, once: true });
-      document.addEventListener("keydown",    unlock, { capture: true, once: true });
-      document.addEventListener("touchstart", unlock, { capture: true, once: true });
-    });
-  }
-
-  async function initRadio(){
-    try{
-      const resp = await fetch(PLAYLIST_URL);
-      if(!resp.ok) throw new Error("json não encontrado");
-      const raw = await resp.json();
-      PLAYLIST = shufflePlaylist(raw);
-    }catch(e){
-      console.warn("Radio: usando playlist fallback.", e);
-      PLAYLIST = shufflePlaylist(PLAYLIST_FALLBACK);
-    }
-    loadTrack(0);
+  function onPlayerReady(){
+    player.setShuffle(true);
+    player.setLoop(true);
+    updateTrackName();
     tentarAutoplay();
   }
 
-  initRadio();
+  function onPlayerStateChange(e){
+    const S = YT.PlayerState;
+    if(e.data === S.PLAYING){
+      isPlaying = true;
+      playBtn.textContent = "⏸";
+      playBtn.classList.add("playing");
+      statusEl.textContent = "tocando";
+      statusEl.className = "radio-track-status live";
+      autoplayPendente = false;
+      updateTrackName();
+      clearInterval(progressTimer);
+      progressTimer = setInterval(updateProgress, 1000);
+    } else if(e.data === S.PAUSED || e.data === S.ENDED){
+      if(e.data === S.ENDED){
+        player.nextVideo();
+        return;
+      }
+      isPlaying = false;
+      playBtn.textContent = "▶";
+      playBtn.classList.remove("playing");
+      statusEl.textContent = "pausado";
+      statusEl.className = "radio-track-status";
+      clearInterval(progressTimer);
+    } else if(e.data === S.BUFFERING){
+      statusEl.textContent = "carregando...";
+      statusEl.className = "radio-track-status";
+      updateTrackName();
+    }
+  }
+
+  function onPlayerError(){
+    statusEl.textContent = "pulando...";
+    setTimeout(()=>{ if(player) player.nextVideo(); }, 1500);
+  }
+
+  function updateTrackName(){
+    if(!player || !player.getVideoData) return;
+    const data = player.getVideoData();
+    const nome = data?.title || "♪ ToolFlix Radio";
+    const span = document.createElement("span");
+    span.textContent = "♪ " + nome;
+    trackName.innerHTML = "";
+    trackName.appendChild(span);
+  }
+
+  function updateProgress(){
+    if(!player || !player.getDuration) return;
+    const dur = player.getDuration();
+    const cur = player.getCurrentTime();
+    if(dur > 0) progressEl.style.width = ((cur/dur)*100) + "%";
+  }
+
+  function tentarAutoplay(){
+    if(!player) return;
+    try{
+      player.playVideo();
+      autoplayPendente = true;
+      statusEl.textContent = "clique em qualquer lugar ▶";
+      // Se o navegador bloquear, dispara no primeiro clique
+      const unlock = ()=>{
+        if(!autoplayPendente) return;
+        player.playVideo();
+        document.removeEventListener("click",      unlock, true);
+        document.removeEventListener("keydown",    unlock, true);
+        document.removeEventListener("touchstart", unlock, true);
+      };
+      document.addEventListener("click",      unlock, { capture:true, once:true });
+      document.addEventListener("keydown",    unlock, { capture:true, once:true });
+      document.addEventListener("touchstart", unlock, { capture:true, once:true });
+    }catch(e){}
+  }
+
+  // Botão Play/Pause
+  if(playBtn){
+    playBtn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      if(!player) return;
+      if(isPlaying){ player.pauseVideo(); }
+      else { player.playVideo(); }
+    });
+  }
+
+  // Botão Skip
+  if(skipBtn){
+    skipBtn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      if(!player) return;
+      progressEl.style.width = "0%";
+      player.nextVideo();
+    });
+  }
+
+  // Botão Mudo
+  if(volDot){
+    volDot.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      if(!player) return;
+      isMuted = !isMuted;
+      if(isMuted){ player.mute(); }
+      else { player.unMute(); }
+      volDot.style.background = isMuted ? "#e74c3c" : "var(--cor-accent)";
+      volDot.style.boxShadow  = isMuted ? "0 0 6px #e74c3c" : "0 0 6px var(--cor-accent)";
+      volDot.title = isMuted ? "Ativar som" : "Mudo";
+    });
+  }
+
+  // Atualiza nome da música a cada 3s (caso mude sem evento)
+  setInterval(()=>{ if(isPlaying) updateTrackName(); }, 3000);
 })();
-</script>
-
-<script>
-/* ===== HISTÓRICO DE JOGOS (Vistos recentemente) ===== */
-const RECENT_KEY = "toolflix_recent_games";
-const RECENT_MAX = 12;
-
-function getRecentGames(){
-  try{ return JSON.parse(localStorage.getItem(RECENT_KEY) || "[]"); }
-  catch(e){ return []; }
-}
-
-function saveRecentGames(list){
-  try{ localStorage.setItem(RECENT_KEY, JSON.stringify(list)); }
-  catch(e){}
-}
-
-function addRecentGame(j){
-  if(!j?.nome) return;
-  let list = getRecentGames();
-  list = list.filter(g => g.nome !== j.nome);
-  list.unshift({ nome: j.nome, capa: j.capa || "", _raw: j });
-  if(list.length > RECENT_MAX) list = list.slice(0, RECENT_MAX);
-  saveRecentGames(list);
-  renderRecentGames();
-}
-
-function clearRecentGames(){
-  saveRecentGames([]);
-  renderRecentGames();
-}
-
-function renderRecentGames(){
-  const section = document.getElementById("recentGamesSection");
-  const list    = document.getElementById("recentGamesList");
-  if(!section || !list) return;
-  const games = getRecentGames();
-  if(games.length === 0){ section.style.display = "none"; return; }
-  section.style.display = "block";
-  list.innerHTML = games.map((g, i) => {
-    const capa = g.capa || "";
-    const nome = (g.nome || "").replace(/"/g, "&quot;");
-    return `<div class="recent-card" onclick="openRecentGame(${i})" title="${nome}">
-      <img src="${capa}" alt="${nome}" onerror="this.style.background='#333'">
-      <div class="recent-name">${g.nome || ""}</div>
-    </div>`;
-  }).join("");
-}
-
-function openRecentGame(idx){
-  const g = getRecentGames()[idx];
-  if(g && typeof openGameDetails === "function") openGameDetails(g._raw || g);
-}
-
-window.addRecentGame    = addRecentGame;
-window.clearRecentGames = clearRecentGames;
-
-renderRecentGames();
 </script>
 
 </body>
