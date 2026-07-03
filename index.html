@@ -1860,206 +1860,269 @@ select optgroup{
     #globalChatOverlay .gc-backdrop{
       position:absolute;
       inset:0;
-      background: rgba(0,0,0,.70);
-      backdrop-filter: blur(6px);
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(10px);
     }
     #globalChatOverlay .gc-modal{
       position: relative;
-      width: min(760px, 94vw);
-      height: min(700px, 86vh);
-      margin: 6vh auto 0;
-      border-radius: 22px;
+      width: min(780px, 94vw);
+      height: min(700px, 88vh);
+      margin: 4vh auto 0;
+      border-radius: 24px;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(20,20,20,.97), rgba(12,12,12,.97));
-      box-shadow: 0 30px 80px rgba(0,0,0,.60), 0 0 30px rgba(0,255,255,.08);
+      border: 1px solid rgba(255,255,255,.08);
+      background: #0e0e14;
+      box-shadow: 0 40px 100px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.04);
       display:flex;
       flex-direction:column;
     }
+
+    /* HEADER */
     #globalChatOverlay .gc-head{
       display:flex;
       justify-content:space-between;
       align-items:center;
       gap:12px;
-      padding:16px 18px;
-      border-bottom:1px solid rgba(255,255,255,.08);
-      background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      padding:18px 22px;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border-bottom:1px solid rgba(255,255,255,.06);
+      flex-shrink: 0;
+    }
+    .gc-head-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .gc-head-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--cor-accent), #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 4px 14px rgba(124,58,237,0.4);
     }
     #globalChatOverlay .gc-head strong{
-      font-size:18px;
-      letter-spacing:.2px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: .3px;
+    }
+    .gc-head-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,.4);
+      margin-top: 2px;
     }
     #globalChatClose{
       border:none;
-      width:38px;
-      height:38px;
-      border-radius:12px;
+      width:36px;
+      height:36px;
+      border-radius:10px;
       cursor:pointer;
-      background: rgba(255,255,255,.08);
-      color:#fff;
-      font-size:18px;
-      font-weight:900;
+      background: rgba(255,255,255,.07);
+      color:rgba(255,255,255,.7);
+      font-size:16px;
+      font-weight:700;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
-    #globalChatClose:hover{ background: rgba(255,255,255,.14); }
+    #globalChatClose:hover{ background: rgba(255,60,60,.2); color:#fff; }
+
+    /* MESSAGES */
     #globalChatMessages{
       flex:1;
-      overflow:auto;
-      padding:16px 18px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 20px 22px;
       display:flex;
       flex-direction:column;
-      gap:10px;
+      gap: 16px;
       scroll-behavior:smooth;
+      background: #0e0e14;
     }
+    #globalChatMessages::-webkit-scrollbar { width: 4px; }
+    #globalChatMessages::-webkit-scrollbar-track { background: transparent; }
+    #globalChatMessages::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 4px; }
+
+    /* MENSAGEM */
     .global-chat-row{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      max-width: min(88%, 680px);
-      align-self:flex-start;
-      position:relative;
-      padding:12px;
-      border-radius:20px;
-      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow: 0 10px 28px rgba(0,0,0,.22);
+      display: flex;
+      gap: 10px;
+      max-width: min(85%, 600px);
+      align-self: flex-start;
+      animation: chatFadeIn 0.25s ease;
+    }
+    @keyframes chatFadeIn {
+      from { opacity:0; transform: translateY(8px); }
+      to   { opacity:1; transform: translateY(0); }
     }
     .global-chat-row.own{
-      align-self:flex-end;
-      background: linear-gradient(180deg, rgba(0,255,255,.08), rgba(255,255,255,.03));
-      border-color: rgba(0,255,255,.18);
-    }
-    .global-chat-head{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin:0;
-      padding-right:0;
+      align-self: flex-end;
+      flex-direction: row-reverse;
     }
     .global-chat-avatar{
-      width:40px;
-      height:40px;
-      border-radius:50%;
-      object-fit:cover;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.05);
-      box-shadow:0 8px 18px rgba(0,0,0,.24);
-      flex:0 0 40px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.05);
+      align-self: flex-end;
+    }
+    .global-chat-body {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+    .global-chat-head{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 4px;
+    }
+    .global-chat-row.own .global-chat-head {
+      flex-direction: row-reverse;
     }
     .global-chat-name{
-      font-size:12px;
-      opacity:.92;
-      margin:0;
-      font-weight:800;
-      letter-spacing:.2px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--cor-accent);
+      letter-spacing: .2px;
+    }
+    .global-chat-row.own .global-chat-name {
+      color: #a78bfa;
     }
     .global-chat-bubble{
-      margin-left:50px;
-      padding:12px 14px;
-      border-radius:18px;
-      border-top-left-radius:10px;
-      line-height:1.45;
-      white-space:pre-wrap;
-      word-break:break-word;
-      box-shadow:0 8px 20px rgba(0,0,0,0.16);
-      border:1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.075);
-      backdrop-filter: blur(12px);
+      padding: 10px 14px;
+      border-radius: 18px;
+      border-bottom-left-radius: 4px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 14px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.08);
+      color: rgba(255,255,255,.92);
     }
     .global-chat-row.own .global-chat-bubble{
-      background: rgba(0,255,255,.10);
-      border-color: rgba(0,255,255,.18);
-      border-top-left-radius:18px;
-      border-top-right-radius:10px;
+      background: linear-gradient(135deg, rgba(124,58,237,.25), rgba(99,102,241,.2));
+      border-color: rgba(124,58,237,.3);
+      border-radius: 18px;
+      border-bottom-right-radius: 4px;
+      border-bottom-left-radius: 18px;
     }
     .global-chat-meta{
-      margin:0 0 0 50px;
-      font-size:11px;
-      opacity:.62;
+      font-size: 10px;
+      color: rgba(255,255,255,.3);
+      padding: 0 4px;
+    }
+    .global-chat-row.own .global-chat-meta {
+      text-align: right;
     }
     .global-chat-actions{
-      position:static;
-      display:flex;
-      gap:10px;
-      align-items:center;
-      margin:8px 0 0 50px;
-      flex-wrap:wrap;
-      opacity:.92;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      padding: 0 4px;
+      flex-wrap: wrap;
+    }
+    .global-chat-row.own .global-chat-actions {
+      justify-content: flex-end;
     }
     .global-chat-delete-btn{
-      border:none;
-      border-radius:999px;
-      padding:6px 10px;
-      font-size:11px;
-      line-height:1;
-      font-weight:900;
-      cursor:pointer;
-      color:#fff;
-      background:rgba(255,60,60,.14);
-      border:1px solid rgba(255,60,60,.25);
-      box-shadow: 0 6px 16px rgba(0,0,0,.16);
+      border: none;
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      color: rgba(255,100,100,.9);
+      background: rgba(255,60,60,.08);
+      border: 1px solid rgba(255,60,60,.15);
+      transition: 0.2s;
     }
     .global-chat-delete-btn:hover{
-      background:rgba(255,60,60,.22);
+      background: rgba(255,60,60,.18);
       transform: translateY(-1px);
     }
     .global-chat-bubble.deleted{
-      font-style:italic;
-      opacity:.82;
-      border-style:dashed;
-      background: rgba(255,255,255,.05);
+      font-style: italic;
+      opacity: .5;
+      border-style: dashed;
     }
     .global-chat-empty{
-      padding:14px;
-      border-radius:16px;
-      background: rgba(255,255,255,.04);
-      border:1px dashed rgba(255,255,255,.10);
-      opacity:.78;
-      font-size:13px;
+      padding: 32px 14px;
+      text-align: center;
+      opacity: .4;
+      font-size: 13px;
     }
+
+    /* COMPOSER */
     #globalChatComposer{
-      border-top:1px solid rgba(255,255,255,.08);
-      padding:14px 16px 16px;
-      background: rgba(0,0,0,.18);
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding: 14px 18px 18px;
+      background: #0e0e14;
+      position: relative;
+      flex-shrink: 0;
     }
     #globalChatForm{
-      display:flex;
-      gap:10px;
-      align-items:flex-end;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
     }
     #globalChatInput{
-      flex:1;
-      min-height:46px;
-      max-height:120px;
-      resize:none;
-      padding:12px 14px;
-      border-radius:16px;
+      flex: 1;
+      min-height: 46px;
+      max-height: 120px;
+      resize: none;
+      padding: 12px 16px;
+      border-radius: 16px;
       background: rgba(255,255,255,.06);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.10);
-      outline:none;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.08);
+      outline: none;
       font: inherit;
+      font-size: 14px;
+      transition: 0.2s;
     }
+    #globalChatInput::placeholder { color: rgba(255,255,255,.3); }
     #globalChatInput:focus{
-      border-color: rgba(0,255,255,.35);
-      box-shadow: 0 0 0 3px rgba(0,255,255,.08);
+      border-color: rgba(124,58,237,.5);
+      background: rgba(255,255,255,.08);
+      box-shadow: 0 0 0 3px rgba(124,58,237,.12);
     }
     #globalChatSend{
-      border:none;
-      border-radius:16px;
-      padding:12px 16px;
-      font-weight:900;
-      cursor:pointer;
-      color:#111;
-      background: linear-gradient(90deg, #00ffff, #ffd700);
-      min-width:110px;
+      border: none;
+      border-radius: 16px;
+      padding: 13px 20px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(135deg, var(--cor-accent), #7c3aed);
+      min-width: 90px;
+      box-shadow: 0 4px 16px rgba(124,58,237,.35);
+      transition: 0.2s;
+      letter-spacing: .3px;
+    }
+    #globalChatSend:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(124,58,237,.5);
     }
     #globalChatHint{
-      margin-top:8px;
-      font-size:11px;
-      opacity:.68;
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
+      margin-top: 8px;
+      font-size: 11px;
+      color: rgba(255,255,255,.3);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
     }
 
 
@@ -4247,7 +4310,13 @@ body.avatar-modal-open{
     <div class="gc-backdrop"></div>
     <div class="gc-modal" role="dialog" aria-modal="true" aria-labelledby="globalChatTitle">
       <div class="gc-head">
-        <strong id="globalChatTitle">🎮 Chat ToolFlix</strong>
+        <div class="gc-head-left">
+          <div class="gc-head-icon">🎮</div>
+          <div>
+            <strong id="globalChatTitle">Chat ToolFlix</strong>
+            <div class="gc-head-sub">Converse com a comunidade</div>
+          </div>
+        </div>
         <button id="globalChatClose" type="button" aria-label="Fechar">✕</button>
       </div>
       <div id="globalChatMessages"></div>
@@ -9001,13 +9070,15 @@ document.addEventListener("DOMContentLoaded", function(){
     const quoteHtml = (!deleted && parsed.reply) ? `<div class="global-chat-quote"><strong>↪ ${escapeHtml(parsed.reply.nick)}</strong><span>${escapeHtml(parsed.reply.text)}</span></div>` : "";
     return `
       <div class="global-chat-row ${own ? "own" : ""}" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
-        <div class="global-chat-head">
-          <img class="global-chat-avatar ${getAvatarClass(msg?.level)}" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1-1.webp';">
-          <div class="global-chat-name" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}">${escapeHtml(formatGlobalAuthor(msg))}</div>
+        <img class="global-chat-avatar ${getAvatarClass(msg?.level)}" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1-1.webp';">
+        <div class="global-chat-body">
+          <div class="global-chat-head">
+            <div class="global-chat-name" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}">${escapeHtml(formatGlobalAuthor(msg))}</div>
+          </div>
+          <div class="${bubbleClass}">${quoteHtml}${deleted ? escapeHtml(bubbleText) : linkGlobalMentions(bubbleText)}</div>
+          <div class="global-chat-meta">${formatGlobalTime(msg?.created_at)}</div>
+          ${globalChatDeleteButtonHtml(msg)}
         </div>
-        <div class="${bubbleClass}">${quoteHtml}${deleted ? escapeHtml(bubbleText) : linkGlobalMentions(bubbleText)}</div>
-        ${globalChatDeleteButtonHtml(msg)}
-        <div class="global-chat-meta">${formatGlobalTime(msg?.created_at)}</div>
       </div>
     `;
   }
