@@ -6253,18 +6253,33 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
       }
 
       if(!videoId) return raw;
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&enablejsapi=1`;
     }catch{
       return raw;
     }
   }
 
+  function stopTrailerFrame(){
+    const wrap = document.getElementById("gameTrailerWrap");
+    const oldFrame = document.getElementById("gameTrailerFrame");
+    if(wrap) wrap.classList.remove("active");
+    if(!oldFrame) return;
+
+    try{
+      oldFrame.contentWindow?.postMessage('{"event":"command","func":"stopVideo","args":""}', "*");
+    }catch{}
+
+    // Substitui o iframe por um novo "limpo": é o jeito mais garantido de
+    // matar o player do YouTube de vez (evita áudio tocando em segundo plano).
+    const freshFrame = oldFrame.cloneNode(false);
+    freshFrame.removeAttribute("src");
+    freshFrame.src = "about:blank";
+    oldFrame.parentNode?.replaceChild(freshFrame, oldFrame);
+  }
+
   function closeGameDetailsModal(){
     const modal = document.getElementById("gameDetailsModal");
-    const frame = document.getElementById("gameTrailerFrame");
-    const wrap = document.getElementById("gameTrailerWrap");
-    if(frame) frame.src = "about:blank";
-    if(wrap) wrap.classList.remove("active");
+    stopTrailerFrame();
     setModalDownloadMeter(0);
     if(modal) modal.style.display = "none";
     window.__toolflixCurrentGame = null;
@@ -6281,8 +6296,6 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     const cat = document.getElementById("gameDetailsCategory");
     const premium = document.getElementById("gameDetailsPremium");
     const trailerBtn = document.getElementById("gameDetailsTrailerBtn");
-    const frame = document.getElementById("gameTrailerFrame");
-    const wrap = document.getElementById("gameTrailerWrap");
     const downloadBtn = document.getElementById("gameDetailsDownloadBtn");
 
     if(!modal || !title || !desc || !downloadBtn) return;
@@ -6299,8 +6312,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     if(cat) cat.textContent = normalizeCategoria(j?.categoria || "Conteúdo");
     if(premium) premium.textContent = j?.premium ? "💎 Premium" : "";
 
-    if(frame) frame.src = "about:blank";
-    if(wrap) wrap.classList.remove("active");
+    stopTrailerFrame();
 
     if(trailerBtn){
       trailerBtn.style.display = hasTrailer ? "block" : "none";
@@ -6310,6 +6322,8 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
           showToast("Trailer indisponível.");
           return;
         }
+        const wrap = document.getElementById("gameTrailerWrap");
+        const frame = document.getElementById("gameTrailerFrame");
         if(frame) frame.src = embed;
         if(wrap) wrap.classList.add("active");
       };
