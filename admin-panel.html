@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ToolFlix Admin</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg:       #08090d;
+    --bg2:      #0f1017;
+    --bg3:      #16181f;
+    --border:   rgba(255,255,255,.07);
+    --accent:   #7c3aed;
+    --accent2:  #5b21b6;
+    --green:    #22c55e;
+    --red:      #ef4444;
+    --yellow:   #f59e0b;
+    --text:     #e4e4f0;
+    --muted:    rgba(255,255,255,.38);
+    --mono:     'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* ===== LOGIN ===== */
+  #loginScreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 30% 40%, rgba(124,58,237,.12), transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(99,102,241,.08), transparent 60%),
+                var(--bg);
+  }
+  .login-box {
+    width: 380px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 36px;
+    box-shadow: 0 40px 80px rgba(0,0,0,.6);
+  }
+  .login-logo {
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+    letter-spacing: -1px;
+  }
+  .login-logo span { color: var(--accent); }
+  .login-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .login-box label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    margin-bottom: 8px;
+  }
+  .login-box input {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 14px;
+    outline: none;
+    margin-bottom: 20px;
+    transition: .2s;
+  }
+  .login-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,58,237,.15); }
+  .login-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: .2s;
+  }
+  .login-btn:hover { background: var(--accent2); transform: translateY(-1px); }
+  .login-err { color: var(--red); font-size: 12px; margin-top: 12px; display: none; }
+
+  /* ===== LAYOUT ===== */
+  #appScreen { display: none; min-height: 100vh; }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,9,13,.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .topbar-brand {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+  }
+  .topbar-brand span { color: var(--accent); }
+  .topbar-tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .tab-btn {
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .tab-btn:hover { color: #fff; background: rgba(255,255,255,.06); }
+  .tab-btn.active { background: var(--accent); color: #fff; }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .api-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--green);
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .logout-btn {
+    padding: 6px 12px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    transition: .2s;
+  }
+  .logout-btn:hover { color: var(--red); border-color: var(--red); }
+
+  /* ===== PAGES ===== */
+  .page { display: none; padding: 28px; max-width: 1100px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .page-title { font-size: 20px; font-weight: 800; letter-spacing: -.5px; }
+  .page-title small { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 8px; }
+
+  /* ===== CARDS ===== */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+  }
+  .stat-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; }
+  .stat-value { font-size: 28px; font-weight: 800; margin-top: 6px; letter-spacing: -1px; }
+  .stat-value.green { color: var(--green); }
+  .stat-value.yellow { color: var(--yellow); }
+  .stat-value.purple { color: var(--accent); }
+
+  /* ===== TABLE ===== */
+  .table-wrap {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    color: var(--muted);
+    background: rgba(255,255,255,.03);
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr { border-bottom: 1px solid var(--border); transition: .15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,.025); }
+  tbody td { padding: 12px 16px; vertical-align: middle; }
+  .mono { font-family: var(--mono); font-size: 12px; }
+  .badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .badge-green { background: rgba(34,197,94,.12); color: var(--green); border: 1px solid rgba(34,197,94,.25); }
+  .badge-red { background: rgba(239,68,68,.12); color: var(--red); border: 1px solid rgba(239,68,68,.25); }
+  .badge-yellow { background: rgba(245,158,11,.12); color: var(--yellow); border: 1px solid rgba(245,158,11,.25); }
+  .badge-purple { background: rgba(124,58,237,.12); color: #a78bfa; border: 1px solid rgba(124,58,237,.25); }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-danger { background: rgba(239,68,68,.12); color: var(--red); border: 1px solid rgba(239,68,68,.25); }
+  .btn-danger:hover { background: rgba(239,68,68,.22); }
+  .btn-ghost { background: rgba(255,255,255,.06); color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { background: rgba(255,255,255,.1); }
+  .btn-green { background: rgba(34,197,94,.12); color: var(--green); border: 1px solid rgba(34,197,94,.25); }
+  .btn-green:hover { background: rgba(34,197,94,.22); }
+  .btn-sm { padding: 5px 11px; font-size: 12px; }
+
+  /* ===== FORMS ===== */
+  .form-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; }
+  .form-group input, .form-group select {
+    padding: 10px 13px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    min-width: 180px;
+    transition: .2s;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(124,58,237,.12);
+  }
+
+  /* ===== TOAST ===== */
+  #toastContainer {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .toast {
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    min-width: 240px;
+    animation: toastIn .25s ease;
+    border: 1px solid;
+  }
+  @keyframes toastIn { from { opacity:0; transform: translateY(12px); } }
+  .toast-success { background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.3); color: var(--green); }
+  .toast-error { background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.3); color: var(--red); }
+  .toast-info { background: rgba(124,58,237,.12); border-color: rgba(124,58,237,.3); color: #a78bfa; }
+
+  /* ===== RECOVERY CARDS ===== */
+  .recovery-list { display: flex; flex-direction: column; gap: 12px; }
+  .recovery-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .recovery-card.urgent { border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.04); }
+  .recovery-nick { font-weight: 800; font-size: 15px; }
+  .recovery-meta { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .recovery-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+  /* ===== XP ===== */
+  .xp-result-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .xp-result-card.visible { display: block; }
+  .xp-nick { font-size: 18px; font-weight: 800; }
+  .xp-info { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
+  .xp-stat { font-size: 12px; color: var(--muted); }
+  .xp-stat strong { display: block; font-size: 20px; font-weight: 800; color: var(--text); margin-top: 2px; }
+
+  /* ===== EMPTY ===== */
+  .empty-state {
+    padding: 48px 20px;
+    text-align: center;
+    color: var(--muted);
+  }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 13px; }
+
+  /* ===== LOADING ===== */
+  .loading { text-align: center; padding: 32px; color: var(--muted); font-size: 13px; }
+  .spin { display: inline-block; animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* TOKEN ROW */
+  .token-text { font-family: var(--mono); font-size: 12px; letter-spacing: .5px; }
+  .copy-btn {
+    padding: 3px 8px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 11px;
+    cursor: pointer;
+    transition: .2s;
+    margin-left: 6px;
+  }
+  .copy-btn:hover { color: #fff; border-color: rgba(255,255,255,.3); }
+</style>
+</head>
+<body>
+
+<div id="toastContainer"></div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Tool<span>Flix</span></div>
+    <div class="login-sub">Painel administrativo</div>
+    <label>URL da API</label>
+    <input type="text" id="loginApi" placeholder="https://toolflix-api.onrender.com" value="https://toolflix-api.onrender.com">
+    <label>Admin Key</label>
+    <input type="password" id="loginKey" placeholder="••••••••••••">
+    <button class="login-btn" onclick="doLogin()">Entrar</button>
+    <div class="login-err" id="loginErr">Chave inválida ou API inacessível.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen">
+  <div class="topbar">
+    <div class="topbar-brand">Tool<span>Flix</span> Admin</div>
+    <div class="topbar-tabs">
+      <button class="tab-btn active" onclick="showTab('premium')" id="tab-premium">💎 Premium</button>
+      <button class="tab-btn" onclick="showTab('senha')" id="tab-senha">🔐 Senhas</button>
+      <button class="tab-btn" onclick="showTab('xp')" id="tab-xp">⭐ XP</button>
+    </div>
+    <div class="topbar-right">
+      <div class="api-badge" id="apiBadge"></div>
+      <button class="logout-btn" onclick="doLogout()">Sair</button>
+    </div>
+  </div>
+
+  <!-- ===== PREMIUM ===== -->
+  <div class="page active" id="page-premium">
+    <div class="page-header">
+      <div class="page-title">Premium <small id="premiumCount"></small></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" onclick="loadPremium()">↻ Atualizar</button>
+        <button class="btn btn-primary btn-sm" onclick="openGerarToken()">+ Gerar Token</button>
+      </div>
+    </div>
+
+    <div class="stat-row" id="premiumStats"></div>
+
+    <!-- GERAR TOKEN -->
+    <div id="gerarTokenBox" style="display:none; background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:20px 22px; margin-bottom:20px;">
+      <div style="font-weight:700; margin-bottom:14px;">Gerar novo token Premium</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Duração (dias)</label>
+          <select id="tokenDays">
+            <option value="7">7 dias</option>
+            <option value="15">15 dias</option>
+            <option value="30" selected>30 dias</option>
+            <option value="60">60 dias</option>
+            <option value="90">90 dias</option>
+            <option value="365">1 ano</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-end;">
+          <button class="btn btn-primary" onclick="gerarToken()">Gerar</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('gerarTokenBox').style.display='none'">Cancelar</button>
+        </div>
+      </div>
+      <div id="tokenGerado" style="display:none; margin-top:12px; padding:14px 16px; background:var(--bg3); border-radius:10px; border:1px solid rgba(34,197,94,.25);">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">TOKEN GERADO</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="token-text" id="tokenGeradoText" style="color:var(--green);font-size:16px;"></span>
+          <button class="copy-btn" onclick="copyToken()">copiar</button>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px;" id="tokenGeradoExpiry"></div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Usuário</th>
+            <th>Token usado</th>
+            <th>Desde</th>
+            <th>Expira em</th>
+            <th>Status</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody id="premiumTable"><tr><td colspan="6" class="loading"><span class="spin">⟳</span> Carregando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== SENHAS ===== -->
+  <div class="page" id="page-senha">
+    <div class="page-header">
+      <div class="page-title">Recuperação de Senha</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" onclick="loadSenhas()">↻ Atualizar</button>
+      </div>
+    </div>
+
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px;">
+      <div style="font-weight:700;margin-bottom:14px;">Buscar usuário por nick</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nick</label>
+          <input type="text" id="senhaSearchNick" placeholder="ex: Srgokucheats" onkeydown="if(event.key==='Enter')buscarUsuarioSenha()">
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+          <button class="btn btn-primary" onclick="buscarUsuarioSenha()">Buscar</button>
+        </div>
+      </div>
+      <div id="senhaUserResult" style="display:none;"></div>
+    </div>
+
+    <div style="margin-bottom:14px;font-weight:700;font-size:13px;color:var(--muted);">SOLICITAÇÕES PENDENTES</div>
+    <div id="recoveryList" class="recovery-list">
+      <div class="loading"><span class="spin">⟳</span> Carregando...</div>
+    </div>
+  </div>
+
+  <!-- ===== XP ===== -->
+  <div class="page" id="page-xp">
+    <div class="page-header">
+      <div class="page-title">Gerenciar XP</div>
+    </div>
+
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:20px;">
+      <div style="font-weight:700;margin-bottom:16px;">Buscar usuário</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nick</label>
+          <input type="text" id="xpNick" placeholder="ex: Srgokucheats" onkeydown="if(event.key==='Enter')buscarXP()">
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+          <button class="btn btn-primary" onclick="buscarXP()">Buscar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="xp-result-card" id="xpResultCard">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+        <div>
+          <div class="xp-nick" id="xpResultNick"></div>
+          <div class="xp-info">
+            <div class="xp-stat">XP atual<strong id="xpResultXP"></strong></div>
+            <div class="xp-stat">Nível<strong id="xpResultLevel"></strong></div>
+            <div class="xp-stat">Premium<strong id="xpResultPremium"></strong></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-ghost btn-sm" onclick="ajustarXP('add',100)">+100 XP</button>
+          <button class="btn btn-ghost btn-sm" onclick="ajustarXP('add',500)">+500 XP</button>
+          <button class="btn btn-ghost btn-sm" onclick="ajustarXP('add',1000)">+1000 XP</button>
+          <button class="btn btn-ghost btn-sm" onclick="ajustarXP('add',5000)">+5000 XP</button>
+        </div>
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
+
+      <div style="font-weight:700;margin-bottom:14px;">Definir XP manualmente</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Novo valor de XP</label>
+          <input type="number" id="xpManual" placeholder="ex: 2400" min="0">
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:8px;">
+          <button class="btn btn-primary" onclick="setXPManual()">Salvar</button>
+          <button class="btn btn-danger btn-sm" onclick="confirmarZerarXP()">Zerar XP</button>
+        </div>
+      </div>
+
+      <div style="margin-top:8px;">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">ADICIONAR VALOR PERSONALIZADO</div>
+        <div class="form-row" style="margin-bottom:0;">
+          <div class="form-group">
+            <label>Quantidade</label>
+            <input type="number" id="xpCustomAmount" placeholder="ex: 250" min="1">
+          </div>
+          <div style="display:flex;align-items:flex-end;">
+            <button class="btn btn-green" onclick="ajustarXPCustom()">+ Adicionar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="xpHistoryWrap" style="display:none;">
+      <div style="font-weight:700;font-size:13px;color:var(--muted);margin-bottom:10px;">HISTÓRICO DE ALTERAÇÕES (sessão)</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nick</th><th>Ação</th><th>XP antes</th><th>XP depois</th><th>Horário</th></tr></thead>
+          <tbody id="xpHistoryTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ===== STATE =====
+let API_URL = "";
+let ADMIN_KEY = "";
+let xpCurrentUser = null;
+let xpHistory = [];
+
+// ===== AUTH =====
+async function doLogin(){
+  const url = document.getElementById("loginApi").value.trim().replace(/\/$/, "");
+  const key = document.getElementById("loginKey").value.trim();
+  const err = document.getElementById("loginErr");
+  err.style.display = "none";
+
+  if(!url || !key){ err.textContent = "Preencha todos os campos."; err.style.display = "block"; return; }
+
+  try {
+    const r = await fetch(`${url}/api/admin/premium-users`, {
+      headers: { "x-admin-key": key }
+    });
+    if(!r.ok) throw new Error("Unauthorized");
+    API_URL = url;
+    ADMIN_KEY = key;
+    localStorage.setItem("toolflix_api_url", url);
+    localStorage.setItem("toolflix_admin_key", key);
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("appScreen").style.display = "block";
+    document.getElementById("apiBadge").textContent = url.replace("https://","");
+    loadPremium();
+    loadSenhas();
+  } catch(e) {
+    err.textContent = "Chave inválida ou API inacessível.";
+    err.style.display = "block";
+  }
+}
+
+function doLogout(){
+  API_URL = ""; ADMIN_KEY = "";
+  localStorage.removeItem("toolflix_api_url");
+  localStorage.removeItem("toolflix_admin_key");
+  document.getElementById("loginScreen").style.display = "flex";
+  document.getElementById("appScreen").style.display = "none";
+  document.getElementById("loginKey").value = "";
+}
+
+document.getElementById("loginKey").addEventListener("keydown", e => { if(e.key==="Enter") doLogin(); });
+
+// ===== AUTO-LOGIN (persistir sessão) =====
+(function autoLogin(){
+  const savedUrl = localStorage.getItem("toolflix_api_url");
+  const savedKey = localStorage.getItem("toolflix_admin_key");
+  if(savedUrl && savedKey){
+    API_URL = savedUrl;
+    ADMIN_KEY = savedKey;
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("appScreen").style.display = "block";
+    document.getElementById("apiBadge").textContent = savedUrl.replace("https://","");
+    loadPremium();
+    loadSenhas();
+  }
+})();
+
+// ===== HELPERS =====
+function api(path, opts={}){
+  return fetch(API_URL + path, {
+    ...opts,
+    headers: { "Content-Type":"application/json", "x-admin-key": ADMIN_KEY, ...(opts.headers||{}) }
+  }).then(r => r.json());
+}
+
+function toast(msg, type="info"){
+  const c = document.getElementById("toastContainer");
+  const t = document.createElement("div");
+  t.className = `toast toast-${type}`;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(()=>t.remove(), 3500);
+}
+
+function fmtDate(ts){
+  if(!ts) return "—";
+  const d = new Date(Number(ts));
+  return d.toLocaleDateString("pt-BR") + " " + d.toLocaleTimeString("pt-BR", {hour:"2-digit",minute:"2-digit"});
+}
+
+function fmtExpiry(ts){
+  if(!ts) return "Vitalício";
+  const diff = Number(ts) - Date.now();
+  if(diff <= 0) return "Expirado";
+  const days = Math.floor(diff / 86400000);
+  if(days > 0) return `${days} dia${days>1?"s":""}`;
+  const hrs = Math.floor(diff / 3600000);
+  return `${hrs}h`;
+}
+
+function calcLevel(xp){ return Math.floor(Math.sqrt(Number(xp||0)/100)) + 1; }
+
+function showTab(tab){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("page-"+tab).classList.add("active");
+  document.getElementById("tab-"+tab).classList.add("active");
+}
+
+// ===== PREMIUM =====
+async function loadPremium(){
+  document.getElementById("premiumTable").innerHTML = `<tr><td colspan="6" class="loading"><span class="spin">⟳</span> Carregando...</td></tr>`;
+  try {
+    const d = await api("/api/admin/premium-users");
+    if(!d.ok) throw new Error();
+    const users = d.premiumUsers || d.users || [];
+
+    // stats
+    const expiringSoon = users.filter(u => u.expires_at && (Number(u.expires_at)-Date.now()) < 7*86400000);
+    document.getElementById("premiumStats").innerHTML = `
+      <div class="stat-card"><div class="stat-label">Premium ativos</div><div class="stat-value green">${users.length}</div></div>
+      <div class="stat-card"><div class="stat-label">Expira em 7 dias</div><div class="stat-value yellow">${expiringSoon.length}</div></div>
+      <div class="stat-card"><div class="stat-label">Vitalícios</div><div class="stat-value purple">${users.filter(u=>!u.expires_at).length}</div></div>
+    `;
+    document.getElementById("premiumCount").textContent = `— ${users.length} usuário${users.length!==1?"s":""}`;
+
+    if(!users.length){
+      document.getElementById("premiumTable").innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="icon">💎</div><p>Nenhum usuário premium ativo.</p></div></td></tr>`;
+      return;
+    }
+
+    document.getElementById("premiumTable").innerHTML = users.map(u => {
+      const diff = u.expires_at ? Number(u.expires_at)-Date.now() : null;
+      const expiring = diff !== null && diff < 7*86400000;
+      const badge = !u.expires_at
+        ? `<span class="badge badge-purple">Vitalício</span>`
+        : diff <= 0
+          ? `<span class="badge badge-red">Expirado</span>`
+          : expiring
+            ? `<span class="badge badge-yellow">⚠ ${fmtExpiry(u.expires_at)}</span>`
+            : `<span class="badge badge-green">${fmtExpiry(u.expires_at)}</span>`;
+      return `<tr>
+        <td><strong>${u.nick||"—"}</strong><br><span style="font-size:11px;color:var(--muted)">ID: ${u.user_id||u.id||"—"}</span></td>
+        <td><span class="mono">${u.token_used||"—"}</span></td>
+        <td style="font-size:12px;color:var(--muted)">${fmtDate(u.since)}</td>
+        <td style="font-size:12px;">${u.expires_at ? fmtDate(u.expires_at) : "Vitalício"}</td>
+        <td>${badge}</td>
+        <td><button class="btn btn-danger btn-sm" onclick="removerPremium('${u.user_id||u.id}','${u.nick}')">Remover</button></td>
+      </tr>`;
+    }).join("");
+  } catch(e) {
+    document.getElementById("premiumTable").innerHTML = `<tr><td colspan="6" style="color:var(--red);padding:20px">Erro ao carregar.</td></tr>`;
+  }
+}
+
+async function removerPremium(userId, nick){
+  if(!confirm(`Remover premium de ${nick}?`)) return;
+  try {
+    const d = await api("/api/admin/premium-users/remove", {
+      method: "POST",
+      body: JSON.stringify({ userId })
+    });
+    if(d.ok){ toast(`Premium de ${nick} removido!`, "success"); loadPremium(); }
+    else toast("Erro ao remover premium.", "error");
+  } catch(e){ toast("Erro de conexão.", "error"); }
+}
+
+function openGerarToken(){
+  const box = document.getElementById("gerarTokenBox");
+  box.style.display = box.style.display === "none" ? "block" : "none";
+  document.getElementById("tokenGerado").style.display = "none";
+}
+
+async function gerarToken(){
+  const days = Number(document.getElementById("tokenDays").value);
+  try {
+    const d = await api("/api/admin/tokens", { method:"POST", body: JSON.stringify({days}) });
+    if(d.ok && d.token){
+      document.getElementById("tokenGerado").style.display = "block";
+      document.getElementById("tokenGeradoText").textContent = d.token;
+      document.getElementById("tokenGeradoExpiry").textContent = `Expira em: ${fmtDate(d.expiresAt)} (${days} dias)`;
+      toast("Token gerado!", "success");
+    } else toast("Erro ao gerar token.", "error");
+  } catch(e){ toast("Erro de conexão.", "error"); }
+}
+
+function copyToken(){
+  const t = document.getElementById("tokenGeradoText").textContent;
+  navigator.clipboard.writeText(t).then(()=>toast("Token copiado!", "success"));
+}
+
+// ===== SENHAS =====
+const pendingRecoveries = {};
+
+async function loadSenhas(){
+  // Não há rota de listar todas as solicitações — mostramos dica de busca
+  document.getElementById("recoveryList").innerHTML = `
+    <div class="empty-state">
+      <div class="icon">🔐</div>
+      <p>Use a busca acima para localizar um usuário pelo nick<br>e redefinir a senha ou verificar solicitações.</p>
+    </div>`;
+}
+
+async function buscarUsuarioSenha(){
+  const nick = document.getElementById("senhaSearchNick").value.trim();
+  if(!nick) return;
+  const wrap = document.getElementById("senhaUserResult");
+  wrap.style.display = "block";
+  wrap.innerHTML = `<div class="loading"><span class="spin">⟳</span> Buscando...</div>`;
+  try {
+    const d = await api(`/api/admin/find-user-by-nick?nick=${encodeURIComponent(nick)}`);
+    if(!d.ok){ wrap.innerHTML = `<div style="color:var(--red);font-size:13px;padding:10px 0">Usuário não encontrado.</div>`; return; }
+    const u = d.user;
+    wrap.innerHTML = `
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-top:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+          <div>
+            <div style="font-weight:800;font-size:16px;">${u.nick}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px;">
+              XP: ${u.xp} &nbsp;|&nbsp; Nível: ${calcLevel(u.xp)}
+              &nbsp;|&nbsp; Premium: ${u.premium ? '<span style="color:var(--green)">✓ Sim</span>' : 'Não'}
+              ${u.password_temp ? '&nbsp;|&nbsp;<span style="color:var(--yellow)">⚠ Senha temporária ativa</span>' : ''}
+            </div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px;">
+              Criado: ${fmtDate(u.created_at)} &nbsp;|&nbsp; Último login: ${fmtDate(u.last_login_at)}
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-primary btn-sm" onclick="resetarSenha('${u.nick}')">🔑 Redefinir senha</button>
+            <button class="btn btn-ghost btn-sm" onclick="verRecoveryChat('${u.nick}')">💬 Ver chat</button>
+          </div>
+        </div>
+        <div id="senhaResetResult_${u.nick.replace(/\W/g,'')}" style="display:none;margin-top:12px;"></div>
+        <div id="recoveryChat_${u.nick.replace(/\W/g,'')}" style="display:none;margin-top:12px;"></div>
+      </div>`;
+  } catch(e){ wrap.innerHTML = `<div style="color:var(--red);font-size:13px;padding:10px 0">Erro de conexão.</div>`; }
+}
+
+async function resetarSenha(nick){
+  const safe = nick.replace(/\W/g,'');
+  const resultEl = document.getElementById(`senhaResetResult_${safe}`);
+  resultEl.style.display = "block";
+  resultEl.innerHTML = `
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-top:4px;">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;">Redefinir senha de ${nick}</div>
+      <div class="form-row" style="margin-bottom:12px;">
+        <div class="form-group" style="flex:1;">
+          <label>Nova senha (deixe vazio para gerar automática)</label>
+          <input type="text" id="senhaManual_${safe}" placeholder="ex: Minhasenha123">
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+          <button class="btn btn-primary" onclick="executarResetSenha('${nick}')">Redefinir</button>
+        </div>
+      </div>
+      <div id="senhaResetOutput_${safe}" style="display:none;"></div>
+    </div>`;
+}
+
+async function executarResetSenha(nick){
+  const safe = nick.replace(/\W/g,'');
+  const senhaManual = (document.getElementById(`senhaManual_${safe}`)?.value || "").trim();
+  const outputEl = document.getElementById(`senhaResetOutput_${safe}`);
+  outputEl.style.display = "block";
+  outputEl.innerHTML = `<div class="loading"><span class="spin">⟳</span> Redefinindo...</div>`;
+  try {
+    const body = { nick };
+    if(senhaManual) body.tempPassword = senhaManual;
+    const d = await api("/api/admin/reset-password-temp", {
+      method: "POST",
+      body: JSON.stringify(body)
+    });
+    if(d.ok){
+      const senha = d.tempPassword;
+      // Guarda senha e nick para envio no chat
+      window._lastResetNick = nick;
+      window._lastResetSenha = senha;
+      outputEl.innerHTML = `
+        <div style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:10px;padding:14px 16px;">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">SENHA ${senhaManual ? 'DEFINIDA' : 'GERADA'}</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+            <span style="font-family:var(--mono);font-size:18px;color:var(--green);font-weight:700;">${senha}</span>
+            <button class="copy-btn" onclick="navigator.clipboard.writeText('${senha}').then(()=>toast('Copiado!','success'))">copiar</button>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-primary btn-sm" onclick="enviarSenhaNoChat('${nick}', '${senha}')">
+              💬 Enviar no chat de ${nick}
+            </button>
+          </div>
+          <div id="chatEnvioStatus_${safe}" style="margin-top:10px;font-size:12px;"></div>
+        </div>`;
+      toast(`Senha de ${nick} redefinida!`, "success");
+    } else {
+      outputEl.innerHTML = `<div style="color:var(--red);font-size:13px;">Erro: ${d.error||"desconhecido"}</div>`;
+    }
+  } catch(e){ outputEl.innerHTML = `<div style="color:var(--red);font-size:13px;">Erro de conexão.</div>`; }
+}
+
+async function enviarSenhaNoChat(nick, senha){
+  const safe = nick.replace(/\W/g,'');
+  const statusEl = document.getElementById(`chatEnvioStatus_${safe}`);
+  if(statusEl) statusEl.innerHTML = `<span class="spin">⟳</span> Abrindo chat...`;
+  try {
+    // Abre/pega o chat do usuário
+    const chatD = await api("/api/admin/chats/open-by-nick", {
+      method: "POST",
+      body: JSON.stringify({ nick })
+    });
+    if(!chatD.ok){ 
+      if(statusEl) statusEl.innerHTML = `<span style="color:var(--red)">Erro ao abrir chat.</span>`;
+      toast("Erro ao abrir chat.", "error");
+      return;
+    }
+    const chatId = chatD.chat?.id;
+    if(!chatId){ 
+      if(statusEl) statusEl.innerHTML = `<span style="color:var(--red)">Chat não encontrado.</span>`;
+      return;
+    }
+    // Envia mensagem com a senha
+    const msg = `🔑 Sua senha foi redefinida!\n\nNova senha: ${senha}\n\nEntre com essa senha e depois vá em Perfil → Trocar Senha para definir uma nova. 😊`;
+    const sendD = await api(`/api/admin/chats/${chatId}/send`, {
+      method: "POST",
+      body: JSON.stringify({ message: msg })
+    });
+    if(sendD.ok){
+      if(statusEl) statusEl.innerHTML = `<span style="color:var(--green)">✓ Senha enviada no chat de ${nick}!</span>`;
+      toast(`Senha enviada no chat de ${nick}!`, "success");
+    } else {
+      if(statusEl) statusEl.innerHTML = `<span style="color:var(--red)">Erro ao enviar mensagem.</span>`;
+    }
+  } catch(e){
+    if(statusEl) statusEl.innerHTML = `<span style="color:var(--red)">Erro de conexão.</span>`;
+    toast("Erro de conexão.", "error");
+  }
+}
+
+async function verRecoveryChat(nick){
+  const safe = nick.replace(/\W/g,'');
+  const chatEl = document.getElementById(`recoveryChat_${safe}`);
+  chatEl.style.display = "block";
+  chatEl.innerHTML = `<div class="loading"><span class="spin">⟳</span> Carregando chat...</div>`;
+  try {
+    const d = await api(`/api/recovery-chat/${encodeURIComponent(nick)}`);
+    if(!d.ok){ chatEl.innerHTML = `<div style="color:var(--red);font-size:13px;">Erro ao carregar.</div>`; return; }
+    const msgs = d.messages || [];
+    if(!msgs.length){
+      chatEl.innerHTML = `<div style="color:var(--muted);font-size:12px;padding:8px 0;">Nenhuma solicitação no chat.</div>`;
+      return;
+    }
+    chatEl.innerHTML = `
+      <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px;">Solicitações no chat</div>
+      ${msgs.map(m=>`
+        <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:10px 14px;margin-bottom:8px;font-size:13px;">
+          <span style="color:var(--yellow);">🔐</span> ${m.message||""}
+          <span style="color:var(--muted);font-size:11px;margin-left:10px;">${fmtDate(m.created_at)}</span>
+        </div>`).join("")}`;
+  } catch(e){ chatEl.innerHTML = `<div style="color:var(--red);font-size:13px;">Erro de conexão.</div>`; }
+}
+
+// ===== XP =====
+async function buscarXP(){
+  const nick = document.getElementById("xpNick").value.trim();
+  if(!nick) return;
+  try {
+    const d = await api(`/api/admin/find-user-by-nick?nick=${encodeURIComponent(nick)}`);
+    if(!d.ok){ toast("Usuário não encontrado.", "error"); return; }
+    xpCurrentUser = d.user;
+    renderXPCard();
+  } catch(e){ toast("Erro de conexão.", "error"); }
+}
+
+function renderXPCard(){
+  if(!xpCurrentUser) return;
+  const u = xpCurrentUser;
+  document.getElementById("xpResultCard").classList.add("visible");
+  document.getElementById("xpResultNick").textContent = u.nick;
+  document.getElementById("xpResultXP").textContent = Number(u.xp||0).toLocaleString("pt-BR") + " XP";
+  document.getElementById("xpResultLevel").textContent = "Nível " + calcLevel(u.xp);
+  document.getElementById("xpResultPremium").textContent = u.premium ? "✓ Sim" : "Não";
+}
+
+async function ajustarXP(tipo, amount){
+  if(!xpCurrentUser) return;
+  const novoXP = Math.max(0, Number(xpCurrentUser.xp||0) + amount);
+  await salvarXP(novoXP, `+${amount} XP`);
+}
+
+async function ajustarXPCustom(){
+  const amount = Number(document.getElementById("xpCustomAmount").value);
+  if(!amount || amount <= 0){ toast("Valor inválido.", "error"); return; }
+  const novoXP = Number(xpCurrentUser.xp||0) + amount;
+  await salvarXP(novoXP, `+${amount} XP`);
+  document.getElementById("xpCustomAmount").value = "";
+}
+
+async function setXPManual(){
+  const val = Number(document.getElementById("xpManual").value);
+  if(isNaN(val) || val < 0){ toast("Valor inválido.", "error"); return; }
+  await salvarXP(val, `Definido para ${val}`);
+  document.getElementById("xpManual").value = "";
+}
+
+async function confirmarZerarXP(){
+  if(!xpCurrentUser) return;
+  if(!confirm(`Zerar o XP de ${xpCurrentUser.nick}?`)) return;
+  await salvarXP(0, "XP zerado");
+}
+
+async function salvarXP(novoXP, acao){
+  if(!xpCurrentUser) return;
+  const xpAntes = Number(xpCurrentUser.xp||0);
+  try {
+    const d = await api("/api/admin/set-xp", {
+      method: "POST",
+      body: JSON.stringify({ nick: xpCurrentUser.nick, xp: novoXP })
+    });
+    if(d.ok){
+      // Atualiza histórico
+      xpHistory.unshift({
+        nick: xpCurrentUser.nick,
+        acao,
+        antes: xpAntes,
+        depois: novoXP,
+        hora: new Date().toLocaleTimeString("pt-BR")
+      });
+      xpCurrentUser.xp = novoXP;
+      renderXPCard();
+      renderXPHistory();
+      toast(`XP de ${xpCurrentUser.nick} atualizado para ${novoXP.toLocaleString("pt-BR")}!`, "success");
+    } else toast("Erro: " + (d.error||"desconhecido"), "error");
+  } catch(e){ toast("Erro de conexão.", "error"); }
+}
+
+function renderXPHistory(){
+  if(!xpHistory.length) return;
+  document.getElementById("xpHistoryWrap").style.display = "block";
+  document.getElementById("xpHistoryTable").innerHTML = xpHistory.map(h => `
+    <tr>
+      <td><strong>${h.nick}</strong></td>
+      <td>${h.acao}</td>
+      <td class="mono" style="color:var(--muted)">${h.antes.toLocaleString("pt-BR")}</td>
+      <td class="mono" style="color:var(--green)">${h.depois.toLocaleString("pt-BR")}</td>
+      <td style="font-size:12px;color:var(--muted)">${h.hora}</td>
+    </tr>`).join("");
+}
+</script>
+</body>
+</html>
