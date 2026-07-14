@@ -296,8 +296,8 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     }
 
     .premium-locked img {
-      filter: grayscale(100%) blur(8px);
-      opacity: 0.2;
+      filter: grayscale(100%) blur(4px);
+      opacity: 0.45;
     }
 
     /* ADMIN */
@@ -2112,106 +2112,6 @@ select optgroup{
     }
 
 
-    /* ===== VISITANTE GRÁTIS ===== */
-    #guestTrialBanner{
-      display:none;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      margin: 0 0 22px;
-      padding: 14px 18px;
-      border-radius: 20px;
-      border:1px solid rgba(255,215,0,.26);
-      background: linear-gradient(135deg, rgba(255,215,0,.16), rgba(0,255,255,.10));
-      box-shadow: 0 14px 32px rgba(0,0,0,.28), 0 0 18px rgba(255,215,0,.08);
-      backdrop-filter: blur(14px);
-    }
-    #guestTrialBanner.show{ display:flex; }
-    .guest-trial-copy{ min-width:0; }
-    .guest-trial-title{
-      font-weight:900;
-      color:#ffe27a;
-      margin-bottom:4px;
-      font-size:15px;
-    }
-    .guest-trial-sub{
-      font-size:13px;
-      opacity:.92;
-      line-height:1.45;
-    }
-    .guest-trial-actions{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    #guestTrialCountdown{
-      min-width:120px;
-      text-align:center;
-      padding:10px 14px;
-      border-radius:999px;
-      background: rgba(0,0,0,.34);
-      border:1px solid rgba(255,255,255,.10);
-      font-weight:900;
-      color:#fff;
-      letter-spacing:.5px;
-      box-shadow: inset 0 0 12px rgba(0,0,0,.26);
-    }
-    .guest-trial-btn{
-      border:none;
-      border-radius:999px;
-      padding:10px 16px;
-      font-weight:900;
-      cursor:pointer;
-      background: linear-gradient(135deg, #ffd700, #ffb700);
-      color:#000;
-      box-shadow: 0 10px 24px rgba(255,215,0,.18);
-    }
-    .guest-trial-btn.secondary{
-      background: rgba(255,255,255,.08);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:none;
-    }
-    .guest-trial-locked-note{
-      margin-top:10px;
-      font-size:11px;
-      font-weight:800;
-      color:#ffe27a;
-      line-height:1.4;
-      text-align:center;
-    }
-    .guest-trial-chip{
-      position:absolute;
-      left:12px;
-      top:12px;
-      z-index:11;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:10px;
-      font-weight:900;
-      letter-spacing:.5px;
-      color:#111;
-      background: linear-gradient(135deg, #ffd700, #fff2a8);
-      box-shadow: 0 8px 20px rgba(255,215,0,.24);
-    }
-    #guestExpiredModal .modal-box{
-      width:min(440px, 92vw);
-      background: linear-gradient(180deg, rgba(18,18,18,.98), rgba(8,8,8,.98));
-      border:1px solid rgba(255,215,0,.25);
-      box-shadow: 0 26px 60px rgba(0,0,0,.55), 0 0 28px rgba(255,215,0,.10);
-    }
-    @media (max-width: 860px){
-      #guestTrialBanner{
-        flex-direction:column;
-        align-items:flex-start;
-      }
-      .guest-trial-actions{
-        width:100%;
-        justify-content:flex-start;
-      }
-    }
 
   
 /* ===== SIDEBAR UPGRADE FIX ===== */
@@ -2592,10 +2492,6 @@ body.avatar-modal-open{
       font-size: 14px !important;
       font-weight: 600 !important;
     }
-    #catalogo.list-mode .jogo .guest-trial-locked-note {
-      display: none !important;
-    }
-
     /* ===== GLOWING PREMIUM LOGIN PANEL ===== */
     #userLoginModal .login-shell {
       width: min(420px, 94vw) !important;
@@ -3418,106 +3314,6 @@ body.avatar-modal-open{
     }
 
 
-    /* ===== VISITANTE GRÁTIS ===== */
-    #guestTrialBanner{
-      display:none;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      margin: 0 0 22px;
-      padding: 14px 18px;
-      border-radius: 20px;
-      border:1px solid rgba(255,215,0,.26);
-      background: linear-gradient(135deg, rgba(255,215,0,.16), rgba(0,255,255,.10));
-      box-shadow: 0 14px 32px rgba(0,0,0,.28), 0 0 18px rgba(255,215,0,.08);
-      backdrop-filter: blur(14px);
-    }
-    #guestTrialBanner.show{ display:flex; }
-    .guest-trial-copy{ min-width:0; }
-    .guest-trial-title{
-      font-weight:900;
-      color:#ffe27a;
-      margin-bottom:4px;
-      font-size:15px;
-    }
-    .guest-trial-sub{
-      font-size:13px;
-      opacity:.92;
-      line-height:1.45;
-    }
-    .guest-trial-actions{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    #guestTrialCountdown{
-      min-width:120px;
-      text-align:center;
-      padding:10px 14px;
-      border-radius:999px;
-      background: rgba(0,0,0,.34);
-      border:1px solid rgba(255,255,255,.10);
-      font-weight:900;
-      color:#fff;
-      letter-spacing:.5px;
-      box-shadow: inset 0 0 12px rgba(0,0,0,.26);
-    }
-    .guest-trial-btn{
-      border:none;
-      border-radius:999px;
-      padding:10px 16px;
-      font-weight:900;
-      cursor:pointer;
-      background: linear-gradient(135deg, #ffd700, #ffb700);
-      color:#000;
-      box-shadow: 0 10px 24px rgba(255,215,0,.18);
-    }
-    .guest-trial-btn.secondary{
-      background: rgba(255,255,255,.08);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:none;
-    }
-    .guest-trial-locked-note{
-      margin-top:10px;
-      font-size:11px;
-      font-weight:800;
-      color:#ffe27a;
-      line-height:1.4;
-      text-align:center;
-    }
-    .guest-trial-chip{
-      position:absolute;
-      left:12px;
-      top:12px;
-      z-index:11;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:10px;
-      font-weight:900;
-      letter-spacing:.5px;
-      color:#111;
-      background: linear-gradient(135deg, #ffd700, #fff2a8);
-      box-shadow: 0 8px 20px rgba(255,215,0,.24);
-    }
-    #guestExpiredModal .modal-box{
-      width:min(440px, 92vw);
-      background: linear-gradient(180deg, rgba(18,18,18,.98), rgba(8,8,8,.98));
-      border:1px solid rgba(255,215,0,.25);
-      box-shadow: 0 26px 60px rgba(0,0,0,.55), 0 0 28px rgba(255,215,0,.10);
-    }
-    @media (max-width: 860px){
-      #guestTrialBanner{
-        flex-direction:column;
-        align-items:flex-start;
-      }
-      .guest-trial-actions{
-        width:100%;
-        justify-content:flex-start;
-      }
-    }
 
   
 /* ===== CHAT WHATSAPP STYLE ===== */
@@ -3829,13 +3625,6 @@ body.avatar-modal-open{
       <div id="presenceSummarySub">Clique para ver quem está online e os últimos vistos</div>
     </div>
 
-    <div style="margin-bottom:25px">
-      <input type="text" id="searchBar" placeholder="🔍 Buscar jogos..."
-        style="width:100%; padding:14px; border-radius:50px; border:1px solid #222;
-        background:rgba(255,255,255,0.04); color:#fff; outline:none;
-        font-size:14px; padding-left:20px;">
-    </div>
-
     <!-- ===== RADIO PLAYER ===== -->
     <nav id="categoriaBtns" style="overflow-y:auto; padding-right:5px;">
       <button class="catBtn active" data-cat="Todos">📂 Todos</button>
@@ -3947,17 +3736,6 @@ body.avatar-modal-open{
       </div>
     </div>
 
-    <div id="guestTrialBanner">
-      <div class="guest-trial-copy">
-        <div class="guest-trial-title">🎁 Aproveite grátis por alguns minutos</div>
-        <div class="guest-trial-sub">💬 Crie uma conta e solicite acesso grátis no chat</div>
-      </div>
-      <div class="guest-trial-actions">
-        <div id="guestTrialCountdown">10:00</div>
-        <button id="guestTrialCreateAccountBtn" class="guest-trial-btn secondary" type="button">Criar conta</button>
-        <button id="guestTrialChatBtn" class="guest-trial-btn" type="button">Pedir acesso grátis</button>
-      </div>
-    </div>
 
     <section id="tfNeonHero" aria-label="Destaques ToolFlix">
       <div class="tf-hero-layout">
@@ -4184,17 +3962,6 @@ body.avatar-modal-open{
         <div class="level-up-sub">Seu perfil evoluiu. Continue assistindo, baixando e explorando para desbloquear ainda mais recompensas.</div>
         <div class="level-up-progress"><div></div></div>
       </div>
-    </div>
-  </div>
-
-  <div id="guestExpiredModal" class="modal-overlay">
-    <div class="modal-box">
-      <h2 style="color:gold; margin-bottom:14px;">🔒 Seu acesso grátis terminou</h2>
-      <p style="opacity:.92; line-height:1.6; margin-bottom:10px;">🎁 Crie uma conta para continuar</p>
-      <p style="opacity:.84; line-height:1.6; margin-bottom:22px;">💬 Solicite acesso grátis no chat</p>
-      <button id="guestExpiredCreateBtn" class="nav-item" style="width:100%; background:var(--cor-accent); color:#000; margin-bottom:10px;">Criar conta</button>
-      <button id="guestExpiredChatBtn" class="nav-item" style="width:100%; background:gold; color:#000; margin-bottom:10px;">Quero acesso grátis</button>
-      <button id="guestExpiredCloseBtn" class="nav-item" style="width:100%;">Fechar</button>
     </div>
   </div>
 
@@ -4612,150 +4379,6 @@ const MASTER_NICK = "Srgokucheats";
   let sortModo  = "recentes";
   let filterFav = false;
 
-
-  const GUEST_TRIAL_KEY = "toolflix_guest_trial";
-  const GUEST_TRIAL_DURATION_MS = 10 * 60 * 1000;
-  const GUEST_PREMIUM_CHAT_MESSAGE = "Quero acesso grátis";
-
-  function loadGuestTrial(){
-    try{ return JSON.parse(localStorage.getItem(GUEST_TRIAL_KEY) || "null"); }
-    catch{ return null; }
-  }
-
-  function saveGuestTrial(data){
-    localStorage.setItem(GUEST_TRIAL_KEY, JSON.stringify(data || null));
-  }
-
-  function hasLoggedAccount(){
-    const u = loadUser();
-    return !!(u && u.nick);
-  }
-
-  function isGuestTrialEligible(){
-    return !getLoggedUserId() && !hasLoggedAccount() && !isPremium && !modoAdmin;
-  }
-
-  function getGuestTrialState(){
-    const raw = loadGuestTrial();
-    if(!raw || typeof raw !== "object") return null;
-    const startAt = Number(raw.startAt || 0);
-    const endAt = Number(raw.endAt || 0);
-    const expiredShown = !!raw.expiredShown;
-    if(!startAt || !endAt) return null;
-    const now = Date.now();
-    return {
-      startAt,
-      endAt,
-      expiredShown,
-      remainingMs: Math.max(0, endAt - now),
-      active: now < endAt
-    };
-  }
-
-  function ensureGuestTrial(){
-    if(!isGuestTrialEligible()) return getGuestTrialState();
-    let state = getGuestTrialState();
-    if(!state){
-      const now = Date.now();
-      saveGuestTrial({ startAt: now, endAt: now + GUEST_TRIAL_DURATION_MS, expiredShown:false });
-      state = getGuestTrialState();
-    }
-    return state;
-  }
-
-  function canAccessPremiumAsGuest(){
-    const state = getGuestTrialState();
-    return !!(state && state.active && isGuestTrialEligible());
-  }
-
-  function formatGuestTrialTime(ms){
-    const total = Math.max(0, Math.ceil(Number(ms || 0) / 1000));
-    const min = String(Math.floor(total / 60)).padStart(2, "0");
-    const sec = String(total % 60).padStart(2, "0");
-    return `${min}:${sec}`;
-  }
-
-  function setPendingPremiumChatRequest(){
-    localStorage.setItem("toolflix_open_chat_after_login", "1");
-    localStorage.setItem("toolflix_chat_prefill", GUEST_PREMIUM_CHAT_MESSAGE);
-  }
-
-  function openChatWithPrefill(message){
-    const msg = String(message || "").trim();
-    const token = getToken?.();
-    if(!token){
-      setPendingPremiumChatRequest();
-      showToast("Crie sua conta para pedir acesso grátis no chat.");
-      openLogin("register");
-      return;
-    }
-
-    const chat = document.getElementById("miniChat");
-    const input = document.getElementById("chatInput");
-    if(chat){
-      chat.style.display = "flex";
-      window.__chatIsOpen = true;
-    }
-    if(input){
-      input.value = msg;
-      input.focus();
-    }
-    loadChatMessages?.({ markSeen:true, forceScroll:true });
-  }
-
-  function maybeOpenPendingPremiumChatRequest(){
-    const shouldOpen = localStorage.getItem("toolflix_open_chat_after_login") === "1";
-    if(!shouldOpen || !getToken?.()) return;
-    const msg = localStorage.getItem("toolflix_chat_prefill") || GUEST_PREMIUM_CHAT_MESSAGE;
-    localStorage.removeItem("toolflix_open_chat_after_login");
-    localStorage.removeItem("toolflix_chat_prefill");
-    setTimeout(()=> openChatWithPrefill(msg), 250);
-  }
-
-  function showGuestExpiredModal(){
-    const modal = document.getElementById("guestExpiredModal");
-    if(modal) modal.style.display = "flex";
-  }
-
-  function markGuestTrialExpiredShown(){
-    const raw = loadGuestTrial();
-    if(!raw) return;
-    raw.expiredShown = true;
-    saveGuestTrial(raw);
-  }
-
-  function handleGuestTrialExpiration(){
-    const state = getGuestTrialState();
-    if(!state || state.active || !isGuestTrialEligible()) return;
-    if(state.expiredShown) return;
-    markGuestTrialExpiredShown();
-    render?.();
-    showGuestExpiredModal();
-  }
-
-  function updateGuestTrialUI(){
-    const banner = document.getElementById("guestTrialBanner");
-    const countdown = document.getElementById("guestTrialCountdown");
-    const counter = document.getElementById("premiumCounter");
-    const state = ensureGuestTrial();
-    const active = !!(state && state.active && isGuestTrialEligible());
-
-    if(banner){
-      banner.classList.toggle("show", active);
-      banner.style.display = active ? "flex" : "none";
-    }
-    if(countdown){
-      countdown.textContent = active ? formatGuestTrialTime(state.remainingMs) : "00:00";
-    }
-
-    if(counter){
-      counter.style.display = "block";
-    }
-
-    if(!active){
-      handleGuestTrialExpiration();
-    }
-  }
 
 
   /* ===============================
@@ -5987,7 +5610,6 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
       closeLogin();
       toggleUserMenu(true);
       updateUserUI();
-      updateGuestTrialUI?.();
       const fromRegister = AUTH_MODE === "register";
       showToast(j2.user.password_temp ? `Bem-vindo, ${j2.user.nick}. Troque sua senha no perfil.` : `Bem-vindo, ${j2.user.nick}!`);
       if(j2.user.password_temp){
@@ -5997,7 +5619,6 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
         if(fromRegister){
           setTimeout(()=> showToast("💬 Abra o chat e peça acesso premium grátis."), 450);
         }
-        maybeOpenPendingPremiumChatRequest();
       }
     }catch(e){
       showToast("Erro ao conectar com servidor.");
@@ -6540,7 +6161,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
   function getPremiumStats(){
     const totalPremium = db_jogos.filter(j => j && j.premium === true).length;
     const totalItens = db_jogos.length;
-    const desbloqueados = (isPremium || modoAdmin || canAccessPremiumAsGuest()) ? totalPremium : 0;
+    const desbloqueados = (isPremium || modoAdmin) ? totalPremium : 0;
     return { totalPremium, totalItens, desbloqueados };
   }
 
@@ -6553,19 +6174,14 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
 
     const s = getPremiumStats();
     const totalP = (premiumMembersCount || s.totalPremium || 0);
-    const guestTrial = getGuestTrialState();
-    const guestActive = !!(guestTrial && guestTrial.active && isGuestTrialEligible());
     const headline = isPremium
       ? `💎 Você é um dos <b>${totalP}</b> usuários Premium`
-      : guestActive
-        ? `🎁 Visitante grátis ativo por <b>${formatGuestTrialTime(guestTrial.remainingMs)}</b>`
-        : `💎 Total de Premiums: <b>${totalP}</b>`;
+      : `💎 Total de Premiums: <b>${totalP}</b>`;
 
     counter.innerHTML = `
-      <div style="font-weight:900; color:${guestActive ? '#ffe27a' : 'gold'}; margin-bottom:6px;">${headline}</div>
+      <div style="font-weight:900; color:gold; margin-bottom:6px;">${headline}</div>
       <div>🔓 Desbloqueados: <b>${s.desbloqueados}</b> / <b>${s.totalPremium}</b></div>
       <div>📦 Total no catálogo: <b>${s.totalItens}</b></div>
-      ${guestActive ? '<div style="margin-top:8px; font-size:11px; color:#ffe27a; font-weight:800;">💬 Crie uma conta e peça acesso grátis no chat antes do tempo acabar.</div>' : ''}
     `;
   }
 
@@ -6647,7 +6263,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     const modal = document.getElementById("gameDetailsModal");
     const frame = document.getElementById("gameTrailerFrame");
     const wrap = document.getElementById("gameTrailerWrap");
-    if(frame) frame.src = "";
+    if(frame) frame.src = "about:blank";
     if(wrap) wrap.classList.remove("active");
     setModalDownloadMeter(0);
     if(modal) modal.style.display = "none";
@@ -6683,7 +6299,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     if(cat) cat.textContent = normalizeCategoria(j?.categoria || "Conteúdo");
     if(premium) premium.textContent = j?.premium ? "💎 Premium" : "";
 
-    if(frame) frame.src = "";
+    if(frame) frame.src = "about:blank";
     if(wrap) wrap.classList.remove("active");
 
     if(trailerBtn){
@@ -6921,8 +6537,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     lista.forEach((j, idx) => {
       const isFav = db_favs.includes(j.nome);
       const isP = j.premium === true;
-      const guestUnlocked = canAccessPremiumAsGuest();
-      const lock = isP && !isPremium && !modoAdmin && !guestUnlocked;
+      const lock = isP && !isPremium && !modoAdmin;
 
       const card = document.createElement("div");
       card.className = `jogo ${isP ? "jogo-premium" : ""} ${lock ? "premium-locked" : ""}`;
@@ -6949,8 +6564,6 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
         </button>
 
         ${lock ? '<span style="position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:40px; z-index:5">🔒</span>' : ""}
-
-        ${isP && guestUnlocked ? '<span class="guest-trial-chip">🎁 LIBERADO AGORA</span>' : ""}
 
         <img src="${capaFinal}" alt="" onerror="this.src='https://via.placeholder.com/512x512.png?text=ToolFlix';">
 
@@ -8160,32 +7773,11 @@ document.addEventListener("click", async (ev)=>{
       await loadChatMessages({ markSeen: true, forceScroll: true });
     }
   });
-  document.getElementById("guestTrialCreateAccountBtn")?.addEventListener("click", ()=> openLogin("register"));
-  document.getElementById("guestTrialChatBtn")?.addEventListener("click", ()=>{
-    setPendingPremiumChatRequest();
-    openChatWithPrefill(GUEST_PREMIUM_CHAT_MESSAGE);
-  });
-  document.getElementById("guestExpiredCreateBtn")?.addEventListener("click", ()=>{
-    document.getElementById("guestExpiredModal").style.display = "none";
-    openLogin("register");
-  });
-  document.getElementById("guestExpiredChatBtn")?.addEventListener("click", ()=>{
-    document.getElementById("guestExpiredModal").style.display = "none";
-    setPendingPremiumChatRequest();
-    openChatWithPrefill(GUEST_PREMIUM_CHAT_MESSAGE);
-  });
-  document.getElementById("guestExpiredCloseBtn")?.addEventListener("click", ()=>{
-    document.getElementById("guestExpiredModal").style.display = "none";
-  });
-
-  setInterval(updateGuestTrialUI, 1000);
 
     /* ===============================
      INIT DO SITE
   ================================= */
-  ensureGuestTrial();
   updateUserUI();
-  updateGuestTrialUI();
   updatePremiumSidebar();
   render();
 
@@ -8200,7 +7792,6 @@ document.addEventListener("click", async (ev)=>{
     if(loginModal && getComputedStyle(loginModal).display !== "none") return;
     if(selectorModal && getComputedStyle(selectorModal).display === "none") openProfileSelector();
   }, 180);
-  maybeOpenPendingPremiumChatRequest();
   checkPremiumSync();
   syncJogos();
 
@@ -8446,106 +8037,6 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
 
-    /* ===== VISITANTE GRÁTIS ===== */
-    #guestTrialBanner{
-      display:none;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      margin: 0 0 22px;
-      padding: 14px 18px;
-      border-radius: 20px;
-      border:1px solid rgba(255,215,0,.26);
-      background: linear-gradient(135deg, rgba(255,215,0,.16), rgba(0,255,255,.10));
-      box-shadow: 0 14px 32px rgba(0,0,0,.28), 0 0 18px rgba(255,215,0,.08);
-      backdrop-filter: blur(14px);
-    }
-    #guestTrialBanner.show{ display:flex; }
-    .guest-trial-copy{ min-width:0; }
-    .guest-trial-title{
-      font-weight:900;
-      color:#ffe27a;
-      margin-bottom:4px;
-      font-size:15px;
-    }
-    .guest-trial-sub{
-      font-size:13px;
-      opacity:.92;
-      line-height:1.45;
-    }
-    .guest-trial-actions{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    #guestTrialCountdown{
-      min-width:120px;
-      text-align:center;
-      padding:10px 14px;
-      border-radius:999px;
-      background: rgba(0,0,0,.34);
-      border:1px solid rgba(255,255,255,.10);
-      font-weight:900;
-      color:#fff;
-      letter-spacing:.5px;
-      box-shadow: inset 0 0 12px rgba(0,0,0,.26);
-    }
-    .guest-trial-btn{
-      border:none;
-      border-radius:999px;
-      padding:10px 16px;
-      font-weight:900;
-      cursor:pointer;
-      background: linear-gradient(135deg, #ffd700, #ffb700);
-      color:#000;
-      box-shadow: 0 10px 24px rgba(255,215,0,.18);
-    }
-    .guest-trial-btn.secondary{
-      background: rgba(255,255,255,.08);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:none;
-    }
-    .guest-trial-locked-note{
-      margin-top:10px;
-      font-size:11px;
-      font-weight:800;
-      color:#ffe27a;
-      line-height:1.4;
-      text-align:center;
-    }
-    .guest-trial-chip{
-      position:absolute;
-      left:12px;
-      top:12px;
-      z-index:11;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:10px;
-      font-weight:900;
-      letter-spacing:.5px;
-      color:#111;
-      background: linear-gradient(135deg, #ffd700, #fff2a8);
-      box-shadow: 0 8px 20px rgba(255,215,0,.24);
-    }
-    #guestExpiredModal .modal-box{
-      width:min(440px, 92vw);
-      background: linear-gradient(180deg, rgba(18,18,18,.98), rgba(8,8,8,.98));
-      border:1px solid rgba(255,215,0,.25);
-      box-shadow: 0 26px 60px rgba(0,0,0,.55), 0 0 28px rgba(255,215,0,.10);
-    }
-    @media (max-width: 860px){
-      #guestTrialBanner{
-        flex-direction:column;
-        align-items:flex-start;
-      }
-      .guest-trial-actions{
-        width:100%;
-        justify-content:flex-start;
-      }
-    }
 
   
 /* ===== CHAT WHATSAPP STYLE ===== */
