@@ -4511,11 +4511,13 @@ const MASTER_NICK = "Srgokucheats";
     renderProfileSelector();
     if(modal) modal.style.display = "flex";
     document.getElementById("userLoginModal")?.classList.add("has-selector-back");
+    document.querySelector(".sidebar")?.style.setProperty("display", "none");
   }
 
   function closeProfileSelector(){
     const modal = document.getElementById("profileSelectorModal");
     if(modal) modal.style.display = "none";
+    document.querySelector(".sidebar")?.style.removeProperty("display");
   }
 
   function openLoginFromSelector(mode){
