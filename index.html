@@ -7,6 +7,8 @@
   <title>ToolFlix Pro - Oficial</title>
 
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
     :root {
       --cor-accent: #00ffff;
       --cor-bg-overlay: rgba(0, 0, 0, 0.3);
@@ -47,7 +49,7 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     * { margin:0; padding:0; box-sizing:border-box; }
 
     body {
-      font-family:'Segoe UI', system-ui, sans-serif;
+      font-family: 'Inter', 'Outfit', 'Segoe UI', system-ui, sans-serif;
       background:#050505;
       color:#f0f0f0;
       display:flex;
@@ -239,6 +241,17 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       z-index: 1;
     }
 
+    @keyframes cardFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
     .jogo {
       background: var(--glass-bg);
       border-radius:20px;
@@ -249,6 +262,7 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       cursor:pointer;
       overflow:hidden;
       z-index:1;
+      animation: cardFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
     .jogo:hover {
@@ -2512,20 +2526,142 @@ body.avatar-modal-open{
   background:rgba(255,255,255,.06);
   border-radius:999px;
 }
-.avatar-picker-grid{
-  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
-}
-.avatar-picker-card img{
-  width:68px !important;
-  height:68px !important;
-}
-.avatar-picker-card.locked img{
-  filter: grayscale(100%) brightness(.55);
-}
-@media (max-width:760px){
-  #avatarPickerModal .modal-box{ padding:22px !important; }
-  .avatar-picker-grid{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
-}
+    /* Focus styling for the new search bar */
+    #searchBar:focus {
+      border-color: var(--cor-accent) !important;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2) !important;
+      background: rgba(255, 255, 255, 0.09) !important;
+    }
+
+    /* ===== MODO LISTA (Visualização compacta/linha) ===== */
+    #catalogo.list-mode {
+      display: flex !important;
+      flex-direction: column !important;
+      grid-template-columns: none !important;
+      gap: 12px !important;
+    }
+    #catalogo.list-mode .jogo {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 16px !important;
+      padding: 12px 20px !important;
+      border-radius: 16px !important;
+      height: auto !important;
+      width: 100% !important;
+      text-align: left !important;
+    }
+    #catalogo.list-mode .jogo:hover {
+      transform: translateY(-2px) scale(1.005) !important;
+    }
+    #catalogo.list-mode .jogo img {
+      width: 60px !important;
+      height: 60px !important;
+      aspect-ratio: 1/1 !important;
+      border-radius: 10px !important;
+      flex-shrink: 0 !important;
+    }
+    #catalogo.list-mode .jogo button {
+      position: relative !important;
+      top: auto !important;
+      right: auto !important;
+      margin-left: auto !important;
+      flex-shrink: 0 !important;
+    }
+    #catalogo.list-mode .jogo .tf-card-download-count {
+      position: relative !important;
+      bottom: auto !important;
+      right: auto !important;
+      margin-left: 15px !important;
+      flex-shrink: 0 !important;
+      transform: none !important;
+    }
+    #catalogo.list-mode .jogo > div:nth-of-type(1) {
+      margin-top: 0 !important;
+      text-align: left !important;
+      flex: 1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+    }
+    #catalogo.list-mode .jogo > div:nth-of-type(1) span {
+      font-size: 9px !important;
+    }
+    #catalogo.list-mode .jogo > div:nth-of-type(1) p {
+      margin-top: 2px !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+    }
+    #catalogo.list-mode .jogo .guest-trial-locked-note {
+      display: none !important;
+    }
+
+    /* ===== GLOWING PREMIUM LOGIN PANEL ===== */
+    #userLoginModal .login-shell {
+      width: min(420px, 94vw) !important;
+      padding: 40px 30px !important;
+      border-radius: 24px !important;
+      background: linear-gradient(180deg, rgba(16, 20, 30, 0.95), rgba(8, 10, 15, 0.98)) !important;
+      border: 1px solid rgba(0, 255, 255, 0.25) !important;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 35px rgba(0, 255, 255, 0.12) !important;
+      backdrop-filter: blur(25px) !important;
+    }
+    #userLoginModal .login-shell h2 {
+      font-size: 24px !important;
+      font-weight: 900 !important;
+      margin-bottom: 20px !important;
+      background: linear-gradient(90deg, #ffffff, var(--cor-accent)) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      letter-spacing: -0.5px !important;
+    }
+    #userLoginModal .login-shell .admin-input {
+      background: rgba(255, 255, 255, 0.04) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 12px !important;
+      padding: 14px 16px !important;
+      color: #fff !important;
+      transition: all 0.3s ease !important;
+      font-size: 14px !important;
+    }
+    #userLoginModal .login-shell .admin-input:focus {
+      border-color: var(--cor-accent) !important;
+      background: rgba(255, 255, 255, 0.07) !important;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2) !important;
+    }
+    #userLoginModal .login-shell button.nav-item {
+      padding: 14px !important;
+      border-radius: 12px !important;
+      font-weight: 800 !important;
+      font-size: 14px !important;
+      letter-spacing: 0.5px !important;
+      transition: all 0.3s ease !important;
+      border: none !important;
+    }
+    #userLoginModal .login-shell #userLoginSubmit {
+      background: linear-gradient(90deg, var(--cor-accent), #00b7ff) !important;
+      color: #000c14 !important;
+      box-shadow: 0 8px 24px rgba(0, 255, 255, 0.25) !important;
+    }
+    #userLoginModal .login-shell #userLoginSubmit:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 12px 30px rgba(0, 255, 255, 0.4) !important;
+      filter: brightness(1.08) !important;
+    }
+    #userLoginModal .login-shell #userLoginSubmit:active {
+      transform: translateY(0) !important;
+    }
+    #userLoginModal .login-shell #backToProfilesBtn,
+    #userLoginModal .login-shell #forgotPasswordBtn {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      color: #fff !important;
+    }
+    #userLoginModal .login-shell #backToProfilesBtn:hover,
+    #userLoginModal .login-shell #forgotPasswordBtn:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.15) !important;
+    }
 
 
 /* ===== BOTÃO MASTER: CHAMAR NO PRIVADO ===== */
@@ -3748,6 +3884,8 @@ body.avatar-modal-open{
 
   <main>
     <div class="top-nav">
+      <input type="text" id="searchBar" class="nav-item" placeholder="🔍 Buscar no catálogo..." style="flex: 1; min-width: 150px; max-width: 300px; background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); padding: 10px 18px; border-radius: 999px; color: #fff; font-family: inherit; font-size: 13px; outline: none; transition: 0.3s;">
+
       <select id="themeSelect" class="nav-item">
         <option value="default">🎭 Temas</option>
         <option value="gow">God of War⚔️</option>
@@ -3778,6 +3916,7 @@ body.avatar-modal-open{
 
       <button class="nav-item" id="sortBtn">🔃 Ordem: Recentes</button>
       <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
+      <button class="nav-item" id="viewModeBtn">📱 Visualização: Grade</button>
       <button class="nav-item" id="adminBtn">⚙️ Admin</button>
 	        <!-- ===== ÁREA DO USUÁRIO (GAME) ===== -->
       <div id="userArea" class="nav-item" role="button" tabindex="0" aria-label="Abrir menu do perfil, avatar e conquistas" style="display:flex; align-items:center; gap:10px; position:relative; cursor:pointer;" title="Abrir menu do perfil">
@@ -6779,7 +6918,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     else if(sortModo === "za") lista.sort((a,b)=> b.nome.localeCompare(a.nome));
     else if(sortModo === "recentes") lista.sort((a,b)=> (Number(b.created_at||0) - Number(a.created_at||0)));
 
-    lista.forEach(j => {
+    lista.forEach((j, idx) => {
       const isFav = db_favs.includes(j.nome);
       const isP = j.premium === true;
       const guestUnlocked = canAccessPremiumAsGuest();
@@ -6787,6 +6926,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
 
       const card = document.createElement("div");
       card.className = `jogo ${isP ? "jogo-premium" : ""} ${lock ? "premium-locked" : ""}`;
+      card.style.animationDelay = `${Math.min(idx * 25, 500)}ms`;
 
       card.onclick = ()=>{
         if(lock){
@@ -6854,6 +6994,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     updateHeroCarousel();
     updatePremiumSidebar();
     updateUserUI();
+    try { updateViewModeUI(); } catch(e){}
   }
     /* ===============================
      FAVORITOS
@@ -6901,6 +7042,27 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
   document.getElementById("favFiltroBtn")?.addEventListener("click", ()=>{
     filterFav = !filterFav;
     render();
+  });
+
+  window.viewMode = localStorage.getItem("toolflix_view_mode") || "grid";
+  window.updateViewModeUI = function(){
+    const grid = document.getElementById("catalogo");
+    const btn = document.getElementById("viewModeBtn");
+    if(!grid || !btn) return;
+    
+    if(window.viewMode === "list"){
+      grid.classList.add("list-mode");
+      btn.innerText = "📱 Visualização: Lista";
+    } else {
+      grid.classList.remove("list-mode");
+      btn.innerText = "📱 Visualização: Grade";
+    }
+  }
+
+  document.getElementById("viewModeBtn")?.addEventListener("click", ()=>{
+    window.viewMode = window.viewMode === "grid" ? "list" : "grid";
+    localStorage.setItem("toolflix_view_mode", window.viewMode);
+    window.updateViewModeUI();
   });
 
   document.querySelectorAll(".catBtn").forEach(btn=>{
