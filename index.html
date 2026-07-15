@@ -3303,58 +3303,211 @@ body.avatar-modal-open{
 </style>
 
 <style id="masterChatsOverlayStyle">
-/* ===== Painel exclusivo de Chats (Master) ===== */
+/* ===== Painel exclusivo de Chats (Master) - MODERNO ===== */
 #masterChatsOverlay{ position:fixed; inset:0; z-index:99999; display:none; }
-#masterChatsOverlay .mco-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.65); backdrop-filter: blur(6px); }
+#masterChatsOverlay .mco-backdrop{
+  position:absolute; inset:0;
+  background: rgba(0,0,0,.75);
+  backdrop-filter: blur(14px) saturate(120%);
+}
 #masterChatsOverlay .mco-modal{
   position:relative;
-  width:min(980px, 94vw);
-  height:min(680px, 86vh);
-  margin:6vh auto 0 auto;
-  background:rgba(20,20,20,.92);
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  box-shadow: 0 20px 60px rgba(0,0,0,.55);
+  width:min(1000px, 94vw);
+  height:min(700px, 88vh);
+  margin:5vh auto 0 auto;
+  border-radius:24px;
   overflow:hidden;
   display:flex;
   flex-direction:column;
+  border:1px solid rgba(180,76,255,.18);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(180,76,255,.08), transparent 30%),
+    radial-gradient(circle at 90% 100%, rgba(0,229,255,.06), transparent 30%),
+    linear-gradient(180deg, rgba(14,16,28,.98), rgba(8,9,16,.99));
+  box-shadow:
+    0 40px 100px rgba(0,0,0,.7),
+    0 0 0 1px rgba(255,255,255,.04),
+    0 0 60px rgba(180,76,255,.08);
 }
 #masterChatsOverlay .mco-topbar{
   display:flex; align-items:center; justify-content:space-between;
-  padding:12px 14px;
-  background:linear-gradient(to right, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  border-bottom:1px solid rgba(255,255,255,.08);
+  padding:16px 22px;
+  background: linear-gradient(135deg, rgba(180,76,255,.10), rgba(0,229,255,.06), rgba(180,76,255,.04));
+  border-bottom:1px solid rgba(255,255,255,.07);
+  position:relative;
+  overflow:hidden;
+  flex-shrink:0;
 }
-#masterChatsOverlay .mco-title{ font-weight:800; letter-spacing:.2px; }
-#masterChatsOverlay .mco-close{
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.06);
+#masterChatsOverlay .mco-topbar::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.04), transparent);
+  animation: mcoShimmer 5s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes mcoShimmer{
+  0%,100%{ opacity:.3; transform:translateX(-100%); }
+  50%{ opacity:1; transform:translateX(100%); }
+}
+#masterChatsOverlay .mco-title{
+  font-weight:900;
+  letter-spacing:.3px;
+  font-size:17px;
   color:#fff;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  position:relative;
+  z-index:1;
+}
+#masterChatsOverlay .mco-title::before{
+  content:"📨";
+  font-size:20px;
+}
+#masterChatsOverlay .mco-close{
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.06);
+  color:rgba(255,255,255,.7);
   border-radius:12px;
-  padding:8px 10px;
+  width:36px;
+  height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   cursor:pointer;
+  font-size:16px;
+  font-weight:900;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  position:relative;
+  z-index:1;
 }
-#masterChatsOverlay .mco-close:hover{ background:rgba(255,255,255,.10); }
-#masterChatsOverlay .mco-body{ flex:1; padding:12px; overflow:auto; }
+#masterChatsOverlay .mco-close:hover{
+  background:rgba(255,50,50,.2);
+  color:#fff;
+  border-color:rgba(255,50,50,.35);
+  transform:rotate(90deg);
+}
+#masterChatsOverlay .mco-body{
+  flex:1;
+  padding:16px;
+  overflow:auto;
+  display:flex;
+  gap:16px;
+}
 #masterChatsOverlay .mco-hint{
-  padding:10px 14px;
+  padding:12px 18px;
   font-size:12px;
-  color:rgba(255,255,255,.70);
-  border-top:1px solid rgba(255,255,255,.08);
-  background:rgba(0,0,0,.25);
+  color:rgba(255,255,255,.50);
+  border-top:1px solid rgba(255,255,255,.06);
+  background:rgba(0,0,0,.30);
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-shrink:0;
 }
+#masterChatsOverlay .mco-hint strong{
+  color:rgba(180,76,255,.8);
+}
+
+/* SCROLLBAR */
+#masterChatsOverlay .mco-body::-webkit-scrollbar{ width:6px; }
+#masterChatsOverlay .mco-body::-webkit-scrollbar-track{ background:transparent; }
+#masterChatsOverlay .mco-body::-webkit-scrollbar-thumb{ background:rgba(180,76,255,.25); border-radius:999px; }
+#masterChatsOverlay .mco-body::-webkit-scrollbar-thumb:hover{ background:rgba(180,76,255,.4); }
+
 /* melhora visual do painel existente quando estiver no overlay */
 #masterChatsOverlay #adminChatsPanel{
-  display:block;
+  display:flex !important;
+  flex-direction:column;
   width:100%;
   height:100%;
   background:transparent !important;
   border:none !important;
   padding:0 !important;
+  gap:14px !important;
 }
-#masterChatsOverlay #adminChatsPanel > div{ gap:12px !important; }
-#masterChatsOverlay #adminChatsList button{ transition: transform .06s ease, background .12s ease; }
-#masterChatsOverlay #adminChatsList button:hover{ transform: translateY(-1px); }
+#masterChatsOverlay #adminChatsPanel > div{ gap:14px !important; }
+#masterChatsOverlay #adminChatsList{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:8px !important;
+}
+#masterChatsOverlay #adminChatsList button{
+  transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+  border-radius:14px !important;
+  border:1px solid rgba(255,255,255,.06) !important;
+  background:rgba(255,255,255,.04) !important;
+  padding:12px 14px !important;
+  text-align:left !important;
+  color:#fff !important;
+}
+#masterChatsOverlay #adminChatsList button:hover{
+  transform:translateY(-2px) !important;
+  background:rgba(180,76,255,.10) !important;
+  border-color:rgba(180,76,255,.25) !important;
+  box-shadow:0 8px 24px rgba(0,0,0,.25), 0 0 14px rgba(180,76,255,.08) !important;
+}
+
+/* CHAT VIEW (lado direito) */
+#masterChatsOverlay #adminChatHeader{
+  padding:14px 16px !important;
+  border-radius:14px !important;
+  background:rgba(255,255,255,.04) !important;
+  border:1px solid rgba(255,255,255,.06) !important;
+  margin-bottom:8px !important;
+}
+#masterChatsOverlay #adminChatMsgs{
+  border-radius:14px !important;
+  background:rgba(0,0,0,.20) !important;
+  border:1px solid rgba(255,255,255,.05) !important;
+  padding:12px !important;
+}
+#masterChatsOverlay #adminChatMsgs::-webkit-scrollbar{ width:5px; }
+#masterChatsOverlay #adminChatMsgs::-webkit-scrollbar-track{ background:transparent; }
+#masterChatsOverlay #adminChatMsgs::-webkit-scrollbar-thumb{ background:rgba(180,76,255,.2); border-radius:999px; }
+
+/* INPUT AREA */
+#masterChatsOverlay .chat-input-area,
+#masterChatsOverlay #chatInputArea{
+  border-radius:14px !important;
+  background:rgba(255,255,255,.04) !important;
+  border:1px solid rgba(255,255,255,.06) !important;
+  padding:10px !important;
+  margin-top:8px !important;
+}
+
+/* MENSAGENS DO CHAT - VISUAL MODERNO */
+#masterChatsOverlay .tf-wa-row{
+  border-radius:18px !important;
+}
+#masterChatsOverlay .tf-wa-row.user .tf-wa-bubble{
+  background:rgba(180,76,255,.12) !important;
+  border:1px solid rgba(180,76,255,.18) !important;
+  border-radius:18px 18px 18px 6px !important;
+}
+#masterChatsOverlay .tf-wa-row.admin .tf-wa-bubble{
+  background:linear-gradient(135deg, rgba(0,229,255,.15), rgba(0,200,200,.12)) !important;
+  border:1px solid rgba(0,229,255,.20) !important;
+  border-radius:18px 18px 6px 18px !important;
+}
+
+/* EMPTY STATE */
+#masterChatsOverlay .mco-empty{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+  gap:12px;
+  color:rgba(255,255,255,.35);
+  font-size:14px;
+}
+#masterChatsOverlay .mco-empty::before{
+  content:"💬";
+  font-size:48px;
+  opacity:.4;
+}
 
     #recoveryChatWrap{
       display:none;
