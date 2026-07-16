@@ -10159,6 +10159,8 @@ document.addEventListener("DOMContentLoaded",()=>{
 /* ===== FIX: botão X do modal de detalhes fecha corretamente ===== */
 (function(){
   function closeGameDetailsModal(){
+    try { stopTrailerFrame(); } catch(e){}
+
     const overlay =
       document.getElementById("gameDetailsModal") ||
       document.querySelector(".game-details-modal-box")?.closest(".modal-overlay") ||
