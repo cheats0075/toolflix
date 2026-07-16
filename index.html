@@ -6680,7 +6680,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
 
   function refreshModalDownloadMeterForGame(j){
     try{
-      setModalDownloadMeter(0);
+      setModalDownloadMeter(getCardDownloadCount(j));
     }catch{}
   }
 
