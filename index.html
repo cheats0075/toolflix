@@ -1786,11 +1786,12 @@ select optgroup{
     /* ===== GLOBAL CHAT ===== */
     #globalChatBtn{
       position: relative;
-      overflow: hidden;
+      overflow: visible !important;
     }
     #globalChatBtn.has-new{
-      border-color: rgba(0,255,255,.35) !important;
-      box-shadow: 0 0 14px rgba(0,255,255,.18), 0 0 28px rgba(0,255,255,.10) !important;
+      border-color: rgba(255,60,60,.45) !important;
+      box-shadow: 0 0 14px rgba(255,0,0,.35), 0 0 30px rgba(255,0,0,.15) !important;
+      animation: chatGlowPulse 1.2s infinite ease-in-out;
     }
     #globalChatOverlay{
       position: fixed;
@@ -8974,6 +8975,35 @@ document.addEventListener("DOMContentLoaded", function(){
     box.innerHTML = list.map(globalChatRowHtml).join("");
   }
 
+  window.__globalChatOpen = false;
+  window.__globalLastSeenCount = Number(localStorage.getItem("toolflix_global_last_seen") || 0);
+  window.__globalCurrentCount = 0;
+
+  function tfHideGlobalChatBadge(){
+    const badge = document.getElementById("globalChatBadge");
+    const btn = document.getElementById("globalChatBtn");
+    if(badge){ badge.style.display = "none"; badge.textContent = ""; }
+    if(btn) btn.classList.remove("has-new");
+  }
+
+  function tfShowGlobalChatBadge(diff){
+    const btn = document.getElementById("globalChatBtn");
+    if(!btn) return;
+    btn.style.position = "relative";
+    btn.style.overflow = "visible";
+    let badge = document.getElementById("globalChatBadge");
+    if(!badge){
+      badge = document.createElement("span");
+      badge.id = "globalChatBadge";
+      badge.style.cssText = "position:absolute;top:-10px;right:-10px;min-width:28px;height:auto;padding:5px 10px;border-radius:999px;background:linear-gradient(135deg,#ff1b1b,#ff0000);color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px rgba(255,0,0,.6);border:1.5px solid rgba(255,255,255,.2);z-index:100500;pointer-events:none;white-space:nowrap;animation:chatBadgePulse 1.2s infinite ease-in-out;";
+      btn.appendChild(badge);
+    }
+    const plural = diff === 1 ? "não lida" : "não lidas";
+    badge.textContent = diff + " msg " + plural;
+    badge.style.display = "flex";
+    btn.classList.add("has-new");
+  }
+
   async function refreshGlobalChat(scrollToBottom=true){
     try{
       const r = await fetch(API_URL + "/api/global-chat/messages");
@@ -8982,10 +9012,22 @@ document.addEventListener("DOMContentLoaded", function(){
         const box = document.getElementById("globalChatMessages");
         const prevScrollTop = box ? box.scrollTop : 0;
         const shouldScroll = !box || scrollToBottom || (box.scrollHeight - box.scrollTop - box.clientHeight < 80);
+
+        const list = Array.isArray(j?.messages) ? j.messages : [];
+        const newCount = list.length;
+        window.__globalCurrentCount = newCount;
+
         renderGlobalChat(j);
+
         if(box){
           if(shouldScroll) box.scrollTop = box.scrollHeight;
           else box.scrollTop = prevScrollTop;
+        }
+
+        if(!window.__globalChatOpen && newCount > window.__globalLastSeenCount){
+          const diff = newCount - window.__globalLastSeenCount;
+          tfShowGlobalChatBadge(diff);
+          if(diff > 0) tfPlayNotifSound();
         }
       }
     }catch(e){}
@@ -9024,6 +9066,10 @@ document.addEventListener("DOMContentLoaded", function(){
     if(!ov) return;
     ov.classList.add("open");
     document.body.style.overflow = "hidden";
+    window.__globalChatOpen = true;
+    window.__globalLastSeenCount = window.__globalCurrentCount || 0;
+    localStorage.setItem("toolflix_global_last_seen", String(window.__globalLastSeenCount));
+    tfHideGlobalChatBadge();
     refreshGlobalChat(true);
     setTimeout(()=>{
       const input = document.getElementById("globalChatInput");
@@ -9036,6 +9082,7 @@ document.addEventListener("DOMContentLoaded", function(){
     if(!ov) return;
     ov.classList.remove("open");
     document.body.style.overflow = "";
+    window.__globalChatOpen = false;
   }
 
   async function sendGlobalChatMessage(){
