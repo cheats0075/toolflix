@@ -1747,6 +1747,11 @@ select optgroup{
       box-shadow:0 0 6px rgba(150,150,150,.3);
       animation:none;
     }
+    .presence-bullet.offline{
+      background:#666;
+      box-shadow:0 0 4px rgba(100,100,100,.25);
+      animation:none;
+    }
     .presence-name{
       font-weight:700;
       color:#fff;
@@ -7879,6 +7884,24 @@ document.getElementById("loginInput")?.addEventListener("keydown", (e)=>{
   window.__chatLastSeenKey = "toolflix_chat_last_seen_count";
   window.__chatLastSeenCount = Number(localStorage.getItem(window.__chatLastSeenKey) || 0);
 
+  function tfPlayNotifSound(){
+    try{
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const o1 = ctx.createOscillator();
+      const o2 = ctx.createOscillator();
+      const g = ctx.createGain();
+      o1.type = "sine"; o1.frequency.value = 880;
+      o2.type = "sine"; o2.frequency.value = 1320;
+      g.gain.value = 0.15;
+      o1.connect(g); o2.connect(g); g.connect(ctx.destination);
+      o1.start(); o2.start();
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      o1.stop(ctx.currentTime + 0.25);
+      o2.stop(ctx.currentTime + 0.25);
+      setTimeout(()=> ctx.close(), 400);
+    }catch(e){}
+  }
+
   async function loadChatMessages(opts = {}){
     const token = getToken?.();
     if(!token) return { ok:false, count:0 };
@@ -7977,6 +8000,7 @@ document.getElementById("loginInput")?.addEventListener("keydown", (e)=>{
         }
         const btn = document.getElementById("chatToggleBtn");
         if(btn) btn.classList.add("chat-has-new");
+        if(!window.__chatIsOpen && diff > 0) tfPlayNotifSound();
       }
 
       if(opts.markSeen){
@@ -8664,17 +8688,23 @@ document.addEventListener("DOMContentLoaded", function(){
     return `visto por último em ${dd}/${mo} às ${hh}:${mm}`;
   }
 
-  function presenceCardHtml(item, idx, withSeen=false){
+  function presenceCardHtml(item, idx, withSeen=false, isOnline=true){
     const guest = !!item?.is_guest;
     const name = formatPresenceName(item, idx);
     const level = formatPresenceLevel(item);
     const seen = withSeen ? `<div class="global-chat-meta">${formatLastSeen(item?.last_seen_at)}</div>` : "";
     const avatar = getAvatarSrc(item);
+    let bulletClass = "presence-bullet";
+    if(!isOnline){
+      bulletClass += " offline";
+    }else if(guest){
+      bulletClass += " guest";
+    }
     return `
       <div class="presence-user">
         <div class="presence-user-left">
           <img class="presence-avatar ${getAvatarClass(item?.level)}" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1-1.webp';">
-          <span class="presence-bullet ${guest ? "guest" : ""}"></span>
+          <span class="${bulletClass}"></span>
           <div>
             <div class="presence-name">${name}</div>
             ${seen}
@@ -8708,7 +8738,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     if(last.length){
-      lastListEl.innerHTML = last.map((item, idx) => presenceCardHtml(item, idx, true)).join("");
+      lastListEl.innerHTML = last.map((item, idx) => presenceCardHtml(item, idx, true, false)).join("");
     }else{
       lastListEl.innerHTML = '<div class="presence-empty">Ainda não há visitantes registrados.</div>';
     }
