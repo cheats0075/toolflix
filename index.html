@@ -85,22 +85,27 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       z-index:999; display:none; opacity:0; transition: opacity .3s;
     }
     .sidebar-overlay.open{ display:block; opacity:1; }
-    .hamburger-btn{
-      position:fixed; top:16px; left:16px; z-index:1001;
-      width:42px; height:42px; border-radius:12px; border:1px solid rgba(255,255,255,.12);
-      background:rgba(20,20,20,.92); backdrop-filter:blur(12px); cursor:pointer;
-      display:flex;
-      flex-direction:column; align-items:center; justify-content:center; gap:5px;
-      box-shadow:0 4px 16px rgba(0,0,0,.4); transition: all .2s;
+    .hamburger-btn-inline{
+      display:flex; width:38px; height:38px; border-radius:10px; border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06); cursor:pointer;
+      flex-direction:column; align-items:center; justify-content:center; gap:4px;
+      transition: all .2s; flex:0 0 38px;
     }
-    .hamburger-btn:hover{ background:rgba(255,255,255,.1); transform:scale(1.05); }
-    .hamburger-btn span{
-      display:block; width:20px; height:2px; background:#fff; border-radius:2px;
+    .hamburger-btn-inline:hover{ background:rgba(255,255,255,.12); }
+    .hamburger-btn-inline span{
+      display:block; width:18px; height:2px; background:#fff; border-radius:2px;
       transition: all .3s;
     }
-    .hamburger-btn.open span:nth-child(1){ transform:rotate(45deg) translate(5px,5px); }
-    .hamburger-btn.open span:nth-child(2){ opacity:0; }
-    .hamburger-btn.open span:nth-child(3){ transform:rotate(-45deg) translate(5px,-5px); }
+    .hamburger-btn-inline.open span:nth-child(1){ transform:rotate(45deg) translate(4px,4px); }
+    .hamburger-btn-inline.open span:nth-child(2){ opacity:0; }
+    .hamburger-btn-inline.open span:nth-child(3){ transform:rotate(-45deg) translate(4px,-4px); }
+    .topnav-brand{
+      font-family:'Impact', sans-serif; font-size:22px; cursor:pointer;
+      background:linear-gradient(90deg,#fff, var(--cor-accent));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      letter-spacing:1px; flex:0 0 auto; white-space:nowrap;
+    }
+    .top-nav{ align-items:center; }
 
     #logoToolFlix {
       font-family:'Impact', sans-serif;
@@ -186,10 +191,10 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
 
     .top-nav {
       display:flex;
-      justify-content:flex-end;
+      justify-content:flex-start;
       align-items:center;
-      gap:15px;
-      margin-bottom:40px;
+      gap:10px;
+      margin-bottom:24px;
       flex-wrap:wrap;
       position:sticky;
       top:0;
@@ -3215,7 +3220,8 @@ body.avatar-modal-open{
     overflow-y:auto !important;
   }
   .sidebar.open{ transform:translateX(0) !important; }
-  .hamburger-btn{ display:flex !important; }
+  .hamburger-btn-inline{ display:flex !important; }
+  .topnav-brand{ display:block !important; }
   #logoToolFlix{ font-size:34px !important; text-align:left !important; margin-bottom:18px !important; }
   #premiumBadge{ margin-left:0 !important; margin-right:auto !important; }
   #premiumCounter, #presenceSummary{ width:100% !important; margin-left:0 !important; margin-right:0 !important; }
@@ -3945,9 +3951,6 @@ body.avatar-modal-open{
 
 </head>
 <body class="theme-default">
-  <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menu">
-    <span></span><span></span><span></span>
-  </button>
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <aside class="sidebar" id="sidebar">
     <div id="logoToolFlix" onclick="location.reload()">ToolFlix</div>
@@ -4011,7 +4014,12 @@ body.avatar-modal-open{
 
   <main>
     <div class="top-nav">
-      <input type="text" id="searchBar" class="nav-item" placeholder="🔍 Buscar no catálogo..." style="flex: 1; min-width: 150px; max-width: 300px; background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); padding: 10px 18px; border-radius: 999px; color: #fff; font-family: inherit; font-size: 13px; outline: none; transition: 0.3s;">
+      <button class="hamburger-btn-inline" id="hamburgerBtn" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="topnav-brand" id="topnavLogo" onclick="location.reload()">ToolFlix</div>
+
+      <input type="text" id="searchBar" class="nav-item" placeholder="🔍 Buscar..." style="flex: 1; min-width: 120px; max-width: 260px; background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); padding: 10px 16px; border-radius: 999px; color: #fff; font-family: inherit; font-size: 13px; outline: none; transition: 0.3s;">
 
       <select id="themeSelect" class="nav-item">
         <option value="default">🎭 Temas</option>
@@ -4039,11 +4047,11 @@ body.avatar-modal-open{
   📨 Chats
 </button>
 
-      <div id="visitorCounter" class="nav-item" style="display:none; cursor:default; user-select:none;">👀 Você é o visitante <span id="visitorCounterNum">0</span></div>
+      <div id="visitorCounter" class="nav-item" style="display:none; cursor:default; user-select:none;">👀 Visitante <span id="visitorCounterNum">0</span></div>
 
-      <button class="nav-item" id="sortBtn">🔃 Ordem: Recentes</button>
+      <button class="nav-item" id="sortBtn">🔃 Ordem</button>
       <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
-      <button class="nav-item" id="viewModeBtn">📱 Visualização: Grade</button>
+      <button class="nav-item" id="viewModeBtn">📱 Grade</button>
       <button class="nav-item" id="adminBtn">⚙️ Admin</button>
 	        <!-- ===== ÁREA DO USUÁRIO (GAME) ===== -->
       <div id="userArea" class="nav-item" role="button" tabindex="0" aria-label="Abrir menu do perfil, avatar e conquistas" style="display:flex; align-items:center; gap:10px; position:relative; cursor:pointer;" title="Abrir menu do perfil">
@@ -10684,8 +10692,12 @@ document.addEventListener("DOMContentLoaded",()=>{
 
   sidebar.querySelectorAll(".catBtn").forEach(btn=>{
     btn.addEventListener("click", ()=>{
-      if(window.innerWidth <= 760) closeSidebar();
+      if(window.innerWidth <= 920) closeSidebar();
     });
+  });
+
+  document.addEventListener("keydown", e=>{
+    if(e.key === "Escape" && sidebar.classList.contains("open")) closeSidebar();
   });
 })();
 </script>
