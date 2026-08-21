@@ -52,7 +52,7 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       font-family: 'Inter', 'Outfit', 'Segoe UI', system-ui, sans-serif;
       background:#050505;
       color:#f0f0f0;
-      display:flex;
+      display:block;
       min-height:100vh;
       background-attachment:fixed;
       background-size:cover;
@@ -78,6 +78,7 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       transform: translateX(-100%);
       transition: transform .3s cubic-bezier(.4,0,.2,1);
       overflow-y: auto;
+      flex: 0 0 auto;
     }
     .sidebar.open{ transform: translateX(0); }
     .sidebar-overlay{
@@ -86,10 +87,10 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     }
     .sidebar-overlay.open{ display:block; opacity:1; }
     .hamburger-btn-inline{
-      display:flex; width:38px; height:38px; border-radius:10px; border:1px solid rgba(255,255,255,.12);
+      display:flex; width:38px; height:38px; min-width:38px; border-radius:10px; border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.06); cursor:pointer;
       flex-direction:column; align-items:center; justify-content:center; gap:4px;
-      transition: all .2s; flex:0 0 38px;
+      transition: all .2s;
     }
     .hamburger-btn-inline:hover{ background:rgba(255,255,255,.12); }
     .hamburger-btn-inline span{
@@ -184,34 +185,25 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
     /* MAIN */
     main {
       margin-left: 0;
-      flex: 1;
       padding: 30px 50px;
       width: 100%;
+      box-sizing: border-box;
     }
 
     .top-nav {
       display:flex;
       justify-content:flex-start;
       align-items:center;
-      gap:10px;
+      gap:8px;
       margin-bottom:24px;
-      flex-wrap:nowrap;
+      flex-wrap:wrap;
       position:sticky;
       top:0;
       z-index: 99999;
-      background:rgba(10,10,14,.88);
+      background:rgba(10,10,14,.92);
       backdrop-filter:blur(16px);
-      padding:12px 20px;
+      padding:10px 20px;
       border-bottom:1px solid rgba(255,255,255,.06);
-      overflow-x:auto;
-      -webkit-overflow-scrolling:touch;
-    }
-    .top-nav::-webkit-scrollbar{ height:0; }
-    .top-nav-row{
-      display:flex; align-items:center; gap:8px; flex:0 0 auto;
-    }
-    .top-nav-sep{
-      width:1px; height:28px; background:rgba(255,255,255,.1); flex:0 0 1px;
     }
 
     .nav-item {
@@ -3735,14 +3727,17 @@ body.avatar-modal-open{
   .sidebar{
     width: var(--sidebar-width) !important;
     height: calc(100vh - 32px) !important;
-    left:16px !important;
-    top:16px !important;
+    left:0 !important;
+    top:0 !important;
     padding:18px 14px !important;
-    border-radius:28px !important;
+    border-radius:0 !important;
     background: linear-gradient(180deg, rgba(19,22,45,.92), rgba(9,10,22,.88)) !important;
     border:1px solid rgba(255,255,255,.10) !important;
     box-shadow: 0 25px 70px rgba(0,0,0,.45), 0 0 28px rgba(180,76,255,.12) !important;
+    transform: translateX(-100%) !important;
+    transition: transform .3s cubic-bezier(.4,0,.2,1) !important;
   }
+  .sidebar.open{ transform: translateX(0) !important; }
   #logoToolFlix{
     text-align:left !important;
     font-size:24px !important;
@@ -3784,17 +3779,19 @@ body.avatar-modal-open{
     box-shadow: 0 12px 28px rgba(180,76,255,.28), inset 0 0 12px rgba(255,255,255,.08) !important;
   }
   main{
-    margin-left: calc(var(--sidebar-width) + 28px) !important;
-    width: calc(100% - var(--sidebar-width) - 28px) !important;
+    margin-left: 0 !important;
+    width: 100% !important;
     padding:22px 26px 52px !important;
     position:relative;
     z-index:1;
+    box-sizing: border-box;
   }
   .top-nav{
-    justify-content:flex-end !important;
+    justify-content:flex-start !important;
+    align-items:center;
     gap:10px !important;
     margin-bottom:18px !important;
-    padding:8px 4px !important;
+    padding:10px 14px !important;
   }
   .nav-item,
   #themeSelect{
@@ -4037,8 +4034,6 @@ body.avatar-modal-open{
 
       <input type="text" id="searchBar" class="nav-item" placeholder="🔍 Buscar..." style="flex: 1; min-width: 100px; max-width: 220px; background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); padding: 8px 14px; border-radius: 999px; color: #fff; font-family: inherit; font-size: 13px; outline: none; transition: 0.3s;">
 
-      <div class="top-nav-sep"></div>
-
       <select id="themeSelect" class="nav-item" style="padding:8px 12px; font-size:12px;">
         <option value="default">🎭 Temas</option>
         <option value="gow">God of War⚔️</option>
@@ -4067,8 +4062,6 @@ body.avatar-modal-open{
 
       <div id="visitorCounter" class="nav-item" style="display:none; cursor:default; user-select:none;">👀 Visitante <span id="visitorCounterNum">0</span></div>
 
-      <div class="top-nav-sep"></div>
-
       <button class="nav-item" id="sortBtn">🔃 Ordem</button>
       <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
       <button class="nav-item" id="viewModeBtn">📱 Grade</button>
@@ -4091,8 +4084,6 @@ body.avatar-modal-open{
           <button class="userMenuItem" id="logoutBtn">🚪 Sair</button>
         </div>
       </div>
-
-      <div class="top-nav-sep"></div>
 
       <button class="nav-item" id="premiumTriggerBtn" style="font-size:12px;">💎 Premium</button>
       <button class="nav-item" id="solicitarTokenBtn"
