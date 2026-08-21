@@ -75,7 +75,32 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       flex-direction: column;
       padding: 25px;
       z-index: 1000;
+      transform: translateX(-100%);
+      transition: transform .3s cubic-bezier(.4,0,.2,1);
+      overflow-y: auto;
     }
+    .sidebar.open{ transform: translateX(0); }
+    .sidebar-overlay{
+      position:fixed; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(4px);
+      z-index:999; display:none; opacity:0; transition: opacity .3s;
+    }
+    .sidebar-overlay.open{ display:block; opacity:1; }
+    .hamburger-btn{
+      position:fixed; top:16px; left:16px; z-index:1001;
+      width:42px; height:42px; border-radius:12px; border:1px solid rgba(255,255,255,.12);
+      background:rgba(20,20,20,.92); backdrop-filter:blur(12px); cursor:pointer;
+      display:flex;
+      flex-direction:column; align-items:center; justify-content:center; gap:5px;
+      box-shadow:0 4px 16px rgba(0,0,0,.4); transition: all .2s;
+    }
+    .hamburger-btn:hover{ background:rgba(255,255,255,.1); transform:scale(1.05); }
+    .hamburger-btn span{
+      display:block; width:20px; height:2px; background:#fff; border-radius:2px;
+      transition: all .3s;
+    }
+    .hamburger-btn.open span:nth-child(1){ transform:rotate(45deg) translate(5px,5px); }
+    .hamburger-btn.open span:nth-child(2){ opacity:0; }
+    .hamburger-btn.open span:nth-child(3){ transform:rotate(-45deg) translate(5px,-5px); }
 
     #logoToolFlix {
       font-family:'Impact', sans-serif;
@@ -153,10 +178,10 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
 
     /* MAIN */
     main {
-      margin-left: var(--sidebar-width);
+      margin-left: 0;
       flex: 1;
       padding: 30px 50px;
-      width: calc(100% - var(--sidebar-width));
+      width: 100%;
     }
 
     .top-nav {
@@ -166,8 +191,13 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       gap:15px;
       margin-bottom:40px;
       flex-wrap:wrap;
-      position:relative;
+      position:sticky;
+      top:0;
       z-index: 99999;
+      background:rgba(10,10,14,.88);
+      backdrop-filter:blur(16px);
+      padding:14px 0;
+      border-bottom:1px solid rgba(255,255,255,.06);
     }
 
     .nav-item {
@@ -3176,23 +3206,28 @@ body.avatar-modal-open{
   body{ display:block !important; min-height:100vh; background-attachment:scroll !important; }
 
   .sidebar{
-    position:relative !important; left:auto !important; top:auto !important;
-    width:100% !important; height:auto !important; min-height:0 !important;
+    position:fixed !important; left:0 !important; top:0 !important;
+    width:280px !important; height:100vh !important;
     padding:22px 18px 18px !important; border-right:none !important;
-    border-bottom:1px solid rgba(255,215,0,.24) !important;
-    border-radius:0 0 28px 28px; background:rgba(8,8,8,.78) !important;
-    backdrop-filter:blur(18px) !important; z-index:20 !important;
+    border-radius:0; background:rgba(8,8,8,.96) !important;
+    backdrop-filter:blur(18px) !important; z-index:1001 !important;
+    transform:translateX(-100%) !important; transition:transform .3s cubic-bezier(.4,0,.2,1) !important;
+    overflow-y:auto !important;
   }
-  #logoToolFlix{ font-size:42px !important; text-align:left !important; margin-bottom:18px !important; }
+  .sidebar.open{ transform:translateX(0) !important; }
+  .hamburger-btn{ display:flex !important; }
+  #logoToolFlix{ font-size:34px !important; text-align:left !important; margin-bottom:18px !important; }
   #premiumBadge{ margin-left:0 !important; margin-right:auto !important; }
   #premiumCounter, #presenceSummary{ width:100% !important; margin-left:0 !important; margin-right:0 !important; }
 
   .catBtn{ min-height:56px !important; border-radius:18px !important; font-size:15px !important; }
 
-  main{ margin-left:0 !important; width:100% !important; padding:22px 14px 90px !important; }
+  main{ margin-left:0 !important; width:100% !important; padding:22px 14px 90px !important; padding-top:70px !important; }
   .top-nav{
+    position:fixed !important; top:0 !important; left:0 !important; right:0 !important;
     justify-content:flex-start !important; gap:10px !important; margin-bottom:24px !important;
-    overflow-x:auto; flex-wrap:nowrap !important; padding-bottom:6px; -webkit-overflow-scrolling:touch;
+    overflow-x:auto; flex-wrap:nowrap !important; padding:12px 14px !important; -webkit-overflow-scrolling:touch;
+    border-bottom:1px solid rgba(255,255,255,.06) !important;
   }
   .top-nav::-webkit-scrollbar{ display:none; }
   .nav-item, #themeSelect{
@@ -3910,7 +3945,11 @@ body.avatar-modal-open{
 
 </head>
 <body class="theme-default">
-  <aside class="sidebar">
+  <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <aside class="sidebar" id="sidebar">
     <div id="logoToolFlix" onclick="location.reload()">ToolFlix</div>
 
     <div id="premiumBadge">💎 PREMIUM ATIVO</div>
@@ -10617,6 +10656,37 @@ document.addEventListener("DOMContentLoaded",()=>{
       sendToolflixGlobalChat();
     }
   }, true);
+})();
+</script>
+
+<script>
+(function(){
+  const hamburger = document.getElementById("hamburgerBtn");
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("sidebarOverlay");
+  if(!hamburger || !sidebar || !overlay) return;
+
+  function openSidebar(){
+    sidebar.classList.add("open");
+    overlay.classList.add("open");
+    hamburger.classList.add("open");
+  }
+  function closeSidebar(){
+    sidebar.classList.remove("open");
+    overlay.classList.remove("open");
+    hamburger.classList.remove("open");
+  }
+
+  hamburger.addEventListener("click", ()=>{
+    sidebar.classList.contains("open") ? closeSidebar() : openSidebar();
+  });
+  overlay.addEventListener("click", closeSidebar);
+
+  sidebar.querySelectorAll(".catBtn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      if(window.innerWidth <= 760) closeSidebar();
+    });
+  });
 })();
 </script>
 
