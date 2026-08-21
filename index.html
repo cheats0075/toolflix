@@ -7886,19 +7886,20 @@ document.getElementById("loginInput")?.addEventListener("keydown", (e)=>{
 
   function tfPlayNotifSound(){
     try{
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if(!window.__tfAudioCtx) window.__tfAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = window.__tfAudioCtx;
+      if(ctx.state === "suspended") ctx.resume();
       const o1 = ctx.createOscillator();
       const o2 = ctx.createOscillator();
       const g = ctx.createGain();
       o1.type = "sine"; o1.frequency.value = 880;
       o2.type = "sine"; o2.frequency.value = 1320;
-      g.gain.value = 0.15;
+      g.gain.value = 0.18;
       o1.connect(g); o2.connect(g); g.connect(ctx.destination);
-      o1.start(); o2.start();
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
-      o1.stop(ctx.currentTime + 0.25);
-      o2.stop(ctx.currentTime + 0.25);
-      setTimeout(()=> ctx.close(), 400);
+      const now = ctx.currentTime;
+      o1.start(now); o2.start(now);
+      g.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      o1.stop(now + 0.3); o2.stop(now + 0.3);
     }catch(e){}
   }
 
@@ -7994,9 +7995,10 @@ document.getElementById("loginInput")?.addEventListener("keydown", (e)=>{
 
       if(!opts.markSeen && currentCount > window.__chatLastSeenCount){
         const diff = currentCount - window.__chatLastSeenCount;
+        const plural = diff === 1 ? "não lida" : "não lidas";
         if(window.__chatBadge){
           window.__chatBadge.style.display = "flex";
-          window.__chatBadge.innerText = diff;
+          window.__chatBadge.innerText = diff + " msg " + plural;
         }
         const btn = document.getElementById("chatToggleBtn");
         if(btn) btn.classList.add("chat-has-new");
