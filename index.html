@@ -3962,6 +3962,188 @@ body.avatar-modal-open{
 
 </style>
 
+<!-- ===== THEME OVERLAY: Azul/Roxo + Glass ===== -->
+<style>
+@media (min-width: 761px){
+  :root{ --cor-accent:#4080ff !important; }
+  body.theme-default, body{
+    background:
+      radial-gradient(circle at 18% 8%, rgba(60,80,200,.28), transparent 34%),
+      radial-gradient(circle at 82% 18%, rgba(100,60,180,.22), transparent 34%),
+      linear-gradient(135deg, #080c1a 0%, #0c1028 48%, #060812 100%) !important;
+  }
+  body::before{
+    background: linear-gradient(120deg, rgba(255,255,255,.025), transparent 35%, rgba(100,140,255,.025)) !important;
+  }
+  .sidebar{
+    background: linear-gradient(180deg, rgba(20,28,60,.94), rgba(12,16,40,.90)) !important;
+    border-color: rgba(100,140,255,.15) !important;
+    box-shadow: 0 25px 70px rgba(0,0,0,.50), 0 0 30px rgba(60,100,220,.12) !important;
+  }
+  #logoToolFlix{
+    background: linear-gradient(90deg,#fff,#7090ff,#40c0ff) !important;
+    -webkit-background-clip:text !important;
+    -webkit-text-fill-color:transparent !important;
+  }
+  #presenceSummary{
+    background: rgba(60,80,160,.18) !important;
+    border-color: rgba(100,140,255,.22) !important;
+  }
+  .catBtn{
+    background: rgba(40,50,110,.35) !important;
+    border-color: rgba(100,140,255,.12) !important;
+    color: rgba(255,255,255,.88) !important;
+    font-weight:600 !important;
+  }
+  .catBtn:hover{
+    background: linear-gradient(135deg, rgba(80,100,200,.55), rgba(60,80,180,.45)) !important;
+    border-color: rgba(100,140,255,.30) !important;
+  }
+  .catBtn.active{
+    background: linear-gradient(135deg, #c040d0, #9030b0, #7028a0) !important;
+    font-weight:800 !important;
+    border-color: rgba(180,60,220,.35) !important;
+    box-shadow: 0 10px 28px rgba(160,50,200,.30), inset 0 0 12px rgba(255,255,255,.08) !important;
+  }
+  .jogo{
+    background: linear-gradient(180deg, rgba(20,28,60,.75), rgba(14,18,38,.82)) !important;
+    border-color: rgba(100,140,255,.12) !important;
+  }
+  .jogo:hover{
+    border-color: rgba(100,140,255,.40) !important;
+    box-shadow: 0 24px 54px rgba(0,0,0,.38), 0 0 22px rgba(80,120,255,.15) !important;
+  }
+  #tfNeonHero{
+    border-color: rgba(100,140,255,.15) !important;
+    background:
+      radial-gradient(circle at 55% 48%, rgba(60,100,220,.18), transparent 24%),
+      radial-gradient(circle at 86% 50%, rgba(100,60,180,.22), transparent 32%),
+      linear-gradient(120deg, rgba(14,18,40,.92), rgba(10,14,30,.88)) !important;
+    box-shadow: 0 24px 70px rgba(0,0,0,.32), 0 0 28px rgba(60,100,220,.08) !important;
+  }
+  .top-nav .nav-item{
+    background: rgba(40,50,110,.30) !important;
+    border-color: rgba(100,140,255,.18) !important;
+  }
+  .top-nav .nav-item:hover{
+    background: rgba(60,80,160,.35) !important;
+    border-color: rgba(100,140,255,.30) !important;
+  }
+  .tf-stat-pill{
+    background:rgba(40,50,110,.30) !important;
+    border-color: rgba(100,140,255,.12) !important;
+  }
+}
+
+/* ===== ONLINE GLASS PANEL ===== */
+.online-glass-card{
+  margin:12px 0 16px;
+  padding:16px;
+  border-radius:20px;
+  background: linear-gradient(135deg, rgba(80,120,255,.08), rgba(120,80,200,.05)),
+    rgba(20,28,60,.55);
+  border:1px solid rgba(120,160,255,.18);
+  box-shadow: 0 12px 32px rgba(0,0,0,.30), 0 0 20px rgba(80,120,255,.08),
+    inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+}
+.online-glass-title{
+  font-size:15px;
+  font-weight:900;
+  color:#e8eeff;
+  margin-bottom:12px;
+  letter-spacing:.3px;
+}
+.online-glass-user{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 10px;
+  border-radius:12px;
+  margin-bottom:6px;
+  transition: background .2s ease;
+}
+.online-glass-user:hover{ background: rgba(80,120,255,.08); }
+.online-glass-dot{
+  width:10px; height:10px; border-radius:50%;
+  background:#4cff7a;
+  box-shadow: 0 0 10px rgba(76,255,122,.65);
+  flex:0 0 10px;
+}
+.online-glass-name{ font-size:14px; font-weight:700; color:#d0d8f0; }
+.online-glass-level{
+  margin-left:auto; font-size:11px; font-weight:800;
+  color:rgba(200,215,255,.65);
+}
+
+/* ===== ONLINE PILL (top bar) ===== */
+.online-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:8px 14px;
+  border-radius:999px;
+  background: rgba(40,60,120,.35);
+  border:1px solid rgba(80,140,255,.22);
+  color:#e0e8ff;
+  font-size:13px;
+  font-weight:800;
+  cursor:pointer;
+  transition: all .22s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,.20);
+}
+.online-pill:hover{
+  background: rgba(60,80,160,.40);
+  border-color: rgba(80,140,255,.35);
+  transform: translateY(-1px);
+}
+.online-pill .dot{
+  width:8px; height:8px; border-radius:50%;
+  background:#4cff7a;
+  box-shadow: 0 0 8px rgba(76,255,122,.6);
+}
+
+/* ===== PRESENCE OVERLAY GLASS ===== */
+#presenceOverlay .presence-modal{
+  background:
+    radial-gradient(circle at top left, rgba(80,120,255,.08), transparent 34%),
+    linear-gradient(180deg, rgba(16,20,42,.92), rgba(10,14,30,.94)) !important;
+  border-color: rgba(120,160,255,.18) !important;
+  box-shadow: 0 30px 80px rgba(0,0,0,.60), 0 0 40px rgba(80,120,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.06) !important;
+  backdrop-filter: blur(24px) saturate(140%) !important;
+}
+#presenceOverlay .presence-backdrop{
+  background: rgba(4,6,16,.78) !important;
+  backdrop-filter: blur(8px) !important;
+}
+#presenceOverlay .presence-head{
+  background: linear-gradient(90deg, rgba(80,120,255,.10), rgba(120,80,200,.06)) !important;
+  border-bottom-color: rgba(120,160,255,.12) !important;
+}
+#presenceOverlay .presence-user{
+  background: rgba(255,255,255,.04) !important;
+  border-color: rgba(120,160,255,.12) !important;
+  backdrop-filter: blur(10px) !important;
+}
+#presenceOverlay .presence-user:hover{
+  background: rgba(80,120,255,.10) !important;
+  border-color: rgba(120,160,255,.28) !important;
+}
+#presenceOverlay .presence-level{
+  background: linear-gradient(90deg, #4080ff, #60b0ff) !important;
+  color:#fff !important;
+  border-color: rgba(100,160,255,.30) !important;
+}
+#presenceOverlay .presence-section-title{ color: #80b0ff !important; }
+#presenceOverlay .presence-name{ color:#e8eeff !important; }
+#presenceOverlay .presence-bullet{
+  background:#4cff7a !important;
+  box-shadow: 0 0 12px rgba(76,255,122,.70) !important;
+}
+</style>
+
 </head>
 <body class="theme-default">
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -3977,6 +4159,12 @@ body.avatar-modal-open{
         <span style="opacity:.75; font-size:12px;">Abrir</span>
       </div>
       <div id="presenceSummarySub">Clique para ver quem está online e os últimos vistos</div>
+    </div>
+
+    <!-- ===== PAINEL GLASS: USUÁRIOS ONLINE ===== -->
+    <div id="onlineGlassPanel" class="online-glass-card">
+      <div class="online-glass-title">Usuários Online (<span id="onlineGlassCount">0</span>)</div>
+      <div id="onlineGlassList"></div>
     </div>
 
     <!-- ===== RADIO PLAYER ===== -->
@@ -4064,6 +4252,12 @@ body.avatar-modal-open{
 
       <button class="nav-item" id="sortBtn">🔃 Ordem</button>
       <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
+
+      <div class="online-pill" id="onlinePillBtn" onclick="document.getElementById('presenceSummary').click()">
+        <span class="dot"></span>
+        <span id="onlinePillCount">0</span> Online
+      </div>
+
       <button class="nav-item" id="viewModeBtn">📱 Grade</button>
       <button class="nav-item" id="adminBtn">⚙️ Admin</button>
 	        <!-- ===== ÁREA DO USUÁRIO (GAME) ===== -->
@@ -8781,21 +8975,40 @@ document.addEventListener("DOMContentLoaded", function(){
     const onlineListEl = document.getElementById("presenceOnlineList");
     const lastListEl = document.getElementById("presenceLastList");
     const subEl = document.getElementById("presenceSummarySub");
+    const glassCountEl = document.getElementById("onlineGlassCount");
+    const glassListEl = document.getElementById("onlineGlassList");
+    const pillCountEl = document.getElementById("onlinePillCount");
 
     if(!onlineCountEl || !onlineListEl || !lastListEl) return;
 
     const online = Array.isArray(data?.online) ? data.online : [];
     const last = Array.isArray(data?.lastSeen) ? data.lastSeen : (Array.isArray(data?.last) ? data.last : []);
+    const totalOnline = Number(data?.onlineCount || online.length || 0);
 
-    onlineCountEl.textContent = String(Number(data?.onlineCount || online.length || 0));
+    onlineCountEl.textContent = String(totalOnline);
+    if(glassCountEl) glassCountEl.textContent = String(totalOnline);
+    if(pillCountEl) pillCountEl.textContent = String(totalOnline);
 
     if(online.length){
       onlineListEl.innerHTML = online.map((item, idx) => presenceCardHtml(item, idx)).join("");
       const names = online.slice(0,3).map((item, idx) => formatPresenceName(item, idx)).join(" • ");
       if(subEl) subEl.textContent = names || "Clique para ver quem está online e os últimos vistos";
+
+      if(glassListEl){
+        glassListEl.innerHTML = online.map((item) => {
+          const nick = safeStr(item?.nick || item?.name || "Anônimo").trim() || "Anônimo";
+          const level = Number(item?.level || item?.nivel || 1);
+          return `<div class="online-glass-user">
+            <div class="online-glass-dot"></div>
+            <span class="online-glass-name">${nick}</span>
+            <span class="online-glass-level">Nv.${level}</span>
+          </div>`;
+        }).join("");
+      }
     }else{
       onlineListEl.innerHTML = '<div class="presence-empty">Ninguém online no momento.</div>';
       if(subEl) subEl.textContent = "Clique para ver quem está online e os últimos vistos";
+      if(glassListEl) glassListEl.innerHTML = '<div style="opacity:.5;font-size:13px;padding:4px 0;">Ninguém online</div>';
     }
 
     if(last.length){
