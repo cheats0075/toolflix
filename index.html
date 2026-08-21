@@ -195,14 +195,23 @@ body.theme-gow { --cor-accent: #0077ff; background-image: linear-gradient(var(--
       align-items:center;
       gap:10px;
       margin-bottom:24px;
-      flex-wrap:wrap;
+      flex-wrap:nowrap;
       position:sticky;
       top:0;
       z-index: 99999;
       background:rgba(10,10,14,.88);
       backdrop-filter:blur(16px);
-      padding:14px 0;
+      padding:12px 20px;
       border-bottom:1px solid rgba(255,255,255,.06);
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+    .top-nav::-webkit-scrollbar{ height:0; }
+    .top-nav-row{
+      display:flex; align-items:center; gap:8px; flex:0 0 auto;
+    }
+    .top-nav-sep{
+      width:1px; height:28px; background:rgba(255,255,255,.1); flex:0 0 1px;
     }
 
     .nav-item {
@@ -3942,6 +3951,13 @@ body.avatar-modal-open{
     margin-top:5px !important;
   }
 }
+@media (min-width: 761px) and (max-width: 1400px){
+  .nav-item, #themeSelect{
+    padding:8px 12px !important; font-size:12px !important; min-height:36px !important;
+  }
+  #catalogo{ grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important; gap:18px !important; }
+  main{ padding:24px 24px !important; }
+}
 @media (min-width: 761px) and (max-width: 1180px){
   #catalogo{ grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
   #tfNeonHero{ grid-template-columns:1fr; }
@@ -4019,9 +4035,11 @@ body.avatar-modal-open{
       </button>
       <div class="topnav-brand" id="topnavLogo" onclick="location.reload()">ToolFlix</div>
 
-      <input type="text" id="searchBar" class="nav-item" placeholder="🔍 Buscar..." style="flex: 1; min-width: 120px; max-width: 260px; background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); padding: 10px 16px; border-radius: 999px; color: #fff; font-family: inherit; font-size: 13px; outline: none; transition: 0.3s;">
+      <input type="text" id="searchBar" class="nav-item" placeholder="🔍 Buscar..." style="flex: 1; min-width: 100px; max-width: 220px; background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); padding: 8px 14px; border-radius: 999px; color: #fff; font-family: inherit; font-size: 13px; outline: none; transition: 0.3s;">
 
-      <select id="themeSelect" class="nav-item">
+      <div class="top-nav-sep"></div>
+
+      <select id="themeSelect" class="nav-item" style="padding:8px 12px; font-size:12px;">
         <option value="default">🎭 Temas</option>
         <option value="gow">God of War⚔️</option>
         <option value="dbz">Dragon Ball🐉</option>
@@ -4040,7 +4058,7 @@ body.avatar-modal-open{
       </select>
 
       <button id="chatToggleBtn" class="nav-item">💬 Chat</button>
-      <button id="globalChatBtn" class="nav-item">🎮 Chat ToolFlix</button>
+      <button id="globalChatBtn" class="nav-item">🎮 Global</button>
 	  <button id="masterChatsTopBtn" class="nav-item"
   onclick="openMasterChatsTop()"
   style="display:none;">
@@ -4048,6 +4066,8 @@ body.avatar-modal-open{
 </button>
 
       <div id="visitorCounter" class="nav-item" style="display:none; cursor:default; user-select:none;">👀 Visitante <span id="visitorCounterNum">0</span></div>
+
+      <div class="top-nav-sep"></div>
 
       <button class="nav-item" id="sortBtn">🔃 Ordem</button>
       <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
@@ -4072,14 +4092,14 @@ body.avatar-modal-open{
         </div>
       </div>
 
-      <div style="display:flex; flex-direction:column; gap:8px;">
-        <button class="nav-item" id="premiumTriggerBtn">💎 ATIVAR PREMIUM</button>
-        <button class="nav-item" id="solicitarTokenBtn"
-          onclick="window.open('https://www.youtube.com/watch?v=FbHaSemn5NI','_blank')"
-          style="background:#f1c40f; color:#000; font-size:11px;">
-          🎁 GANHAR TOKEN
-        </button>
-      </div>
+      <div class="top-nav-sep"></div>
+
+      <button class="nav-item" id="premiumTriggerBtn" style="font-size:12px;">💎 Premium</button>
+      <button class="nav-item" id="solicitarTokenBtn"
+        onclick="window.open('https://www.youtube.com/watch?v=FbHaSemn5NI','_blank')"
+        style="background:#f1c40f; color:#000; font-size:11px; padding:8px 12px;">
+        🎁 Token
+      </button>
     </div>
 
 
