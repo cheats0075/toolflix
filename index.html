@@ -4306,7 +4306,7 @@ body.avatar-modal-open{
 
       <button class="nav-item" id="sortBtn">🔃 Ordem</button>
       <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
-      <button class="nav-item" id="trophyTopBtn" onclick="openAchFromTop()" style="background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,140,0,0.1)); border-color: rgba(255,215,0,0.3);">🏆 <span id="trophyTopCount"></span></button>
+      <button class="nav-item" id="trophyTopBtn" onclick="openAchFromTop()" style="background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,140,0,0.1)); border-color: rgba(255,215,0,0.3);">🏆 Conquistas <span id="trophyTopCount"></span></button>
 
       <div class="online-pill" id="onlinePillBtn" onclick="openPresence()">
         <span class="dot"></span>
@@ -5436,6 +5436,9 @@ const MASTER_NICK = "Srgokucheats";
       if(pfs) profileFrameHtml = `<img class="avatar-frame-img" src="${pfs}" alt="" style="inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);">`;
     }catch(e){}
 
+    const _u = achLoadUnlock();
+    const profileAchUnlocked = Object.keys(_u).filter(k => _u[k] && k !== "platinum_toolflix").length;
+
     box.innerHTML = `
       <div class="profile-head">
         <div class="avatar-frame-wrap" style="flex:0 0 80px;width:80px;height:80px;">
@@ -5468,7 +5471,7 @@ const MASTER_NICK = "Srgokucheats";
         </div>
         <div class="profile-stat">
           <div class="profile-stat-label">Conquistas</div>
-          <div class="profile-stat-value">${Number(ach.unlockedCount || 0)}/${Number(ach.totalCount || 0)}</div>
+          <div class="profile-stat-value">${profileAchUnlocked}/${ACH_LIST.length}</div>
         </div>
         <div class="profile-stat">
           <div class="profile-stat-label">Favoritos</div>
