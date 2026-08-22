@@ -1767,6 +1767,32 @@ select optgroup{
       background:rgba(255,255,255,.05);
       box-shadow:0 6px 16px rgba(0,0,0,.22);
       flex:0 0 42px;
+      position:relative;
+      z-index:1;
+    }
+    .avatar-frame-wrap{
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex:0 0 54px;
+      width:54px;
+      height:54px;
+    }
+    .avatar-frame-img{
+      position:absolute;
+      inset:-6px;
+      width:calc(100% + 12px);
+      height:calc(100% + 12px);
+      object-fit:contain;
+      pointer-events:none;
+      z-index:2;
+      filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));
+    }
+    .avatar-frame-wrap .user-avatar{
+      width:42px;
+      height:42px;
+      flex:0 0 42px;
     }
     .presence-bullet{
       width:9px;
@@ -4277,6 +4303,7 @@ body.avatar-modal-open{
         <div id="userMenuBox" class="userMenuBox" style="display:none;">
           <button class="userMenuItem" id="openProfileBtn">👤 Perfil</button>
           <button class="userMenuItem" id="openAvatarPickerBtn">🖼️ Trocar avatar</button>
+          <button class="userMenuItem" id="openFramePickerBtn">🖼️ Quadro de avatar</button>
           <button class="userMenuItem" id="openGameBtn">🎮 Game</button>
           <button class="userMenuItem" id="openAchBtn">🏆 Conquistas</button>
           <button class="userMenuItem" id="logoutBtn">🚪 Sair</button>
@@ -4431,6 +4458,19 @@ body.avatar-modal-open{
         <div style="font-size:12px; opacity:.84; line-height:1.6;">Escolha qualquer avatar já desbloqueado pelo seu nível. Os bloqueados ficam liberados quando você subir de nível.</div>
         <div id="avatarPickerSummary" style="margin-top:12px; font-size:13px; font-weight:800; color:#7cf3ff;"></div>
         <div id="avatarPickerGrid" class="avatar-picker-grid"></div>
+      </div>
+    </div>
+
+    <!-- ===== MODAL QUADRO DE AVATAR ===== -->
+    <div id="framePickerModal" class="modal-overlay">
+      <div class="modal-box" style="width:640px; max-width:94vw; text-align:left;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:10px;">
+          <h2 style="color:gold;">🖼️ Quadro de avatar</h2>
+          <button id="closeFramePickerBtn" class="nav-item" style="padding:8px 12px;">✖</button>
+        </div>
+        <div style="font-size:12px; opacity:.84; line-height:1.6;">Escolha a moldura que aparece ao redor do seu avatar. Desbloqueadas conforme seu nível.</div>
+        <div id="framePickerSummary" style="margin-top:12px; font-size:13px; font-weight:800; color:#7cf3ff;"></div>
+        <div id="framePickerGrid" class="avatar-picker-grid"></div>
       </div>
     </div>
 
@@ -5847,6 +5887,57 @@ const MASTER_NICK = "Srgokucheats";
     return Math.max(1, Math.min(15, n));
   }
 
+  function getFramePath(level){
+    const lv = clampAvatarLevel(level);
+    return `/toolflix/assets/img/molduras/avatar-${lv}.png`;
+  }
+
+  function getSavedFrame(){
+    try { return localStorage.getItem("toolflix_frame") || "auto"; }
+    catch { return "auto"; }
+  }
+
+  function setSavedFrame(f){ localStorage.setItem("toolflix_frame", f); }
+
+  function getCurrentFramePath(level){
+    const mode = getSavedFrame();
+    if(mode === "none") return "";
+    return getFramePath(level);
+  }
+
+  function applyFrameToAvatar(imgEl, level){
+    if(!imgEl || !imgEl.parentNode) return;
+    const framePath = getCurrentFramePath(level);
+    let wrap = imgEl.parentNode;
+    if(!wrap.classList || !wrap.classList.contains("avatar-frame-wrap")){
+      wrap = document.createElement("div");
+      wrap.className = "avatar-frame-wrap";
+      imgEl.parentNode.insertBefore(wrap, imgEl);
+      wrap.appendChild(imgEl);
+    }
+    let frameImg = wrap.querySelector(".avatar-frame-img");
+    if(!framePath){
+      if(frameImg) frameImg.remove();
+      return;
+    }
+    if(!frameImg){
+      frameImg = document.createElement("img");
+      frameImg.className = "avatar-frame-img";
+      frameImg.alt = "";
+      wrap.appendChild(frameImg);
+    }
+    frameImg.src = framePath;
+  }
+
+  function removeFrameWrap(imgEl){
+    if(!imgEl || !imgEl.parentNode) return;
+    const wrap = imgEl.parentNode;
+    if(wrap.classList && wrap.classList.contains("avatar-frame-wrap")){
+      const frameImg = wrap.querySelector(".avatar-frame-img");
+      if(frameImg) frameImg.remove();
+    }
+  }
+
   function getAutoAvatarLevelFromXp(xp){
     const info = (typeof getLevelInfo === "function") ? getLevelInfo(Number(xp || 0)) : { level: 1 };
     return clampAvatarLevel(info.level);
@@ -5917,6 +6008,7 @@ const MASTER_NICK = "Srgokucheats";
       if(xpFill) xpFill.style.width = "0%";
       if(xpText) xpText.innerText = "0/100";
       if(userAvatarEl){ userAvatarEl.src = `/toolflix/assets/img/avatars/level-1-1.webp`; userAvatarEl.className = "user-avatar avatar-glow-low"; }
+      removeFrameWrap(userAvatarEl);
 
       // Esconde tudo quando não está logado
       if(masterTopBtn) masterTopBtn.style.display = "none";
@@ -5939,6 +6031,8 @@ const MASTER_NICK = "Srgokucheats";
 
     if(xpFill) xpFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
         if(xpText) xpText.innerText   = `${u.xp}/${info.max} (Nv ${info.level})`;
+
+    applyFrameToAvatar(userAvatarEl, info.level);
   }
 
   function tfInitAudio(){
@@ -6775,6 +6869,53 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
   document.getElementById("closeAvatarPickerBtn")?.addEventListener("click", ()=>{
     document.getElementById("avatarPickerModal").style.display = "none";
   });
+
+  document.getElementById("closeFramePickerBtn")?.addEventListener("click", ()=>{
+    document.getElementById("framePickerModal").style.display = "none";
+  });
+
+  document.getElementById("openFramePickerBtn")?.addEventListener("click", async ()=>{
+    toggleUserMenu(true);
+    renderFramePicker();
+    document.getElementById("framePickerModal").style.display = "flex";
+  });
+
+  function renderFramePicker(){
+    const grid = document.getElementById("framePickerGrid");
+    const summary = document.getElementById("framePickerSummary");
+    if(!grid) return;
+
+    const u = loadUser();
+    const level = u ? clampAvatarLevel(getLevelInfo(u.xp || 0).level) : 1;
+    const current = getSavedFrame();
+
+    if(summary) summary.textContent = `Seu nível: ${level} | Moldura atual: ${current === "none" ? "Nenhuma" : "Automática"}`;
+
+    let html = "";
+
+    html += `<div class="avatar-picker-card ${current === "none" ? "selected" : ""}" onclick="selectFrame('none')" style="text-align:center;">
+      <div style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.08);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:24px;">❌</div>
+      <div class="avatar-picker-badge">Nenhuma</div>
+    </div>`;
+
+    for(let i = 1; i <= 15; i++){
+      const locked = i > level;
+      const sel = current === "auto" && !locked;
+      html += `<div class="avatar-picker-card ${locked ? "locked" : ""} ${sel && i === level ? "selected" : ""}" onclick="${locked ? "" : `selectFrame('auto')`}" style="text-align:center;">
+        <img src="/toolflix/assets/img/molduras/avatar-${i}.png" alt="Frame ${i}" style="width:64px;height:64px;object-fit:contain;margin:0 auto 10px;${locked ? "filter:grayscale(100%) opacity(.4);" : ""}">
+        <div class="avatar-picker-badge">Nv ${i}${locked ? " 🔒" : ""}</div>
+      </div>`;
+    }
+
+    grid.innerHTML = html;
+  }
+
+  window.selectFrame = function(mode){
+    setSavedFrame(mode);
+    document.getElementById("framePickerModal").style.display = "none";
+    updateUserUI();
+    showToast(mode === "none" ? "Moldura removida." : "Moldura automática ativada!");
+  };
 
   document.getElementById("userNick")?.addEventListener("click", async (e)=>{
     const u = loadUser();
