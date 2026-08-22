@@ -1794,6 +1794,21 @@ select optgroup{
       height:42px;
       flex:0 0 42px;
     }
+    .global-chat-row .avatar-frame-wrap{
+      flex:0 0 40px;
+      width:40px;
+      height:40px;
+    }
+    .global-chat-row .avatar-frame-wrap .global-chat-avatar{
+      width:32px;
+      height:32px;
+      flex:0 0 32px;
+    }
+    .global-chat-row .avatar-frame-img{
+      inset:-4px;
+      width:calc(100% + 8px);
+      height:calc(100% + 8px);
+    }
     .presence-bullet{
       width:9px;
       height:9px;
@@ -5269,8 +5284,10 @@ const MASTER_NICK = "Srgokucheats";
         xp: Number(j.profile.xp || 0),
         avatar: j.profile.avatar,
         premium: !!j.profile.premium,
-        password_temp: !!j.profile.passwordTemp
+        password_temp: !!j.profile.passwordTemp,
+        frame: j.profile.frame || "auto"
       });
+      if(j.profile.frame) setSavedFrame(j.profile.frame);
       updateUserUI?.();
       return profileCache;
     }catch(e){
@@ -5384,9 +5401,16 @@ const MASTER_NICK = "Srgokucheats";
       </div>
     ` : "";
 
+    const profileFrame = getCurrentFramePath(profile.level || 1);
+    const profileFrameSrc = (profile.frame === "none") ? "" : (profile.frame && profile.frame !== "auto" ? getFramePath(parseInt(profile.frame) || profile.level || 1) : profileFrame);
+    const profileFrameHtml = profileFrameSrc ? `<img class="avatar-frame-img" src="${escapeHtml(profileFrameSrc)}" alt="" style="inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);">` : "";
+
     box.innerHTML = `
       <div class="profile-head">
-        <img class="profile-avatar ${getAvatarClass(profile.level)}" src="${getAvatarSrc(profile)}" alt="Avatar">
+        <div class="avatar-frame-wrap" style="flex:0 0 80px;width:80px;height:80px;">
+          <img class="profile-avatar ${getAvatarClass(profile.level)}" src="${getAvatarSrc(profile)}" alt="Avatar" style="width:64px;height:64px;">
+          ${profileFrameHtml}
+        </div>
         <div style="min-width:0;">
           <div style="font-size:24px; font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${safeStr(profile.nick || "Jogador")}</div>
           <div style="opacity:.82; margin-top:4px;">Nível ${Number(profile.level || 1)} • ${Number(profile.xp || 0)} XP</div>
@@ -6325,11 +6349,14 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
 
       setLoginFailCount(0);
       saveAuth({ token: j2.token, userId: j2.user.id, nick: j2.user.nick });
-      saveUser({ nick: j2.user.nick, xp: Number(j2.user.xp || 0), password_temp: !!j2.user.password_temp });
+      saveUser({ nick: j2.user.nick, xp: Number(j2.user.xp || 0), password_temp: !!j2.user.password_temp, frame: j2.user.frame || "auto" });
       upsertSavedProfile({ nick: j2.user.nick, xp: Number(j2.user.xp || 0), premium: !!j2.user.premium });
       profileCache = null;
       const freshProfile = await fetchProfileMe(true);
-      if(freshProfile) upsertSavedProfile(freshProfile);
+      if(freshProfile){
+        upsertSavedProfile(freshProfile);
+        if(freshProfile.frame) setSavedFrame(freshProfile.frame);
+      }
 
       localStorage.removeItem("toolflix_recovery_nick");
       closeLogin();
@@ -6922,8 +6949,18 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     grid.innerHTML = html;
   }
 
-  window.selectFrame = function(mode){
+  window.selectFrame = async function(mode){
     setSavedFrame(mode);
+    const token = getToken();
+    if(token){
+      try{
+        await fetch(API_BASE + "/api/profile/frame", {
+          method: "POST",
+          headers: { "Content-Type":"application/json", "Authorization":"Bearer " + token },
+          body: JSON.stringify({ frame: mode })
+        });
+      }catch(e){}
+    }
     document.getElementById("framePickerModal").style.display = "none";
     updateUserUI();
     if(mode === "none") showToast("Moldura removida.");
@@ -9512,6 +9549,17 @@ document.addEventListener("DOMContentLoaded", function(){
     input.dispatchEvent(new Event("input", { bubbles:true }));
   }
 
+  function getChatFrameSrc(msg){
+    if(!msg || msg.is_guest) return "";
+    const frame = msg.frame || "auto";
+    if(frame === "none") return "";
+    const level = msg.level || 1;
+    if(frame === "auto") return getFramePath(level);
+    const num = parseInt(frame);
+    if(!isNaN(num) && num >= 1 && num <= 15) return getFramePath(num);
+    return getFramePath(level);
+  }
+
   function globalChatRowHtml(msg){
     const deleted = !!msg?.deleted;
     const own = isOwnGlobalChatMessage(msg);
@@ -9519,10 +9567,16 @@ document.addEventListener("DOMContentLoaded", function(){
     const bubbleText = deleted ? "Mensagem apagada pelo administrador" : String(parsed.body || "");
     const bubbleClass = deleted ? "global-chat-bubble deleted" : "global-chat-bubble";
     const avatar = getAvatarSrc(msg);
+    const avatarLevel = msg?.level || 1;
+    const frameSrc = getChatFrameSrc(msg);
+    const frameHtml = frameSrc ? `<img class="avatar-frame-img" src="${escapeHtml(frameSrc)}" alt="" onerror="this.remove();">` : "";
     const quoteHtml = (!deleted && parsed.reply) ? `<div class="global-chat-quote"><strong>↪ ${escapeHtml(parsed.reply.nick)}</strong><span>${escapeHtml(parsed.reply.text)}</span></div>` : "";
     return `
       <div class="global-chat-row ${own ? "own" : ""}" data-global-chat-id="${escapeHtml(String(msg?.id || ""))}">
-        <img class="global-chat-avatar ${getAvatarClass(msg?.level)}" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1-1.webp';">
+        <div class="avatar-frame-wrap">
+          <img class="global-chat-avatar ${getAvatarClass(msg?.level)}" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}" src="${escapeHtml(avatar)}" alt="Avatar" onerror="this.onerror=null;this.src='/toolflix/assets/img/avatars/level-1-1.webp';">
+          ${frameHtml}
+        </div>
         <div class="global-chat-body">
           <div class="global-chat-head">
             <div class="global-chat-name" data-profile-nick="${escapeHtml(String(msg?.nick || ""))}">${escapeHtml(formatGlobalAuthor(msg))}</div>
