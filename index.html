@@ -5320,14 +5320,25 @@ const MASTER_NICK = "Srgokucheats";
   }
 
   function closeAllOverlays(){
-    try{ closeGlobalChat(); }catch(e){}
-    try{ closePresence(); }catch(e){}
-    try{ document.getElementById("gameModal").style.display = "none"; }catch(e){}
-    try{ document.getElementById("achModal").style.display = "none"; }catch(e){}
-    try{ document.getElementById("gameDetailsModal").style.display = "none"; }catch(e){}
-    try{ closeSupportChat(); }catch(e){}
-    try{ closeSidebar(); }catch(e){}
-    try{ document.getElementById("userMenuBox").style.display = "none"; }catch(e){}
+    const gChat = document.getElementById("globalChatOverlay");
+    if(gChat){ gChat.classList.remove("open"); gChat.style.display = "none"; }
+    const pres = document.getElementById("presenceOverlay");
+    if(pres){ pres.classList.remove("open"); pres.style.display = "none"; }
+    const gm = document.getElementById("gameModal");
+    if(gm) gm.style.display = "none";
+    const ach = document.getElementById("achModal");
+    if(ach) ach.style.display = "none";
+    const gd = document.getElementById("gameDetailsModal");
+    if(gd) gd.style.display = "none";
+    const sc = document.querySelector(".support-chat-overlay.open");
+    if(sc) sc.classList.remove("open");
+    const sb = document.querySelector(".sidebar.open");
+    if(sb) sb.classList.remove("open");
+    const menu = document.getElementById("userMenuBox");
+    if(menu) menu.style.display = "none";
+    const hamburger = document.querySelector(".hamburger.open");
+    if(hamburger) hamburger.classList.remove("open");
+    document.body.style.overflow = "";
   }
 
   async function openPublicProfileModalByNick(nick){
