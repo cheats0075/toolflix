@@ -5319,7 +5319,19 @@ const MASTER_NICK = "Srgokucheats";
     }
   }
 
+  function closeAllOverlays(){
+    try{ closeGlobalChat(); }catch(e){}
+    try{ closePresence(); }catch(e){}
+    try{ document.getElementById("gameModal").style.display = "none"; }catch(e){}
+    try{ document.getElementById("achModal").style.display = "none"; }catch(e){}
+    try{ document.getElementById("gameDetailsModal").style.display = "none"; }catch(e){}
+    try{ closeSupportChat(); }catch(e){}
+    try{ closeSidebar(); }catch(e){}
+    try{ document.getElementById("userMenuBox").style.display = "none"; }catch(e){}
+  }
+
   async function openPublicProfileModalByNick(nick){
+    closeAllOverlays();
     const modal = document.getElementById("profileModal");
     const box = document.getElementById("profileContent");
     if(modal){
@@ -5486,6 +5498,7 @@ const MASTER_NICK = "Srgokucheats";
   }
 
   async function openProfileModal(force=false){
+    closeAllOverlays();
     const modal = document.getElementById("profileModal");
     if(modal){
       modal.style.zIndex = "300000";
