@@ -5321,9 +5321,9 @@ const MASTER_NICK = "Srgokucheats";
 
   function closeAllOverlays(){
     const gChat = document.getElementById("globalChatOverlay");
-    if(gChat){ gChat.classList.remove("open"); gChat.style.display = "none"; }
+    if(gChat){ gChat.classList.remove("open"); gChat.style.display = ""; }
     const pres = document.getElementById("presenceOverlay");
-    if(pres){ pres.classList.remove("open"); pres.style.display = "none"; }
+    if(pres){ pres.classList.remove("open"); pres.style.display = ""; }
     const gm = document.getElementById("gameModal");
     if(gm) gm.style.display = "none";
     const ach = document.getElementById("achModal");
@@ -5332,12 +5332,8 @@ const MASTER_NICK = "Srgokucheats";
     if(gd) gd.style.display = "none";
     const sc = document.querySelector(".support-chat-overlay.open");
     if(sc) sc.classList.remove("open");
-    const sb = document.querySelector(".sidebar.open");
-    if(sb) sb.classList.remove("open");
     const menu = document.getElementById("userMenuBox");
     if(menu) menu.style.display = "none";
-    const hamburger = document.querySelector(".hamburger.open");
-    if(hamburger) hamburger.classList.remove("open");
     document.body.style.overflow = "";
   }
 
