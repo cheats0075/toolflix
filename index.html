@@ -5902,6 +5902,9 @@ const MASTER_NICK = "Srgokucheats";
   function getCurrentFramePath(level){
     const mode = getSavedFrame();
     if(mode === "none") return "";
+    if(mode === "auto") return getFramePath(level);
+    const num = parseInt(mode);
+    if(!isNaN(num) && num >= 1 && num <= 15 && num <= level) return getFramePath(num);
     return getFramePath(level);
   }
 
@@ -6889,7 +6892,11 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     const level = u ? clampAvatarLevel(getLevelInfo(u.xp || 0).level) : 1;
     const current = getSavedFrame();
 
-    if(summary) summary.textContent = `Seu nível: ${level} | Moldura atual: ${current === "none" ? "Nenhuma" : "Automática"}`;
+    let currentLabel = "Automática";
+    if(current === "none") currentLabel = "Nenhuma";
+    else if(current !== "auto") currentLabel = `Moldura nível ${current}`;
+
+    if(summary) summary.textContent = `Seu nível: ${level} | Moldura atual: ${currentLabel}`;
 
     let html = "";
 
@@ -6898,10 +6905,15 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
       <div class="avatar-picker-badge">Nenhuma</div>
     </div>`;
 
+    html += `<div class="avatar-picker-card ${current === "auto" ? "selected" : ""}" onclick="selectFrame('auto')" style="text-align:center;">
+      <img src="/toolflix/assets/img/molduras/avatar-${level}.png" alt="Auto" style="width:64px;height:64px;object-fit:contain;margin:0 auto 10px;">
+      <div class="avatar-picker-badge">Automática</div>
+    </div>`;
+
     for(let i = 1; i <= 15; i++){
       const locked = i > level;
-      const sel = current === "auto" && !locked;
-      html += `<div class="avatar-picker-card ${locked ? "locked" : ""} ${sel && i === level ? "selected" : ""}" onclick="${locked ? "" : `selectFrame('auto')`}" style="text-align:center;">
+      const isCurrent = current === String(i);
+      html += `<div class="avatar-picker-card ${locked ? "locked" : ""} ${isCurrent ? "selected" : ""}" onclick="${locked ? "" : `selectFrame('${i}')`}" style="text-align:center;">
         <img src="/toolflix/assets/img/molduras/avatar-${i}.png" alt="Frame ${i}" style="width:64px;height:64px;object-fit:contain;margin:0 auto 10px;${locked ? "filter:grayscale(100%) opacity(.4);" : ""}">
         <div class="avatar-picker-badge">Nv ${i}${locked ? " 🔒" : ""}</div>
       </div>`;
@@ -6914,7 +6926,9 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     setSavedFrame(mode);
     document.getElementById("framePickerModal").style.display = "none";
     updateUserUI();
-    showToast(mode === "none" ? "Moldura removida." : "Moldura automática ativada!");
+    if(mode === "none") showToast("Moldura removida.");
+    else if(mode === "auto") showToast("Moldura automática ativada!");
+    else showToast(`Moldura do nível ${mode} selecionada!`);
   };
 
   document.getElementById("userNick")?.addEventListener("click", async (e)=>{
