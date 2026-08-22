@@ -4153,7 +4153,7 @@ body.avatar-modal-open{
     <div id="premiumBadge">💎 PREMIUM ATIVO</div>
     <div id="premiumCounter"></div>
 
-    <div id="presenceSummary" title="Clique para ver quem está online">
+    <div id="presenceSummary" title="Clique para ver quem está online" style="display:none !important;">
       <div id="presenceSummaryTop">
         <span><span class="dot">🟢</span> <span id="presenceOnlineCount">0</span> online agora</span>
         <span style="opacity:.75; font-size:12px;">Abrir</span>
@@ -4253,7 +4253,7 @@ body.avatar-modal-open{
       <button class="nav-item" id="sortBtn">🔃 Ordem</button>
       <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
 
-      <div class="online-pill" id="onlinePillBtn" onclick="document.getElementById('presenceSummary').click()">
+      <div class="online-pill" id="onlinePillBtn" onclick="openPresence()">
         <span class="dot"></span>
         <span id="onlinePillCount">0</span> Online
       </div>
@@ -9069,6 +9069,8 @@ document.addEventListener("DOMContentLoaded", function(){
     hitPresence().finally(refreshPresence);
     setInterval(hitPresence, 60000);
     setInterval(refreshPresence, 20000);
+
+    window.openPresence = openPresence;
   });
 
   /* ===== GLOBAL CHAT ===== */
