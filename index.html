@@ -5492,6 +5492,13 @@ const MASTER_NICK = "Srgokucheats";
       }
 
       showToast("✅ Avatar atualizado.");
+
+      const avatarDaily = JSON.parse(localStorage.getItem("toolflix_avatar_daily_" + todayKey()) || '{"done":false}');
+      if(!avatarDaily.done){
+        avatarDaily.done = true;
+        localStorage.setItem("toolflix_avatar_daily_" + todayKey(), JSON.stringify(avatarDaily));
+        awardXp(XP_RULES.avatar_change, "Trocar avatar");
+      }
     }catch(e){
       showToast("Erro ao trocar avatar.");
     }
@@ -5610,8 +5617,10 @@ const MASTER_NICK = "Srgokucheats";
     return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
   }
 
-  const XP_RULES = { youtube: 15, download: 10, theme: 15, favorite: 5, premium: 100 };
+  const XP_RULES = { youtube: 15, download: 10, theme: 15, favorite: 5, premium: 100, chat_msg: 3, avatar_change: 10, level_bonus: 50 };
   const DAILY_KEY = "toolflix_xp_daily_";
+  const LOGIN_DAILY_KEY = "toolflix_login_daily_";
+  const STREAK_KEY = "toolflix_streak";
 
   async function addXp(amount){
     amount = Number(amount || 0);
@@ -5669,6 +5678,64 @@ const MASTER_NICK = "Srgokucheats";
 
   function setDaily(d){
     localStorage.setItem(DAILY_KEY + todayKey(), JSON.stringify(d));
+  }
+
+  // ===== LOGIN DIÁRIO + STREAK =====
+  function getLoginDaily(){
+    try{
+      return JSON.parse(localStorage.getItem(LOGIN_DAILY_KEY + todayKey()) || '{"done":false}');
+    }catch{
+      return {done:false};
+    }
+  }
+
+  function setLoginDaily(d){
+    localStorage.setItem(LOGIN_DAILY_KEY + todayKey(), JSON.stringify(d));
+  }
+
+  function getStreak(){
+    try{
+      return JSON.parse(localStorage.getItem(STREAK_KEY) || '{"count":0,"lastDate":""}');
+    }catch{
+      return {count:0,lastDate:""};
+    }
+  }
+
+  function saveStreak(s){
+    localStorage.setItem(STREAK_KEY, JSON.stringify(s));
+  }
+
+  function checkAndAwardLoginBonus(){
+    const u = loadUser();
+    if(!u || !u.nick) return;
+
+    const daily = getLoginDaily();
+    if(daily.done) return;
+
+    const streak = getStreak();
+    const today = todayKey();
+    const yesterday = (() => {
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+    })();
+
+    let newCount = 1;
+    if(streak.lastDate === yesterday){
+      newCount = streak.count + 1;
+    } else if(streak.lastDate !== today){
+      newCount = 1;
+    }
+
+    let bonusXP = 20;
+    if(newCount >= 30) bonusXP = 500;
+    else if(newCount >= 7) bonusXP = 100;
+    else if(newCount >= 3) bonusXP = 30;
+
+    saveStreak({count: newCount, lastDate: today});
+    setLoginDaily({done: true});
+
+    awardXp(bonusXP, `Login diário (${newCount} dias seguidos)`);
   }
 
   function getLevelInfo(totalXp){
@@ -6023,6 +6090,9 @@ const MASTER_NICK = "Srgokucheats";
     const afterLv = getLevelInfo(afterXp).level;
     if(afterLv > beforeLv){
       triggerLevelUpFx(afterLv);
+      await addXp(XP_RULES.level_bonus);
+      showToast(`+${XP_RULES.level_bonus} XP (Bônus de nível!)`);
+      updateUserUI();
     }
   }
 
@@ -6166,6 +6236,8 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
       updateUserUI();
       const fromRegister = AUTH_MODE === "register";
       showToast(j2.user.password_temp ? `Bem-vindo, ${j2.user.nick}. Troque sua senha no perfil.` : `Bem-vindo, ${j2.user.nick}!`);
+
+      checkAndAwardLoginBonus();
       if(j2.user.password_temp){
         setTimeout(()=> openProfileModal(true), 250);
       }
@@ -9382,6 +9454,13 @@ document.addEventListener("DOMContentLoaded", function(){
         const count = document.getElementById("globalChatCount");
         if(count) count.textContent = "0";
         refreshGlobalChat(true);
+
+        const chatDaily = JSON.parse(localStorage.getItem("toolflix_chat_daily_" + todayKey()) || '{"count":0}');
+        if(chatDaily.count < 20){
+          chatDaily.count++;
+          localStorage.setItem("toolflix_chat_daily_" + todayKey(), JSON.stringify(chatDaily));
+          awardXp(XP_RULES.chat_msg, "Mensagem no chat");
+        }
       }else{
         if(j?.error === "SPAM") showToast("Espere um pouco antes de enviar outra mensagem.");
         else if(j?.error === "MESSAGE_TOO_LONG") showToast("Mensagem grande demais.");
