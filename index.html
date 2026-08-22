@@ -4153,7 +4153,19 @@ body.avatar-modal-open{
     <div id="premiumBadge">💎 PREMIUM ATIVO</div>
     <div id="premiumCounter"></div>
 
-    <!-- presenceSummary e onlineGlassPanel removidos -->
+    <div id="presenceSummary" title="Clique para ver quem está online">
+      <div id="presenceSummaryTop">
+        <span><span class="dot">🟢</span> <span id="presenceOnlineCount">0</span> online agora</span>
+        <span style="opacity:.75; font-size:12px;">Abrir</span>
+      </div>
+      <div id="presenceSummarySub">Clique para ver quem está online e os últimos vistos</div>
+    </div>
+
+    <!-- ===== PAINEL GLASS: USUÁRIOS ONLINE ===== -->
+    <div id="onlineGlassPanel" class="online-glass-card" style="display:none !important;">
+      <div class="online-glass-title">Usuários Online (<span id="onlineGlassCount">0</span>)</div>
+      <div id="onlineGlassList"></div>
+    </div>
 
     <!-- ===== RADIO PLAYER ===== -->
     <nav id="categoriaBtns" style="overflow-y:auto; padding-right:5px;">
