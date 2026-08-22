@@ -10924,6 +10924,16 @@ document.addEventListener("DOMContentLoaded",()=>{
           const box = document.getElementById("globalChatMessages");
           if(box) box.scrollTop = box.scrollHeight;
         }, 80);
+
+        try{
+          const chatDaily = JSON.parse(localStorage.getItem("toolflix_chat_daily_" + todayKey()) || '{"count":0}');
+          if(chatDaily.count < 20){
+            chatDaily.count++;
+            localStorage.setItem("toolflix_chat_daily_" + todayKey(), JSON.stringify(chatDaily));
+            awardXp(XP_RULES.chat_msg, "Mensagem no chat");
+          }
+        }catch(e){}
+
         return;
       }
 
