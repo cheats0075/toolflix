@@ -5411,9 +5411,11 @@ const MASTER_NICK = "Srgokucheats";
       </div>
     ` : "";
 
-    const profileFrame = getCurrentFramePath(profile.level || 1);
-    const profileFrameSrc = (profile.frame === "none") ? "" : (profile.frame && profile.frame !== "auto" ? getFramePath(parseInt(profile.frame) || profile.level || 1) : profileFrame);
-    const profileFrameHtml = profileFrameSrc ? `<img class="avatar-frame-img" src="${escapeHtml(profileFrameSrc)}" alt="" style="inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);">` : "";
+    let profileFrameHtml = "";
+    try{
+      const pfs = (profile.frame === "none") ? "" : (profile.frame && profile.frame !== "auto" ? getFramePath(parseInt(profile.frame) || profile.level || 1) : getFramePath(profile.level || 1));
+      if(pfs) profileFrameHtml = `<img class="avatar-frame-img" src="${pfs}" alt="" style="inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);">`;
+    }catch(e){}
 
     box.innerHTML = `
       <div class="profile-head">
