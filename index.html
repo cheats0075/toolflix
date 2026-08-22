@@ -4255,6 +4255,7 @@ body.avatar-modal-open{
 
       <button class="nav-item" id="sortBtn">🔃 Ordem</button>
       <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
+      <button class="nav-item" id="trophyTopBtn" onclick="openAchFromTop()" style="background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,140,0,0.1)); border-color: rgba(255,215,0,0.3);">🏆 Conquistas</button>
 
       <div class="online-pill" id="onlinePillBtn" onclick="openPresence()">
         <span class="dot"></span>
@@ -6768,6 +6769,11 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     achRender();
     document.getElementById("achModal").style.display = "flex";
   });
+
+  window.openAchFromTop = function(){
+    achRender();
+    document.getElementById("achModal").style.display = "flex";
+  };
 
   document.getElementById("closeAchBtn")?.addEventListener("click", ()=>{
     document.getElementById("achModal").style.display = "none";
