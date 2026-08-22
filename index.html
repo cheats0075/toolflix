@@ -6620,11 +6620,30 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     { id:"th_30",  type:"themes",    title:"🎨 Designer",            need:30 },
     { id:"th_60",  type:"themes",    title:"🎨 Modo DJ",             need:60 },
     { id:"th_120", type:"themes",    title:"🎨 Multiverso",          need:120 },
+
+    { id:"streak_3",  type:"streak",  title:"🔥 Fogo aceso",         need:3 },
+    { id:"streak_7",  type:"streak",  title:"🔥 Semana sagrada",     need:7 },
+    { id:"streak_14", type:"streak",  title:"🔥 Imparável",          need:14 },
+    { id:"streak_30", type:"streak",  title:"🔥 Lenda do fogo",      need:30 },
+
+    { id:"chat_10",  type:"chat",     title:"💬 Conversa fiada",     need:10 },
+    { id:"chat_50",  type:"chat",     title:"💬 Velocity",           need:50 },
+    { id:"chat_100", type:"chat",     title:"💬 Insano no chat",     need:100 },
+
+    { id:"lvl_5",  type:"level",      title:"⭐ Ascendente",         need:5 },
+    { id:"lvl_10", type:"level",      title:"⭐ Elite",              need:10 },
+    { id:"lvl_15", type:"level",      title:"⭐ Mestre",             need:15 },
+
+    { id:"time_1h", type:"time",      title:"🕐 Perdido no tempo",   need:60 },
+    { id:"time_5h", type:"time",      title:"🕐 Viajante temporal",   need:300 },
+
+    { id:"daily_3", type:"daily",     title:"🎯 Focado",             need:3 },
+    { id:"daily_7", type:"daily",     title:"🎯 Disciplinado",       need:7 },
   ];
 
   function achLoadStats(){
-    try { return JSON.parse(localStorage.getItem(ACH_STATS_KEY) || '{"youtube":0,"downloads":0,"favorites":0,"themes":0,"premium":0}'); }
-    catch { return { youtube:0, downloads:0, favorites:0, themes:0, premium:0 }; }
+    try { return JSON.parse(localStorage.getItem(ACH_STATS_KEY) || '{"youtube":0,"downloads":0,"favorites":0,"themes":0,"premium":0,"streak":0,"chat":0,"level":0,"time":0,"daily":0}'); }
+    catch { return { youtube:0, downloads:0, favorites:0, themes:0, premium:0, streak:0, chat:0, level:0, time:0, daily:0 }; }
   }
   function achSaveStats(s){ localStorage.setItem(ACH_STATS_KEY, JSON.stringify(s || {})); }
 
@@ -6715,12 +6734,22 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     const dl = ACH_LIST.filter(a => a.type === "downloads");
     const fv = ACH_LIST.filter(a => a.type === "favorites");
     const th = ACH_LIST.filter(a => a.type === "themes");
+    const sk = ACH_LIST.filter(a => a.type === "streak");
+    const ch = ACH_LIST.filter(a => a.type === "chat");
+    const lv = ACH_LIST.filter(a => a.type === "level");
+    const tm = ACH_LIST.filter(a => a.type === "time");
+    const dy = ACH_LIST.filter(a => a.type === "daily");
 
     list.innerHTML =
       achSection("🎥 YouTube", yt, stats, unlock) +
       achSection("🎮 Downloads", dl, stats, unlock) +
       achSection("❤️ Favoritos", fv, stats, unlock) +
-      achSection("🎨 Temas", th, stats, unlock);
+      achSection("🎨 Temas", th, stats, unlock) +
+      achSection("🔥 Streak de Login", sk, stats, unlock) +
+      achSection("💬 Chat", ch, stats, unlock) +
+      achSection("⭐ Nível", lv, stats, unlock) +
+      achSection("🕐 Tempo Online", tm, stats, unlock) +
+      achSection("🎯 Missões Diárias", dy, stats, unlock);
 
     if(plat){
       plat.textContent = unlock["platinum_toolflix"]
@@ -6787,7 +6816,41 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     if(reason === "Favorito"){ achInc("favorites", 1); syncProfileAction("favorite", 1); }
     if(reason === "Troca de tema"){ achInc("themes", 1); syncProfileAction("theme", 1); }
     if(reason === "Virou Premium") achInc("premium", 1);
+    if(reason.includes("Login diário")){ const streak = getStreak(); achInc("streak", streak.count || 1); }
+    if(reason === "Mensagem no chat") achInc("chat", 1);
+    if(reason.includes("Bônus de nível")) achInc("level", 1);
   };
+    /* ===== TIME TRACKER ===== */
+  let _achTimeInterval = null;
+  function startTimeTracker(){
+    if(_achTimeInterval) return;
+    const u = loadUser();
+    if(!u || !u.nick) return;
+    _achTimeInterval = setInterval(()=>{
+      const u2 = loadUser();
+      if(!u2 || !u2.nick){ clearInterval(_achTimeInterval); _achTimeInterval = null; return; }
+      achInc("time", 5);
+    }, 5 * 60 * 1000);
+  }
+  startTimeTracker();
+
+    /* ===== DAILY COMPLETION TRACKER ===== */
+  function checkDailyCompletion(){
+    const u = loadUser();
+    if(!u || !u.nick) return;
+    const dailyKey = "toolflix_daily_complete_" + todayKey();
+    if(localStorage.getItem(dailyKey)) return;
+    const d = getDaily();
+    if(d.downloads >= 3 && d.favorites >= 5 && d.themes >= 1){
+      localStorage.setItem(dailyKey, "1");
+      const stats = achLoadStats();
+      stats.daily = Number(stats.daily || 0) + 1;
+      achSaveStats(stats);
+      achUnlockCheck();
+    }
+  }
+  setInterval(checkDailyCompletion, 30 * 1000);
+
     /* ===============================
      PREMIUM (Render only)
   ================================= */
