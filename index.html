@@ -4306,7 +4306,7 @@ body.avatar-modal-open{
 
       <button class="nav-item" id="sortBtn">🔃 Ordem</button>
       <button class="nav-item" id="favFiltroBtn">❤️ Favoritos</button>
-      <button class="nav-item" id="trophyTopBtn" onclick="openAchFromTop()" style="background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,140,0,0.1)); border-color: rgba(255,215,0,0.3);">🏆 Conquistas</button>
+      <button class="nav-item" id="trophyTopBtn" onclick="openAchFromTop()" style="background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,140,0,0.1)); border-color: rgba(255,215,0,0.3);">🏆 <span id="trophyTopCount"></span></button>
 
       <div class="online-pill" id="onlinePillBtn" onclick="openPresence()">
         <span class="dot"></span>
@@ -4330,7 +4330,7 @@ body.avatar-modal-open{
           <button class="userMenuItem" id="openAvatarPickerBtn">🖼️ Trocar avatar</button>
           <button class="userMenuItem" id="openFramePickerBtn">🖼️ Quadro de avatar</button>
           <button class="userMenuItem" id="openGameBtn">🎮 Game</button>
-          <button class="userMenuItem" id="openAchBtn">🏆 Conquistas</button>
+          <button class="userMenuItem" id="openAchBtn">🏆 <span id="achMenuCount">Conquistas</span></button>
           <button class="userMenuItem" id="logoutBtn">🚪 Sair</button>
         </div>
       </div>
@@ -4504,7 +4504,7 @@ body.avatar-modal-open{
     <div id="achModal" class="modal-overlay">
       <div class="modal-box" style="width:520px; max-width:92vw; text-align:left;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <h2 style="color:gold;">🏆 Conquistas</h2>
+          <h2 id="achHeader" style="color:gold;">🏆 Conquistas</h2>
           <button id="closeAchBtn" class="nav-item" style="padding:8px 12px;">✖</button>
         </div>
         <div id="achList"
@@ -6874,17 +6874,26 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
   function achRender(){
     const list = document.getElementById("achList");
     const plat = document.getElementById("achPlatinum");
+    const header = document.getElementById("achHeader");
     if(!list) return;
 
     const u = loadUser();
     if(!u || !u.nick){
       list.innerHTML = `<div style="opacity:.9">Faça login para ver suas conquistas.</div>`;
       if(plat) plat.textContent = "";
+      if(header) header.innerHTML = `🏆 Conquistas <span style="font-size:14px;opacity:.7;font-weight:400;">Faça login</span>`;
       return;
     }
 
     const stats = achLoadStats();
     const unlock = achLoadUnlock();
+    const total = ACH_LIST.length;
+    const unlocked = Object.keys(unlock).filter(k => unlock[k]).length;
+    if(header) header.innerHTML = `🏆 Conquistas <span style="font-size:14px;opacity:.7;font-weight:400;">${unlocked}/${total}</span>`;
+    const topCount = document.getElementById("trophyTopCount");
+    if(topCount) topCount.textContent = `${unlocked}/${total}`;
+    const menuCount = document.getElementById("achMenuCount");
+    if(menuCount) menuCount.textContent = `Conquistas ${unlocked}/${total}`;
 
     const yt = ACH_LIST.filter(a => a.type === "youtube");
     const dl = ACH_LIST.filter(a => a.type === "downloads");
@@ -8766,6 +8775,7 @@ document.addEventListener("click", async (ev)=>{
      INIT DO SITE
   ================================= */
   updateUserUI();
+  achRender();
   updatePremiumSidebar();
   render();
 
