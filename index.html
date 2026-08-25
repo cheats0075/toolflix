@@ -3982,6 +3982,31 @@ body.avatar-modal-open{
     transform:translateY(-2px) scale(1.04);
     box-shadow:0 8px 22px rgba(238,77,45,.5);
   }
+  .tf-promo-carousel-wrap{ position:relative; }
+  .tf-promo-arrow{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:10;
+    width:34px; height:34px; border-radius:50%; border:none; cursor:pointer;
+    display:none; align-items:center; justify-content:center;
+    background:rgba(0,0,0,.65); color:#fff; font-size:16px; font-weight:900;
+    backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,.12);
+    transition:.2s; box-shadow:0 4px 14px rgba(0,0,0,.4);
+  }
+  .tf-promo-arrow:hover{ background:rgba(255,255,255,.15); transform:translateY(-50%) scale(1.1); }
+  .tf-promo-arrow.arrow-left{ left:-14px; }
+  .tf-promo-arrow.arrow-right{ right:-14px; }
+  .tf-promo-carousel-wrap:hover .tf-promo-arrow{ display:flex; }
+  .tf-promo-ver-todas-card{
+    flex:0 0 150px; height:190px; border-radius:20px; border:2px dashed rgba(76,255,122,.35);
+    background:rgba(76,255,122,.05); display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:6px; padding:14px;
+    text-decoration:none; color:#4cff7a; transition:.25s; cursor:pointer;
+  }
+  .tf-promo-ver-todas-card:hover{
+    background:rgba(76,255,122,.12); border-color:rgba(76,255,122,.6);
+    transform:translateY(-4px); box-shadow:0 12px 28px rgba(76,255,122,.15);
+  }
+  .tf-promo-ver-todas-card span{ font-size:22px; }
+  .tf-promo-ver-todas-card b{ font-size:11px; font-weight:800; text-align:center; line-height:1.2; }
   .tf-promo-ver-todas{
     flex:0 0 auto; display:inline-flex; align-items:center; gap:6px;
     padding:8px 16px; border-radius:999px; font-size:12px; font-weight:900;
@@ -6633,7 +6658,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
   }
 
   let tfHeroCarouselTimer = null;
-  let tfHeroFeaturedTimer = null;
+
   let tfHeroVideoIndex = 0;
   let tfHeroFeaturedIndex = 0;
 
@@ -6685,25 +6710,38 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     }
 
     const hasMore = allPromos.length > 8;
-    const verTodasBtn = hasMore ? `<a class="tf-promo-ver-todas" href="promos.html" target="_blank">🛒 Ver todas as ofertas →</a>` : "";
+    const verTodasCard = `<a class="tf-promo-ver-todas-card" href="promos.html" target="_blank"><span>🛒</span><b>Ver todas as ofertas</b></a>`;
 
-    box.innerHTML = `<div class="tf-promo-scroll" id="tfPromoScroll">${list.map((p, idx)=>{
-      const nome = escHtml(p.name || p.nome || "Produto");
-      const capa = escHtml(p.image || p.capa || "https://via.placeholder.com/300x300.png?text=Promo");
-      const link = escHtml(p.link || p.linkShopee || "#");
-      const precoOld = (p.price_old || p.precoOriginal) ? `<span class="tf-promo-price-old">R$ ${escHtml(p.price_old || p.precoOriginal)}</span>` : "";
-      const precoNew = (p.price_new || p.precoAtual) ? `<span class="tf-promo-price-new">R$ ${escHtml(p.price_new || p.precoAtual)}</span>` : "";
-      return `
-        <a class="tf-promo-card" href="${link}" target="_blank" rel="nofollow" title="Ver na Shopee">
-          <img src="${capa}" alt="${nome}" onerror="this.src='https://via.placeholder.com/300x300.png?text=Promo';">
-          <div class="tf-promo-badge">OFERTA</div>
-          <div class="tf-promo-shopee-icon">🛒</div>
-          <div class="tf-promo-info">
-            <span class="tf-promo-name">${nome}</span>
-            <div class="tf-promo-prices">${precoOld}${precoNew}</div>
-          </div>
-        </a>`;
-    }).join("")}${verTodasBtn}</div>`;
+    box.innerHTML = `
+      <div class="tf-promo-carousel-wrap">
+        <button class="tf-promo-arrow arrow-left" onclick="scrollPromoCarousel(-1)">‹</button>
+        <div class="tf-promo-scroll" id="tfPromoScroll">${list.map((p, idx)=>{
+          const nome = escHtml(p.name || p.nome || "Produto");
+          const capa = escHtml(p.image || p.capa || "https://via.placeholder.com/300x300.png?text=Promo");
+          const link = escHtml(p.link || p.linkShopee || "#");
+          const precoOld = (p.price_old || p.precoOriginal) ? `<span class="tf-promo-price-old">R$ ${escHtml(p.price_old || p.precoOriginal)}</span>` : "";
+          const precoNew = (p.price_new || p.precoAtual) ? `<span class="tf-promo-price-new">R$ ${escHtml(p.price_new || p.precoAtual)}</span>` : "";
+          return `
+            <a class="tf-promo-card" href="${link}" target="_blank" rel="nofollow" title="Ver na Shopee">
+              <img src="${capa}" alt="${nome}" onerror="this.src='https://via.placeholder.com/300x300.png?text=Promo';">
+              <div class="tf-promo-badge">OFERTA</div>
+              <div class="tf-promo-shopee-icon">🛒</div>
+              <div class="tf-promo-info">
+                <span class="tf-promo-name">${nome}</span>
+                <div class="tf-promo-prices">${precoOld}${precoNew}</div>
+              </div>
+            </a>`;
+        }).join("")}${verTodasCard}</div>
+        <button class="tf-promo-arrow arrow-right" onclick="scrollPromoCarousel(1)">›</button>
+      </div>`;
+  }
+
+  function scrollPromoCarousel(dir){
+    const scroller = document.getElementById("tfPromoScroll");
+    if(!scroller) return;
+    const card = scroller.querySelector(".tf-promo-card");
+    const step = card ? (card.getBoundingClientRect().width + 12) : 160;
+    scroller.scrollBy({ left: dir * step, behavior: "smooth" });
   }
 
   function renderSingleYoutubeHighlight(videos){
@@ -6782,16 +6820,6 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
         renderSingleYoutubeHighlight(freshVideos);
       }
     }, 7000);
-
-    if(tfHeroFeaturedTimer) clearInterval(tfHeroFeaturedTimer);
-    tfHeroFeaturedTimer = setInterval(()=>{
-      const scroller = document.getElementById("tfPromoScroll");
-      if(!scroller) return;
-      const card = scroller.querySelector(".tf-promo-card");
-      const step = card ? (card.getBoundingClientRect().width + 12) : 160;
-      if(scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 8){ scroller.scrollTo({ left: 0, behavior: "smooth" }); }
-      else{ scroller.scrollBy({ left: step, behavior: "smooth" }); }
-    }, 5000);
   }
 
   function renderGamePanel(){
