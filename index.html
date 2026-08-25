@@ -3959,12 +3959,31 @@ body.avatar-modal-open{
     margin-bottom:12px;
   }
   #tfPromoSectionTitle{
-    font-size:16px !important;
-    letter-spacing:.8px !important;
-    background:linear-gradient(90deg,#ffd700,#ffb700,#ff8c00);
+    font-size:18px !important;
+    letter-spacing:1.5px !important;
+    font-weight:1000 !important;
+    text-transform:uppercase;
+    background:linear-gradient(90deg,#00ff88,#4cff7a,#00e676,#76ff03);
     -webkit-background-clip:text; -webkit-text-fill-color:transparent;
     text-shadow:none;
-    filter:drop-shadow(0 0 8px rgba(255,215,0,.25));
+    filter:drop-shadow(0 0 12px rgba(76,255,122,.45));
+    animation:promoTitlePulse 2s ease-in-out infinite;
+  }
+  @keyframes promoTitlePulse{
+    0%,100%{ filter:drop-shadow(0 0 12px rgba(76,255,122,.45)); }
+    50%{ filter:drop-shadow(0 0 22px rgba(76,255,122,.7)); }
+  }
+  .tf-promo-loja-btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:10px 22px; border-radius:999px; font-size:13px; font-weight:900;
+    color:#fff; text-decoration:none; letter-spacing:.5px;
+    background:linear-gradient(135deg,#00c853,#00e676,#69f0ae);
+    box-shadow:0 6px 20px rgba(0,200,83,.35), 0 0 14px rgba(76,255,122,.2);
+    border:none; transition:.3s; margin-top:10px;
+  }
+  .tf-promo-loja-btn:hover{
+    transform:translateY(-2px) scale(1.04);
+    box-shadow:0 10px 30px rgba(0,200,83,.5), 0 0 24px rgba(76,255,122,.35);
   }
   .tf-promo-ver-todas{
     flex:0 0 auto; display:inline-flex; align-items:center; gap:6px;
@@ -4439,7 +4458,8 @@ body.avatar-modal-open{
         </div>
 
         <div class="tf-hero-panel tf-featured-panel">
-          <div class="tf-hero-block-title" id="tfPromoSectionTitle">🛒 Loja do Site</div>
+          <div class="tf-hero-block-title" id="tfPromoSectionTitle">🔥 PRODUTOS EM PROMOÇÃO</div>
+          <a class="tf-promo-loja-btn" href="promos.html" target="_blank">🛒 LOJA DO SITE — Ver catálogo completo</a>
           <div id="tfFeaturedGameBox" aria-label="Produtos em promoção"></div>
         </div>
 
