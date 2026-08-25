@@ -3967,8 +3967,20 @@ body.avatar-modal-open{
     filter:drop-shadow(0 0 8px rgba(255,215,0,.25));
   }
   #tfPromoSectionSub{
-    font-size:11px; font-weight:600; letter-spacing:.4px;
-    color:rgba(255,255,255,.5); margin-top:2px; margin-bottom:6px;
+    font-size:13px; font-weight:700; letter-spacing:.3px;
+    color:rgba(255,255,255,.7); margin-top:4px; margin-bottom:8px;
+  }
+  .tf-promo-loja-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:9px 18px; border-radius:999px; font-size:12px; font-weight:900;
+    color:#111; text-decoration:none; letter-spacing:.4px;
+    background:linear-gradient(135deg,#ffd700,#ffb700,#ff8c00);
+    box-shadow:0 4px 14px rgba(255,215,0,.3);
+    border:none; transition:.25s; margin-bottom:10px;
+  }
+  .tf-promo-loja-btn:hover{
+    transform:translateY(-2px) scale(1.04);
+    box-shadow:0 8px 22px rgba(255,215,0,.45);
   }
   .tf-promo-ver-todas{
     flex:0 0 auto; display:inline-flex; align-items:center; gap:6px;
@@ -4445,6 +4457,7 @@ body.avatar-modal-open{
         <div class="tf-hero-panel tf-featured-panel">
           <div class="tf-hero-block-title" id="tfPromoSectionTitle">🛒 Produtos em Promoção</div>
           <div id="tfPromoSectionSub">Compre pelos links e ajude o site</div>
+          <a class="tf-promo-loja-btn" href="promos.html" target="_blank">🛒 Ver Loja do Site</a>
           <div id="tfFeaturedGameBox" aria-label="Produtos em promoção"></div>
         </div>
 
