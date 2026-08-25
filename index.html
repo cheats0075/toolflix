@@ -4420,7 +4420,10 @@ body.avatar-modal-open{
         </div>
 
         <div class="tf-hero-panel tf-featured-panel">
-          <div class="tf-hero-block-title" id="tfPromoSectionTitle">🏷️ Promoções imperdíveis</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="tf-hero-block-title" id="tfPromoSectionTitle">🛒 Loja do Site</div>
+            <a href="promos.html" target="_blank" style="color:#4cff7a;font-size:12px;font-weight:900;text-decoration:none;padding:6px 14px;border-radius:999px;border:1px solid rgba(76,255,122,.3);background:rgba(76,255,122,.08);transition:.2s;white-space:nowrap;">Ver todas →</a>
+          </div>
           <div id="tfFeaturedGameBox" aria-label="Produtos em promoção"></div>
         </div>
 
@@ -6640,7 +6643,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     const box = document.getElementById("tfFeaturedGameBox");
     if(!box) return;
 
-    const list = getPromoProducts().slice(0, 12);
+    const list = getPromoProducts().slice(0, 8);
     if(!list.length){
       box.innerHTML = `<div class="tf-promo-empty">🏷️ Cadastre produtos em promoção no painel Admin para aparecerem aqui.</div>`;
       return;
