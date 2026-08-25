@@ -3958,6 +3958,25 @@ body.avatar-modal-open{
     color:#8befff;
     margin-bottom:12px;
   }
+  #tfPromoSectionTitle{
+    font-size:16px !important;
+    letter-spacing:.8px !important;
+    background:linear-gradient(90deg,#ffd700,#ffb700,#ff8c00);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    text-shadow:none;
+    filter:drop-shadow(0 0 8px rgba(255,215,0,.25));
+  }
+  .tf-promo-ver-todas{
+    flex:0 0 auto; display:inline-flex; align-items:center; gap:6px;
+    padding:8px 16px; border-radius:999px; font-size:12px; font-weight:900;
+    color:#4cff7a; text-decoration:none; letter-spacing:.3px;
+    border:1px solid rgba(76,255,122,.3); background:rgba(76,255,122,.08);
+    transition:.25s; white-space:nowrap;
+  }
+  .tf-promo-ver-todas:hover{
+    background:rgba(76,255,122,.18); border-color:rgba(76,255,122,.6);
+    transform:translateY(-2px); box-shadow:0 8px 20px rgba(76,255,122,.15);
+  }
   .tf-feature-card{
     width:100%;
     height:164px;
@@ -4420,10 +4439,7 @@ body.avatar-modal-open{
         </div>
 
         <div class="tf-hero-panel tf-featured-panel">
-          <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div class="tf-hero-block-title" id="tfPromoSectionTitle">🛒 Loja do Site</div>
-            <a href="promos.html" target="_blank" style="color:#4cff7a;font-size:12px;font-weight:900;text-decoration:none;padding:6px 14px;border-radius:999px;border:1px solid rgba(76,255,122,.3);background:rgba(76,255,122,.08);transition:.2s;white-space:nowrap;">Ver todas →</a>
-          </div>
+          <div class="tf-hero-block-title" id="tfPromoSectionTitle">🛒 Loja do Site</div>
           <div id="tfFeaturedGameBox" aria-label="Produtos em promoção"></div>
         </div>
 
@@ -6643,11 +6659,15 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     const box = document.getElementById("tfFeaturedGameBox");
     if(!box) return;
 
-    const list = getPromoProducts().slice(0, 8);
+    const allPromos = getPromoProducts();
+    const list = allPromos.slice(0, 8);
     if(!list.length){
       box.innerHTML = `<div class="tf-promo-empty">🏷️ Cadastre produtos em promoção no painel Admin para aparecerem aqui.</div>`;
       return;
     }
+
+    const hasMore = allPromos.length > 8;
+    const verTodasBtn = hasMore ? `<a class="tf-promo-ver-todas" href="promos.html" target="_blank">🛒 Ver todas as ofertas →</a>` : "";
 
     box.innerHTML = `<div class="tf-promo-scroll" id="tfPromoScroll">${list.map((p, idx)=>{
       const nome = escHtml(p.name || p.nome || "Produto");
@@ -6665,7 +6685,7 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
             <div class="tf-promo-prices">${precoOld}${precoNew}</div>
           </div>
         </a>`;
-    }).join("")}</div>`;
+    }).join("")}${verTodasBtn}</div>`;
   }
 
   function renderSingleYoutubeHighlight(videos){
