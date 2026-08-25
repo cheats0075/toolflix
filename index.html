@@ -6616,7 +6616,23 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
       .filter(j => normalizeCategoria(j.categoria).toLowerCase() === "youtube" && safeStr(j.link || j.trailer, "").trim());
   }
 
+  let db_promos_cache = [];
+
+  async function fetchPromosFromAPI(){
+    try{
+      const r = await fetch(`${API_URL}/api/promos?v=${Date.now()}`);
+      const data = await r.json().catch(()=>null);
+      if(data?.ok && Array.isArray(data.promos)){
+        db_promos_cache = data.promos;
+        localStorage.setItem("toolflix_promos", JSON.stringify(data.promos));
+        return data.promos;
+      }
+    }catch(e){ console.error("FETCH_PROMOS_FAIL:", e); }
+    return [];
+  }
+
   function getPromoProducts(){
+    if(db_promos_cache.length) return db_promos_cache;
     try{ return JSON.parse(localStorage.getItem("toolflix_promos") || "[]"); }catch{ return []; }
   }
 
@@ -6631,11 +6647,11 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     }
 
     box.innerHTML = `<div class="tf-promo-scroll" id="tfPromoScroll">${list.map((p, idx)=>{
-      const nome = escHtml(p.nome || "Produto");
-      const capa = escHtml(p.capa || "https://via.placeholder.com/300x300.png?text=Promo");
-      const link = escHtml(p.linkShopee || "#");
-      const precoOld = p.precoOriginal ? `<span class="tf-promo-price-old">R$ ${escHtml(p.precoOriginal)}</span>` : "";
-      const precoNew = p.precoAtual ? `<span class="tf-promo-price-new">R$ ${escHtml(p.precoAtual)}</span>` : "";
+      const nome = escHtml(p.name || p.nome || "Produto");
+      const capa = escHtml(p.image || p.capa || "https://via.placeholder.com/300x300.png?text=Promo");
+      const link = escHtml(p.link || p.linkShopee || "#");
+      const precoOld = (p.price_old || p.precoOriginal) ? `<span class="tf-promo-price-old">R$ ${escHtml(p.price_old || p.precoOriginal)}</span>` : "";
+      const precoNew = (p.price_new || p.precoAtual) ? `<span class="tf-promo-price-new">R$ ${escHtml(p.price_new || p.precoAtual)}</span>` : "";
       return `
         <a class="tf-promo-card" href="${link}" target="_blank" rel="nofollow" title="Ver na Shopee">
           <img src="${capa}" alt="${nome}" onerror="this.src='https://via.placeholder.com/300x300.png?text=Promo';">
@@ -6709,10 +6725,11 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
       <div class="tf-stat-pill"><div class="tf-stat-number">🎬 +${fmtCompactNumber(stats.youtube)}</div><div class="tf-stat-label">vídeos assistidos</div></div>`;
   }
 
-  function updateHeroCarousel(){
+  async function updateHeroCarousel(){
     const videos = getHeroYoutubeVideos();
 
     renderSingleYoutubeHighlight(videos);
+    await fetchPromosFromAPI();
     renderPromoProducts();
     updateHeroSiteStats();
 
@@ -7942,25 +7959,38 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
       }
       listEl.innerHTML = promos.map((p, i) => `
         <div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);">
-          <img src="${escHtml(p.capa || '')}" style="width:48px;height:48px;border-radius:10px;object-fit:cover;background:rgba(255,255,255,.06);" onerror="this.src='https://via.placeholder.com/48x48.png?text=IMG';">
+          <img src="${escHtml(p.image || p.capa || '')}" style="width:48px;height:48px;border-radius:10px;object-fit:cover;background:rgba(255,255,255,.06);" onerror="this.src='https://via.placeholder.com/48x48.png?text=IMG';">
           <div style="flex:1;min-width:0;">
-            <div style="font-weight:800;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(p.nome)}</div>
-            <div style="font-size:11px;opacity:.7;">${p.precoOriginal ? 'De R$'+escHtml(p.precoOriginal)+' por ' : ''}<span style="color:#4cff7a;font-weight:900;">R$ ${escHtml(p.precoAtual || '?')}</span></div>
+            <div style="font-weight:800;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(p.name || p.nome)}</div>
+            <div style="font-size:11px;opacity:.7;">${(p.price_old || p.precoOriginal) ? 'De R$'+escHtml(p.price_old || p.precoOriginal)+' por ' : ''}<span style="color:#4cff7a;font-weight:900;">R$ ${escHtml(p.price_new || p.precoAtual || '?')}</span></div>
           </div>
-          <button onclick="removePromo(${i})" style="background:rgba(255,60,60,.2);border:1px solid rgba(255,60,60,.3);color:#ff4444;padding:6px 12px;border-radius:10px;cursor:pointer;font-weight:800;font-size:12px;">✕</button>
+          <button onclick="removePromo('${escHtml(p.id || '')}')" style="background:rgba(255,60,60,.2);border:1px solid rgba(255,60,60,.3);color:#ff4444;padding:6px 12px;border-radius:10px;cursor:pointer;font-weight:800;font-size:12px;">✕</button>
         </div>`).join("");
     }
 
-    window.removePromo = function(idx){
-      const promos = getPromoProducts();
-      promos.splice(idx, 1);
-      localStorage.setItem("toolflix_promos", JSON.stringify(promos));
-      renderPromoListAdmin();
-      renderPromoProducts();
-      showToast("Promoção removida!");
+    window.removePromo = async function(id){
+      if(!id) return;
+      const adminKey = getAdminKey();
+      if(!adminKey) return showToast("Admin Key obrigatória!");
+      try{
+        const r = await fetch(`${API_URL}/api/admin/promos/delete`, {
+          method: "POST",
+          headers: { "Content-Type":"application/json", "x-admin-key": adminKey },
+          body: JSON.stringify({ id })
+        });
+        const data = await r.json().catch(()=>({}));
+        if(!r.ok || data?.ok !== true) return showToast("Erro ao remover promoção!");
+        await fetchPromosFromAPI();
+        renderPromoListAdmin();
+        renderPromoProducts();
+        showToast("Promoção removida!");
+      }catch(e){
+        console.error(e);
+        showToast("Erro ao conectar com API.");
+      }
     };
 
-    document.getElementById("addPromoBtn")?.addEventListener("click", ()=>{
+    document.getElementById("addPromoBtn")?.addEventListener("click", async ()=>{
       const nome = (document.getElementById("promoNome")?.value || "").trim();
       const capa = (document.getElementById("promoCapa")?.value || "").trim();
       const link = (document.getElementById("promoLink")?.value || "").trim();
@@ -7969,22 +7999,36 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
 
       if(!nome || !link) return showToast("Nome e link são obrigatórios!");
 
-      const promos = getPromoProducts();
-      promos.push({ nome, capa, linkShopee: link, precoOriginal: precoOld, precoAtual: precoNew });
-      localStorage.setItem("toolflix_promos", JSON.stringify(promos));
+      const adminKey = getAdminKey();
+      if(!adminKey) return showToast("Admin Key obrigatória!");
 
-      document.getElementById("promoNome").value = "";
-      document.getElementById("promoCapa").value = "";
-      document.getElementById("promoLink").value = "";
-      document.getElementById("promoPrecoOld").value = "";
-      document.getElementById("promoPrecoNew").value = "";
+      try{
+        const r = await fetch(`${API_URL}/api/admin/promos`, {
+          method: "POST",
+          headers: { "Content-Type":"application/json", "x-admin-key": adminKey },
+          body: JSON.stringify({ name: nome, image: capa, link, price_old: precoOld, price_new: precoNew })
+        });
+        const data = await r.json().catch(()=>({}));
+        if(!r.ok || data?.ok !== true) return showToast("Erro ao salvar promoção!");
 
-      renderPromoListAdmin();
-      renderPromoProducts();
-      showToast("✅ Promoção salva!");
+        document.getElementById("promoNome").value = "";
+        document.getElementById("promoCapa").value = "";
+        document.getElementById("promoLink").value = "";
+        document.getElementById("promoPrecoOld").value = "";
+        document.getElementById("promoPrecoNew").value = "";
+
+        await fetchPromosFromAPI();
+        renderPromoListAdmin();
+        renderPromoProducts();
+        showToast("✅ Promoção salva na API!");
+      }catch(e){
+        console.error(e);
+        showToast("Erro ao conectar com API.");
+      }
     });
 
-    document.getElementById("refreshPromosBtn")?.addEventListener("click", ()=>{
+    document.getElementById("refreshPromosBtn")?.addEventListener("click", async ()=>{
+      await fetchPromosFromAPI();
       renderPromoListAdmin();
       renderPromoProducts();
       showToast("Promoções atualizadas!");
