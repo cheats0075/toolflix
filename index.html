@@ -5040,12 +5040,30 @@ const MASTER_NICK = "Srgokucheats";
   
   // ===== ADMIN KEY HELPER (faltava no arquivo) =====
   function getAdminKey(){
+    // 👑 Super Admin usa o próprio JWT (backend já aceita via requireAdminOrMaster)
+    const token = (typeof getToken === "function" ? getToken() : "") || "";
+    const nick = (localStorage.getItem("toolflix_nick") || "");
+    if (token && nick === MASTER_NICK) return null; // null = usar Bearer
     let k = (localStorage.getItem("toolflix_admin_key") || "").trim();
     if(!k){
       k = (prompt("Digite a ADMIN KEY da API:") || "").trim();
       if(k) localStorage.setItem("toolflix_admin_key", k);
     }
     return k;
+  }
+
+  // Monta headers de admin: Bearer se master logado, senão x-admin-key
+  function adminHeaders(extra){
+    const token = (typeof getToken === "function" ? getToken() : "") || "";
+    const nick = (localStorage.getItem("toolflix_nick") || "");
+    const headers = Object.assign({ "Content-Type": "application/json" }, extra || {});
+    if (token && nick === MASTER_NICK) {
+      headers["Authorization"] = "Bearer " + token;
+    } else {
+      const k = getAdminKey();
+      if (k) headers["x-admin-key"] = k;
+    }
+    return headers;
   }
 /* ===============================
      HELPERS / NORMALIZAÇÃO
@@ -7827,10 +7845,11 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
     }
 
     try{
+      const bearer = (typeof getToken === "function" ? getToken() : "") || "";
       const r = await fetch(`${API_URL}/api/validar-token`, {
         method: "POST",
-        headers: { "Content-Type":"application/json" },
-        body: JSON.stringify({ token, userId })
+        headers: { "Content-Type":"application/json", "Authorization": "Bearer " + bearer },
+        body: JSON.stringify({ token })
       });
 
       const data = await r.json().catch(()=> ({}));
@@ -8059,12 +8078,13 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
 
     window.removePromo = async function(id){
       if(!id) return;
-      const adminKey = getAdminKey();
-      if(!adminKey) return showToast("Admin Key obrigatória!");
+      const token0 = (typeof getToken === "function" ? getToken() : "") || "";
+      const isMaster0 = token0 && (localStorage.getItem("toolflix_nick") || "") === MASTER_NICK;
+      if(!isMaster0){ const adminKey = getAdminKey(); if(!adminKey) return showToast("Admin Key obrigatória!"); }
       try{
         const r = await fetch(`${API_URL}/api/admin/promos/delete`, {
           method: "POST",
-          headers: { "Content-Type":"application/json", "x-admin-key": adminKey },
+          headers: adminHeaders(),
           body: JSON.stringify({ id })
         });
         const data = await r.json().catch(()=>({}));
@@ -8088,22 +8108,23 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
 
       if(!nome || !link) return showToast("Nome e link são obrigatórios!");
 
-      const adminKey = getAdminKey();
-      if(!adminKey) return showToast("Admin Key obrigatória!");
+      const token0 = (typeof getToken === "function" ? getToken() : "") || "";
+      const isMaster0 = token0 && (localStorage.getItem("toolflix_nick") || "") === MASTER_NICK;
+      if(!isMaster0){ const adminKey = getAdminKey(); if(!adminKey) return showToast("Admin Key obrigatória!"); }
 
       try{
         // Se estiver editando, deleta o antigo primeiro
         if(editandoPromoId){
           await fetch(`${API_URL}/api/admin/promos/delete`, {
             method: "POST",
-            headers: { "Content-Type":"application/json", "x-admin-key": adminKey },
+            headers: adminHeaders(),
             body: JSON.stringify({ id: editandoPromoId })
           });
         }
 
         const r = await fetch(`${API_URL}/api/admin/promos`, {
           method: "POST",
-          headers: { "Content-Type":"application/json", "x-admin-key": adminKey },
+          headers: adminHeaders(),
           body: JSON.stringify({ name: nome, image: capa, link, price_old: precoOld, price_new: precoNew })
         });
         const data = await r.json().catch(()=>({}));
@@ -8170,22 +8191,23 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
 
       if(!nome || !link) return showToast("Nome e link são obrigatórios!");
 
-      const adminKey = getAdminKey();
-      if(!adminKey) return showToast("Admin Key obrigatória!");
+      const token0 = (typeof getToken === "function" ? getToken() : "") || "";
+      const isMaster0 = token0 && (localStorage.getItem("toolflix_nick") || "") === MASTER_NICK;
+      if(!isMaster0){ const adminKey = getAdminKey(); if(!adminKey) return showToast("Admin Key obrigatória!"); }
 
       try{
         const oldLink = editandoNome || null;
         if(oldLink && oldLink !== link){
           await fetch(`${API_URL}/api/admin/games/delete`, {
             method: "POST",
-            headers: { "Content-Type":"application/json", "x-admin-key": adminKey },
+            headers: adminHeaders(),
             body: JSON.stringify({ link: oldLink })
           });
         }
 
         const r = await fetch(`${API_URL}/api/admin/games`, {
           method: "POST",
-          headers: { "Content-Type":"application/json", "x-admin-key": adminKey },
+          headers: adminHeaders(),
           body: JSON.stringify({
             title: nome,
             link,
@@ -8243,19 +8265,14 @@ document.getElementById("userArea")?.addEventListener("click", ()=>{
       const days = prompt("Quantos dias o token deve durar?", "30");
       if(!days) return;
 
-      const adminKey = getAdminKey();
-      if(!adminKey){
-        alert("Admin key não encontrada.");
-        return;
-      }
+      const token0 = (typeof getToken === "function" ? getToken() : "") || "";
+      const isMaster0 = token0 && (localStorage.getItem("toolflix_nick") || "") === MASTER_NICK;
+      if(!isMaster0){ const adminKey = getAdminKey(); if(!adminKey){ alert("Admin key não encontrada."); return; } }
 
       try{
         const r = await fetch(`${API_URL}/api/admin/tokens`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-admin-key": adminKey
-          },
+          headers: adminHeaders(),
           body: JSON.stringify({ days: Number(days) })
         });
 
@@ -8581,8 +8598,9 @@ document.getElementById("masterChatsTopBtn")?.addEventListener("click", async ()
 
       if(!nome || !link) return showToast("Nome e link são obrigatórios!");
 
-      const adminKey = getAdminKey();
-      if(!adminKey) return showToast("Admin Key obrigatória!");
+      const token0 = (typeof getToken === "function" ? getToken() : "") || "";
+      const isMaster0 = token0 && (localStorage.getItem("toolflix_nick") || "") === MASTER_NICK;
+      if(!isMaster0){ const adminKey = getAdminKey(); if(!adminKey) return showToast("Admin Key obrigatória!"); }
 
       try{
         // se mudou o LINK na edição, apaga o antigo
@@ -8590,14 +8608,14 @@ document.getElementById("masterChatsTopBtn")?.addEventListener("click", async ()
         if(oldLink && oldLink !== link){
           await fetch(`${API_URL}/api/admin/games/delete`, {
             method: "POST",
-            headers: { "Content-Type":"application/json", "x-admin-key": adminKey },
+            headers: adminHeaders(),
             body: JSON.stringify({ link: oldLink })
           });
         }
 
         const r = await fetch(`${API_URL}/api/admin/games`, {
           method: "POST",
-          headers: { "Content-Type":"application/json", "x-admin-key": adminKey },
+          headers: adminHeaders(),
           body: JSON.stringify({
             title: nome,
             link,
@@ -8670,14 +8688,10 @@ document.getElementById("masterChatsTopBtn")?.addEventListener("click", async ()
 
     if(!confirm("Deseja mesmo excluir este conteúdo?")) return;
 
-    const adminKey = (localStorage.getItem("toolflix_admin_key") || "").trim() || (prompt("Digite a ADMIN KEY da API:") || "").trim();
-    if(!adminKey) return showToast("Admin Key obrigatória!");
-    localStorage.setItem("toolflix_admin_key", adminKey);
-
     try{
       const r = await fetch(`${API_URL}/api/admin/games/delete`, {
         method: "POST",
-        headers: { "Content-Type":"application/json", "x-admin-key": adminKey },
+        headers: adminHeaders(),
         body: JSON.stringify({ link: j.link })
       });
 
