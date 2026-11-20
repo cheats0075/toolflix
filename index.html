@@ -9131,8 +9131,11 @@ document.addEventListener("DOMContentLoaded", function(){
   font-size:14px;
   box-shadow:0 0 20px rgba(0,0,0,0.5);
 ">
-  <div style="padding:10px;background:#000;border-bottom:1px solid #222;">
-    💬 Suporte    pressione ESC para fechar o chat
+  <div style="padding:10px;background:#000;border-bottom:1px solid #222;display:flex;align-items:center;justify-content:space-between;">
+    <span>💬 Suporte</span>
+    <button id="miniChatCloseBtn" type="button" aria-label="Fechar chat" title="Fechar chat"
+      onclick="document.getElementById('miniChat').style.display='none';window.__chatIsOpen=false;"
+      style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);border:none;border-radius:8px;color:#fff;font-size:18px;line-height:1;cursor:pointer;">✕</button>
   </div>
 
   <div id="chatMessages" style="
