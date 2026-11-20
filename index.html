@@ -9150,7 +9150,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
   <div style="display:flex;border-top:1px solid #222;">
     <input id="chatInput" type="text"
-      placeholder="Digite sua mensagem..."
+      placeholder="Digite sua mensagem... (!token = Premium grátis)"
       style="flex:1;padding:8px;border:none;background:#111;color:#fff;">
     <button id="chatSendBtn" onclick="sendChatMessage()"
   style="padding:8px 12px;background:var(--cor-accent);border:none;color:#000;">
@@ -10814,15 +10814,19 @@ document.addEventListener("DOMContentLoaded",()=>{
     let note = "";
 
     if(!logged){
-      text = "👋 Quer acesso grátis? Crie uma conta rapidinho e depois me chame aqui no chat para liberar seu premium.";
+      text = "👋 Quer acesso grátis? Crie uma conta rapidinho e depois digite <b>!token</b> aqui no chat para receber seu Premium.";
       showButton = true;
-      note = "Depois do cadastro, envie no chat: quero acesso grátis";
+      note = "Depois do cadastro, digite no chat: !token";
     }else if(afterRegister){
-      text = "🎉 Conta criada! Agora envie aqui no chat: quero acesso grátis";
+      text = "🎉 Conta criada! Agora digite <b>!token</b> aqui no chat para receber seu token Premium automaticamente.";
       showButton = false;
-      note = "O suporte vai liberar seu premium assim que possível.";
+      note = "O token vale 150 dias e cada conta recebe apenas 1.";
     }else{
-      return;
+      // usuário logado: avisa como pedir o token (some se já for Premium)
+      if(typeof isPremium !== "undefined" && isPremium) return;
+      text = "🎁 Quer Premium grátis? Digite <b>!token</b> aqui no chat e receba seu token automaticamente.";
+      showButton = false;
+      note = "O token vale 150 dias e cada conta recebe apenas 1. Depois é só colar em 💎 Premium.";
     }
 
     const card = document.createElement("div");
